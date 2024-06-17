@@ -1,0 +1,145 @@
+<section class="container">
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+        <mat-form-field appearance="fill">
+            <mat-label>Nombre/Modelo</mat-label>
+            <input type="text" matInput formControlName="name">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Variante</mat-label>
+            <input type="text" matInput formControlName="feature">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Marca</mat-label>
+            <input type="email" matInput formControlName="brand">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Ubicacion</mat-label>
+            <input type="text" matInput formControlName="location">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Descripcion (No se imprime)</mat-label>
+            <textarea matInput formControlName="description"></textarea>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Categoria</mat-label>
+            <mat-select formControlName="categoryId" class="text-uppercase">
+                <mat-option *ngFor="let category of categories" [value]="category._id">
+                    {{ category.name | uppercase }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div class="mb-3">
+            <button type="button" class="w-100" mat-flat-button color="primary" (click)="onCreateCategory()">
+                NUEVA CATEGORIA
+            </button>
+        </div>
+        <mat-form-field appearance="fill">
+            <mat-label>Unidad de medida</mat-label>
+            <mat-select formControlName="unitCode">
+                <mat-option *ngFor="let unitCode of unitCodes" [value]="unitCode.code">{{ unitCode.name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Declaracion</mat-label>
+            <mat-select formControlName="igvCode">
+                <mat-option value="10">GRAVADO</mat-option>
+                <mat-option value="20">EXONERADO</mat-option>
+                <mat-option value="30">INAFECTO</mat-option>
+                <mat-option value="11">BONIFICACION</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" *ngIf="setting.showPrintZone">
+            <mat-label>Comanda</mat-label>
+            <mat-select formControlName="printZone">
+                <mat-option value="COCINA">COCINA</mat-option>
+                <mat-option value="BARRA">BARRA</mat-option>
+                <mat-option value="HORNO">HORNO</mat-option>
+                <mat-option value="CAJA">CAJA</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Codigo interno</mat-label>
+            <input type="text" matInput formControlName="sku">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Codigo fabricante</mat-label>
+            <input type="text" matInput formControlName="upc">
+        </mat-form-field>
+        <div class="mb-3">
+            <button type="button" class="w-100" mat-flat-button color="primary" (click)="onGenerateEan13()">
+                GENERAR CODIGO
+            </button>
+        </div>
+        @if (setting.defaultPrice === 'GLOBAL') {
+            <mat-form-field appearance="fill">
+                <mat-label>Precio</mat-label>
+                <input type="number" matInput formControlName="price">
+            </mat-form-field>
+        } @else {
+            <ng-container formArrayName="prices">
+                @for (price of formArray.controls; track i; let i = $index) {
+                    <mat-form-field appearance="fill" [formGroupName]="i">
+                        <mat-label>{{ price.value.name }}</mat-label>
+                        <input type="number" matInput formControlName="price">
+                    </mat-form-field>
+                }
+            </ng-container>
+        }
+        <mat-form-field appearance="fill">
+            <mat-label>Costo</mat-label>
+            <input type="number" matInput formControlName="cost">
+        </mat-form-field>
+        <div class="mb-3">
+            <button type="button" mat-flat-button color="primary" (click)="fileImageInput.click()"
+                class="w-100">AGREGAR IMAGEN</button>
+            <input type="file" #fileImageInput (change)="onFileImageSelected(fileImageInput.files, fileImageInput)"
+                hidden>
+        </div>
+        <div class="text-center" *ngIf="imgUri">
+            <img [src]="imgUri" alt="producto" width="400" class="mat-elevation-z2">
+        </div>
+        <mat-list>
+            <div mat-subheader>Productos vinculados</div>
+            <mat-list-item *ngFor="let linkProduct of linkProducts; let i = index">
+                <span matListItemTitle>{{ linkProduct.fullName }}</span>
+                <div matListItemMeta>
+                    <button type="button" mat-icon-button (click)="onRemoveProduct(i)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </mat-list-item>
+        </mat-list>
+        <div class="mb-3">
+            <button type="button" class="w-100" mat-flat-button color="primary"
+                (click)="onOpenDialogProducts()">VINCULAR PRODUCTO</button>
+        </div>
+        <mat-list>
+            <div mat-subheader>Anotaciones</div>
+            <mat-list-item *ngFor="let annotation of annotations; let i = index">
+                <span matListItemTitle>{{ annotation }}</span>
+                <div matListItemMeta>
+                    <button type="button" mat-icon-button (click)="onRemoveAnnotation(i)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </mat-list-item>
+        </mat-list>
+        <div class="mb-3">
+            <button type="button" class="w-100" mat-flat-button color="primary"
+                (click)="onOpenDialogAnnotations()">AGREGAR ANOTACION</button>
+        </div>
+        <div class="py-3">
+            <mat-slide-toggle formControlName="isTrackStock">Trackear stock</mat-slide-toggle>
+        </div>
+        <div class="py-3">
+            <mat-slide-toggle #excludeCheck [checked]="!isExcluded"
+                (change)="onExcludedChange()">Activo</mat-slide-toggle>
+        </div>
+        <div class="d-flex">
+            <span class="spacer"></span>
+            <button type="button" mat-raised-button routerLink="/products" color="primary">CANCELAR</button>
+            <span class="divider"></span>
+            <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
+        </div>
+    </form>
+</section>

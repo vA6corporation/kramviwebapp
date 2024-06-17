@@ -1,0 +1,58 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+    <h2 mat-dialog-title>Nuevo Proveedor</h2>
+    <div mat-dialog-content>
+        <mat-form-field appearance="fill">
+            <mat-label>Tipo de Documento</mat-label>
+            <mat-select formControlName="documentType" tabindex="-1">
+                <mat-option *ngFor="let element of documentTypes" [value]="element">{{ element }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>N° de Documento</mat-label>
+            <input type="text" matInput formControlName="document">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Nombres/Razon Social</mat-label>
+            <input type="text" matInput formControlName="name">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Direccion</mat-label>
+            <input type="text" matInput formControlName="address">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Celular</mat-label>
+            <input type="text" matInput formControlName="mobileNumber">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <input type="text" matInput formControlName="email">
+        </mat-form-field>
+        <ng-container formArrayName="banks" *ngFor="let item of formArray.controls; let i = index;">
+            <div class="d-flex" [formGroupName]="i">
+                <mat-form-field appearance="fill">
+                    <mat-select formControlName="bankName">
+                        <mat-option value="BCP">BCP</mat-option>
+                        <mat-option value="BBVA">BBVA</mat-option>
+                        <mat-option value="INTERBANK">INTERBANK</mat-option>
+                        <mat-option value="SCOTIABANK">SCOTIABANK</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>N° de cuenta</mat-label>
+                    <input type="text" matInput formControlName="accountNumber">
+                    <button type="button" mat-icon-button matSuffix (click)="onRemoveAccount(i)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+        </ng-container>
+        <button type="button" class="w-100" mat-flat-button color="primary" (click)="onAddAccount()">
+            AGREGAR NUMERO DE CUENTA
+        </button>
+    </div>
+    <mat-dialog-actions>
+        <span class="spacer"></span>
+        <button type="button" mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+        <button type="submit" mat-flat-button color="primary" [disabled]="isLoading">GUARDAR</button>
+    </mat-dialog-actions>
+</form>

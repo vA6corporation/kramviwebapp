@@ -1,0 +1,57 @@
+<mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="onChangeSelected($event)" animationDuration="0ms">
+    <mat-tab label="Recaudacion">
+        <ng-template matTabContent>
+            <app-incomes></app-incomes>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Ingresos/Salidas">
+        <ng-template matTabContent>
+            <app-inout></app-inout>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Utilidades">
+        <ng-template matTabContent>
+            <app-utilities></app-utilities>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Productos">
+        <ng-template matTabContent>
+            <app-products></app-products>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Categorias">
+        <ng-template matTabContent>
+            <app-categories></app-categories>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Clientes">
+        <ng-template matTabContent>
+            <app-customers></app-customers>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Facturacion">
+        <ng-template matTabContent>
+            <app-invoices></app-invoices>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Proformas">
+        <ng-template matTabContent>
+            <app-proformas></app-proformas>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Personal">
+        <ng-template matTabContent>
+            <app-workers></app-workers>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Insumos Salidas">
+        <ng-template matTabContent>
+            <app-supplies-out></app-supplies-out>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Insumos Ingresos">
+        <ng-template matTabContent>
+            <app-supplies-in></app-supplies-in>
+        </ng-template>
+    </mat-tab>
+</mat-tab-group>

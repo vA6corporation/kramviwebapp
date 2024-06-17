@@ -1,0 +1,50 @@
+<section class="container">
+    <div class="mat-elevation-z2">
+        <table mat-table [dataSource]="dataSource" class="w-100">
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Nombres</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize">{{ element.name | uppercase }}</td>
+            </ng-container>
+            <ng-container matColumnDef="deletedAt">
+                <th mat-header-cell *matHeaderCellDef>Activado</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize">
+                    {{ !element.deletedAt ? 'SI' : 'NO' }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" class="text-right">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu" xPosition="before">
+                        <button [routerLink]="['/tables', element._id, 'edit']" mat-menu-item>
+                            <mat-icon>edit</mat-icon>
+                            <span>Editar</span>
+                        </button>
+                        @if (element.deletedAt) {
+                            <button type="button" (click)="onRestoreTable(element)" mat-menu-item>
+                                <mat-icon>restore</mat-icon>
+                                <span>Restablecer</span>
+                            </button>
+                        } @else {
+                            <button type="button" (click)="onDeleteTable(element)" mat-menu-item>
+                                <mat-icon>delete</mat-icon>
+                                <span>Desactivar</span>
+                            </button>
+                        }
+                    </mat-menu>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex"
+            [length]="length" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
+    </div>
+    <div class="fixed-bottom p-3" style="right: 0; left: unset; width: auto;">
+        <button mat-fab color="primary" class="float-right" routerLink="/tables/create">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+</section>

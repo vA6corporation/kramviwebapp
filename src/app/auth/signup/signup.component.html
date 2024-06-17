@@ -1,0 +1,52 @@
+<section class="py-5">
+    <form class="container" (ngSubmit)="onSubmit()" [formGroup]="signupForm" autocomplete="off">
+        <div formGroupName="user">
+            <mat-form-field appearance="fill">
+                <mat-label>Email</mat-label>
+                <input type="email" matInput formControlName="email">
+            </mat-form-field>
+        </div>
+        <div formGroupName="business">
+            <mat-form-field appearance="fill">
+                <mat-label>RUC</mat-label>
+                <input type="text" matInput formControlName="ruc" maxlength="11" minlength="11">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Razon Social</mat-label>
+                <input type="text" matInput formControlName="businessName">
+            </mat-form-field>
+        </div>
+        <div formGroupName="office">
+            <mat-form-field appearance="fill">
+                <mat-label>Nombre Comercial</mat-label>
+                <input type="text" matInput formControlName="tradeName">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Domicilio fiscal</mat-label>
+                <input type="text" matInput formControlName="address">
+            </mat-form-field>
+        </div>
+        <div formGroupName="business">
+            <mat-form-field appearance="fill">
+                <mat-label>Celular del cliente</mat-label>
+                <input #mobile type="text" matInput (input)="onInputMobile(mobile.value)" formControlName="mobileNumber"
+                    maxlength="15" minlength="9">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Tipo de negocio</mat-label>
+                <mat-select formControlName="businessType">
+                    <mat-option value="TIENDA">TIENDA</mat-option>
+                    <mat-option value="RESTAURANTE">RESTAURANTE</mat-option>
+                    <mat-option value="HOTEL">HOTEL</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="d-flex">
+            <span class="spacer"></span>
+            <button type="button" mat-raised-button color="primary" [disabled]="isLoading"
+                routerLink="/login">VOLVER</button>
+            <span class="divider"></span>
+            <button type="submit" mat-flat-button color="primary" [disabled]="isLoading">GUARDAR</button>
+        </div>
+    </form>
+</section>

@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>Detalles incidencia</h2>
+<mat-list class="m-0">
+    @for (incidentItem of incidentItems; track incidentItem._id) {
+    <mat-list-item>
+        <span matListItemTitle>{{ incidentItem.fullName }} ({{ incidentItem.quantity }})</span>
+    </mat-list-item>
+    }
+</mat-list>
+<div mat-dialog-content>
+    <table class="w-100">
+        <tbody>
+            <tr>
+                <td>F/H de registro</td>
+                <td align="right">{{ incident?.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</td>
+            </tr>
+            <tr>
+                <td>Motivo</td>
+                <td align="right">{{ incident?.incidentType }}</td>
+            </tr>
+            <tr>
+                <td>Observaciones</td>
+                <td align="right">{{ incident?.observations || 'NINGUNO' }}</td>
+            </tr>
+            <tr>
+                <td>Usuario</td>
+                <td align="right">{{ user?.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<mat-dialog-actions>
+    <button mat-raised-button color="warn" (click)="onDeleteIncident()" [disabled]="isLoading">ELIMINAR</button>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary" [disabled]="isLoading">VOLVER</button>
+</mat-dialog-actions>

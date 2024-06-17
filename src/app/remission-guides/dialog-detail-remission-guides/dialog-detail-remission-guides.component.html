@@ -1,0 +1,44 @@
+<h2 mat-dialog-title>
+    Detalles T{{ office.serialPrefix }}-{{ remissionGuide?.remissionGuideNumber }}
+    <span class="ml-2 text-danger" *ngIf="remissionGuide?.deletedAt">ANULADO</span>
+</h2>
+<div mat-dialog-content>
+    <mat-list class="m-0">
+        <mat-list-item *ngFor="let item of remissionGuideItems">
+            <span class="mr-2 text-muted">x{{ item.quantity }}</span>
+            {{ item.fullName }}
+            <span class="spacer"></span>
+        </mat-list-item>
+    </mat-list>
+    <mat-divider class="mb-0"></mat-divider>
+    <table class="w-100">
+        <tbody>
+            <tr>
+                <td width="100">F/H. emision</td>
+                <td align="right">{{ remissionGuide?.createdAt | date: 'medium' }}</td>
+            </tr>
+            <tr>
+                <td>Observaciones</td>
+                <td align="right" [ngClass]="{ 'text-muted': !remissionGuide?.observations }">
+                    {{ remissionGuide?.observations || 'NINGUNO' }}
+                </td>
+            </tr>
+            <tr>
+                <td>Usuario</td>
+                <td align="right">{{ user.name }}</td>
+            </tr>
+            <tr class="text-muted">
+                <td>ID</td>
+                <td align="right">{{ remissionGuide?._id }}</td>
+            </tr>
+            <tr *ngIf="cdr" class="text-primary">
+                <td>Mensaje Sunat</td>
+                <td align="right">{{ cdr.sunatMessage }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

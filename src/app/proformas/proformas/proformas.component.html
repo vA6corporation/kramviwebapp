@@ -1,0 +1,121 @@
+<section class="container">
+    <form [formGroup]="formGroup" autocomplete="off">
+        <mat-form-field appearance="fill">
+            <mat-label>Seleccione un rango de fechas</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+                <input matStartDate placeholder="Desde" formControlName="startDate">
+                <input matEndDate placeholder="Hasta" formControlName="endDate" (dateChange)="onRangeChange()">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+        <div class="d-flex">
+            <mat-form-field appearance="fill">
+                <mat-label>Seleccione un usuario</mat-label>
+                <mat-select formControlName="userId" (selectionChange)="onUserChange()">
+                    <mat-option value="">TODOS LOS USUARIOS</mat-option>
+                    <mat-option *ngFor="let element of users" [value]="element._id" class="text-uppercase">
+                        {{ element.name | uppercase }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Seleccione un estado</mat-label>
+                <mat-select formControlName="isBilled" (selectionChange)="onIsBilledChange()">
+                    <mat-option value="">TODOS LOS ESTADOS</mat-option>
+                    <mat-option value="true" class="text-uppercase">SOLO FACTURADOS</mat-option>
+                    <mat-option value="false" class="text-uppercase">SOLO SIN FACTURAR</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </form>
+    <div class="mat-elevation-z2">
+        <table mat-table [dataSource]="dataSource" class="w-100">
+            <ng-container matColumnDef="created">
+                <th mat-header-cell *matHeaderCellDef>F. registro</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">
+                    {{ element.createdAt | date }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="serial">
+                <th mat-header-cell *matHeaderCellDef>N° proforma</th>
+                <td mat-cell *matCellDef="let element">P{{ office.serialPrefix }}-{{ element.proformaNumber }}</td>
+            </ng-container>
+            <ng-container matColumnDef="customer">
+                <th mat-header-cell *matHeaderCellDef>Cliente</th>
+                <td mat-cell *matCellDef="let element" class="text-uppercase truncate-cell"
+                    [ngClass]="{ 'text-muted': !element.customer }">{{ element.customer?.name || 'NINGUNO' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="user">
+                <th mat-header-cell *matHeaderCellDef>Usuario</th>
+                <td mat-cell *matCellDef="let element" class="text-uppercase truncate-cell">{{ element.user.name }}</td>
+            </ng-container>
+            <ng-container matColumnDef="charge">
+                <th mat-header-cell *matHeaderCellDef>Importe T.</th>
+                <td mat-cell *matCellDef="let element">{{ element.charge.toFixed(2) }}</td>
+            </ng-container>
+            <ng-container matColumnDef="observations">
+                <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+                <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.observations }">
+                    {{ element.observations || 'NINGUNO' }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" class="text-right">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu" xPosition="before">
+                        <button mat-menu-item (click)="onOpenDetails(element._id)">
+                            <mat-icon>info</mat-icon>
+                            <span>Detalles de proforma</span>
+                        </button>
+                        <button mat-menu-item *ngIf="element.saleId" (click)="onOpenDetailsSale(element.saleId)">
+                            <mat-icon>info</mat-icon>
+                            <span>Detalles de venta</span>
+                        </button>
+                        <button type="button" mat-menu-item (click)="onPrint(element._id)">
+                            <mat-icon>print</mat-icon>
+                            <span>Imprimir</span>
+                        </button>
+                        <button type="button" mat-menu-item (click)="onExportPdf(element._id)">
+                            <mat-icon>download</mat-icon>
+                            <span>Exportar PDF</span>
+                        </button>
+                        <button *ngIf="element.saleId === null" [routerLink]="['/charge']"
+                            [queryParams]="{ proformaId: element._id }" mat-menu-item>
+                            <mat-icon>receipt</mat-icon>
+                            <span>Vender al contado</span>
+                        </button>
+                        <button *ngIf="element.saleId === null" [routerLink]="['/charge/credit']"
+                            [queryParams]="{ proformaId: element._id }" mat-menu-item>
+                            <mat-icon>receipt</mat-icon>
+                            <span>Vender al credito</span>
+                        </button>
+                        <button [routerLink]="['/proformas/copy']" [queryParams]="{ proformaId: element._id }"
+                            mat-menu-item>
+                            <mat-icon>content_copy</mat-icon>
+                            <span>Copiar proforma</span>
+                        </button>
+                        <button *ngIf="element.saleId === null" [routerLink]="['/proformas', element._id, 'edit']"
+                            mat-menu-item>
+                            <mat-icon>edit</mat-icon>
+                            <span>Editar</span>
+                        </button>
+                    </mat-menu>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                [ngClass]="{ 'bg-danger': row.deleted, 'bg-success': row.saleId }"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex"
+            [length]="length" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
+    </div>
+    <div class="fixed-bottom p-3" style="right: 0; left: unset; width: auto;">
+        <button mat-fab color="primary" class="float-right" routerLink="/proformas/create">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+</section>

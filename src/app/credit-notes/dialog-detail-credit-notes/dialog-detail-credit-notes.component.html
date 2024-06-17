@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>
+    Detalles {{ creditNote?.invoicePrefix }}{{ office.serialPrefix }}-{{ creditNote?.invoiceNumber }}
+    <span class="ml-2 text-danger" *ngIf="creditNote?.deletedAt">ANULADO</span>
+</h2>
+<div mat-dialog-content>
+    <table class="w-100">
+        <tbody>
+            <tr>
+                <td>F/H. emision</td>
+                <td align="right">{{ creditNote?.createdAt | date: 'medium' }}</td>
+            </tr>
+            <tr>
+                <td>Motivo</td>
+                <td align="right">{{ creditNote?.reason }}</td>
+            </tr>
+            <tr>
+                <td>Observaciones</td>
+                <td align="right">{{ creditNote?.observations }}</td>
+            </tr>
+            <tr>
+                <td>Usuario</td>
+                <td align="right">{{ user.name }}</td>
+            </tr>
+            <tr class="text-muted">
+                <td>ID</td>
+                <td align="right">{{ creditNote?._id }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <mat-divider class="mb-0"></mat-divider>
+    <mat-list class="m-0">
+        <mat-list-item *ngFor="let item of creditNoteItems">
+            <span class="mr-2 text-muted">x{{ item.quantity }}</span>
+            {{ item.fullName }}
+            <span class="spacer"></span>
+            {{ (item.price * item.quantity).toFixed(2) }}
+        </mat-list-item>
+    </mat-list>
+</div>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

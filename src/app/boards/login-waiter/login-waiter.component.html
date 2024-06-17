@@ -1,0 +1,60 @@
+<section>
+    <form class="container" (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+        <div class="text-center">
+            <img src="assets/kramviLogo.png" alt="playstore" width="160">
+        </div>
+        <h2 class="mat-title-medium">Por favor identifiquese</h2>
+        @if (rememberUsers.length && newLogin === false) {
+        <mat-card>
+            <mat-action-list>
+                @for (rememberUser of rememberUsers; track $index) {
+                <button type="button" mat-list-item (click)="onUserSelected(rememberUser)">
+                    <span matListItemTitle>{{ rememberUser.name }}</span>
+                    <span matListItemLine>{{ rememberUser.email }}</span>
+                    <div matListItemMeta class="h-100 d-flex align-items-center">
+                        <button mat-icon-button aria-label="trash" (click)="onDeleteUser(rememberUser._id, $event)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </button>
+                }
+            </mat-action-list>
+        </mat-card>
+        <div class="divider"></div>
+        <button type="submit" mat-flat-button color="primary" class="w-100" (click)="newLogin = true">
+            USAR UNA CUENTA DIFERENTE
+        </button>
+        <div class="divider"></div>
+        } @else {
+        <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <input type="email" matInput formControlName="email">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Contraseña</mat-label>
+            <input [type]="hide ? 'password' : 'text'" matInput formControlName="password">
+            <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hide">
+                <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+        </mat-form-field>
+        <button type="submit" mat-flat-button color="primary" class="w-100" [disabled]="isLoading">INGRESAR</button>
+        <div class="divider"></div>
+        <p class="text-center">
+            <mat-slide-toggle formControlName="rememberme">
+                Recuerdame
+            </mat-slide-toggle>
+        </p>
+        }
+        <p class="text-center">
+            Soporte Tecnico: 930 430 929
+        </p>
+        <p class="text-center text-muted" (click)="onDeploy()">
+            v{{ version }}
+        </p>
+        <a href="https://play.google.com/store/apps/details?id=com.va6corporation.kramviapp" target="_blank"
+            class="text-center d-block">
+            <img src="assets/playstore.png" alt="playstore" width="200">
+        </a>
+    </form>
+</section>

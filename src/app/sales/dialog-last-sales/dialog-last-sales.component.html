@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Imprimir comprobante</h2>
+<div mat-dialog-content>
+    <mat-action-list>
+        @for (sale of sales; track sale._id) {
+            <button mat-list-item (click)="printSale(sale._id)">
+                {{ sale.invoicePrefix }}{{ office.serialPrefix }}-{{ sale.invoiceNumber }}
+                <span class="spacer"></span>
+                {{ sale.charge.toFixed(2) }}
+            </button>
+        }
+    </mat-action-list>
+</div>

@@ -1,0 +1,23 @@
+<title mat-dialog-title>Detalle de mesas</title>
+<div mat-dialog-content>
+    <mat-list role="list">
+        @for (board of boards; track board._id; let i = $index) {
+            <mat-list-item role="listitem">
+                N° {{ board.table.name }}
+                <span class="spacer"></span>
+                {{ chargeBoards[i].toFixed(2) }}
+            </mat-list-item>
+        }
+        <mat-list-item role="listitem">
+            <div class="d-flex font-weight-bold">
+                Total
+                <span class="spacer"></span>
+                {{ charge.toFixed(2) }}
+            </div>
+        </mat-list-item>
+    </mat-list>
+</div>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

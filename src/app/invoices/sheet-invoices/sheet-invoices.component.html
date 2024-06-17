@@ -1,0 +1,37 @@
+<mat-action-list>
+    <button type="button" mat-list-item (click)="onSendInvoice()">
+        <mat-icon class="color-black" matListItemIcon>near_me</mat-icon>
+        <span matListItemTitle>Enviar a Sunat</span>
+    </button>
+
+    <button type="button" mat-list-item (click)="onDownloadXmlCdr()">
+        <mat-icon class="color-black" matListItemIcon>download</mat-icon>
+        <span matListItemTitle>Descargar XML/CDR</span>
+    </button>
+    
+    <button type="button" mat-list-item [routerLink]="['/credits', saleId, 'details']"
+        (click)="bottomSheetRef.dismiss()">
+        <mat-icon class="color-black" matListItemIcon>local_atm</mat-icon>
+        <span matListItemTitle>Pagos</span>
+    </button>
+
+    <button type="button" mat-list-item [routerLink]="['/posCopy', saleId]" (click)="bottomSheetRef.dismiss()">
+        <mat-icon class="color-black" matListItemIcon>content_copy</mat-icon>
+        <span matListItemTitle>Copiar venta</span>
+    </button>
+
+    <button type="button" mat-list-item (click)="onEmailDialog()" (click)="bottomSheetRef.dismiss()">
+        <mat-icon class="color-black" matListItemIcon>email</mat-icon>
+        <span matListItemTitle>Enviar por correo</span>
+    </button>
+
+    <button type="button" mat-list-item (click)="onCreditNoteDialog()" (click)="bottomSheetRef.dismiss()">
+        <mat-icon class="color-black" matListItemIcon>receipt</mat-icon>
+        <span matListItemTitle>Notas de credito</span>
+    </button>
+
+    <button type="button" mat-list-item (click)="onRemissionGuideDialog()" (click)="bottomSheetRef.dismiss()">
+        <mat-icon class="color-black" matListItemIcon>receipt</mat-icon>
+        <span matListItemTitle>Guias de remission</span>
+    </button>
+</mat-action-list>

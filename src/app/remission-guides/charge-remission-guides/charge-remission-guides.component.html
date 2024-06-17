@@ -1,0 +1,135 @@
+<section class="d-flex">
+    <form class="flex-70 d-flex" (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+        <div class="p-3">
+            <p class="caption text-center text-muted mb-0">Transportista</p>
+            @if (carrier) {
+            <button type="button" mat-button color="primary" (click)="onEditCarrier()" class="w-100 mb-3">
+                <span class="mat-h1">{{ carrier.name | uppercase }}</span>
+            </button>
+            <p class="text-center m-0">Placa: {{ carrier.carriagePlate || 'NINGUNO' }}</p>
+            <p class="text-center m-0">N° de licencia: {{ carrier.licenseNumber || 'NINGUNO' }}</p>
+            }
+            <mat-divider class="mb-2"></mat-divider>
+            <p class="caption text-center text-muted mb-0">Destinatario</p>
+            @if (customer) {
+            <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
+                <span class="mat-h1">{{ customer.name | uppercase }}</span>
+            </button>
+            <p class="text-center mb-3">{{ customer.mobileNumber }}</p>
+            }
+            <mat-form-field appearance="fill" *ngIf="customer">
+                <mat-label>Direccion</mat-label>
+                <mat-select formControlName="addressIndex">
+                    <mat-option *ngFor="let element of addresses; let i = index" [value]="i">
+                        {{ element | uppercase }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Fecha de transporte</mat-label>
+                <input matInput [matDatepicker]="transportAtDatePicker" formControlName="transportAt">
+                <mat-datepicker-toggle matSuffix [for]="transportAtDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #transportAtDatePicker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Tipo de transporte</mat-label>
+                <mat-select formControlName="carriageTypeCode">
+                    <mat-option value="" disabled>TIPO DE TRANSPORTE</mat-option>
+                    <mat-option value="01">TRANSPORTE PUBLICO</mat-option>
+                    <mat-option value="02">TRANSPORTE PRIVADO</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Motivo del transporte</mat-label>
+                <mat-select formControlName="remissionGuideTypeCode">
+                    <mat-option *ngFor="let element of remissionGuideTypes" [value]="element.code">
+                        {{ element.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Descripcion del motivo</mat-label>
+                <input type="text" matInput formControlName="reasonDescription">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Peso (Kilogramos)</mat-label>
+                <input type="number" matInput formControlName="shippingWeight">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Observaciones</mat-label>
+                <input type="text" matInput formControlName="observations">
+            </mat-form-field>
+            <div class="d-flex">
+                <mat-form-field appearance="fill">
+                    <mat-label>Departamento de origen</mat-label>
+                    <mat-select formControlName="originDepartment" #originDepartment
+                        (selectionChange)="onChangeOriginDepartment(originDepartment.value)">
+                        <mat-option *ngFor="let department of departments" [value]="department.code">
+                            {{ department.name | uppercase }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Provincia de origen</mat-label>
+                    <mat-select formControlName="originProvince" #originProvince
+                        (selectionChange)="onChangeOriginProvince(originProvince.value)">
+                        <mat-option *ngFor="let province of originProvinces" [value]="province.code">
+                            {{ province.name | uppercase }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Distrito de origen</mat-label>
+                    <mat-select formControlName="originLocationCode">
+                        <mat-option *ngFor="let district of originDistricts" [value]="district.code">
+                            {{ district.name | uppercase }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <mat-form-field appearance="fill">
+                <mat-label>Direccion de origen</mat-label>
+                <input type="text" matInput formControlName="originAddress">
+            </mat-form-field>
+            <div class="d-flex">
+                <mat-form-field appearance="fill">
+                    <mat-label>Departamento de destino</mat-label>
+                    <mat-select formControlName="destinyDepartment" #destinyDepartment
+                        (selectionChange)="onChangeDestinyDepartment(destinyDepartment.value)">
+                        <mat-option *ngFor="let department of destinyDepartments" [value]="department.code">
+                            {{ department.name | uppercase }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Provincia de destino</mat-label>
+                    <mat-select formControlName="destinyProvince" #destinyProvince
+                        (selectionChange)="onChangeDestinyProvince(destinyProvince.value)">
+                        <mat-option *ngFor="let province of destinyProvinces" [value]="province.code">
+                            {{ province.name | uppercase }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Distrito de destino</mat-label>
+                    <mat-select formControlName="destinyLocationCode">
+                        <mat-option *ngFor="let district of destinyDistricts" [value]="district.code">
+                            {{ district.name | uppercase }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <mat-form-field appearance="fill">
+                <mat-label>Direccion de destino</mat-label>
+                <input type="text" matInput formControlName="destinyAddress">
+            </mat-form-field>
+            <div class="p-2"></div>
+            <button type="submit" class="w-100" mat-flat-button [disabled]="isLoading" color="primary">
+                GUARDAR
+            </button>
+        </div>
+    </form>
+    <div class="flex-30 h-auto bg-white">
+        <app-remission-guide-items></app-remission-guide-items>
+    </div>
+</section>

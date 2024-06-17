@@ -1,0 +1,47 @@
+<section class="d-flex">
+    <div class="flex-70" style="margin-bottom: 60px;">
+        <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndex = $event"
+            animationDuration="0ms">
+            <mat-tab label="Categorias">
+                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                    <mat-grid-tile (click)="onSelectCategory(category)" [style.background]="'lightgreen'"
+                        *ngFor="let category of categories">
+                        {{ category.name }}
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </mat-tab>
+            <mat-tab label="Productos">
+                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                    <mat-grid-tile (click)="onSelectProduct(product)" [style.background]="'lightblue'"
+                        *ngFor="let product of products" [ngStyle]="urlImage(product)">
+                        {{ product.fullName }}
+                        <small class="text-muted text-price">
+                            {{ product.price.toFixed(2) }}
+                        </small>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+    <div class="flex-30 bg-white board-items" style="margin-bottom: 60px;">
+        <app-board-items></app-board-items>
+    </div>
+    <div class="fixed-bottom d-flex align-items-center footer-button">
+        <div class="pl-3">
+            <mat-form-field appearance="fill"
+                *ngIf="setting.defaultPrice === 'LISTA' || setting.defaultPrice === 'LISTAOFICINA'">
+                <mat-select [(value)]="priceListId" (selectionChange)="onChangePriceList()">
+                    <mat-option *ngFor="let element of priceLists" [value]="element._id">{{ element.name }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <span class="spacer"></span>
+        <div class="p-3">
+            <button type="button" mat-raised-button color="primary" (click)="onSubmit()"
+                [disabled]="isLoading">ORDENAR</button>
+            <span class="divider"></span>
+            <button type="button" mat-flat-button color="primary" routerLink="/boards/chargeBoards"
+                [disabled]="board === null">COBRAR</button>
+        </div>
+    </div>
+</section>

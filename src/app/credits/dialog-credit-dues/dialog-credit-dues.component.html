@@ -1,0 +1,16 @@
+<section>
+  <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+    <title mat-dialog-title>Cambiar fecha de vencimiento</title>
+    <div mat-dialog-content>
+      <mat-form-field appearance="fill">
+        <mat-label>N° de cuotas</mat-label>
+        <input type="number" matInput formControlName="dues">
+      </mat-form-field>
+    </div>
+    <mat-dialog-actions>
+      <span class="spacer"></span>
+      <button mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+      <button type="submit" mat-flat-button color="primary" [disabled]="isLoading">GUARDAR</button>
+    </mat-dialog-actions>
+  </form>
+</section>

@@ -1,0 +1,46 @@
+<section class="d-flex">
+    <div class="flex-70">
+        <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndex = $event"
+            animationDuration="0ms">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    Favoritos
+                </ng-template>
+                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                    <mat-grid-tile (click)="onSelectProduct(product)" *ngFor="let product of favorites">
+                        {{ product.fullName }}
+                        <small class="text-muted text-price">
+                            {{ product.cost.toFixed(2) }}
+                        </small>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </mat-tab>
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    Busqueda
+                </ng-template>
+                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                    <mat-grid-tile (click)="onSelectProduct(product)" *ngFor="let product of products">
+                        {{ product.fullName }}
+                        <small class="text-muted text-price">
+                            {{ product.cost.toFixed(2) }}
+                        </small>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+    <div class="flex-30 bg-white list-items">
+        <app-incident-items></app-incident-items>
+    </div>
+    <div class="fixed-bottom d-flex align-items-center">
+        <span class="spacer"></span>
+        <div class="p-3">
+            <button type="button" mat-raised-button (click)="onCancel()" color="primary">CANCELAR</button>
+            <span class="divider"></span>
+            <button type="button" mat-flat-button color="primary"
+                routerLink="/incidents/chargeIncidents">RETIRAR</button>
+        </div>
+    </div>
+</section>

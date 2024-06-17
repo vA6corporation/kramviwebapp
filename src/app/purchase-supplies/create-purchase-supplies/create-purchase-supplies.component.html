@@ -1,0 +1,42 @@
+<section class="d-flex">
+    <div class="flex-70">
+        <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndex = $event"
+            animationDuration="0ms">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    Categorias
+                </ng-template>
+                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                    <mat-grid-tile (click)="onSelectCategorySupply(categorySupply)" [style.background]="'lightgreen'"
+                        *ngFor="let categorySupply of categorySupplies">
+                        {{ categorySupply.name }}
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    Insumos
+                </ng-template>
+                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                    <mat-grid-tile (click)="onClickSupply(supply)" *ngFor="let supply of filterSupplies">
+                        {{ supply.fullName }}
+                        <small class="text-muted text-price">
+                            {{ supply.cost.toFixed(2) }}
+                        </small>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+    <div class="flex-30 bg-white list-items">
+        <app-purchase-supply-items></app-purchase-supply-items>
+    </div>
+    <div class="fixed-bottom d-flex footer-button">
+        <span class="spacer"></span>
+        <div class="p-3">
+            <button type="button" mat-raised-button (click)="onCancel()" color="primary">CANCELAR</button>
+            <span class="divider"></span>
+            <button type="button" mat-flat-button color="primary" routerLink="/purchaseSupplies/charge">COMPRAR</button>
+        </div>
+    </div>
+</section>

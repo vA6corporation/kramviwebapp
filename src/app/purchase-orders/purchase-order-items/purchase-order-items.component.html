@@ -1,0 +1,33 @@
+<mat-action-list>
+    @for (purchaseOrderItem of purchaseOrderItems; track purchaseOrderItem.productId; let i = $index) {
+        <button mat-list-item (click)="onSelectPurchaseOrderItem(i)">
+            <span matListItemTitle>{{ purchaseOrderItem.fullName }}</span>
+            <div matListItemLine class="d-flex my-1">
+                <span class="mr-2">x{{ purchaseOrderItem.quantity }}</span>
+                @if (purchaseOrderItem.igvCode === igvType.BONIFICACION) {
+                    <span class="mr-2" [style.color]="'green'">Bonificacion</span>
+                }
+                @if (purchaseOrderItem.igvCode === igvType.EXONERADO) {
+                    <span class="text-primary mr-2">Exonerado</span>
+                }
+                @if (purchaseOrderItem.igvCode === igvType.INAFECTO) {
+                    <span class="text-primary mr-2">Inafecto</span>
+                }
+                <span class="text-muted">{{ purchaseOrderItem.observations }}</span>
+                <span class="spacer"></span>
+                <span>{{ (purchaseOrderItem.cost * purchaseOrderItem.quantity).toFixed(2) }}</span>
+            </div>
+        </button>
+    }
+    <button mat-list-item>
+        <div matListItemTitle class="d-flex font-weight-bold">
+            <span>
+                Total
+            </span>
+            <span class="spacer"></span>
+            <span>
+                {{ charge.toFixed(2) }}
+            </span>
+        </div>
+    </button>
+</mat-action-list>

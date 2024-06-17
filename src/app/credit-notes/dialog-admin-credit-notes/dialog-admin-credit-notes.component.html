@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>
+    {{ creditNote?.invoicePrefix }}{{ office?.serialPrefix }}-{{ creditNote?.invoiceNumber }}
+</h2>
+<div mat-dialog-content>
+    <h4 class="text-danger">Opciones de administrador</h4>
+    <table class="w-100">
+        <tbody>
+        </tbody>
+    </table>
+    <form [formGroup]="formDate" autocomplete="off" (submit)="onSubmitDate()" class="d-flex">
+        <mat-form-field appearance="fill">
+            <mat-label>Fecha emision</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="createdAt">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <div class="ml-3">
+            <button mat-flat-button color="primary" type="submit">GUARDAR</button>
+        </div>
+    </form>
+    <form [formGroup]="formGroup" autocomplete="off" (submit)="onSubmit()" class="d-flex">
+        <mat-form-field appearance="fill">
+            <mat-label>Correlativo</mat-label>
+            <input type="number" matInput formControlName="invoiceNumber">
+        </mat-form-field>
+        <div class="ml-3">
+            <button mat-flat-button color="primary" type="submit">GUARDAR</button>
+        </div>
+    </form>
+</div>
+<mat-dialog-actions>
+    <button type="button" *ngIf="creditNote != null" mat-raised-button color="primary"
+        (click)="onDeleteCreditNote()">ELIM. NOTA</button>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

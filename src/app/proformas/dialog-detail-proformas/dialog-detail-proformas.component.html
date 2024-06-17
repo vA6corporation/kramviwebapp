@@ -1,0 +1,90 @@
+<h2 mat-dialog-title>
+    Detalles P{{ office.serialPrefix }}-{{ proforma?.proformaNumber }}
+    @if (proforma?.deletedAt) {
+        <span class="ml-2 text-danger">ANULADO</span>
+    }
+</h2>
+<div mat-dialog-content>
+    <table class="w-100">
+        <tbody>
+            <tr>
+                <td>Imp. Total</td>
+                <td align="right">{{ (proforma?.charge || 0).toFixed(2) }}</td>
+            </tr>
+            <tr>
+                <td>Gravado</td>
+                <td align="right">{{ (proforma?.gravado || 0).toFixed(2) }}</td>
+            </tr>
+            <tr>
+                <td>Gratuito</td>
+                <td align="right">{{ (proforma?.gratuito || 0).toFixed(2) }}</td>
+            </tr>
+            <tr>
+                <td>Exonerado</td>
+                <td align="right">{{ (proforma?.exonerado || 0).toFixed(2) }}</td>
+            </tr>
+            <tr>
+                <td>Inafecto</td>
+                <td align="right">{{ (proforma?.inafecto || 0).toFixed(2) }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <mat-divider class="mb-3"></mat-divider>
+    <table class="w-100">
+        <tbody>
+            <tr>
+                <td>F/H venta</td>
+                <td align="right">{{ proforma?.createdAt | date: 'medium' }}</td>
+            </tr>
+            <tr>
+                <td>Observaciones</td>
+                <td align="right">{{ proforma?.observations || 'NINGUNO' }}</td>
+            </tr>
+            <tr>
+                <td>Usuario</td>
+                <td align="right">{{ user.name }}</td>
+            </tr>
+            <tr class="text-muted">
+                <td>ID</td>
+                <td align="right">{{ proforma?._id }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <ng-container *ngIf="customer !== null">
+        <mat-divider class="mb-0"></mat-divider>
+        <table class="my-3 w-100">
+            <tr>
+                <td>Cliente:</td>
+                <td align="right">{{ customer.name }}</td>
+            </tr>
+            <tr>
+                <td>RUC/DNI:</td>
+                <td align="right">{{ customer.documentType }}: {{ customer.document }}</td>
+            </tr>
+            <tr>
+                <td>Celular:</td>
+                <td align="right" [ngClass]="{ 'text-muted': customer.mobileNumber === null }">
+                {{ customer.mobileNumber || 'NINGUNO' }}
+            </td>
+            </tr>
+        </table>
+    </ng-container>
+    <mat-divider class="mb-0"></mat-divider>
+    <mat-list class="m-0">
+        @for (proformaItem of proformaItems; track $index) {
+            <mat-list-item>
+                {{ proformaItem.fullName }}
+                <span class="ml-2 text-muted">x{{ proformaItem.quantity }}</span>
+                <span class="text-success ml-2" *ngIf="proformaItem.igvCode === '11'">Bon</span>
+                <span class="text-primary ml-2" *ngIf="proformaItem.igvCode === '20'">Exo</span>
+                <span class="text-primary ml-2" *ngIf="proformaItem.igvCode === '30'">Ina</span>
+                <span class="spacer"></span>
+                {{ (proformaItem.price * proformaItem.quantity).toFixed(2) }}
+            </mat-list-item>
+        }
+    </mat-list>
+</div>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

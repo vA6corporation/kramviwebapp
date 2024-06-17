@@ -1,0 +1,7 @@
+<mat-list role="list">
+    @for (trackedProduct of trackedProducts; track trackedProduct._id) {
+        <mat-list-item role="listitem">
+            {{ trackedProduct.stock }}
+        </mat-list-item>
+    }
+  </mat-list>

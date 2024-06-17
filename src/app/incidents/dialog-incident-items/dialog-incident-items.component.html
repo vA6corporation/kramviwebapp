@@ -1,0 +1,30 @@
+<section>
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+        <title mat-dialog-title>{{ incidentItem.fullName }}</title>
+        <div mat-dialog-content>
+            <mat-form-field appearance="fill">
+                <mat-label>Cantidad</mat-label>
+                <input type="number" class="text-center" matInput formControlName="quantity">
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="setting.allowFreePrice">
+                <mat-label>Precio</mat-label>
+                <input type="number" class="text-center" matInput formControlName="cost">
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="setting.showSubPrice">
+                <mat-label>Monto</mat-label>
+                <input type="number" class="text-center" matInput #subTotalInput
+                    (input)="onChangeSubTotal(subTotalInput.value)" [value]="subTotal()">
+            </mat-form-field>
+            <div class="py-3" *ngIf="setting.allowBonus">
+                <mat-slide-toggle formControlName="isBonus">Bonificacion</mat-slide-toggle>
+            </div>
+        </div>
+        <mat-dialog-actions>
+            <span class="spacer"></span>
+            <button mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+            <button type="button" mat-raised-button mat-dialog-close color="primary"
+                (click)="onDelete()">ELIMINAR</button>
+            <button type="submit" mat-flat-button color="primary">GUARDAR</button>
+        </mat-dialog-actions>
+    </form>
+</section>

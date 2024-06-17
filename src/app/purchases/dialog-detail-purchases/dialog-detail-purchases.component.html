@@ -1,0 +1,61 @@
+<h2 mat-dialog-title class="mb-0">Detalles compra {{ purchase?.serie }}</h2>
+<div mat-dialog-content>
+    <mat-list class="m-0">
+        @for (purchaseItem of purchaseItems; track purchaseItem._id) {
+        <mat-list-item>
+            <span matListItemTitle>{{ purchaseItem.fullName }} ({{ purchaseItem.quantity }})</span>
+            @if (purchaseItem.lot) {
+                <span matListItemLine>
+                    <span class="mr-3">Lote: {{ purchaseItem.lot.lotNumber || 'NINGUNO' }}</span>
+                    <span>Vence: {{ purchaseItem.lot.expirationAt | date: 'dd/MM/yyyy' }}</span>
+                </span>
+            }
+            <span>{{ (purchaseItem.cost * purchaseItem.quantity).toFixed(2) }}</span>
+        </mat-list-item>
+        }
+    </mat-list>
+    <table class="w-100">
+        <tbody>
+            <tr>
+                <td>F. de compra</td>
+                <td align="right">{{ purchase?.purchasedAt | date: 'dd/MM/yyyy' }}</td>
+            </tr>
+            <tr>
+                <td>Serie</td>
+                <td align="right">{{ purchase?.serie || 'NINGUNO' }}</td>
+            </tr>
+            <tr>
+                <td>Proveedor</td>
+                <td align="right">{{ provider?.name || 'NINGUNO' }}</td>
+            </tr>
+            <tr>
+                <td>Observaciones</td>
+                <td align="right">{{ purchase?.observations || 'NINGUNO' }}</td>
+            </tr>
+            <tr>
+                <td>Usuario</td>
+                <td align="right">{{ user?.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <mat-list>
+        @for (payment of payments; track payment._id) {
+        <mat-list-item>
+            <span matListItemTitle>{{ payment.paymentMethod.name }}</span>
+            <span matListItemLine>{{ payment.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</span>
+            <span>{{ payment.charge.toFixed(2) }}</span>
+        </mat-list-item>
+        } @empty {
+            <mat-list-item>
+                <h2 class="text-center mat-title-medium">Sin pagos</h2>
+            </mat-list-item>
+        }
+    </mat-list>
+</div>
+<mat-dialog-actions>
+    <button mat-raised-button (click)="onDeletePurchase()" color="warn">ELIMINAR</button>
+    <button mat-raised-button mat-dialog-close [routerLink]="['/purchases', purchaseId, 'edit']"
+        color="primary">EDITAR</button>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

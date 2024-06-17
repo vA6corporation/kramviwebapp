@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Seleccione una caja</h2>
+<mat-dialog-content>
+    <mat-action-list *ngFor="let element of turns">
+        <button mat-list-item (click)="onChangeTurn(element._id)">
+            <span matListItemTitle>{{ element.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</span>
+            <span matListItemLine>{{ element.user.name }}</span>
+        </button>
+    </mat-action-list>
+</mat-dialog-content>

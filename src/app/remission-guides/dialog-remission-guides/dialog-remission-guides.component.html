@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>Guias de remision</h2>
+<div mat-dialog-content>
+    <ng-container *ngIf="remissionGuides.length; else elseBlock">
+        <mat-action-list *ngFor="let element of remissionGuides">
+            <button mat-list-item (click)="onPrintRemissionGuide(element._id)">
+                T{{ office.serialPrefix }}-{{ element.remissionGuideNumber }}
+                <span class="spacer"></span>
+            </button>
+        </mat-action-list>
+    </ng-container>
+    <ng-template #elseBlock>
+        <h2 class="text-center text-muted mat-title-medium">Sin guias de remision</h2>
+    </ng-template>
+</div>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+    <button type="button" mat-flat-button mat-dialog-close color="primary" [routerLink]="['/remissionGuides/charge']"
+        [queryParams]="{ saleId: saleId }">NUEVA GUIA DE REMISION</button>
+</mat-dialog-actions>

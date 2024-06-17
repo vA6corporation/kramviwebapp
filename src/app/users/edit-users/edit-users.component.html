@@ -1,0 +1,32 @@
+<section class="container">
+  <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+    <mat-form-field appearance="fill">
+      <mat-label>Nombre</mat-label>
+      <input type="text" matInput formControlName="name">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input type="email" matInput formControlName="email">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Contraseña</mat-label>
+      <input [type]="hide ? 'password' : 'text'" matInput formControlName="password">
+      <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+        <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-form-field appearance="fill" floatLabel="always">
+      <mat-label>Sucursal</mat-label>
+      <mat-select formControlName="assignedOfficeId" placeholder="ACCESO A TODAS LAS SUCURSALES" class="text-uppercase">
+        <mat-option [value]="null">ACCESO A TODAS LAS SUCURSALES</mat-option>
+        <mat-option *ngFor="let office of offices" [value]="office._id">{{ office.name | uppercase }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="d-flex">
+      <span class="spacer"></span>
+      <button type="button" mat-raised-button routerLink="/users" color="primary">CANCELAR</button>
+      <div class="divider"></div>
+      <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
+    </div>
+  </form>
+</section>

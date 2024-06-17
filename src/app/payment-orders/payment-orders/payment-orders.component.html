@@ -1,0 +1,92 @@
+<section class="container">
+    <form [formGroup]="formGroup" autocomplete="off">
+        <mat-form-field appearance="fill">
+            <mat-label>Seleccione un rango de fechas</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+                <input matStartDate placeholder="Desde" formControlName="startDate">
+                <input matEndDate placeholder="Hasta" formControlName="endDate" (dateChange)="onRangeChange()">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+    </form>
+    <div class="mat-elevation-z2">
+        <table mat-table [dataSource]="dataSource" class="w-100">
+            <ng-container matColumnDef="paymentOrderNumber">
+                <th mat-header-cell *matHeaderCellDef>N°</th>
+                <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'yyyyMM' }}-{{
+                    element.paymentOrderNumber }}</td>
+            </ng-container>
+            <ng-container matColumnDef="serie">
+                <th mat-header-cell *matHeaderCellDef>Serie</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">{{ element.serie }}</td>
+            </ng-container>
+            <ng-container matColumnDef="concept">
+                <th mat-header-cell *matHeaderCellDef>Descripcion</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">{{ element.concept }}</td>
+            </ng-container>
+            <ng-container matColumnDef="provider">
+                <th mat-header-cell *matHeaderCellDef>Proveedor</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">{{ element.provider.name }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="charge">
+                <th mat-header-cell *matHeaderCellDef>Importe</th>
+                <td mat-cell *matCellDef="let element">{{ element.charge.toFixed(2) }}</td>
+            </ng-container>
+            <ng-container matColumnDef="paymentAt">
+                <th mat-header-cell *matHeaderCellDef>F. de pago</th>
+                <td mat-cell *matCellDef="let element">{{ element.paymentAt | date }}</td>
+            </ng-container>
+            <ng-container matColumnDef="observations">
+                <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+                <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.observations  }">{{
+                    element.observations || 'NINGUNO' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" class="text-right">
+                    @if (element.urlPdf) {
+                        <button mat-icon-button aria-label="Example icon-button with a menu">
+                            <mat-icon>attach_file</mat-icon>
+                        </button>
+                    }
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu" xPosition="before">
+                        <button type="button" [routerLink]="['/paymentOrders', element._id, 'edit']" mat-menu-item>
+                            <mat-icon>edit</mat-icon>
+                            <span>Editar</span>
+                        </button>
+                        <button type="button" (click)="onPrint(element._id)" mat-menu-item>
+                            <mat-icon>printer</mat-icon>
+                            <span>Imprimir</span>
+                        </button>
+                        <button type="button" (click)="onExportPdf(element._id)" mat-menu-item>
+                            <mat-icon>download</mat-icon>
+                            <span>Exportar PDF</span>
+                        </button>
+                        <button type="button" *ngIf="element.urlPdf" (click)="onShowPdf(element)" mat-menu-item>
+                            <mat-icon>attach_file</mat-icon>
+                            <span>Comprobante</span>
+                        </button>
+                        <button type="button" (click)="onDelete(element._id)" mat-menu-item>
+                            <mat-icon>delete</mat-icon>
+                            <span>Eliminar</span>
+                        </button>
+                    </mat-menu>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{ 'bg-success': row.isPaid }"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex"
+            [length]="length" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
+    </div>
+    <div class="fixed-bottom p-3" style="right: 0; left: unset; width: auto;">
+        <button mat-fab color="primary" class="float-right" routerLink="/paymentOrders/create">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+</section>

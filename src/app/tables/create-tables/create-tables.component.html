@@ -1,0 +1,14 @@
+<section class="container">
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+        <mat-form-field appearance="fill">
+            <mat-label>Nombre</mat-label>
+            <input type="text" matInput formControlName="name">
+        </mat-form-field>
+        <div class="d-flex py-3">
+            <span class="spacer"></span>
+            <button type="button" mat-raised-button routerLink="/users" color="primary">CANCELAR</button>
+            <div class="divider"></div>
+            <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
+        </div>
+    </form>
+</section>

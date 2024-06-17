@@ -1,0 +1,71 @@
+<section class="d-flex container-fluid">
+    <div class="flex-70">
+        <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndex = $event"
+            animationDuration="0ms">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    Favoritos
+                </ng-template>
+                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                    <mat-grid-tile (click)="onSelectProduct(product, $event)" (contextmenu)="onRightClick(product)"
+                        *ngFor="let product of favorites" [ngStyle]="urlImage(product)">
+                        <span class="bg-lightblue px-1">
+                            {{ product.fullName.slice(0, 60) }}
+                        </span>
+                        <small class="text-muted text-price">
+                            {{ product.price.toFixed(2) }}
+                        </small>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    Categorias
+                </ng-template>
+                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                    <mat-grid-tile (click)="onSelectCategory(category)" [style.background]="'lightgreen'"
+                        *ngFor="let category of categories">
+                        <small class="px-1">
+                            {{ category.name.slice(0, 60) }}
+                        </small>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    Busqueda
+                </ng-template>
+                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                    <mat-grid-tile (click)="onSelectProduct(product, $event)" (contextmenu)="onRightClick(product)"
+                        *ngFor="let product of products" [ngStyle]="urlImage(product)">
+                        <span class="bg-lightblue px-1">
+                            {{ product.fullName.slice(0, 60) }}
+                        </span>
+                        <small class="text-muted text-price">
+                            {{ product.price.toFixed(2) }}
+                        </small>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+    <div class="flex-30 bg-white list-items">
+        <app-sale-items></app-sale-items>
+    </div>
+    <div class="fixed-bottom d-flex align-items-center footer-button">
+        <div class="px-3" *ngIf="priceLists.length">
+            <mat-form-field appearance="fill"
+                *ngIf="setting.defaultPrice === 'LISTA' || setting.defaultPrice === 'LISTAOFICINA'">
+                <mat-select [(value)]="priceListId" (selectionChange)="onChangePriceList()">
+                    <mat-option *ngFor="let element of priceLists" [value]="element._id">{{ element.name }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <span class="spacer"></span>
+        <div class="p-3">
+            <button type="button" mat-raised-button (click)="onCancel()" color="primary">CANCELAR</button>
+            <span class="divider"></span>
+            <button type="button" mat-flat-button color="primary" routerLink="/charge/copy">COBRAR</button>
+        </div>
+    </div>
+</section>

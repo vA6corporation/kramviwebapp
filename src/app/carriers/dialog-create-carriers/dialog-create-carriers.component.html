@@ -1,0 +1,41 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+  <h2 mat-dialog-title>Nuevo transportista</h2>
+  <div mat-dialog-content>
+    <mat-form-field appearance="fill">
+      <mat-label>Tipo de Documento</mat-label>
+      <mat-select formControlName="documentType" tabindex="-1">
+        <mat-option *ngFor="let element of documentTypes" [value]="element">{{ element }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>N° de Documento</mat-label>
+      <input type="text" matInput maxlength="11" formControlName="document">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Nombres/Razon Social</mat-label>
+      <input type="text" matInput formControlName="name">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>N° de placa</mat-label>
+      <input type="text" matInput formControlName="carriagePlate">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>N° de licencia de conducir</mat-label>
+      <input type="text" matInput formControlName="licenseNumber">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Celular</mat-label>
+      <input type="text" matInput formControlName="mobileNumber">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input type="text" matInput formControlName="email">
+    </mat-form-field>
+    <div class="my-3"></div>
+  </div>
+  <mat-dialog-actions>
+    <span class="spacer"></span>
+    <button type="button" mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+    <button type="submit" mat-flat-button color="primary" [disabled]="isLoading">GUARDAR</button>
+  </mat-dialog-actions>
+</form>

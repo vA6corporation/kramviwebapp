@@ -1,0 +1,101 @@
+<section class="d-flex h-100">
+    <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()"
+        [formGroup]="formGroup" autocomplete="off">
+        <div class="px-3">
+            <h2 class="text-center mat-display-small mb-0">{{ charge.toFixed(2) }}</h2>
+            <p class="caption text-center text-muted mb-2">Total a deber</p>
+            <mat-divider class="mb-2"></mat-divider>
+            <p class="caption text-center text-muted mb-2" *ngIf="payments[0]; else elseBlock">
+                Cuota inicial: {{ payments[0].charge }}
+            </p>
+            <ng-template #elseBlock>
+                <p class="caption text-center text-muted mb-2">Sin cuota inicial</p>
+            </ng-template>
+            @if (customer) {
+            <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
+                <span class="mat-h1">{{ customer.name | uppercase }}</span>
+            </button>
+            <p class="text-center mb-3">{{ customer.mobileNumber }}</p>
+            }
+            <mat-form-field appearance="fill" *ngIf="customer">
+                <mat-label>Direccion</mat-label>
+                <mat-select formControlName="addressIndex">
+                    <mat-option *ngFor="let address of addresses; let i = index" [value]="i">
+                        {{ address | uppercase }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Comprobante</mat-label>
+                <mat-select formControlName="invoiceType">
+                    <mat-option *ngFor="let invoiceType of invoiceTypes" [value]="invoiceType.code">
+                        {{ invoiceType.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="setting.showEmitionAt">
+                <mat-label>Fecha de emision</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="emitionAt">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="setting.showSpecialty">
+                <mat-label>Especialidad</mat-label>
+                <mat-select formControlName="specialtyId">
+                    <mat-option *ngFor="let specialty of specialties" [value]="specialty._id">
+                        {{ specialty.name | uppercase }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="setting.showWorker">
+                <mat-label>Personal a cargo</mat-label>
+                <mat-select formControlName="workerId">
+                    <mat-option *ngFor="let worker of workers" [value]="worker._id">
+                        {{ worker.name | uppercase }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="setting.showReferred">
+                <mat-label>Referido por</mat-label>
+                <mat-select formControlName="referredId">
+                    <mat-option *ngFor="let worker of workers" [value]="worker._id">
+                        {{ worker.name | uppercase }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="setting.showTotalDiscount">
+                <mat-label>Descuento global</mat-label>
+                <input type="number" matInput formControlName="discount" (input)="onChangeDiscount()">
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="setting.showCurrencyCode">
+                <mat-label>Moneda</mat-label>
+                <mat-select formControlName="currencyCode">
+                    <mat-option value="PEN">SOLES</mat-option>
+                    <mat-option value="USD">DOLARES</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Observaciones</mat-label>
+                <input type="text" matInput formControlName="observations" [autofocus]>
+            </mat-form-field>
+            <div class="py-3" *ngIf="setting.showIsRetainer">
+                <mat-slide-toggle formControlName="isRetainer">Es agente retenedor</mat-slide-toggle>
+            </div>
+            <button type="button" class="w-100" mat-flat-button [disabled]="isLoading" color="primary"
+                (click)="onSubmit()">
+                GUARDAR
+            </button>
+        </div>
+    </form>
+    <div class="flex-30 bg-white biller-items">
+        <app-biller-items></app-biller-items>
+    </div>
+    <div class="fixed-bottom d-flex align-items-center footer-button">
+        <span class="spacer"></span>
+        <div class="p-3">
+            <button type="button" mat-raised-button (click)="onCancel()" color="primary">CANCELAR</button>
+            <span class="divider"></span>
+            <button type="button" mat-flat-button color="primary" (click)="onAddProduct()">AGREGAR PRODUCTO</button>
+        </div>
+    </div>
+</section>

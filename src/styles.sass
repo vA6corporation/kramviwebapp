@@ -1,1 +1,251 @@
 /* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat
+
+.mat-elevation-z2
+    @include mat.elevation(2)
+
+html, body
+    height: 100%
+    margin: 0
+
+.mat-drawer-container
+    background: #eaf1fb !important
+
+mat-sidenav-container
+    height: 100%
+
+mat-form-field
+    width: 100%
+
+.fixed-bottom
+    bottom: 0
+    left: 0
+    width: 100%
+    position: fixed
+
+.float-right
+    float: right
+
+.justify-content-center
+    justify-content: center
+
+.align-items-center
+    align-items: center
+
+.container
+    max-width: 90vw
+    margin-top: 1rem
+    margin-left: auto
+    margin-right: auto
+    margin-bottom: 6rem
+
+.container-fluid
+    padding: .5rem
+    overflow: auto
+    height: calc(100vh - 64px)
+
+// Text transform
+
+.text-capitalize
+    text-transform: capitalize
+
+.text-center
+    text-align: center
+
+.text-end
+    text-align: end
+
+.text-right
+    text-align: right !important
+
+.text-uppercase
+    text-transform: uppercase
+
+.text-lowercase
+    text-transform: lowercase
+
+.text-muted
+    color: #6c757d !important
+
+.text-danger
+    color: #eb4034 !important
+
+.text-warning
+    color: #ffff35 !important
+
+.text-success
+    color: green
+
+.text-primary
+    color: #3f51b5
+
+.text-white
+    color: white
+
+.text-truncate
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
+.font-weight-bold
+    font-weight: 600 !important
+
+// Spacing
+
+$spacer: .25rem
+$sides: (l: left, r: right, t: top, b: bottom)
+
+@for $var from 0 through 5
+    .mx-#{$var}
+        margin-right: $spacer * $var !important
+        margin-left: $spacer * $var !important
+
+    .my-#{$var}
+        margin-top: $spacer * $var !important
+        margin-bottom: $spacer * $var !important
+
+    .m-#{$var}
+        margin-right: $spacer * $var !important
+        margin-left: $spacer * $var !important
+        margin-top: $spacer * $var !important
+        margin-bottom: $spacer * $var !important
+
+    .px-#{$var}
+        padding-right: $spacer * $var !important
+        padding-left: $spacer * $var !important
+
+    .py-#{$var}
+        padding-top: $spacer * $var !important
+        padding-bottom: $spacer * $var !important
+
+    .p-#{$var}
+        padding-right: $spacer * $var !important
+        padding-left: $spacer * $var !important
+        padding-top: $spacer * $var !important
+        padding-bottom: $spacer * $var !important
+
+@each $name, $side in $sides
+    @for $var from 0 through 5
+        .m#{$name}-#{$var}
+            margin-#{$side}: $spacer * $var !important
+
+@each $name, $side in $sides
+    @for $var from 0 through 5
+        .p#{$name}-#{$var}
+            padding-#{$side}: $spacer * $var !important
+
+.spacer
+    flex: 1 1 auto
+
+.divider
+    width: .5rem
+    height: auto
+    display: inline-block
+
+.w-100
+    width: 100%
+
+.w-50
+    width: 50%
+
+.w-auth
+    width: auto
+
+.h-100
+    height: 100%
+
+.h-auto
+    height: auto
+
+// Flex
+
+.d-flex
+  display: flex !important
+
+.d-flex-wrap
+  display: flex
+  flex-wrap: wrap
+
+.d-inline
+  display: inline
+
+.flex-column
+  flex-direction: column
+
+.flex-end
+  justify-content: flex-end
+
+.align-items-center
+  align-items: center
+
+.flex-70
+  flex: 70vw
+
+.flex-30
+  flex: 30vw
+
+.flex-50
+  flex-shrink: 1
+  flex-grow: 1
+  flex-basis: 50%
+  min-width: 360px
+
+@media (max-width: 1024px)
+
+  .flex-70
+    flex: 65vw
+
+  .flex-30
+    flex: 35vw
+
+@media (min-width: 720px)
+  
+  .flex-50
+    padding-left: 0.5rem
+    padding-right: 0.5rem
+    box-sizing: border-box
+    flex-shrink: 1
+    flex-grow: 1
+    flex-basis: 50%
+    min-width: 360px
+
+.flex-60
+  flex: 60vw
+
+.flex-40
+  flex: 40vw
+
+.align-items-center
+  align-items: center
+
+.justify-content-center
+  justify-content: center
+
+.justify-content-between
+  justify-content: space-between
+
+.overflow-hidden
+  overflow: hidden
+
+.overflow-auto
+  overflow: auto
+
+// Colors
+
+.bg-info 
+  background-color: #17a2b8 !important
+
+.bg-danger 
+  background: #ffa7a6 !important
+
+.bg-success 
+  background: lightgreen !important
+
+.bg-warning
+  background: #ffc107 !important
+
+.bg-white
+  background: white
+
+.color-black 
+  color: black !important

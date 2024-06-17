@@ -1,0 +1,18 @@
+<mat-action-list>
+    <button type="button" mat-list-item (click)="onSendRemissionGuide()">
+        <mat-icon class="color-black" matListItemIcon>near_me</mat-icon>
+        <span matListItemTitle>Enviar a Sunat</span>
+    </button>
+    <button type="button" mat-list-item (click)="onDownloadXmlCdr()">
+        <mat-icon class="color-black" matListItemIcon>download</mat-icon>
+        <span matListItemTitle>Descargar XML/CDR</span>
+    </button>
+    <button type="button" mat-list-item (click)="onExportPdf()">
+        <mat-icon class="color-black" matListItemIcon>download</mat-icon>
+        <span matListItemTitle>Exportar PDF A4</span>
+    </button>
+    <button type="button" mat-list-item (click)="onExportPdfTicket()">
+        <mat-icon class="color-black" matListItemIcon>download</mat-icon>
+        <span matListItemTitle>Exportar PDF Ticket 80mm</span>
+    </button>
+</mat-action-list>

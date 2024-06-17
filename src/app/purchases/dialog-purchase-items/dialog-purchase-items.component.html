@@ -1,0 +1,95 @@
+<mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndex = $event">
+    <mat-tab label="Editar item">
+        <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+            <title mat-dialog-title>{{ purchaseItem.fullName }}</title>
+            <div mat-dialog-content>
+                <mat-form-field appearance="fill">
+                    <mat-label>Cantidad</mat-label>
+                    <input type="number" class="text-center" matInput formControlName="quantity">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Costo</mat-label>
+                    <input type="number" class="text-center" matInput formControlName="cost">
+                </mat-form-field>
+                @if (setting.defaultPrice === 'GLOBAL') {
+                <mat-form-field appearance="fill">
+                    <mat-label>Precio</mat-label>
+                    <input type="number" matInput class="text-center" formControlName="price" readonly>
+                </mat-form-field>
+                } @else {
+                <ng-container formArrayName="prices">
+                    @for (price of formArray.controls; track i; let i = $index) {
+                    <mat-form-field appearance="fill" [formGroupName]="i">
+                        <mat-label>{{ price.value.name }}</mat-label>
+                        <input type="number" matInput class="text-center" formControlName="price" readonly>
+                    </mat-form-field>
+                    }
+                </ng-container>
+                }
+                <button type="button" (click)="selectedIndex = 1" class="w-100 mb-3" mat-flat-button color="primary">EDITAR PRECIOS</button>
+                <button type="button" (click)="selectedIndex = 2" class="w-100 mb-3" mat-flat-button color="primary">AGREGAR LOTE</button>
+                <div class="py-3">
+                    <mat-slide-toggle formControlName="isBonus">Bonificacion</mat-slide-toggle>
+                </div>
+            </div>
+            <mat-dialog-actions>
+                <button type="button" (click)="onDeletePurchaseItem()" mat-flat-button color="warn">ELIMINAR</button>
+                <span class="spacer"></span>
+                <button mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+                <button type="submit" mat-flat-button color="primary">GUARDAR</button>
+            </mat-dialog-actions>
+        </form>
+    </mat-tab>
+    <mat-tab label="Editar precios">
+        <form (ngSubmit)="onSubmitPrices()" [formGroup]="formGroup" autocomplete="off">
+            <title mat-dialog-title>{{ purchaseItem.fullName }}</title>
+            <mat-dialog-content>
+                @if (setting.defaultPrice === 'GLOBAL') {
+                <mat-form-field appearance="fill">
+                    <mat-label>Precio</mat-label>
+                    <input type="number" matInput class="text-center" formControlName="price">
+                </mat-form-field>
+                } @else {
+                <ng-container formArrayName="prices">
+                    @for (price of formArray.controls; track i; let i = $index) {
+                    <mat-form-field appearance="fill" [formGroupName]="i">
+                        <mat-label>{{ price.value.name }}</mat-label>
+                        <input type="number" matInput class="text-center" formControlName="price">
+                    </mat-form-field>
+                    }
+                </ng-container>
+                }
+            </mat-dialog-content>
+            <mat-dialog-actions>
+                <span class="spacer"></span>
+                <button mat-raised-button mat-dialog-close color="primary" [disabled]="isLoading">CANCELAR</button>
+                <button type="submit" mat-flat-button color="primary" [disabled]="isLoading">GUARDAR</button>
+            </mat-dialog-actions>
+        </form>
+    </mat-tab>
+    <mat-tab label="Lote">
+        <form (ngSubmit)="onSubmitLot()" [formGroup]="formLot" autocomplete="off">
+            <title mat-dialog-title>Lote</title>
+            <mat-dialog-content>
+                <mat-form-field appearance="fill">
+                    <mat-label>Fecha de vencimiento</mat-label>
+                    <input matInput [matDatepicker]="expirationAtPicker" formControlName="expirationAt">
+                    <mat-datepicker-toggle matSuffix [for]="expirationAtPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #expirationAtPicker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>N° de lote</mat-label>
+                    <input type="text" matInput formControlName="lotNumber">
+                </mat-form-field>
+                <button type="button" class="w-100" mat-flat-button color="primary" (click)="onGenerateLotNumber()">
+                    GENERAR CODIGO
+                </button>
+            </mat-dialog-content>
+            <mat-dialog-actions>
+                <span class="spacer"></span>
+                <button mat-raised-button mat-dialog-close color="primary" [disabled]="isLoading">CANCELAR</button>
+                <button type="submit" mat-flat-button color="primary" [disabled]="isLoading">GUARDAR</button>
+            </mat-dialog-actions>
+        </form>
+    </mat-tab>
+</mat-tab-group>

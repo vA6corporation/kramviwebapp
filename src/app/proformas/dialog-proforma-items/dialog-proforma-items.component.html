@@ -1,0 +1,52 @@
+<section>
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+        <title mat-dialog-title>{{ proformaItem.fullName }}</title>
+        <div mat-dialog-content>
+            <mat-form-field appearance="fill">
+                <mat-label>Cantidad</mat-label>
+                <input type="number" class="text-center" matInput formControlName="quantity">
+            </mat-form-field>
+            @if (setting.allowFreePrice) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Precio</mat-label>
+                    <input type="number" class="text-center" matInput formControlName="price">
+                </mat-form-field>
+            }
+            @if (setting.showSubPrice) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Monto</mat-label>
+                    <input type="number" class="text-center" matInput #subTotalInput
+                        (input)="onChangeSubTotal(subTotalInput.value)" [value]="subTotal()">
+                </mat-form-field>
+            }
+            @if (setting.defaultPrice === 'LISTA' || setting.defaultPrice === 'LISTAOFICINA') {
+                <mat-form-field appearance="fill">
+                    <mat-label>Lista de precios</mat-label>
+                    <mat-select [(value)]="priceListId" (selectionChange)="onChangePriceList()">
+                        @for (priceList of priceLists; track priceList._id) {
+                            <mat-option [value]="priceList._id">{{ priceList.name }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            }
+            @if (setting.showObservationItems) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Observaciones</mat-label>
+                    <input type="text" class="text-center" matInput formControlName="observations">
+                </mat-form-field>
+            }
+            @if (setting.allowBonus) {
+                <div class="py-3">
+                    <mat-slide-toggle formControlName="isBonus">Bonificacion</mat-slide-toggle>
+                </div>
+            }
+            <div class="py-3"></div>
+        </div>
+        <mat-dialog-actions>
+            <button type="button" mat-flat-button mat-dialog-close color="warn" (click)="onDelete()">ELIMINAR</button>
+            <span class="spacer"></span>
+            <button mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+            <button type="submit" mat-flat-button color="primary">GUARDAR</button>
+        </mat-dialog-actions>
+    </form>
+</section>

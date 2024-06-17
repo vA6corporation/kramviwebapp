@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Recetas {{ supply?.name }}</h2>
+<div mat-dialog-content>
+  <mat-list class="m-0">
+    <mat-list-item *ngFor="let recipe of recipes">
+      {{ recipe.product.name }} {{ recipe.product.feature }} {{ recipe.product.brand }} 
+      <span class="ml-2 text-muted">x{{ recipe.quantity }}</span>
+      <span class="spacer"></span>
+      {{ (recipe.supply.cost * recipe.quantity).toFixed(2) }}
+    </mat-list-item>
+  </mat-list>
+</div>
+<mat-dialog-actions>
+  <span class="spacer"></span>
+  <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

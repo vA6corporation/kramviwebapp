@@ -1,0 +1,22 @@
+<mat-tab-group animationDuration="0ms">
+    <mat-tab label="Importar productos">
+        <app-import-products></app-import-products>
+    </mat-tab>
+    <mat-tab label="Importar clientes">
+        <app-import-customers></app-import-customers>
+    </mat-tab>
+    <mat-tab label="Actualizar precios">
+        <app-update-prices></app-update-prices>
+    </mat-tab>
+    <mat-tab label="Cargar stock">
+        <app-add-stock></app-add-stock>
+    </mat-tab>
+    <mat-tab label="Eliminar datos">
+        <app-delete-data></app-delete-data>
+    </mat-tab>
+    <mat-tab label="Analizar stock">
+        <ng-template matTabContent>
+            <app-check-stock></app-check-stock>
+        </ng-template>
+    </mat-tab>
+</mat-tab-group>

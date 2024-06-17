@@ -1,0 +1,44 @@
+<section class="container">
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+        <mat-form-field appearance="fill">
+            <mat-label>Tipo de Documento</mat-label>
+            <mat-select formControlName="documentType">
+                <mat-option value="RUC">RUC</mat-option>
+                <mat-option value="DNI">DNI</mat-option>
+                <mat-option value="CE">CE</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>N° de Documento</mat-label>
+            <input type="text" matInput formControlName="document" [maxlength]="maxLength">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Nombres/Rason Social</mat-label>
+            <input type="text" matInput formControlName="name">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>N° de place</mat-label>
+            <input type="text" matInput formControlName="carriagePlate">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Direccion</mat-label>
+            <input type="text" matInput formControlName="address">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Celular</mat-label>
+            <input type="text" matInput formControlName="mobileNumber">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <input type="email" matInput formControlName="email">
+        </mat-form-field>
+        <div class="d-flex">
+            <span class="spacer"></span>
+            <div class="py-3">
+                <button type="button" mat-raised-button routerLink="/carriers" color="primary">CANCELAR</button>
+                <span class="divider"></span>
+                <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
+            </div>
+        </div>
+    </form>
+</section>

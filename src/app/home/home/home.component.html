@@ -1,0 +1,14 @@
+<mat-grid-list cols="2" rowHeight="100px">
+    @for (module of modules; track $index) {
+        @if (module.isAuthorized) {
+            <mat-grid-tile [style.background]="'lightblue'" [routerLink]="module.path">
+                <mat-icon class="mr-2">{{ module.icon }}</mat-icon>
+                {{ module.label }}
+            </mat-grid-tile>
+        }
+    }
+    <mat-grid-tile [style.background]="'lightblue'" (click)="onLogout()">
+        <mat-icon class="mr-2">exit_to_app</mat-icon>
+        Cerrar sesion
+    </mat-grid-tile>
+</mat-grid-list>

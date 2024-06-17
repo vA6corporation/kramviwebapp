@@ -1,0 +1,30 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+    <h2 mat-dialog-title>Nuevo lote</h2>
+    <mat-dialog-content>
+        <mat-form-field appearance="fill">
+            <mat-label>N° de lote</mat-label>
+            <input type="text" matInput formControlName="lotNumber">
+        </mat-form-field>
+        <div class="mb-4">
+            <button type="button" class="w-100" mat-flat-button color="primary" (click)="onGenerateEan13()">
+                GENERAR CODIGO
+            </button>
+        </div>
+        <mat-form-field appearance="fill">
+            <mat-label>Fecha de vencimiento</mat-label>
+            <input matInput [matDatepicker]="expirationAtPicker" formControlName="expirationAt">
+            <mat-datepicker-toggle matSuffix [for]="expirationAtPicker"></mat-datepicker-toggle>
+            <mat-datepicker #expirationAtPicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Stock</mat-label>
+            <input type="number" matInput formControlName="stock">
+        </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions class="d-flex">
+        <span class="spacer"></span>
+        <button type="button" mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+        <div class="divider"></div>
+        <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
+    </mat-dialog-actions>
+</form>

@@ -1,0 +1,11 @@
+<mat-action-list>
+    @for (remissionGuideItem of remissionGuideItems; track remissionGuideItem.productId; let i = $index) {
+        <button mat-list-item (click)="onSelectRemissionGuideItem(i)">
+            <span matListItemTitle>{{ remissionGuideItem.fullName }}</span>
+            <div matListItemLine class="d-flex my-1">
+                <span class="mr-2">x{{ remissionGuideItem.quantity }}</span>
+                <span class="text-muted">{{ remissionGuideItem.observations }}</span>
+            </div>
+        </button>
+    }
+</mat-action-list>

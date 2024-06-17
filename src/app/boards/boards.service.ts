@@ -1,0 +1,200 @@
+import { Injectable } from '@angular/core';
+import { Params } from '@angular/router';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpBoardsService } from '../http-boards.service';
+import { CreatePaymentModel } from '../payments/create-payment.model';
+import { ProductModel } from '../products/product.model';
+import { CreateSaleModel } from '../sales/create-sale.model';
+import { SaleModel } from '../sales/sale.model';
+import { BoardItemModel } from './board-item.model';
+import { BoardModel } from './board.model';
+import { CreateBoardItemModel } from './create-board-item.model';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class BoardsService {
+
+    constructor(
+        private readonly httpService: HttpBoardsService,
+    ) { }
+
+    private boardItems: CreateBoardItemModel[] = []
+    private board: BoardModel | null = null
+
+    private boardItems$ = new BehaviorSubject<CreateBoardItemModel[]>([])
+
+    setBoard(board: BoardModel | null) {
+        this.board = board
+    }
+
+    getBoard() {
+        return this.board
+    }
+
+    forceAddBoardItem(product: ProductModel, annotation: string = "") {
+        const boardItem: CreateBoardItemModel = {
+            _id: '',
+            printZone: product.printZone,
+            fullName: product.fullName,
+            onModel: product.onModel,
+            productId: product._id,
+            price: product.price,
+            quantity: 1,
+            preQuantity: 0,
+            deletedQuantity: 0,
+            boardId: '',
+            unitCode: product.unitCode,
+            igvCode: product.igvCode,
+            preIgvCode: product.igvCode,
+            isTrackStock: product.isTrackStock,
+            observations: annotation,
+        }
+        this.boardItems.push(boardItem)
+        this.boardItems$.next(this.boardItems)
+    }
+
+    addBoardItem(product: ProductModel, annotation: string = "") {
+        const index = this.boardItems.findIndex(e => e.productId === product._id && e.igvCode === product.igvCode && e.observations === annotation)
+        if (index < 0) {
+            const boardItem: CreateBoardItemModel = {
+                _id: '',
+                printZone: product.printZone,
+                fullName: product.fullName,
+                onModel: product.onModel,
+                productId: product._id,
+                price: product.price,
+                quantity: 1,
+                preQuantity: 0,
+                deletedQuantity: 0,
+                boardId: '',
+                unitCode: product.unitCode,
+                igvCode: product.igvCode,
+                preIgvCode: product.igvCode,
+                isTrackStock: product.isTrackStock,
+                observations: annotation,
+            }
+            this.boardItems.push(boardItem)
+        } else {
+            const boardItem: CreateBoardItemModel = this.boardItems[index]
+            boardItem.quantity += 1
+            this.boardItems.splice(index, 1, boardItem)
+        }
+        this.boardItems$.next(this.boardItems)
+    }
+
+    getBoards(): Observable<BoardModel[]> {
+        return this.httpService.get('boards')
+    }
+
+    getCharge(): number {
+        let sum = 0
+        for (const boardItem of this.boardItems) {
+            if (boardItem.igvCode !== '11') {
+                sum += boardItem.price * boardItem.quantity
+            }
+        }
+        return sum
+    }
+
+    setBoardItems(boardItems: CreateBoardItemModel[]) {
+        this.boardItems = boardItems
+        this.boardItems$.next(this.boardItems)
+    }
+
+    getBaordItem(index: number): CreateBoardItemModel {
+        return this.boardItems[index]
+    }
+
+    updateBoardItem(index: number, boardItem: CreateBoardItemModel) {
+        this.boardItems.splice(index, 1, boardItem)
+        this.boardItems$.next(this.boardItems)
+    }
+
+    removeBoardItem(index: number) {
+        this.boardItems.splice(index, 1)
+        this.boardItems$.next(this.boardItems)
+    }
+
+    handleBoardItems(): Observable<CreateBoardItemModel[]> {
+        return this.boardItems$.asObservable()
+    }
+
+    getCountBoards(
+        params: Params
+    ): Observable<number> {
+        return this.httpService.get(`boards/countBoards`, params)
+    }
+
+    getBoardsOfTheDay(): Observable<BoardModel[]> {
+        return this.httpService.get('boards/boardsOfTheDay')
+    }
+
+    getBoardsByPage(
+        pageIndex: number,
+        pageSize: number,
+        params: Params
+    ): Observable<BoardModel[]> {
+        return this.httpService.get(`boards/byPage/${pageIndex}/${pageSize}`, params)
+    }
+
+    getBoardsWithDetails(): Observable<BoardModel[]> {
+        return this.httpService.get('boards/withDetails')
+    }
+
+    getBoardItem(index: number): CreateBoardItemModel {
+        return this.boardItems[index]
+    }
+
+    getBoardById(boardId: string): Observable<BoardModel> {
+        return this.httpService.get(`boards/byId/${boardId}`)
+    }
+
+    getActiveBoardByTable(tableId: string): Observable<BoardModel> {
+        return this.httpService.get(`boards/activeBoardByTable/${tableId}`)
+    }
+
+    getActiveBoards(): Observable<BoardModel[]> {
+        return this.httpService.get(`boards/activeBoards`)
+    }
+
+    getDeletedBoards(pageIndex: number, pageSize: number): Observable<{ boards: BoardModel[], count: number }> {
+        return this.httpService.get(`boards/deletedBoards/${pageIndex}/${pageSize}`)
+    }
+
+    delete(boardNumber: string, deletedObservations: string) {
+        return this.httpService.delete(`boards/${boardNumber}/${deletedObservations}`)
+    }
+
+    deleteBoardItem(boardId: string, boardItemId: string, quantity: number) {
+        return this.httpService.delete(`boards/boardItem/${boardId}/${boardItemId}/${quantity}`)
+    }
+
+    changeBoard(boardId: string, tableId: string) {
+        return this.httpService.get(`boards/changeBoard/${boardId}/${tableId}`)
+    }
+
+    create(
+        tableId: string,
+        boardItems: CreateBoardItemModel[],
+        preBoardItems: BoardItemModel[],
+    ): Observable<BoardModel> {
+        return this.httpService.post(`boards/${tableId}`, { boardItems, preBoardItems })
+    }
+
+    saveSaleSplit(
+        sale: CreateSaleModel,
+        boardItems: CreateBoardItemModel[],
+        preBoardItems: CreateBoardItemModel[],
+        payments: CreatePaymentModel[],
+        boardId: string
+    ): Observable<SaleModel> {
+        return this.httpService.post('sales/splitBoard', {
+            sale,
+            saleItems: boardItems,
+            preBoardItems,
+            payments,
+            boardId
+        })
+    }
+}

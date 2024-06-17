@@ -1,0 +1,22 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+    <h2 mat-dialog-title>Seleccine un lote</h2>
+    <mat-dialog-content>
+        <mat-form-field appearance="fill">
+            <mat-label>Cantidad</mat-label>
+            <input type="number" matInput class="text-center" formControlName="quantity">
+        </mat-form-field>
+        <mat-selection-list [multiple]="false" (selectionChange)="onSelectionChange($event)">
+            @for (lot of lots; track lot._id) {
+            <mat-list-option [value]="lot">
+                <span matListItemTitle>{{ lot.lotNumber }}</span>
+                <span>{{ lot.expirationAt | date: 'dd/MM/yyyy' }}</span>
+            </mat-list-option>
+            }
+        </mat-selection-list>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <span class="spacer"></span>
+        <button mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+        <button type="submit" mat-flat-button color="primary">GUARDAR</button>
+    </mat-dialog-actions>
+</form>

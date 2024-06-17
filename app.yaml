@@ -1,0 +1,11 @@
+runtime: nodejs20
+
+handlers:
+- url: /(.*\..+)$ 
+  static_files: dist/kramviwebapp/browser/\1
+  upload: dist/kramviwebapp/browser/(.*\..+)$
+
+- url: /.*
+  secure: always
+  static_files: dist/kramviwebapp/browser/index.html
+  upload: dist/kramviwebapp/browser/index.html

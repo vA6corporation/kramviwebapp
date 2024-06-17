@@ -1,0 +1,12 @@
+<mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="onChangeSelected($event)" animationDuration="0ms">
+    <mat-tab label="Comprobantes">
+        <ng-template matTabContent>
+            <app-invoices></app-invoices>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="N. de Credito">
+        <ng-template matTabContent>
+            <app-credit-notes></app-credit-notes>
+        </ng-template>
+    </mat-tab>
+</mat-tab-group>

@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Detalles</h2>
+<mat-dialog-content>
+    <mat-list role="list">
+        @for (saleItem of saleItems; track saleItem._id) {
+            <mat-list-item role="listitem">
+                <span matListItemTitle>{{ saleItem.sale.invoicePrefix }}{{ office.serialPrefix }}-{{ saleItem.sale.invoiceNumber }}</span>
+                <div matListItemLine>
+                    <span class="mr-3">x{{ saleItem.quantity }}</span>
+                    <span class="mr-3">{{ saleItem.price.toFixed(2) }}</span>
+                    <span class="mr-3">{{ saleItem.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</span>
+                    @if (saleItem.igvCode === igvType.BONIFICACION) {
+                        <span class="mr-3" [style.color]="'green'">Bonificacion</span>
+                    }
+                    @if (saleItem.igvCode === igvType.EXONERADO) {
+                        <span class="text-primary mr-3">Exonerado</span>
+                    }
+                    @if (saleItem.igvCode === igvType.INAFECTO) {
+                        <span class="text-primary mr-3">Inafecto</span>
+                    }                    
+                </div>
+            </mat-list-item>
+        }
+    </mat-list>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

@@ -1,0 +1,23 @@
+<mat-nav-list class="pt-0" *ngIf="isAuth">
+    <div class="nav-header p-2 text-white overflow-hidden">
+        <p class="text-capitalize font-weight-bold mb-1">{{ office.name }}</p>
+        <span class="m-0 text-capitalize text-truncate">{{ business.businessName }}</span>
+    </div>
+    @for (module of modules; track $index) {
+        @if (module.isAuthorized) {
+            <a [routerLink]="module.path" mat-list-item (click)="onClose()">
+                <mat-icon matListItemIcon class="m-3 color-black">{{ module.icon }}</mat-icon>
+                <span matListItemTitle>{{ module.label }}</span>
+            </a>
+        }
+    }
+    <mat-divider></mat-divider>
+    <a href="#" *ngIf="user?.isAdmin" mat-list-item routerLink="/settings" (click)="onClose()">
+        <mat-icon matListItemIcon class="m-3 color-black">build</mat-icon>
+        <span matListItemTitle>Ajustes</span>
+    </a>
+    <a href="#" mat-list-item routerLink="/logout" (click)="onClose()">
+        <mat-icon matListItemIcon class="m-3 color-black">logout</mat-icon>
+        <span matListItemTitle>Cerrar sesion</span>
+    </a>
+</mat-nav-list>

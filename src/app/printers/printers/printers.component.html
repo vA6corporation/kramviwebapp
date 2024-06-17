@@ -1,0 +1,60 @@
+<section class="container">
+    <div class="mat-elevation-z2">
+        <table mat-table [dataSource]="dataSource" class="w-100">
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">{{ element.name }}</td>
+            </ng-container>
+            <ng-container matColumnDef="invoice">
+                <th mat-header-cell *matHeaderCellDef>Comprobantes</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">{{ element.printInvoice ?
+                    'SI' : 'NO' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="preaccount">
+                <th mat-header-cell *matHeaderCellDef>Precuentas</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">{{ element.printAccount ?
+                    'SI' : 'NO' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="cocina">
+                <th mat-header-cell *matHeaderCellDef>Cocina</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">{{ element.printKitchen ?
+                    'SI' : 'NO' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="barra">
+                <th mat-header-cell *matHeaderCellDef>Barra</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">{{ element.printBar ? 'SI'
+                    : 'NO' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="horno">
+                <th mat-header-cell *matHeaderCellDef>Horno</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">{{ element.printOven ? 'SI' : 'NO' }}</td>
+              </ng-container>
+            <ng-container matColumnDef="caja">
+                <th mat-header-cell *matHeaderCellDef>Caja</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">{{ element.printBox ? 'SI'
+                    : 'NO' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" class="text-right">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu" xPosition="before">
+                        <button mat-menu-item (click)="onDeletePrinter(element._id)">
+                            <mat-icon>delete</mat-icon>
+                            <span>Eliminar</span>
+                        </button>
+                    </mat-menu>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+    <div class="fixed-bottom p-3" style="right: 0; left: unset; width: auto;">
+        <button type="button" mat-fab color="primary" class="float-right" (click)="onAddPrinter()">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+</section>

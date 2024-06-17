@@ -1,0 +1,43 @@
+<section>
+    <mat-grid-list cols="5" rowHeight="100px">
+        @for (room of rooms; track room._id) {
+            @if (room.reception === null) {
+                <mat-grid-tile [routerLink]="['/receptions', room._id]"
+                    [style.background]="'lightgreen'">
+                    <div class="text-center">
+                        <div class="mat-display-small text-center mb-0">
+                            {{ room.roomNumber }}
+                        </div>
+                        <div class="text-center">
+                            {{ room.name | uppercase }}
+                        </div>
+                    </div>
+                </mat-grid-tile>
+            }
+            @if (room.reception && room.reception.cleanedAt === null && room.reception.checkoutAt === null) {
+                <mat-grid-tile [routerLink]="['/receptions', room._id]" [style.background]="'#ff0000'">
+                    <div class="text-center">
+                        <div class="mat-display-small text-center mb-0">
+                            {{ room.roomNumber }}
+                        </div>
+                        <div class="text-center">
+                            {{ room.name | uppercase }}
+                        </div>
+                    </div>
+                </mat-grid-tile>
+            }
+            @if (room.reception && room.reception.cleanedAt === null && room.reception.checkoutAt !== null) {
+                <mat-grid-tile [routerLink]="['/receptions', room._id]" [style.background]="'#ffff35'">
+                    <div class="text-center">
+                        <div class="mat-display-small text-center mb-0">
+                            {{ room.roomNumber }}
+                        </div>
+                        <div class="text-center">
+                            {{ room.name | uppercase }}
+                        </div>
+                    </div>
+                </mat-grid-tile>
+            }
+        }
+    </mat-grid-list>
+</section>

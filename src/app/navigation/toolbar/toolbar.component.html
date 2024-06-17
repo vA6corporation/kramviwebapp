@@ -1,0 +1,51 @@
+<div *ngIf="isLoadingBar" class="progress-bar">
+    <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+</div>
+<mat-toolbar>
+    @if (isAuth) {
+    @if (isMainScreen) {
+    <button type="button" class="app-navbar" mat-icon-button (click)="onToggleSidenav()">
+        <mat-icon>menu</mat-icon>
+    </button>
+    } @else {
+    <button type="button" mat-icon-button (click)="onBack()">
+        <mat-icon>arrow_back</mat-icon>
+    </button>
+    }
+    }
+    <span>{{ title }}</span>
+    <span class="spacer"></span>
+    <form autocomplete="off" class="mr-2 d-inline search-input" (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+        @if (isAuth && showSearch && showInputSearch) {
+        <mat-form-field appearance="outline">
+            <input #inputKey matInput type="text" placeholder="Buscar" formControlName="key">
+            <button type="button" matSuffix mat-icon-button aria-label="close" (click)="onCloseInputSearch()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+        }
+    </form>
+    @if (isAuth && !showInputSearch && showSearch) {
+    <button type="button" mat-icon-button aria-label="Mat menu" (click)="showInputSearch = true; onToggleSearch()">
+        <mat-icon>search</mat-icon>
+    </button>
+    }
+    @for(menu of buttons; track $index) {
+    <button type="button" mat-icon-button (click)="onClickMenu(menu.id)">
+        <mat-icon>{{ menu.icon }}</mat-icon>
+    </button>
+    }
+    @if (menus.length) {
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+    </button>
+    }
+    <mat-menu #menu="matMenu">
+        @for (menu of menus; track $index) {
+        <button mat-menu-item (click)="onClickMenu(menu.id)">
+            <mat-icon>{{ menu.icon }}</mat-icon>
+            <span>{{ menu.label }}</span>
+        </button>
+        }
+    </mat-menu>
+</mat-toolbar>

@@ -1,0 +1,33 @@
+<mat-action-list>
+    @for (creditNoteItem of creditNoteItems; track creditNoteItem.productId; let i = $index) {
+        <button mat-list-item (click)="onSelectCreditNoteItem(i)">
+            <span matListItemTitle>{{ creditNoteItem.fullName }}</span>
+            <div matListItemLine class="d-flex my-1">
+                <span class="mr-2">x{{ creditNoteItem.quantity }}</span>
+                @if (creditNoteItem.igvCode === igvType.BONIFICACION) {
+                    <span class="mr-2" [style.color]="'green'">Bonificacion</span>
+                }
+                @if (creditNoteItem.igvCode === igvType.EXONERADO) {
+                    <span class="text-primary mr-2">Exonerado</span>
+                }
+                @if (creditNoteItem.igvCode === igvType.INAFECTO) {
+                    <span class="text-primary mr-2">Inafecto</span>
+                }
+                <span class="text-muted">{{ creditNoteItem.observations }}</span>
+                <span class="spacer"></span>
+                <span>{{ (creditNoteItem.price * creditNoteItem.quantity).toFixed(2) }}</span>
+            </div>
+        </button>
+    }
+    <button mat-list-item>
+        <div matListItemTitle class="d-flex font-weight-bold">
+            <span>
+                Total
+            </span>
+            <span class="spacer"></span>
+            <span>
+                {{ charge.toFixed(2) }}
+            </span>
+        </div>
+    </button>
+</mat-action-list>

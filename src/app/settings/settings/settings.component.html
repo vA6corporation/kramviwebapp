@@ -1,0 +1,564 @@
+<section class="container">
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+        <mat-accordion>
+            <mat-expansion-panel formGroupName="business">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Sobre la empresa
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-form-field appearance="fill">
+                    <mat-label>Razon Social</mat-label>
+                    <input matInput formControlName="businessName">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>RUC</mat-label>
+                    <input matInput formControlName="ruc">
+                </mat-form-field>
+                <span class="text-muted">ID de empresa: {{ business._id }}</span>
+                <br>
+                <span class="text-muted">Fecha de registro: {{ business.createdAt | date: 'dd/MM/yyyy' }}</span>
+                <br>
+                <span class="text-muted">Proxima fecha de pago: {{ business.paymentAt | date: 'dd/MM/yyyy' }}</span>
+                <br>
+                <span class="text-muted">Grupo de pago: {{ business.paymentGroup }}</span>
+                <br>
+                <span class="text-muted">Tipo de negocio: {{ business.businessType }}</span>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel formGroupName="office">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Sobre la sucursal
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-form-field appearance="fill">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput formControlName="name">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Nombre Comercial</mat-label>
+                    <input matInput formControlName="tradeName">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Direccion</mat-label>
+                    <input matInput formControlName="address">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Contacto (celular/web)</mat-label>
+                    <textarea matInput formControlName="mobileNumber"></textarea>
+                </mat-form-field>
+                <span class="text-muted">ID de sucursal: {{ office._id }}</span>
+                <br>
+                <span class="text-muted">ID de actividad: {{ office.activityId }}</span>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel formGroupName="business">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Usuario secundario
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="mb-3">
+                    <span class="text-danger">
+                        Si cambia esta configuracion es posible que la facturacion deje de funcionar
+                    </span>
+                </div>
+                <mat-form-field appearance="fill">
+                    <mat-label>Usuario Sol</mat-label>
+                    <input matInput formControlName="usuarioSol">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Clave Sol</mat-label>
+                    <input matInput formControlName="claveSol">
+                </mat-form-field>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel formGroupName="business">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Credenciales de API Sunat
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="mb-3">
+                    <span class="text-danger">
+                        Si cambia esta configuracion es posible que la facturacion deje de funcionar
+                    </span>
+                </div>
+                <mat-form-field appearance="fill">
+                    <mat-label>ID</mat-label>
+                    <input matInput formControlName="clientId">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Clave</mat-label>
+                    <input matInput formControlName="clientSecret">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Sunat token</mat-label>
+                    <textarea matInput formControlName="sunattk" readonly></textarea>
+                </mat-form-field>
+                <button type="button" mat-flat-button color="primary" (click)="onGetTokenSunat()">
+                    GENERAR TOKEN SUNAT
+                </button>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel formGroupName="office">
+                <mat-expansion-panel-header (click)="onGetCertificates()">
+                    <mat-panel-title>
+                        Certificado digital
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <h2 class="text-center text-muted mb-0 mat-title-large" *ngIf="certificates.length === 0">No hay
+                    certificado</h2>
+                <mat-action-list>
+                    @for (certificate of certificates; track certificate._id) {
+                    <button type="button" mat-list-item (click)="onSelectCertificate(certificate._id)">
+                        <span matListItemTitle>{{ certificate.expirationAt | date: 'dd/MM/yyyy' }}</span>
+                        <div matListItemMeta>
+                            <button type="button" mat-icon-button aria-label="done"
+                                *ngIf="localBusiness?.certificateId === certificate._id">
+                                <mat-icon>done</mat-icon>
+                            </button>
+                            <button type="button" mat-icon-button aria-label="trash"
+                                (click)="onDeleteCertificate(certificate._id, $event)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                            <button type="button" mat-icon-button aria-label="download" (click)="onDownloadCertificate(certificate._id, $event)">
+                                <mat-icon>download</mat-icon>
+                            </button>
+                        </div>
+                    </button>
+                    }
+                </mat-action-list>
+                <div class="p-3"></div>
+                <button type="button" mat-flat-button color="primary" (click)="fileCertificateInput.click()">
+                    CARGAR CERTIFICADO
+                </button>
+                <input type="file" #fileCertificateInput
+                    (change)="onFileCertificateSelected(fileCertificateInput.files, fileCertificateInput)" hidden>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel formGroupName="setting">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Opciones de impresion
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-form-field appearance="fill">
+                    <mat-label>Tamaño de impresion</mat-label>
+                    <mat-select formControlName="papelImpresion">
+                        <mat-option value="ticket80mm">TICKET 80mm</mat-option>
+                        <mat-option value="ticket58mm">TICKET 58mm</mat-option>
+                        <mat-option value="a4">A4</mat-option>
+                        <mat-option value="a5">A5</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Margen izquierdo</mat-label>
+                    <input type="number" matInput formControlName="marginLeft">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Margen derecho</mat-label>
+                    <input type="number" matInput formControlName="marginRight">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Servicios Ofrecidos</mat-label>
+                    <textarea matInput formControlName="descriptionService"
+                        placeholder="Ofrecemos venta de..."></textarea>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Texto resaltado</mat-label>
+                    <textarea matInput formControlName="textHeader"
+                        placeholder="Ventas al por mayor y menor..."></textarea>
+                </mat-form-field>
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Texto al pie del comprobante</mat-label>
+                    <textarea rows="8" matInput formControlName="textSale"></textarea>
+                </mat-form-field>
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Texto al pie del comprobante segunda parte</mat-label>
+                    <textarea rows="8" matInput formControlName="textSaleTwo"></textarea>
+                </mat-form-field>
+                <div class="mb-4">
+                    <mat-slide-toggle formControlName="printOrder">
+                        Imprimir comanda al ordenar
+                    </mat-slide-toggle>
+                </div>
+                <div class="mb-4">
+                    <mat-slide-toggle formControlName="isAttentionTicket">
+                        Imprimir ticket de atencion
+                    </mat-slide-toggle>
+                </div>
+                <div class="mb-4">
+                    <mat-slide-toggle formControlName="showQrCode">
+                        Mostrar codigo QR en los comprobantes (Para celulares)
+                    </mat-slide-toggle>
+                </div>
+                <div class="mb-4">
+                    <mat-slide-toggle formControlName="showAddressOnTicket">
+                        Mostrar direccion en las NOTAS DE VENTA
+                    </mat-slide-toggle>
+                </div>
+                <div class="mb-4">
+                    <mat-slide-toggle formControlName="showQrOnTicket">
+                        Mostrar codigo QR en las NOTAS DE VENTA
+                    </mat-slide-toggle>
+                </div>
+                <button type="button" mat-flat-button color="primary" (click)="fileInput.click()">CARGAR LOGO</button>
+                <span class="divider"></span>
+                <button type="button" mat-flat-button color="primary" (click)="onDeleteLogo()">ELIMINAR LOGO</button>
+                <span class="divider"></span>
+                <button type="button" mat-flat-button color="primary" (click)="fileBannerInput.click()">CARGAR
+                    BANNER</button>
+                <span class="divider"></span>
+                <button type="button" mat-flat-button color="primary" (click)="onDeleteBanner()">ELIMINAR
+                    BANNER</button>
+                <span class="divider"></span>
+                <button type="button" mat-flat-button color="primary" (click)="fileTittleInput.click()">CARGAR
+                    TITULO</button>
+                <span class="divider"></span>
+                <button type="button" mat-flat-button color="primary" (click)="onDeleteTittle()">ELIMINAR
+                    TITULO</button>
+                <input type="file" accept=".jpg, .jpeg" #fileInput (change)="onFileSelected(fileInput.files, fileInput)"
+                    hidden>
+                <input type="file" accept=".jpg, .jpeg" #fileBannerInput
+                    (change)="onFileBannerSelected(fileBannerInput.files, fileBannerInput)" hidden>
+                <input type="file" accept=".jpg, .jpeg" #fileTittleInput
+                    (change)="onFileTittleSelected(fileTittleInput.files, fileTittleInput)" hidden>
+                <div class="text-center">
+                    <img [src]="setting.header" *ngIf="setting.header" alt="business title" width="500">
+                </div>
+                <hr>
+                <div class="text-center">
+                    <img [src]="setting.logo" *ngIf="setting.logo" alt="business logo" width="500">
+                </div>
+                <hr>
+                <div class="text-center">
+                    <img [src]="setting.banner" *ngIf="setting.banner" alt="business banner" width="500">
+                </div>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel formGroupName="setting">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Opciones al cobrar
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-form-field appearance="fill">
+                    <mat-label>Comprobante por defecto</mat-label>
+                    <mat-select formControlName="defaultInvoice">
+                        <mat-option value="NOTA DE VENTA">NOTA DE VENTA</mat-option>
+                        <mat-option value="BOLETA">BOLETA</mat-option>
+                        <mat-option value="FACTURA">FACTURA</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Bucar cliente por defecto</mat-label>
+                    <mat-select formControlName="defaultSearchCustomer">
+                        <mat-option *ngFor="let element of searchTypes" [value]="element.code">{{ element.label
+                            }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Tipo de moneda por defecto</mat-label>
+                    <mat-select formControlName="defaultCurrencyCode">
+                        <mat-option value="PEN">SOLES</mat-option>
+                        <mat-option value="USD">DOLARES</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-list role="list">
+                    <mat-list-item role="listitem">
+                        <mat-slide-toggle formControlName="showChange">
+                            Mostrar botones para el vuelto
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="showSpecialty">
+                            Mostrar especialidad
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="showIsRetainer">
+                            Mostrar es agente retenedor
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="showWorker">
+                            Mostrar personal a cargo
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="showReferred">
+                            Mostrar referido por
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="showCurrencyCode">
+                            Mostrar dolares/soles
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="showTotalDiscount">
+                            Mostrar descuento global
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="showDeliveryAt">
+                            Mostrar fecha de entrega
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="showEmitionAt">
+                            Mostrar fecha de emision
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                </mat-list>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel formGroupName="setting">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Opciones del punto de venta
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-list role="list">
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="allowCredit">
+                            Permitir ventas al credito
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="allowFreeStock">
+                            Permitir ventas sin stock
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="allowFreePrice">
+                            Permitir editar precios
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="showSubPrice">
+                            Permitir editar monto
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="allowBonus">
+                            Permitir bonus
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="showObservationItems">
+                            Mostrar observaciones en los productos
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="isOfficeTurn">
+                            Usar una sola caja por sucursal
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                </mat-list>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel formGroupName="setting">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Opciones de los productos
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-form-field appearance="fill">
+                    <mat-label>IGV de los productos por defecto</mat-label>
+                    <mat-select formControlName="defaultIgvCode">
+                        <mat-option value="10">GRAVADO</mat-option>
+                        <mat-option value="20">EXONERADO</mat-option>
+                        <mat-option value="30">INAFECTO</mat-option>
+                        <mat-option value="11">BONIFICACION</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button type="button" class="w-100 mb-3" mat-flat-button color="primary"
+                    (click)="onExonerateProducts()">
+                    CONVERTIR TODOS LOS PRODUCTOS A EXONERADO
+                </button>
+                <button type="button" [disabled]="disableUpdateStock" class="w-100" mat-flat-button color="primary"
+                    (click)="onUpdateStock()">
+                    ACTUALIZAR EL STOCK
+                </button>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel formGroupName="setting">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Porcentaje de IGV y RC
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-form-field appearance="fill">
+                    <mat-label>Porcentaje de IGV</mat-label>
+                    <input type="number" min="0" max="18" matInput formControlName="defaultIgvPercent">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Porcentaje de RC</mat-label>
+                    <input type="number" min="0" max="13" matInput formControlName="defaultRcPercent">
+                </mat-form-field>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel formGroupName="setting">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Opciones de seguridad
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-form-field appearance="fill">
+                    <mat-label>Contraseña secundaria</mat-label>
+                    <input [type]="hide ? 'password' : 'text'" matInput formControlName="password">
+                    <button type="button" mat-icon-button matSuffix (click)="hide = !hide"
+                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                        <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    </button>
+                </mat-form-field>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel formGroupName="setting">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Opciones de restaurante
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-list role="list">
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="showChargeCommand">
+                            Mostrar importe total en la comanda
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="showPrintZone">
+                            Mostrar zona de impresion
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="isOnlyConsuption">
+                            Enviar todos los comprobantes a sunat solo como "consumo"
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="closeSession">
+                            Cerrar sesion al ordernar (En atencion de mesas para mozos)
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                </mat-list>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel formGroupName="setting">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Manejo de precios
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <span class="text-danger">Debera revisar sus precios si cambia esta configuracion</span>
+                <mat-form-field appearance="fill">
+                    <mat-label>Gestion de precios</mat-label>
+                    <mat-select formControlName="defaultPrice">
+                        <mat-option value="GLOBAL">GLOBAL</mat-option>
+                        <mat-option value="OFICINA">INDEPENDIENTE POR SUCURSAL</mat-option>
+                        <mat-option value="LISTA">POR LISTA DE PRECIOS GLOBALES</mat-option>
+                        <mat-option value="LISTAOFICINA">POR LISTA DE PRECIOS INDEPENDIENTE POR SUCURSAL</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Lista por defecto</mat-label>
+                    <mat-select formControlName="defaultPriceListId">
+                        <mat-option *ngFor="let element of priceLists" [value]="element._id">{{ element.name
+                            }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-list>
+                    <mat-list-item *ngFor="let priceList of priceLists">
+                        {{ priceList.name }}
+                        <span class="spacer"></span>
+                        <button type="button" (click)="onUpdatePriceList(priceList)" mat-icon-button>
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button type="button" (click)="onDeletePriceList(priceList._id)" mat-icon-button>
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </mat-list-item>
+                </mat-list>
+                <button type="button" class="w-100" mat-flat-button color="primary" (click)="onAddPriceList()">
+                    NUEVA LISTA
+                </button>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel routerLink="/printers">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Impresoras
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel routerLink="/tables">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Mesas
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel routerLink="/offices">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Sucursales
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel routerLink="/paymentMethods">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Medios de pago
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel routerLink="/activities">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Actividades
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel routerLink="/tools">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Herramientas
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel formGroupName="activatedModules">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Modulos adicionales
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-list role="list">
+                    <mat-list-item role="listitem" *ngFor="let module of modules">
+                        <mat-slide-toggle [formControlName]="module.name">
+                            {{ module.label }}
+                            <span *ngIf="module.info" class="text-muted ml-2">{{ module.info }}</span>
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                </mat-list>
+            </mat-expansion-panel>
+
+        </mat-accordion>
+        <div class="d-flex">
+            <span class="spacer"></span>
+            <div class="py-3">
+                <button type="button" mat-raised-button routerLink="/products" color="primary">CANCELAR</button>
+                <span class="divider"></span>
+                <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
+            </div>
+        </div>
+    </form>
+</section>

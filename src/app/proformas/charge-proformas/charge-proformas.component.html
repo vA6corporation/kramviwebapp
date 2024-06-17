@@ -1,0 +1,51 @@
+<section class="d-flex h-100">
+    <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()"
+        [formGroup]="formGroup" autocomplete="off">
+        <div class="px-3">
+            <h2 class="text-center mat-display-small mb-0">{{ charge.toFixed(2) }}</h2>
+            <p class="caption text-center text-muted mb-2">Total a cobrar</p>
+            @if (customer) {
+            <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
+                <span class="mat-h1">{{ customer.name | uppercase }}</span>
+            </button>
+            <p class="text-center mb-3">{{ customer.mobileNumber }}</p>
+            }
+            @if (customer) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Direccion</mat-label>
+                    <mat-select formControlName="addressIndex">
+                        @for (address of addresses; track $index; let i = $index) {
+                            <mat-option [value]="i">{{ address | uppercase }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            }
+            @if (setting.showTotalDiscount) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Descuento global</mat-label>
+                    <input type="number" matInput formControlName="discount" (input)="onChangeDiscount()">
+                </mat-form-field>
+            }
+            @if (setting.showCurrencyCode) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Moneda</mat-label>
+                    <mat-select formControlName="currencyCode">
+                        <mat-option value="PEN">SOLES</mat-option>
+                        <mat-option value="USD">DOLARES</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            }
+            <mat-form-field appearance="fill">
+                <mat-label>Observaciones</mat-label>
+                <input type="text" matInput formControlName="observations">
+            </mat-form-field>
+            <div class="p-1"></div>
+            <button type="submit" class="w-100" mat-flat-button [disabled]="isLoading" color="primary">
+                GUARDAR
+            </button>
+        </div>
+    </form>
+    <div class="flex-30 bg-white list-items">
+        <app-proforma-items></app-proforma-items>
+    </div>
+</section>

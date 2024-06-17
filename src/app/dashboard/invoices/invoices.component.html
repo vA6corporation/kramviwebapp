@@ -1,0 +1,30 @@
+<mat-card class="m-3">
+  <div class="d-flex flex-row">
+    <h2 class="mat-title-large">Comprobantes</h2>
+    <span class="spacer"></span>
+    <div>
+      <mat-form-field appearance="fill" class="text-uppercase my-form-field">
+        <mat-select [(value)]="officeId" (selectionChange)="onChange()">
+          <mat-option value="">TODAS LAS SUCURSALES</mat-option>
+          <mat-option [value]="element._id" *ngFor="let element of offices">{{ element.name | uppercase }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <mat-card-content>
+    <div class="d-flex">
+      <div class="flex-50">
+        <canvas #deliveryChart></canvas>
+      </div>
+      <div class="flex-50">
+        <mat-list role="list">
+          <mat-list-item role="listitem" *ngFor="let element of items">
+            {{ element._id }}
+            <span class="spacer"></span>
+            {{ element.charge.toFixed(2) }}
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,63 @@
+<section class="container">
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+        <mat-form-field appearance="fill">
+            <mat-label>Nombre</mat-label>
+            <input type="text" matInput formControlName="name">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Nombre comercial</mat-label>
+            <input type="text" matInput formControlName="tradeName">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Direccion</mat-label>
+            <input type="text" matInput formControlName="address">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Numero de serie</mat-label>
+            <input type="text" matInput formControlName="serialPrefix" maxlength="3">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Codigo de anexo</mat-label>
+            <input type="text" matInput placeholder="" formControlName="codigoAnexo">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Codigo de ubigeo</mat-label>
+            <input type="text" matInput formControlName="codigoUbigeo">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Departamento</mat-label>
+            <input type="text" matInput formControlName="departamento">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Provincia</mat-label>
+            <input type="text" matInput formControlName="provincia">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Distrito</mat-label>
+            <input type="text" matInput formControlName="distrito">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Urbanizacion</mat-label>
+            <input type="text" matInput formControlName="urbanizacion">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Codigo pais</mat-label>
+            <input type="text" matInput formControlName="codigoPais">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Actividad</mat-label>
+            <mat-select formControlName="activityId" class="text-uppercase">
+                <mat-option *ngFor="let activity of activities" [value]="activity._id">{{ activity.name | uppercase
+                    }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div class="d-flex">
+            <span class="spacer"></span>
+            <div class="py-3">
+                <button type="button" mat-raised-button routerLink="/offices" color="primary">CANCELAR</button>
+                <span class="divider"></span>
+                <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
+            </div>
+        </div>
+    </form>
+</section>

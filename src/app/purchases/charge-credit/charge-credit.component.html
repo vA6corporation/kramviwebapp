@@ -1,0 +1,50 @@
+<section class="d-flex h-100">
+    <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()"
+        [formGroup]="formGroup">
+        <div class="px-3">
+            <h2 class="text-center mat-display-small mb-0">{{ charge.toFixed(2) }}</h2>
+            <p class="caption text-center text-muted mb-2">Total a comprar</p>
+            @if (provider) {
+            <button type="button" mat-button color="primary" (click)="onEditProvider()" class="w-100 mb-3">
+                <span class="mat-h1">{{ provider.name | uppercase }}</span>
+            </button>
+            <p class="text-center mb-3">{{ provider.mobileNumber }}</p>
+            }
+            <mat-form-field appearance="fill">
+                <mat-label>Comprobante</mat-label>
+                <mat-select formControlName="invoiceType">
+                    <mat-option *ngFor="let element of invoiceTypes" [value]="element.code">
+                        {{ element.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>N° de serie</mat-label>
+                <input type="text" matInput formControlName="serie">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Fecha de vencimiento</mat-label>
+                <input matInput [matDatepicker]="pickerExpiration" formControlName="expirationAt">
+                <mat-datepicker-toggle matSuffix [for]="pickerExpiration"></mat-datepicker-toggle>
+                <mat-datepicker #pickerExpiration></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Fecha de compra</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="purchasedAt">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Observaciones</mat-label>
+                <input type="text" matInput formControlName="observations">
+            </mat-form-field>
+            <button type="button" class="w-100" mat-flat-button [disabled]="isLoading" color="primary"
+                (click)="onSubmit()">
+                GUARDAR
+            </button>
+        </div>
+    </form>
+    <div class="flex-30 bg-white list-items">
+        <app-purchase-items></app-purchase-items>
+    </div>
+</section>

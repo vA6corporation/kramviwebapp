@@ -1,0 +1,66 @@
+<section class="container">
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+        @if (provider) {
+        <button type="button" mat-button color="primary" (click)="onEditProvider()" class="w-100">
+            <span class="mat-h1">{{ provider.name }}</span>
+        </button>
+        <p class="text-center m-0">{{ provider.address }}</p>
+        <p class="text-center mb-3">{{ provider.mobileNumber }}</p>
+        }
+        <mat-form-field appearance="fill">
+            <mat-label>Medio de pago</mat-label>
+            <mat-select formControlName="paymentMethodId">
+                <mat-option *ngFor="let element of paymentMethods" [value]="element._id">{{ element.name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Descripcion</mat-label>
+            <input type="text" matInput formControlName="concept">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Importe</mat-label>
+            <input type="number" matInput formControlName="charge">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>N° de comprobante</mat-label>
+            <input type="text" matInput formControlName="serie" class="text-uppercase">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Observaciones</mat-label>
+            <input type="text" matInput formControlName="observations">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Fecha de pago</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="paymentAt">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>N° de operacion</mat-label>
+            <input type="text" matInput formControlName="operationNumber">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Cuenta de la empresa</mat-label>
+            <mat-select formControlName="accountNumber" (selectionChange)="onBankChange($event.value)">
+                <mat-option *ngFor="let element of banks" [value]="element.accountNumber">
+                    {{ element.bankName }} {{ element.accountNumber }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Cuenta del proveedor</mat-label>
+            <mat-select formControlName="providerAccountNumber" (selectionChange)="onProviderBankChange($event.value)">
+                <mat-option *ngFor="let element of providerBanks" [value]="element.accountNumber">
+                    {{ element.bankName }} {{ element.accountNumber }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-slide-toggle formControlName="isPaid">Pagado</mat-slide-toggle>
+        <div class="d-flex">
+            <span class="spacer"></span>
+            <button type="button" mat-raised-button routerLink="/customers" color="primary">CANCELAR</button>
+            <span class="divider"></span>
+            <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
+        </div>
+    </form>
+</section>

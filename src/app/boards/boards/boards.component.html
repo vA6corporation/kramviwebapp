@@ -1,0 +1,10 @@
+<section>
+    <mat-grid-list cols="5" rowHeight="100px">
+        @for (table of tables; track table._id; let i = $index) {
+        <mat-grid-tile [routerLink]="['/boards/posBoards', i]"
+            [style.background]="table.board ? '#ff0000' : 'lightblue'" class="mat-h1">
+            <span class="mat-title-large">{{ table.name }}</span>
+        </mat-grid-tile>
+        }
+    </mat-grid-list>
+</section>

@@ -1,0 +1,32 @@
+<section class="container">
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+        <mat-form-field appearance="fill">
+            <mat-label>Tipo de habitacion</mat-label>
+            <input type="text" matInput formControlName="name">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Numero de habitacion</mat-label>
+            <input type="text" matInput formControlName="roomNumber">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Cantidad de camas</mat-label>
+            <input type="number" matInput formControlName="beds">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Prestaciones</mat-label>
+            <input type="text" matInput formControlName="description">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Precio</mat-label>
+            <input type="text" matInput formControlName="price">
+        </mat-form-field>
+        <div class="d-flex">
+            <span class="spacer"></span>
+            <div class="py-3">
+                <button type="button" mat-raised-button routerLink="/rooms" color="primary">CANCELAR</button>
+                <span class="divider"></span>
+                <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
+            </div>
+        </div>
+    </form>
+</section>

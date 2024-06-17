@@ -1,0 +1,36 @@
+<form [formGroup]="formGroup" autocomplete="off">
+    <h2 mat-dialog-title>Buscar Proveedor</h2>
+    <div mat-dialog-content>
+        <mat-form-field appearance="fill">
+            <mat-label>Tipo de Busqueda</mat-label>
+            <mat-select formControlName="searchType" #searchType tabindex="-1">
+                <mat-option *ngFor="let element of searchTypes" [value]="element.code">{{ element.name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" *ngIf="searchType.value === 'NAME'; else elseBlock">
+            <mat-label>Busqueda</mat-label>
+            <input type="text" matInput formControlName="key" (keyup.enter)="onChangeKey()">
+            <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        <ng-template #elseBlock>
+            <mat-form-field appearance="fill">
+                <mat-label>Busqueda</mat-label>
+                <input type="text" matInput formControlName="key" (input)="onChangeKey()">
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+        </ng-template>
+        <mat-action-list>
+            <button mat-list-item *ngFor="let provider of providers" (click)="onSelectProvider(provider)">
+                <span matListItemTitle>{{ provider.name | uppercase }}</span>
+                <span matListItemLine>{{ provider.documentType }}: {{ provider.document }}</span>
+            </button>
+        </mat-action-list>
+        <div class="py-3"></div>
+    </div>
+    <mat-dialog-actions>
+        <span class="spacer"></span>
+        <button mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+        <button mat-flat-button mat-dialog-close color="primary" [disabled]="isLoading"
+            (click)="onCreateProvider()">NUEVO PROVEEDOR</button>
+    </mat-dialog-actions>
+</form>

@@ -1,0 +1,80 @@
+<section class="d-flex h-100">
+    <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()"
+        [formGroup]="formGroup" autocomplete="off">
+        <div class="px-3">
+            <h2 class="text-center mat-display-small mb-0">{{ charge.toFixed(2) }}</h2>
+            <p class="caption text-center text-muted mb-2">Total a cobrar</p>
+            @if (customer) {
+            <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
+                <span class="mat-h1">{{ customer.name | uppercase }}</span>
+            </button>
+            <p class="text-center mb-0">{{ customer.mobileNumber }}</p>
+            }
+            <mat-form-field appearance="fill">
+                <mat-label>Fecha de agenda</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="scheduledAt">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <div class="d-flex">
+                <mat-form-field appearance="fill">
+                    <mat-label>Hora</mat-label>
+                    <mat-select formControlName="hours">
+                        <mat-option *ngFor="let element of hours" [value]="element.value">
+                            {{ element.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Minuto</mat-label>
+                    <mat-select formControlName="minutes">
+                        <mat-option *ngFor="let element of minutes" [value]="element.value">
+                            {{ element.label }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>AM/PM</mat-label>
+                    <mat-select formControlName="ampm">
+                        <mat-option value="AM">AM</mat-option>
+                        <mat-option value="PM">PM</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <mat-form-field appearance="fill">
+                <mat-label>Especialidad</mat-label>
+                <mat-select formControlName="specialtyId">
+                    <mat-option *ngFor="let element of specialties" [value]="element._id" class="text-uppercase">
+                        {{ element.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Personal a cargo</mat-label>
+                <mat-select formControlName="workerId">
+                    <mat-option *ngFor="let element of workers" [value]="element._id" class="text-uppercase">
+                        {{ element.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Referido por</mat-label>
+                <mat-select formControlName="referredId">
+                    <mat-option *ngFor="let element of workers" [value]="element._id" class="text-uppercase">
+                        {{ element.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Observaciones</mat-label>
+                <input type="text" matInput formControlName="observations">
+            </mat-form-field>
+            <button type="submit" class="w-100" mat-flat-button [disabled]="isLoading" color="primary">
+                GUARDAR
+            </button>
+        </div>
+    </form>
+    <div class="flex-30 bg-white list-items">
+        <app-event-items></app-event-items>
+    </div>
+</section>

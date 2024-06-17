@@ -1,0 +1,87 @@
+<section class="container">
+    <form [formGroup]="formGroup" autocomplete="off">
+        <mat-form-field appearance="fill">
+            <mat-label>Todos los creditos</mat-label>
+            <mat-select formControlName="isPayed" (selectionChange)="onCreditChange($event.value)">
+                <mat-option *ngFor="let element of creditTypes" [value]="element.code" class="text-uppercase">
+                    {{ element.label }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+    <div class="mat-elevation-z2">
+        <table mat-table [dataSource]="dataSource" class="w-100">
+            <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef>F. de emision</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">
+                    {{ element.createdAt | date }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="dueDate">
+                <th mat-header-cell *matHeaderCellDef>F. de vencimiento</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">
+                    @if (element.dues[0]) {
+                    {{ element.dues[0].dueDate | date }}
+                    }
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="serial">
+                <th mat-header-cell *matHeaderCellDef>Serie</th>
+                <td mat-cell *matCellDef="let element">
+                    {{ element.invoicePrefix }}{{ office.serialPrefix }}-{{ element.invoiceNumber }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="customer">
+                <th mat-header-cell *matHeaderCellDef>Cliente</th>
+                <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.customer }"
+                    class="text-uppercase truncate-cell">{{ element.customer?.name || 'NINGUNO' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="mobileNumber">
+                <th mat-header-cell *matHeaderCellDef>Celular</th>
+                <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.mobileNumber}"
+                    class="text-uppercase truncate-cell">{{ element.customer?.mobileNumber || 'NINGUNO' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="worker">
+                <th mat-header-cell *matHeaderCellDef>Personal</th>
+                <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.worker }"
+                    class="text-uppercase truncate-cell">{{ element.worker?.name || 'NINGUNO' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="charge">
+                <th mat-header-cell *matHeaderCellDef>Importe T.</th>
+                <td mat-cell *matCellDef="let element">{{ element.charge.toFixed(2) }}</td>
+            </ng-container>
+            <ng-container matColumnDef="remaining">
+                <th mat-header-cell *matHeaderCellDef>M. pendiente</th>
+                <td mat-cell *matCellDef="let element">{{ (element.charge - element.payed).toFixed(2) }}</td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" class="text-right">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu" xPosition="before">
+                        <button mat-menu-item (click)="onOpenDetails(element._id)">
+                            <mat-icon>info</mat-icon>
+                            <span>Detalles</span>
+                        </button>
+                        @if (element.customer) {
+                            <button type="button" [routerLink]="['/customers', element.customer._id, 'credits']" mat-menu-item>
+                                <mat-icon>local_atm</mat-icon>
+                                <span>Creditos del cliente</span>
+                            </button>
+                        }
+                        <button mat-menu-item [routerLink]="['/credits', element._id, 'details']">
+                            <mat-icon>local_atm</mat-icon>
+                            <span>Pagos</span>
+                        </button>
+                    </mat-menu>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{ 'bg-success': row.isPaid }"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex"
+            [length]="length" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
+    </div>
+</section>

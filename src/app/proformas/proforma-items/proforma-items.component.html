@@ -1,0 +1,33 @@
+<mat-action-list>
+    @for (proformaItem of proformaItems; track $index; let i = $index) {
+        <button type="button" mat-list-item (click)="onClickSaleItem(i)">
+            <div class="d-flex flex-column w-100">
+                <div>
+                    {{ proformaItem.fullName.slice(0, 60) }}
+                </div>
+                <div class="d-flex">
+                    <span class="text-muted mr-2">x{{ proformaItem.quantity }}</span>
+                    <span class="mr-2" [style.color]="'green'" [hidden]="proformaItem.igvCode !== '11'">bonificacion</span>
+                    @if (proformaItem.igvCode === '20') {
+                        <span class="text-primary mr-2">Exonerado</span>
+                    }
+                    @if (proformaItem.igvCode === '30') {
+                        <span class="text-primary mr-2">Inafecto</span>
+                    }
+                    <span class="text-muted">{{ proformaItem.observations }}</span>
+                    <span class="spacer"></span>
+                    <span class="text-muted">
+                        {{ (proformaItem.price * proformaItem.quantity).toFixed(2) }}
+                    </span>
+                </div>
+            </div>
+        </button>
+    }
+    <mat-list-item role="listitem">
+        <div class="d-flex font-weight-bold">
+            Total
+            <span class="spacer"></span>
+            {{ charge.toFixed(2) }}
+        </div>
+    </mat-list-item>
+</mat-action-list>

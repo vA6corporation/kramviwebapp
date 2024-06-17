@@ -1,0 +1,200 @@
+<h2 mat-dialog-title>
+    Detalles venta {{ sale?.invoicePrefix }}{{ office.serialPrefix }}-{{ sale?.invoiceNumber }}
+    <span class="ml-2 text-danger" *ngIf="sale?.deletedAt">ANULADO</span>
+</h2>
+<div mat-dialog-content>
+    <mat-list class="m-0">
+        @for (saleItem of saleItems; track saleItem._id) {
+        <mat-list-item>
+            <span matListItemTitle>{{ saleItem.fullName }} ({{ saleItem.quantity }})</span>
+            <span matListItemLine>
+                <ng-container>{{ (saleItem.price * saleItem.quantity).toFixed(2) }}</ng-container>
+                @if (saleItem.igvCode === '11') {
+                <span class="divider"></span>
+                <span class="text-success">Bon</span>
+                }
+                @if (saleItem.igvCode === '20') {
+                <span class="divider"></span>
+                <span class="text-primary">Exo</span>
+                }
+                @if (saleItem.igvCode === '30') {
+                <span class="divider"></span>
+                <span class="text-primary">Ina</span>
+                }
+                @if (saleItem.observations) {
+                <span class="divider"></span>
+                <span>{{ saleItem.observations }}</span>
+                }
+            </span>
+        </mat-list-item>
+        }
+    </mat-list>
+    <table class="w-100 mb-3">
+        <tbody>
+            <tr>
+                <td>Imp. Total</td>
+                <td align="right">{{ (sale?.charge || 0).toFixed(2) }}</td>
+            </tr>
+            <tr>
+                <td>Gravado</td>
+                <td align="right">{{ (sale?.gravado || 0).toFixed(2) }}</td>
+            </tr>
+            <tr>
+                <td>Gratuito</td>
+                <td align="right">{{ (sale?.gratuito || 0).toFixed(2) }}</td>
+            </tr>
+            <tr>
+                <td>Exonerado</td>
+                <td align="right">{{ (sale?.exonerado || 0).toFixed(2) }}</td>
+            </tr>
+            <tr>
+                <td>Inafecto</td>
+                <td align="right">{{ (sale?.inafecto || 0).toFixed(2) }}</td>
+            </tr>
+            <tr>
+                <td>
+                    R.C.
+                    <span class="font-weight-bold">({{ sale?.rcPercent }}%)</span>
+                </td>
+                <td align="right">{{ (sale?.rc || 0).toFixed(2) }}</td>
+            </tr>
+            <tr>
+                <td>
+                    I.G.V.
+                    <span class="font-weight-bold">({{ sale?.igvPercent }}%)</span>
+                </td>
+                <td align="right">{{ (sale?.igv || 0).toFixed(2) }}</td>
+            </tr>
+            <tr>
+                <td>Descuento Global</td>
+                <td align="right">{{ (sale?.discount || 0).toFixed(2) }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="w-100" *ngIf="sale">
+        <tbody>
+            <tr *ngIf="sale.deletedAt" class="text-danger">
+                <td>F/H de anulacion</td>
+                <td align="right">{{ sale.deletedAt | date: 'medium' }}</td>
+            </tr>
+            <tr *ngIf="sale.deletedReason" class="text-danger">
+                <td>Motivo de anulacion</td>
+                <td align="right">{{ sale.deletedReason }}</td>
+            </tr>
+            <tr *ngIf="sale.createdAt !== sale.updatedAt" class="text-danger">
+                <td>F/H ultima modificacion</td>
+                <td align="right">{{ sale.updatedAt | date: 'medium' }}</td>
+            </tr>
+            <tr>
+                <td>F/H venta</td>
+                <td align="right">{{ sale.createdAt | date: 'medium' }}</td>
+            </tr>
+            <tr>
+                <td>Observaciones</td>
+                <td align="right" *ngIf="sale.observations; else elseBlock">{{ sale.observations }}</td>
+                <ng-template #elseBlock>
+                    <td class="text-muted" align="right">NINGUNO</td>
+                </ng-template>
+            </tr>
+            <tr>
+                <td>Usuario</td>
+                <td align="right">{{ user.name | uppercase }}</td>
+            </tr>
+            <tr *ngIf="sale?.specialty">
+                <td>Especialidad</td>
+                <td align="right">{{ sale.specialty?.name }}</td>
+            </tr>
+            <tr *ngIf="sale?.worker">
+                <td>Personal</td>
+                <td align="right">{{ sale.worker?.name }}</td>
+            </tr>
+            <tr *ngIf="sale?.referred">
+                <td>Referido por</td>
+                <td align="right">{{ sale.referred?.name }}</td>
+            </tr>
+            <tr>
+                <td>Forma de pago</td>
+                <td align="right">{{ sale.isCredit ? 'CREDITO' : 'CONTADO' }}</td>
+            </tr>
+            <tr>
+                <td>Estado de pago</td>
+                <td align="right" [ngClass]="{ 'text-success': sale.isPaid, 'text-danger': !sale.isPaid }">{{
+                    sale.isPaid ? 'PAGADO' : 'PENDIENTE' }}</td>
+            </tr>
+            <tr>
+                <td>Moneda</td>
+                <td align="right">{{ sale.currencyCode === 'PEN' ? 'SOLES' : 'DOLARES' }}</td>
+            </tr>
+            <tr *ngIf="cdr" class="text-primary">
+                <td>Mensaje Sunat</td>
+                <td align="right">{{ cdr.sunatMessage }}</td>
+            </tr>
+            <ng-container *ngIf="cdr && cdr.sunatNotes.length">
+                <tr *ngFor="let sunatNote of cdr.sunatNotes; let i = index" class="text-primary">
+                    <td>Nota: {{ i + 1 }}</td>
+                    <td align="right">{{ sunatNote }}</td>
+                </tr>
+            </ng-container>
+            <tr *ngIf="ticket" class="text-danger">
+                <td>Comunicacion de baja</td>
+                <td align="right">{{ ticket.sunatMessage }}</td>
+            </tr>
+            <tr class="text-muted">
+                <td>ID</td>
+                <td align="right">{{ sale._id }}</td>
+            </tr>
+        </tbody>
+    </table>
+    @if (customer) {
+        <table class="my-3 w-100">
+            <tr>
+                <td>Cliente:</td>
+                <td align="right">{{ customer.name }}</td>
+            </tr>
+            <tr>
+                <td>RUC/DNI:</td>
+                <td align="right">{{ customer.documentType }}: {{ customer.document }}</td>
+            </tr>
+            <tr>
+                <td>Celular:</td>
+                <td align="right" [ngClass]="{ 'text-muted': !customer.mobileNumber }">
+                    {{ customer.mobileNumber || 'NINGUNO' }}
+                </td>
+            </tr>
+            @for (address of customer.addresses; track i; let i = $index) {
+            <tr>
+                <td>Direccion {{ i + 1 }}:</td>
+                <td align="right">{{ address }}</td>
+            </tr>
+            }
+        </table>
+    }
+    <mat-list>
+        @for (payment of payments; track payment._id) {
+        <mat-list-item>
+            <span matListItemTitle>{{ payment.paymentMethod.name }}</span>
+            @if (payment.observations) {
+            <span matListItemLine>{{ payment.observations }}</span>
+            }
+            <span matListItemLine>{{ payment.charge.toFixed(2) }}</span>
+            <div matListItemMeta>
+                <button mat-icon-button mat-dialog-close class="ml-2 text-muted"
+                    [routerLink]="['/turns', payment.turnId, 'details']">
+                    <mat-icon>open_in_new</mat-icon>
+                </button>
+                <button mat-icon-button class="ml-2 text-muted" [cdkCopyToClipboard]="payment._id" (click)="onClickCopy()">
+                    <mat-icon>content_copy</mat-icon>
+                </button>
+            </div>
+        </mat-list-item>
+        } @empty {
+        <mat-list-item>
+            <h2 class="text-center mat-title-medium">Sin pagos</h2>
+        </mat-list-item>
+        }
+    </mat-list>
+</div>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

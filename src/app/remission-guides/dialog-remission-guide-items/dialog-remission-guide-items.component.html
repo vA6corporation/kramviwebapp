@@ -1,0 +1,22 @@
+<section>
+  <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+    <title mat-dialog-title>{{ remissionGuideItem.fullName }}</title>
+    <div mat-dialog-content>
+      <mat-form-field appearance="fill">
+        <mat-label>Cantidad</mat-label>
+        <input type="number" class="text-center" matInput formControlName="quantity">
+      </mat-form-field>
+      <mat-form-field appearance="fill" *ngIf="setting.showObservationItems">
+        <mat-label>Observaciones</mat-label>
+        <input type="text" class="text-center" matInput formControlName="observations">
+      </mat-form-field>
+      <div class="py-3"></div>
+    </div>
+    <mat-dialog-actions>
+      <span class="spacer"></span>
+      <button mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+      <button type="button" mat-raised-button mat-dialog-close color="primary" (click)="onDelete()">ELIMINAR</button>
+      <button type="submit" mat-flat-button color="primary">GUARDAR</button>
+    </mat-dialog-actions>
+  </form>
+</section>
