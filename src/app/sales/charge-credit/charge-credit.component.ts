@@ -37,11 +37,12 @@ import { IgvType } from '../../products/igv-type.enum';
 import { DialogEditCustomersComponent } from '../../customers/dialog-edit-customers/dialog-edit-customers.component';
 import { MaterialModule } from '../../material.module';
 import { SaleItemsComponent } from '../sale-items/sale-items.component';
+import { DirectivesModule } from '../../directives/directives.module';
 
 @Component({
     selector: 'app-charge-credit',
     standalone: true,
-    imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent],
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent, DirectivesModule],
     templateUrl: './charge-credit.component.html',
     styleUrls: ['./charge-credit.component.sass']
 })

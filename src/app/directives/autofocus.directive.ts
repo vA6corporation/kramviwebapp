@@ -1,16 +1,16 @@
 import { Directive, ElementRef } from '@angular/core';
 
 @Directive({
-  selector: '[autofocus]'
+    selector: '[autofocus]'
 })
 export class AutofocusDirective {
 
-  constructor(
-    private readonly el: ElementRef
-  ) { }
+    constructor(
+        private readonly el: ElementRef
+    ) { }
 
-  ngOnInit() {
-    this.el.nativeElement.focus();
-  }
+    ngOnInit() {
+        this.el.nativeElement.focus()
+    }
 
 }

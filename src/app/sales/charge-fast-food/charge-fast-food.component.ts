@@ -30,11 +30,12 @@ import { DialogSplitPaymentsComponent, DialogSplitPaymentsData } from '../../pay
 import { DialogEditCustomersComponent } from '../../customers/dialog-edit-customers/dialog-edit-customers.component';
 import { MaterialModule } from '../../material.module';
 import { SaleItemsComponent } from '../sale-items/sale-items.component';
+import { DirectivesModule } from '../../directives/directives.module';
 
 @Component({
     selector: 'app-charge-fast-food',
     standalone: true,
-    imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent],
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent, DirectivesModule],
     templateUrl: './charge-fast-food.component.html',
     styleUrls: ['./charge-fast-food.component.sass']
 })

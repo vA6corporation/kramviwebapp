@@ -33,11 +33,12 @@ import { DialogSplitPaymentsComponent, DialogSplitPaymentsData } from '../../pay
 import { DialogEditCustomersComponent } from '../../customers/dialog-edit-customers/dialog-edit-customers.component';
 import { MaterialModule } from '../../material.module';
 import { SaleItemsComponent } from '../sale-items/sale-items.component';
+import { DirectivesModule } from '../../directives/directives.module';
 
 @Component({
     selector: 'app-charge',
     standalone: true,
-    imports: [MaterialModule, CommonModule, ReactiveFormsModule, SaleItemsComponent],
+    imports: [MaterialModule, CommonModule, ReactiveFormsModule, SaleItemsComponent, DirectivesModule],
     templateUrl: './charge.component.html',
     styleUrls: ['./charge.component.sass']
 })

@@ -7,7 +7,7 @@ import { PreSalesComponent } from './pre-sales/pre-sales.component';
 import { ChargePreSalesComponent } from '../sales/charge-pre-sales/charge-pre-sales.component';
 import { EditPreSalesComponent } from './edit-pre-sales/edit-pre-sales.component';
 
-const routes: Routes = [
+export const routes: Routes = [
     { path: '', component: PreSalesComponent },
     { path: 'create', component: CreatePreSalesComponent },
     { path: 'charge', component: ChargePreSalesComponent },
@@ -15,9 +15,3 @@ const routes: Routes = [
     { path: 'posPreSaleEdit', component: PosPreSalesEditComponent },
     { path: 'posPreSale', component: PosPreSalesComponent },
 ];
-
-@NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
-})
-export class PreSalesRoutingModule { }

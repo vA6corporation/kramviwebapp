@@ -33,11 +33,12 @@ import { DialogEditCustomersComponent } from '../../customers/dialog-edit-custom
 import { MaterialModule } from '../../material.module';
 import { CommonModule } from '@angular/common';
 import { SaleItemsComponent } from '../sale-items/sale-items.component';
+import { DirectivesModule } from '../../directives/directives.module';
 
 @Component({
     selector: 'app-charge-from',
     standalone: true,
-    imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent],
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent, DirectivesModule],
     templateUrl: './charge-from.component.html',
     styleUrls: ['./charge-from.component.sass']
 })

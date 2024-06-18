@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CreateSaleItemModel } from '../../sales/create-sale-item.model';
 import { SalesService } from '../../sales/sales.service';
 import { PreSaleModel } from '../pre-sale.model';
 import { PreSalesService } from '../pre-sales.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-pre-sales',
+    standalone: true,
+    imports: [MaterialModule, CommonModule, RouterModule],
     templateUrl: './pre-sales.component.html',
     styleUrls: ['./pre-sales.component.sass']
 })

@@ -32,11 +32,12 @@ import { DialogEditCustomersComponent } from '../../customers/dialog-edit-custom
 import { MaterialModule } from '../../material.module';
 import { CommonModule } from '@angular/common';
 import { SaleItemsComponent } from '../sale-items/sale-items.component';
+import { DirectivesModule } from '../../directives/directives.module';
 
 @Component({
     selector: 'app-charge-copy',
     standalone: true,
-    imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent],
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent, DirectivesModule],
     templateUrl: './charge-copy.component.html',
     styleUrls: ['./charge-copy.component.sass']
 })

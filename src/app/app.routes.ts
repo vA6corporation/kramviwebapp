@@ -31,7 +31,7 @@ export const routes: Routes = [
     },
     {
         path: 'preSales',
-        loadChildren: () => import('./pre-sales/pre-sales.module').then(m => m.PreSalesModule)
+        loadChildren: () => import('./pre-sales/pre-sales.routes').then(m => m.routes)
     },
     {
         path: 'tables',
@@ -196,7 +196,7 @@ export const routes: Routes = [
     },
     {
         path: 'biller',
-        loadChildren: () => import('./biller/biller.module').then(m => m.BillerModule)
+        loadChildren: () => import('./biller/biller.routes').then(m => m.routes)
     },
     {
         path: 'paymentOrders',

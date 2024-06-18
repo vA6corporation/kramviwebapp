@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
@@ -20,9 +20,14 @@ import { DialogLastSalesComponent } from '../../sales/dialog-last-sales/dialog-l
 import { DialogSaleItemsComponent } from '../../sales/dialog-sale-items/dialog-sale-items.component';
 import { SalesService } from '../../sales/sales.service';
 import { environment } from '../../../environments/environment';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
+import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component';
 
 @Component({
     selector: 'app-pos-pre-sales-edit',
+    standalone: true,
+    imports: [MaterialModule, CommonModule, RouterModule, SaleItemsComponent],
     templateUrl: './pos-pre-sales-edit.component.html',
     styleUrls: ['./pos-pre-sales-edit.component.sass']
 })

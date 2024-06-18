@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { SettingModel } from '../../auth/setting.model';
@@ -29,9 +29,15 @@ import { WorkersService } from '../../workers/workers.service';
 import { BillItemModel } from '../bill-item.model';
 import { BillsService } from '../bills.service';
 import { DialogAddProductComponent } from '../dialog-add-product/dialog-add-product.component';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
+import { BillerItemsComponent } from '../biller-items/biller-items.component';
+import { DirectivesModule } from '../../directives/directives.module';
 
 @Component({
     selector: 'app-create-credit-biller',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule, BillerItemsComponent, DirectivesModule],
     templateUrl: './create-credit-biller.component.html',
     styleUrls: ['./create-credit-biller.component.sass']
 })
@@ -63,46 +69,45 @@ export class CreateCreditBillerComponent implements OnInit {
         workerId: null,
         referredId: null,
         specialtyId: null,
-    });
+    })
+    payments: PaymentModel[] = []
+    billItems: BillItemModel[] = []
+    charge: number = 0
+    customer: CustomerModel | null = null
+    isLoading: boolean = false
+    cash: number = 0
+    workers: WorkerModel[] = []
+    specialties: SpecialtyModel[] = []
+    setting: SettingModel = new SettingModel()
+    dues: CreateDueModel[] = []
+    addresses: string[] = []
+    private user: UserModel = new UserModel()
+    private turn: TurnModel | null = null
 
-    payments: PaymentModel[] = [];
-    billItems: BillItemModel[] = [];
-    charge: number = 0;
-    customer: CustomerModel | null = null;
-    isLoading: boolean = false;
-    cash: number = 0;
-    workers: WorkerModel[] = [];
-    specialties: SpecialtyModel[] = [];
-    setting: SettingModel = new SettingModel();
-    dues: CreateDueModel[] = [];
-    addresses: string[] = [];
-    private user: UserModel = new UserModel();
-    private turn: TurnModel | null = null;
-
-    private handleClickMenu$: Subscription = new Subscription();
-    private handleOpenTurn$: Subscription = new Subscription();
-    private handlePaymentMethods$: Subscription = new Subscription();
-    private handleBillItems$: Subscription = new Subscription();
-    private handleWorkers$: Subscription = new Subscription();
-    private handleSpecialties$: Subscription = new Subscription();
-    private handleAuth$: Subscription = new Subscription();
-    private handleDues$: Subscription = new Subscription();
+    private handleClickMenu$: Subscription = new Subscription()
+    private handleOpenTurn$: Subscription = new Subscription()
+    private handlePaymentMethods$: Subscription = new Subscription()
+    private handleBillItems$: Subscription = new Subscription()
+    private handleWorkers$: Subscription = new Subscription()
+    private handleSpecialties$: Subscription = new Subscription()
+    private handleAuth$: Subscription = new Subscription()
+    private handleDues$: Subscription = new Subscription()
 
     invoiceTypes = [
         { code: 'NOTA DE VENTA', name: 'NOTA DE VENTA' },
         { code: 'BOLETA', name: 'BOLETA' },
         { code: 'FACTURA', name: 'FACTURA' },
-    ];
+    ]
 
     ngOnDestroy() {
-        this.handleClickMenu$.unsubscribe();
-        this.handleOpenTurn$.unsubscribe();
-        this.handlePaymentMethods$.unsubscribe();
-        this.handleBillItems$.unsubscribe();
-        this.handleWorkers$.unsubscribe();
-        this.handleSpecialties$.unsubscribe();
-        this.handleAuth$.unsubscribe();
-        this.handleDues$.unsubscribe();
+        this.handleClickMenu$.unsubscribe()
+        this.handleOpenTurn$.unsubscribe()
+        this.handlePaymentMethods$.unsubscribe()
+        this.handleBillItems$.unsubscribe()
+        this.handleWorkers$.unsubscribe()
+        this.handleSpecialties$.unsubscribe()
+        this.handleAuth$.unsubscribe()
+        this.handleDues$.unsubscribe()
     }
 
     ngOnInit(): void {
@@ -110,38 +115,38 @@ export class CreateCreditBillerComponent implements OnInit {
             this.router.navigate(['/subscription'])
         }
 
-        this.navigationService.setTitle('Emitir al credito');
-        this.billsService.setBillItems([]);
+        this.navigationService.setTitle('Emitir al credito')
+        this.billsService.setBillItems([])
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.user = auth.user;
-            this.setting = auth.setting;
+            this.user = auth.user
+            this.setting = auth.setting
 
             this.handleOpenTurn$ = this.turnsService.handleOpenTurn(this.setting.isOfficeTurn).subscribe(turn => {
-                this.turn = turn;
+                this.turn = turn
                 if (turn === null) {
                     this.matDialog.open(DialogTurnsComponent, {
                         width: '600px',
                         position: { top: '20px' }
-                    });
+                    })
                 }
-            });
+            })
 
-            this.formGroup.get('invoiceType')?.patchValue(this.setting.defaultInvoice);
-            this.formGroup.get('currencyCode')?.patchValue(this.setting.defaultCurrencyCode);
+            this.formGroup.get('invoiceType')?.patchValue(this.setting.defaultInvoice)
+            this.formGroup.get('currencyCode')?.patchValue(this.setting.defaultCurrencyCode)
 
             if (this.setting.showEmitionAt) {
-                this.formGroup.get('emitionAt')?.patchValue(new Date());
-                this.formGroup.get('emitionAt')?.setValidators([Validators.required]);
-                this.formGroup.get('emitionAt')?.updateValueAndValidity();
+                this.formGroup.get('emitionAt')?.patchValue(new Date())
+                this.formGroup.get('emitionAt')?.setValidators([Validators.required])
+                this.formGroup.get('emitionAt')?.updateValueAndValidity()
             }
 
-        });
+        })
 
         this.navigationService.setMenu([
             { id: 'add_init_payment', label: 'Cuota inicial', icon: 'add_card', show: true },
             { id: 'add_dues', label: 'N° de cuotas', icon: 'event_available', show: true },
             { id: 'add_customer', label: 'Agregar cliente', icon: 'person_add', show: true },
-        ]);
+        ])
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
             switch (id) {
@@ -150,29 +155,29 @@ export class CreateCreditBillerComponent implements OnInit {
                         width: '600px',
                         position: { top: '20px' },
                         data: this.setting.defaultSearchCustomer
-                    });
+                    })
 
                     dialogRef.afterClosed().subscribe(customer => {
                         if (customer) {
-                            this.customer = customer;
-                            this.addresses = customer.addresses;
+                            this.customer = customer
+                            this.addresses = customer.addresses
                         }
-                    });
+                    })
 
                     dialogRef.componentInstance.handleCreateCustomer().subscribe(() => {
                         const dialogRef = this.matDialog.open(DialogCreateCustomersComponent, {
                             width: '600px',
                             position: { top: '20px' },
-                        });
+                        })
 
                         dialogRef.afterClosed().subscribe(customer => {
                             if (customer) {
-                                this.customer = customer;
-                                this.addresses = customer.addresses;
+                                this.customer = customer
+                                this.addresses = customer.addresses
                             }
-                        });
-                    });
-                    break;
+                        })
+                    })
+                    break
 
                 case 'add_dues': {
                     if (this.turn) {
@@ -180,21 +185,21 @@ export class CreateCreditBillerComponent implements OnInit {
                             turnId: this.turn._id,
                             charge: this.charge,
                             dues: this.dues
-                        };
+                        }
 
                         const dialogRef = this.matDialog.open(DialogDuesComponent, {
                             width: '600px',
                             position: { top: '20px' },
                             data,
-                        });
+                        })
 
                         dialogRef.afterClosed().subscribe(dues => {
                             if (dues && dues.length) {
-                                this.dues = dues;
+                                this.dues = dues
                             }
-                        });
+                        })
                     }
-                    break;
+                    break
                 }
 
                 case 'add_init_payment': {
@@ -202,37 +207,37 @@ export class CreateCreditBillerComponent implements OnInit {
                         width: '600px',
                         position: { top: '20px' },
                         data: this.turn?._id,
-                    });
+                    })
 
                     dialogRef.afterClosed().subscribe(payment => {
                         if (payment) {
-                            this.payments = [payment];
-                            this.dues[0].charge = this.dues[0].preCharge - payment.charge;
+                            this.payments = [payment]
+                            this.dues[0].charge = this.dues[0].preCharge - payment.charge
                         }
-                    });
-                    break;
+                    })
+                    break
                 }
             }
-        });
+        })
 
         this.handleWorkers$ = this.workersService.handleWorkers().subscribe(workers => {
-            this.workers = workers;
-        });
+            this.workers = workers
+        })
 
         this.handleSpecialties$ = this.specialtiesService.handleSpecialties().subscribe(specialties => {
-            this.specialties = specialties;
-        });
+            this.specialties = specialties
+        })
 
         this.handleBillItems$ = this.billsService.handleBillItems().subscribe(billItems => {
-            this.billItems = billItems;
-            this.charge = 0;
+            this.billItems = billItems
+            this.charge = 0
             for (const billItem of this.billItems) {
                 if (billItem.igvCode !== '11') {
-                    this.charge += billItem.price * billItem.quantity;
+                    this.charge += billItem.price * billItem.quantity
                 }
             }
 
-            const now = new Date();
+            const now = new Date()
 
             const due: CreateDueModel = {
                 charge: this.charge,
@@ -240,15 +245,15 @@ export class CreateCreditBillerComponent implements OnInit {
                 dueDate: new Date(now.setMonth(now.getMonth() + 1)),
             }
 
-            this.dues = [due];
-        });
+            this.dues = [due]
+        })
     }
 
     onCancel() {
-        const ok = confirm('Esta seguro de anular?...');
+        const ok = confirm('Esta seguro de anular?...')
         if (ok) {
-            this.customer = null;
-            this.billsService.setBillItems([]);
+            this.customer = null
+            this.billsService.setBillItems([])
         }
     }
 
@@ -256,38 +261,38 @@ export class CreateCreditBillerComponent implements OnInit {
         const dialogRef = this.matDialog.open(DialogAddProductComponent, {
             width: '600px',
             position: { top: '20px' },
-        });
+        })
     }
 
     cashChange(): number {
-        const diff = this.cash - this.charge;
-        return Number(diff.toFixed(2));
+        const diff = this.cash - this.charge
+        return Number(diff.toFixed(2))
     }
 
     addCash(cash: number) {
-        this.cash += cash;
-        this.formGroup.get('cash')?.patchValue(this.cash);
+        this.cash += cash
+        this.formGroup.get('cash')?.patchValue(this.cash)
     }
 
     setCash(cash: string) {
-        this.cash = Number(cash);
-        this.formGroup.get('cash')?.patchValue(this.cash);
+        this.cash = Number(cash)
+        this.formGroup.get('cash')?.patchValue(this.cash)
     }
 
     onChangeDiscount() {
-        const { discount } = this.formGroup.value;
-        this.charge = 0;
+        const { discount } = this.formGroup.value
+        this.charge = 0
         for (const billItem of this.billItems) {
             if (billItem.igvCode !== '11') {
-                this.charge += billItem.price * billItem.quantity;
+                this.charge += billItem.price * billItem.quantity
             }
         }
-        this.charge -= discount;
+        this.charge -= discount
     }
 
     resetCash() {
-        this.cash = 0;
-        this.formGroup.get('cash')?.patchValue(this.cash);
+        this.cash = 0
+        this.formGroup.get('cash')?.patchValue(this.cash)
     }
 
     onSubmit() {
@@ -297,23 +302,23 @@ export class CreateCreditBillerComponent implements OnInit {
                 this.matDialog.open(DialogTurnsComponent, {
                     width: '600px',
                     position: { top: '20px' },
-                });
-                throw new Error("Debes aperturar una caja");
+                })
+                throw new Error("Debes aperturar una caja")
             }
 
             if (!this.billItems.length) {
-                throw new Error("Agrega un producto");
+                throw new Error("Agrega un producto")
             }
 
             if (this.customer === null) {
-                throw new Error("Agrega un cliente");
+                throw new Error("Agrega un cliente")
             }
 
             if (this.billItems.find(e => e.price === 0 || e.price === null)) {
-                throw new Error("El producto no puede tener precio 0");
+                throw new Error("El producto no puede tener precio 0")
             }
 
-            const creditForm: CreditForm = this.formGroup.value;
+            const creditForm: CreditForm = this.formGroup.value
 
             const createdCredit: CreateCreditModel = {
                 addressIndex: creditForm.addressIndex,
@@ -337,15 +342,15 @@ export class CreateCreditBillerComponent implements OnInit {
             }
 
             if (createdCredit.invoiceType === 'FACTURA' && this.customer === null) {
-                throw new Error("Agrega un cliente");
+                throw new Error("Agrega un cliente")
             }
 
             if (createdCredit.invoiceType === 'FACTURA' && this.customer !== null && this.customer.documentType !== 'RUC') {
-                throw new Error("El cliente debe tener un RUC");
+                throw new Error("El cliente debe tener un RUC")
             }
 
-            this.isLoading = true;
-            this.navigationService.loadBarStart();
+            this.isLoading = true
+            this.navigationService.loadBarStart()
 
             this.billsService.saveBillCredit(createdCredit, this.billItems, this.payments, this.dues).subscribe(sale => {
 
@@ -356,43 +361,43 @@ export class CreateCreditBillerComponent implements OnInit {
                     worker: this.workers.find(e => e._id === sale.workerId),
                     referred: this.workers.find(e => e._id === sale.referredId),
                     payments: this.payments,
-                });
+                })
 
                 switch (this.setting.papelImpresion) {
                     case 'a4':
-                        this.printService.printA4Invoice(sale);
-                        break;
+                        this.printService.printA4Invoice(sale)
+                        break
                     case 'a5':
-                        this.printService.printA5Invoice(sale);
-                        break;
+                        this.printService.printA5Invoice(sale)
+                        break
                     case 'ticket80mm':
-                        this.printService.printTicket80mm(sale);
-                        break;
+                        this.printService.printTicket80mm(sale)
+                        break
                     default:
-                        this.printService.printTicket58mm(sale);
-                        break;
+                        this.printService.printTicket58mm(sale)
+                        break
                 }
 
-                this.billsService.setBillItems([]);
-                this.dues = [];
-                this.payments = [];
-                this.customer = null;
+                this.billsService.setBillItems([])
+                this.dues = []
+                this.payments = []
+                this.customer = null
                 this.formGroup.patchValue({ workerId: null, referredId: null })
 
-                this.isLoading = false;
-                this.navigationService.loadBarFinish();
-                this.navigationService.showMessage('Registrado correctamente');
+                this.isLoading = false
+                this.navigationService.loadBarFinish()
+                this.navigationService.showMessage('Registrado correctamente')
             }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message);
-                this.isLoading = false;
-                this.navigationService.loadBarFinish();
-            });
+                this.navigationService.showMessage(error.error.message)
+                this.isLoading = false
+                this.navigationService.loadBarFinish()
+            })
         } catch (error) {
             if (error instanceof Error) {
-                this.navigationService.showMessage(error.message);
+                this.navigationService.showMessage(error.message)
             }
-            this.isLoading = false;
-            this.navigationService.loadBarFinish();
+            this.isLoading = false
+            this.navigationService.loadBarFinish()
         }
     }
 
@@ -401,14 +406,14 @@ export class CreateCreditBillerComponent implements OnInit {
             width: '600px',
             position: { top: '20px' },
             data: this.customer,
-        });
+        })
 
         dialogRef.afterClosed().subscribe(customer => {
             if (customer) {
-                this.customer = customer;
-                this.addresses = customer.addresses;
+                this.customer = customer
+                this.addresses = customer.addresses
             }
-        });
+        })
     }
 
 }

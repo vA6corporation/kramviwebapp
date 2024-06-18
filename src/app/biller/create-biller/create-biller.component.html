@@ -1,5 +1,5 @@
 <section class="d-flex h-100">
-    <form class="flex-70 d-flex justify-content-center" (ngSubmit)="onSubmit()"
+    <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()"
         [formGroup]="formGroup" autocomplete="off">
         <div class="px-3">
             <h2 class="text-center mat-display-small mb-0">{{ charge.toFixed(2) }}</h2>
@@ -21,60 +21,80 @@
             <mat-form-field appearance="fill">
                 <mat-label>Comprobante</mat-label>
                 <mat-select formControlName="invoiceType">
-                    <mat-option *ngFor="let invoiceType of invoiceTypes" [value]="invoiceType.code">
-                        {{ invoiceType.name }}
-                    </mat-option>
+                    @for (invoiceType of invoiceTypes; track $index) {
+                        <mat-option [value]="invoiceType.code">
+                            {{ invoiceType.name }}
+                        </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Medio de pago</mat-label>
                 <mat-select formControlName="paymentMethodId">
-                    <mat-option *ngFor="let paymentMethod of paymentMethods" [value]="paymentMethod._id">
-                        {{ paymentMethod.name }}
-                    </mat-option>
+                    @for (paymentMethod of paymentMethods; track paymentMethod._id) {
+                        <mat-option [value]="paymentMethod._id">
+                            {{ paymentMethod.name }}
+                        </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showEmitionAt">
-                <mat-label>Fecha de emision</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="emitionAt">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showSpecialty">
-                <mat-label>Especialidad</mat-label>
-                <mat-select formControlName="specialtyId">
-                    <mat-option *ngFor="let specialty of specialties" [value]="specialty._id">
-                        {{ specialty.name | uppercase }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showWorker">
-                <mat-label>Personal a cargo</mat-label>
-                <mat-select formControlName="workerId">
-                    <mat-option *ngFor="let worker of workers" [value]="worker._id">
-                        {{ worker.name | uppercase }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showReferred">
-                <mat-label>Referido por</mat-label>
-                <mat-select formControlName="referredId">
-                    <mat-option *ngFor="let worker of workers" [value]="worker._id">
-                        {{ worker.name | uppercase }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showTotalDiscount">
-                <mat-label>Descuento global</mat-label>
-                <input type="number" matInput formControlName="discount" (input)="onChangeDiscount()">
-            </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showCurrencyCode">
-                <mat-label>Moneda</mat-label>
-                <mat-select formControlName="currencyCode">
-                    <mat-option value="PEN">SOLES</mat-option>
-                    <mat-option value="USD">DOLARES</mat-option>
-                </mat-select>
-            </mat-form-field>
+            @if (setting.showEmitionAt) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Fecha de emision</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="emitionAt">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            }
+            @if (setting.showSpecialty) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Especialidad</mat-label>
+                    <mat-select formControlName="specialtyId">
+                        @for (specialty of specialties; track $index) {
+                            <mat-option [value]="specialty._id">
+                                {{ specialty.name | uppercase }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            }
+            @if (setting.showWorker) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Personal a cargo</mat-label>
+                    <mat-select formControlName="workerId">
+                        @for (worker of workers; track worker._id) {
+                            <mat-option [value]="worker._id">
+                                {{ worker.name | uppercase }}
+                            </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            }
+            @if (setting.showReferred) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Referido por</mat-label>
+                    <mat-select formControlName="referredId">
+                        <mat-option *ngFor="let worker of workers" [value]="worker._id">
+                            {{ worker.name | uppercase }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            }
+            @if (setting.showTotalDiscount) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Descuento global</mat-label>
+                    <input type="number" matInput formControlName="discount" (input)="onChangeDiscount()">
+                </mat-form-field>
+            }
+            @if (setting.showCurrencyCode) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Moneda</mat-label>
+                    <mat-select formControlName="currencyCode">
+                        <mat-option value="PEN">SOLES</mat-option>
+                        <mat-option value="USD">DOLARES</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            }
             <mat-form-field appearance="fill">
                 <mat-label>Observaciones</mat-label>
                 <input type="text" matInput formControlName="observations" [autofocus]>

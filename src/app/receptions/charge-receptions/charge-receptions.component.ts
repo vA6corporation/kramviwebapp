@@ -32,11 +32,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { DialogEditCustomersComponent } from '../../customers/dialog-edit-customers/dialog-edit-customers.component';
 import { CommonModule, Location } from '@angular/common';
 import { MaterialModule } from '../../material.module';
+import { DirectivesModule } from '../../directives/directives.module';
 
 @Component({
   selector: 'app-charge-receptions',
   standalone: true,
-  imports: [MaterialModule, ReactiveFormsModule, CommonModule],
+  imports: [MaterialModule, ReactiveFormsModule, CommonModule, DirectivesModule],
   templateUrl: './charge-receptions.component.html',
   styleUrls: ['./charge-receptions.component.sass']
 })

@@ -5,9 +5,12 @@ import { BillItemModel } from '../bill-item.model';
 import { BillsService } from '../bills.service';
 import { DialogEditProductComponent } from '../dialog-edit-product/dialog-edit-product.component';
 import { IgvType } from '../../products/igv-type.enum';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-biller-items',
+    standalone: true,
+    imports: [MaterialModule],
     templateUrl: './biller-items.component.html',
     styleUrls: ['./biller-items.component.sass']
 })

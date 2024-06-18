@@ -1,14 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { SettingModel } from '../../auth/setting.model';
 import { BillItemModel } from '../bill-item.model';
 import { BillsService } from '../bills.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-add-product',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-add-product.component.html',
     styleUrls: ['./dialog-add-product.component.sass']
 })

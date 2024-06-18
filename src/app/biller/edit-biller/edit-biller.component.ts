@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -26,9 +26,15 @@ import { WorkersService } from '../../workers/workers.service';
 import { BillItemModel } from '../bill-item.model';
 import { BillsService } from '../bills.service';
 import { DialogAddProductComponent } from '../dialog-add-product/dialog-add-product.component';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
+import { BillerItemsComponent } from '../biller-items/biller-items.component';
+import { DirectivesModule } from '../../directives/directives.module';
 
 @Component({
     selector: 'app-edit-biller',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule, BillerItemsComponent, DirectivesModule],
     templateUrl: './edit-biller.component.html',
     styleUrls: ['./edit-biller.component.sass']
 })
