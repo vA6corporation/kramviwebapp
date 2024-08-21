@@ -44,7 +44,7 @@ export async function buildBarcode50x25mm(
         pdf.setFontSize(title)
 
         text = product.price.toFixed(2)
-        pdf.text(text, 50, positionY + 18, { align: 'right' })
+        pdf.text(text, 49, positionY + 18, { align: 'right' })
 
         if (index + 1 < products.length) {
             pdf.addPage()

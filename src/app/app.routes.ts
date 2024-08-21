@@ -96,7 +96,7 @@ export const routes: Routes = [
     },
     {
         path: 'customers',
-        loadChildren: () => import('./customers/customers.module').then(m => m.CustomersModule)
+        loadChildren: () => import('./customers/customers.routes').then(m => m.routes)
     },
     {
         path: 'events',
@@ -104,11 +104,11 @@ export const routes: Routes = [
     },
     {
         path: 'users',
-        loadChildren: () => import('./users/users.module').then(m => m.UsersModule)
+        loadChildren: () => import('./users/users.routes').then(m => m.routes)
     },
     {
         path: 'reports',
-        loadChildren: () => import('./reports/reports.module').then(m => m.ReportsModule)
+        loadChildren: () => import('./reports/reports.routes').then(m => m.routes)
     },
     {
         path: 'invoices',
@@ -180,7 +180,11 @@ export const routes: Routes = [
     },
     {
         path: 'patients',
-        loadChildren: () => import('./patients/patients.module').then(m => m.PatientsModule)
+        loadChildren: () => import('./patients/patients.routes').then(m => m.routes)
+    },
+    {
+        path: 'generals',
+        loadChildren: () => import('./generals/generals.routes').then(m => m.routes)
     },
     {
         path: 'offices',

@@ -5,18 +5,22 @@
                 <mat-label>Seleccione una sucursal</mat-label>
                 <mat-select (selectionChange)="onOfficeChange()" formControlName="officeId">
                     <mat-option value="">TODAS LAS SUCURSALES</mat-option>
-                    <mat-option class="text-uppercase" *ngFor="let office of offices" [value]="office._id">
-                        {{ office.name | uppercase }}
-                    </mat-option>
+                    @for (office of offices; track office._id) {
+                        <mat-option class="text-uppercase" [value]="office._id">
+                            {{ office.name | uppercase }}
+                        </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Seleccione una categoria</mat-label>
                 <mat-select (selectionChange)="onCategoryChange()" formControlName="categoryId">
                     <mat-option value="">TODAS LAS CATEGORIAS</mat-option>
-                    <mat-option class="text-uppercase" *ngFor="let category of categories" [value]="category._id">
-                        {{ category.name | uppercase }}
-                    </mat-option>
+                    @for (category of categories; track category._id) {
+                        <mat-option class="text-uppercase" [value]="category._id">
+                            {{ category.name | uppercase }}
+                        </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
@@ -103,7 +107,7 @@
                             <mat-icon>north_east</mat-icon>
                             <span>Traspasar stock</span>
                         </button>
-                        <button type="button" (click)="deleteProduct(element._id)" mat-menu-item>
+                        <button type="button" (click)="onDeleteProduct(element._id)" mat-menu-item>
                             <mat-icon>delete</mat-icon>
                             <span>Eliminar</span>
                         </button>
@@ -112,7 +116,7 @@
                             <mat-icon>info</mat-icon>
                             <span>Traquear stock</span>
                         </button>
-                        <button type="button" (click)="deleteProduct(element._id)" mat-menu-item>
+                        <button type="button" (click)="onDeleteProduct(element._id)" mat-menu-item>
                             <mat-icon>delete</mat-icon>
                             <span>Eliminar</span>
                         </button>

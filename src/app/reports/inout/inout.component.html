@@ -2,23 +2,29 @@
     <mat-form-field appearance="fill">
         <mat-label>Año</mat-label>
         <mat-select [(value)]="year" (selectionChange)="onChange()">
-            <mat-option [value]="element" *ngFor="let element of years">{{ element }}</mat-option>
+            @for (year of years; track year) {
+                <mat-option [value]="year">{{ year }}</mat-option>
+            }
         </mat-select>
     </mat-form-field>
     <mat-form-field appearance="fill">
         <mat-label>Sucursal</mat-label>
         <mat-select [(value)]="officeId" (selectionChange)="onChange()">
             <mat-option value="">TODAS LAS SUCURSALES</mat-option>
-            <mat-option [value]="element._id" *ngFor="let element of offices">
-                {{ element.name | uppercase }}
-            </mat-option>
+            @for (office of offices; track office._id) {
+                <mat-option [value]="office._id">
+                    {{ office.name | uppercase }}
+                </mat-option>
+            }
         </mat-select>
     </mat-form-field>
     <mat-form-field appearance="fill">
         <mat-label>Usuario</mat-label>
         <mat-select [(value)]="userId" (selectionChange)="onChange()">
             <mat-option value="">TODOS LOS USUARIOS</mat-option>
-            <mat-option *ngFor="let element of users" [value]="element._id">{{ element.name | uppercase }}</mat-option>
+            @for (user of users; track user._id) {
+                <mat-option [value]="user._id">{{ user.name | uppercase }}</mat-option>
+            }
         </mat-select>
     </mat-form-field>
     <div>

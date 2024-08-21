@@ -1,24 +1,26 @@
 <section class="container">
-  <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
-    <mat-card>
-      <mat-list role="list">
-        <mat-list-item role="listitem" *ngFor="let module of modules">
-          <mat-slide-toggle [formControlName]="module.name">
-            {{ module.label }} 
-            <span class="text-muted ml-2">
-              {{ module.info }}
-            </span>
-          </mat-slide-toggle>
-        </mat-list-item>
-      </mat-list>
-    </mat-card>
-    <div class="d-flex">
-      <span class="spacer"></span>
-      <div class="py-3">
-        <button type="button" mat-raised-button routerLink="/users" color="primary">CANCELAR</button>
-        <span class="divider"></span>
-        <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
-      </div>
-    </div>
-  </form>
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+        <mat-card>
+            <mat-list role="list">
+                @for (module of modules; track $index) {
+                    <mat-list-item role="listitem">
+                        <mat-slide-toggle [formControlName]="module.name">
+                            {{ module.label }}
+                            <span class="text-muted ml-2">
+                                {{ module.info }}
+                            </span>
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                }
+            </mat-list>
+        </mat-card>
+        <div class="d-flex">
+            <span class="spacer"></span>
+            <div class="py-3">
+                <button type="button" mat-raised-button routerLink="/users" color="primary">CANCELAR</button>
+                <span class="divider"></span>
+                <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
+            </div>
+        </div>
+    </form>
 </section>

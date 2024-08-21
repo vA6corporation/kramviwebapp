@@ -117,7 +117,7 @@ export class AuthService {
     }
 
     private auth: AuthModel | null = null
-    private authStatus$: Subject<boolean> = new Subject()
+    private isAuth$: Subject<boolean> = new Subject()
     private offices$: BehaviorSubject<OfficeModel[]> | null = null
     private businesses$: BehaviorSubject<BusinessModel[]> | null = null
     private auth$ = new BehaviorSubject<AuthModel>({
@@ -196,16 +196,16 @@ export class AuthService {
         return this.auth
     }
 
-    handleAuthStatus() {
-        return this.authStatus$.asObservable()
+    handleIsAuth() {
+        return this.isAuth$.asObservable()
     }
 
     loggedIn() {
-        this.authStatus$.next(true)
+        this.isAuth$.next(true)
     }
 
     loggedOut() {
-        this.authStatus$.next(false)
+        this.isAuth$.next(false)
     }
 
     setAccessToken(accessToken: string | null): void {

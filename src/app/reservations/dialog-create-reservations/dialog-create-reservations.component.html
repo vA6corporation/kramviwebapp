@@ -1,0 +1,27 @@
+<form [formGroup]="formGroup" (submit)="onSubmit()" autocomplete="off">
+    <h2 mat-dialog-title>Nueva reservacion</h2>
+    <mat-dialog-content>
+        <mat-form-field appearance="fill">
+            <mat-label>Fecha de entrada/salida</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+                <input matStartDate placeholder="Desde" formControlName="checkinAt">
+                <input matEndDate placeholder="Hasta" formControlName="checkoutAt">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+        <!-- <mat-form-field appearance="fill">
+            <mat-label>Importe Total</mat-label>
+            <input matInput type="number" formControlName="charge">
+        </mat-form-field> -->
+        <mat-form-field appearance="fill">
+            <mat-label>Observaciones</mat-label>
+            <input matInput type="text" formControlName="observations">
+        </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <span class="spacer"></span>
+        <button type="button" mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+        <button type="submit" mat-flat-button color="primary">GUARDAR</button>
+    </mat-dialog-actions>
+</form>

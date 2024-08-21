@@ -21,8 +21,11 @@
             <mat-select formControlName="assignedOfficeId" placeholder="ACCESO A TODAS LAS SUCURSALES"
                 class="text-uppercase">
                 <mat-option>ACCESO A TODAS LAS SUCURSALES</mat-option>
-                <mat-option *ngFor="let office of offices" [value]="office._id">{{ office.name | uppercase
-                    }}</mat-option>
+                @for (office of offices; track $index) {
+                    <mat-option [value]="office._id">
+                        {{ office.name | uppercase }}
+                    </mat-option>
+                }
             </mat-select>
         </mat-form-field>
         <div class="d-flex">

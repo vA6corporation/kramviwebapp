@@ -46,7 +46,6 @@ export function parseExcel(file: File): Promise<any[]> {
         reader.onerror = function (ex) {
             reject()
         }
-        // reader.readAsBinaryString(file)
-        reader.readAsDataURL(file)
+        reader.readAsArrayBuffer(file)
     })
 }

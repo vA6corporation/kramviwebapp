@@ -1,6 +1,10 @@
 <mat-tab-group animationDuration="0ms">
     <mat-tab label="Clientes">
         <section class="container">
+            <div class="mb-3">
+                <button type="button" class="w-100" mat-flat-button color="primary"
+                    (click)="onOpenDialogProducts()">FILTRAR POR PRODUCTO/SERVICIO</button>
+            </div>
             <div class="mat-elevation-z2">
                 <table mat-table [dataSource]="dataSource" class="w-100">
                     <ng-container matColumnDef="checked">

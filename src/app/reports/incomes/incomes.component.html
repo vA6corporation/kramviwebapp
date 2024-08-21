@@ -13,8 +13,11 @@
             <mat-label>Medio de pago</mat-label>
             <mat-select formControlName="paymentMethodId" (selectionChange)="onPaymentMethodChange()">
                 <mat-option value="">TODOS LOS MEDIOS DE PAGO</mat-option>
-                <mat-option *ngFor="let paymentMethod of paymentMethods" [value]="paymentMethod._id"
-                    class="text-uppercase">{{ paymentMethod.name }}</mat-option>
+                @for (paymentMethod of paymentMethods; track paymentMethod._id) {
+                    <mat-option [value]="paymentMethod._id" class="text-uppercase">
+                        {{ paymentMethod.name }}
+                    </mat-option>
+                }
             </mat-select>
         </mat-form-field>
         <div class="d-flex">
@@ -22,16 +25,22 @@
                 <mat-label>Sucursal</mat-label>
                 <mat-select formControlName="officeId" (selectionChange)="onOfficeChange()">
                     <mat-option value="">TODAS LAS SUCURSALES</mat-option>
-                    <mat-option [value]="element._id" *ngFor="let element of offices">{{ element.name | uppercase
-                        }}</mat-option>
+                    @for (office of offices; track office._id) {
+                        <mat-option [value]="office._id">
+                            {{ office.name | uppercase }}
+                        </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Usuario</mat-label>
                 <mat-select formControlName="userId" (selectionChange)="onChangeUser()">
                     <mat-option value="">TODOS LOS USUARIOS</mat-option>
-                    <mat-option *ngFor="let element of users" [value]="element._id" class="text-uppercase">{{
-                        element.name }}</mat-option>
+                    @for (user of users; track user._id) {
+                        <mat-option [value]="user._id" class="text-uppercase">
+                            {{ user.name }}
+                        </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
         </div>
@@ -42,12 +51,14 @@
             <mat-card-content class="pt-3">
                 <table class="w-100 mb-3">
                     <tbody>
-                        <ng-container *ngFor="let summaryPayment of summaryPayments">
-                            <tr *ngIf="summaryPayment.totalCharge">
-                                <td>{{ summaryPayment.paymentMethod.name }} ({{ summaryPayment.totalQuantity }})</td>
-                                <td align="right">{{ summaryPayment.totalCharge.toFixed(2) }}</td>
-                            </tr>
-                        </ng-container>
+                        @for (summaryPayment of summaryPayments; track $index) {
+                            @if (summaryPayment.totalCharge) {
+                                <tr>
+                                    <td>{{ summaryPayment.paymentMethod.name }} ({{ summaryPayment.totalQuantity }})</td>
+                                    <td align="right">{{ summaryPayment.totalCharge.toFixed(2) }}</td>
+                                </tr>
+                            }
+                        }
                         <tr class="text-primary">
                             <td>TOTAL RECAUDADO</td>
                             <td align="right">{{ totalCollected.toFixed(2) }}</td>
@@ -58,22 +69,27 @@
             <mat-divider></mat-divider>
             <mat-card-content>
                 <mat-action-list>
-                    <button type="button" mat-list-item *ngFor="let payment of payments"
-                        (click)="onPaymentSelected(payment.saleId)">
-                        <span matListItemTitle>
-                            @for (paymentMethod of paymentMethods; track paymentMethod._id) {
-                                @if (paymentMethod._id === payment.paymentMethodId) {
-                                    <span>{{ paymentMethod.name }}</span>
+                    @for (payment of payments; track payment._id) {
+                        <button type="button" mat-list-item
+                            (click)="onPaymentSelected(payment.saleId)">
+                            <span matListItemTitle>
+                                @for (paymentMethod of paymentMethods; track paymentMethod._id) {
+                                    @if (paymentMethod._id === payment.paymentMethodId) {
+                                        <span>{{ paymentMethod.name }}</span>
+                                    }
                                 }
-                            }
-                        </span>
-                        <span matListItemLine>{{ payment.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</span>
-                        <span>{{ payment.charge.toFixed(2) }}</span>
-                    </button>
+                            </span>
+                            <span matListItemLine>{{ payment.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</span>
+                            <span>{{ payment.charge.toFixed(2) }}</span>
+                        </button>
+                    }
                 </mat-action-list>
             </mat-card-content>
         </mat-card>
-        <h2 class="text-center my-5" *ngIf="length > 500">No se estan mostrando todos los resultados, descarge el excel
-        </h2>
+        @if (length > 500) {
+            <h2 class="text-center my-5">
+                No se estan mostrando todos los resultados, descarge el excel
+            </h2>
+        }
     </form>
 </section>

@@ -43,6 +43,7 @@ import { OfficeModel } from '../../auth/office.model';
 import { SettingModel } from '../../auth/setting.model';
 import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
 import { BankModel } from '../../providers/bank.model';
+import { buildBarcode50x25mmTwo } from './buildBarcode50x25mmTwo';
 let main: any;
 
 if ((window as any).versions) {
@@ -77,18 +78,18 @@ export class PrintIframeComponent implements OnInit {
     private handleAuth$: Subscription = new Subscription()
     private handlePaymentMethods$: Subscription = new Subscription()
     private handleBanks$: Subscription = new Subscription()
-    private handleAuthStatus$: Subscription = new Subscription()
+    private handleIsAuth$: Subscription = new Subscription()
 
     ngOnDestroy() {
         this.handlePrinters$.unsubscribe()
         this.handleAuth$.unsubscribe()
         this.handlePaymentMethods$.unsubscribe()
         this.handleBanks$.unsubscribe()
-        this.handleAuthStatus$.unsubscribe()
+        this.handleIsAuth$.unsubscribe()
     }
 
     ngOnInit(): void {
-        this.handleAuthStatus$ = this.authService.handleAuthStatus().subscribe(authStatus => {
+        this.handleIsAuth$ = this.authService.handleIsAuth().subscribe(authStatus => {
             if (authStatus) {
                 this.handlePrinters$ = this.printersService.handlePrinters().subscribe(printers => {
                     this.printers = printers
@@ -183,50 +184,57 @@ export class PrintIframeComponent implements OnInit {
             }
         })
 
-        this.printService.handlePrintBarcodes110x30mm().subscribe(async sales => {
-            const pdf = await buildBarcode110x30mm(sales)
+        this.printService.handlePrintBarcodes110x30mm().subscribe(async products => {
+            const pdf = await buildBarcode110x30mm(products)
             pdf.autoPrint({ variant: 'non-conform' })
             const urlString = pdf.output('datauristring')
             this.print(urlString)
         })
 
-        this.printService.handlePrintBarcodes105x25mm().subscribe(async sales => {
-            const pdf = await buildBarcode105x25mm(sales)
+        this.printService.handlePrintBarcodes105x25mm().subscribe(async products => {
+            const pdf = await buildBarcode105x25mm(products)
             pdf.autoPrint({ variant: 'non-conform' })
             const urlString = pdf.output('datauristring')
             this.print(urlString)
         })
 
-        this.printService.handlePrintBarcodes105x25mmTwo().subscribe(async sales => {
-            const pdf = await buildBarcode105x25mmTwo(sales)
+        this.printService.handlePrintBarcodes105x25mmTwo().subscribe(async products => {
+            const pdf = await buildBarcode105x25mmTwo(products)
             pdf.autoPrint({ variant: 'non-conform' })
             const urlString = pdf.output('datauristring')
             this.print(urlString)
         })
 
-        this.printService.handlePrintBarcodes70x30mm().subscribe(async sales => {
-            const pdf = await buildBarcode70x30mm(sales)
+        this.printService.handlePrintBarcodes70x30mm().subscribe(async products => {
+            const pdf = await buildBarcode70x30mm(products)
             pdf.autoPrint({ variant: 'non-conform' })
             const urlString = pdf.output('datauristring')
             this.print(urlString)
         })
 
-        this.printService.handlePrintBarcodes70x30mmTwo().subscribe(async sales => {
-            const pdf = await buildBarcode70x30mmTwo(sales)
+        this.printService.handlePrintBarcodes70x30mmTwo().subscribe(async products => {
+            const pdf = await buildBarcode70x30mmTwo(products)
             pdf.autoPrint({ variant: 'non-conform' })
             const urlString = pdf.output('datauristring')
             this.print(urlString)
         })
 
-        this.printService.handlePrintBarcodes60x30mm().subscribe(async sales => {
-            const pdf = await buildBarcode60x30mm(sales)
+        this.printService.handlePrintBarcodes60x30mm().subscribe(async products => {
+            const pdf = await buildBarcode60x30mm(products)
             pdf.autoPrint({ variant: 'non-conform' })
             const urlString = pdf.output('datauristring')
             this.print(urlString)
         })
 
-        this.printService.handlePrintBarcodes50x25mm().subscribe(async sales => {
-            const pdf = await buildBarcode50x25mm(sales)
+        this.printService.handlePrintBarcodes50x25mm().subscribe(async products => {
+            const pdf = await buildBarcode50x25mm(products)
+            pdf.autoPrint({ variant: 'non-conform' })
+            const urlString = pdf.output('datauristring')
+            this.print(urlString)
+        })
+
+        this.printService.handlePrintBarcodes50x25mmTwo().subscribe(async products => {
+            const pdf = await buildBarcode50x25mmTwo(products)
             pdf.autoPrint({ variant: 'non-conform' })
             const urlString = pdf.output('datauristring')
             this.print(urlString)

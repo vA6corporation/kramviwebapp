@@ -134,7 +134,8 @@ export async function buildA4Proforma(
     positionYCustomer += 5 * strArr.length
 
     pdf.setFont('Helvetica', 'bold')
-    pdf.text('RUC', 8, positionYCustomer)
+    text = customer?.documentType || 'RUC'
+    pdf.text(text, 8, positionYCustomer)
     pdf.text(':', 30, positionYCustomer)
 
     pdf.setFont('Helvetica', 'normal')
@@ -239,6 +240,11 @@ export async function buildA4Proforma(
         pdf.text(text, 45, positionYitems)
 
         text = proformaItem.fullName.toUpperCase()
+
+        if (proformaItem.observations) {
+            text += ` - ${proformaItem.observations}`
+        }
+
         strArr = pdf.splitTextToSize(text, 95)
         pdf.text(strArr, 66, positionYitems)
 
@@ -249,14 +255,6 @@ export async function buildA4Proforma(
         pdf.text(text, 183, positionYitems)
 
         positionYitems += 5 * strArr.length
-
-        if (proformaItem.observations) {
-            text = proformaItem.observations
-            strArr = pdf.splitTextToSize(text, 75)
-            pdf.text(strArr, 47, positionYitems)
-
-            positionYitems += 5 * strArr.length
-        }
 
         if (positionYitems >= pageHeight - 35 && pages === 0) {
             pdf.addPage()

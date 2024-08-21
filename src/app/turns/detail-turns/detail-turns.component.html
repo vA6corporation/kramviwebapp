@@ -81,14 +81,19 @@
         <mat-card-content>
             <table class="w-100 mb-3">
                 <tbody>
-                    <tr *ngFor="let summarySaleItem of summarySaleItems">
-                        <td>
-                            {{ summarySaleItem.fullName | uppercase }} ({{ summarySaleItem.totalQuantity }})
-                            <span *ngIf="summarySaleItem.totalQuantityBonus" class="ml-3 text-success">Bonificacion
-                                ({{ summarySaleItem.totalQuantityBonus }})</span>
-                        </td>
-                        <td align="right">{{ summarySaleItem.totalSale.toFixed(2) }}</td>
-                    </tr>
+                    @for (summarySaleItem of summarySaleItems; track summarySaleItem._id) {
+                        <tr>
+                            <td>
+                                {{ summarySaleItem.fullName | uppercase }} ({{ summarySaleItem.totalQuantity }})
+                                @if (summarySaleItem.totalQuantityBonus) {
+                                    <span class="ml-3 text-success">
+                                        Bonificacion ({{ summarySaleItem.totalQuantityBonus }})
+                                    </span>
+                                }
+                            </td>
+                            <td align="right">{{ summarySaleItem.totalSale.toFixed(2) }}</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </mat-card-content>
@@ -116,8 +121,9 @@
                         }
                     </span>
                     }
-                    <span matListItemLine>{{ credit.user.name | uppercase }} - {{ credit.createdAt | date: 'dd/MM/yyyy'
-                        }} - PENDIENTE: {{ (credit.debt).toFixed(2) }}</span>
+                    <span matListItemLine>
+                        {{ credit.user.name | uppercase }} - {{ credit.createdAt | date: 'dd/MM/yyyy' }} - PENDIENTE: {{ (credit.debt).toFixed(2) }}
+                    </span>
                 </button>
                 }
             </mat-action-list>
@@ -131,9 +137,7 @@
             <mat-action-list role="list">
                 @for (sale of sales; track sale._id) {
                 <button mat-list-item (click)="onShowSheet(sale._id)">
-                    <span matListItemTitle>
-                        {{ sale.invoicePrefix }}{{ office.serialPrefix }}-{{ sale.invoiceNumber }}
-                    </span>
+                    <span matListItemTitle>{{ sale.invoicePrefix }}{{ office.serialPrefix }}-{{ sale.invoiceNumber }}</span>
                     <span matListItemLine>
                         @for (payment of sale.payments; track payment._id) {
                         @for (paymentMethod of paymentMethods; track paymentMethod._id) {
@@ -143,9 +147,7 @@
                         }
                         }
                     </span>
-                    <span matListItemLine>
-                        {{ sale.user.name | uppercase }} - {{ sale.createdAt | date: 'dd/MM/yyyy' }}
-                    </span>
+                    <span matListItemLine>{{ sale.user.name | uppercase }} - {{ sale.createdAt | date: 'dd/MM/yyyy' }}</span>
                 </button>
                 }
             </mat-action-list>

@@ -6,16 +6,10 @@ import { EditCustomersComponent } from './edit-customers/edit-customers.componen
 import { SaleCustomersComponent } from './sale-customers/sale-customers.component';
 import { CreditCustomersComponent } from './credit-customers/credit-customers.component';
 
-const routes: Routes = [
-  { path: '', component: CustomersComponent },
-  { path: 'create', component: CreateCustomersComponent },
-  { path: ':customerId/edit', component: EditCustomersComponent },
-  { path: ':customerId/sales', component: SaleCustomersComponent },
-  { path: ':customerId/credits', component: CreditCustomersComponent }
+export const routes: Routes = [
+    { path: '', component: CustomersComponent },
+    { path: 'create', component: CreateCustomersComponent },
+    { path: ':customerId/edit', component: EditCustomersComponent },
+    { path: ':customerId/sales', component: SaleCustomersComponent },
+    { path: ':customerId/credits', component: CreditCustomersComponent }
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
-})
-export class CustomersRoutingModule { }

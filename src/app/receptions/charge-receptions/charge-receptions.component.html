@@ -2,9 +2,7 @@
     <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()"
         [formGroup]="formGroup" autocomplete="off">
         <div class="px-3">
-            @if (room) {
-                <h2 class="text-center mat-display-small mb-0">{{ room.price.toFixed(2) }}</h2>
-            }
+            <h2 class="text-center mat-display-small mb-0">{{ charge.toFixed(2) }}</h2>
             <p class="caption text-center text-muted mb-2">Total a cobrar</p>
             @if (customer) {
             <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
@@ -131,21 +129,6 @@
         </div>
     </form>
     <div class="flex-30 bg-white sale-items">
-        @if (room) {
-            <mat-action-list>
-                <button type="button" mat-list-item>
-                    <div class="d-flex flex-column w-100">
-                        <div>{{ room.name }}</div>
-                    </div>
-                </button>
-                <mat-list-item role="listitem">
-                    <div class="d-flex font-weight-bold">
-                        Total
-                        <span class="spacer"></span>
-                        {{ room.price.toFixed(2) }}
-                    </div>
-                </mat-list-item>
-            </mat-action-list>
-        }
+        <app-sale-items></app-sale-items>
     </div>
 </section>

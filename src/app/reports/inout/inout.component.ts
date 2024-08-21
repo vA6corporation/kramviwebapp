@@ -10,9 +10,13 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
 import { ReportsService } from '../reports.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-inout',
+    standalone: true,
+    imports: [MaterialModule, CommonModule],
     templateUrl: './inout.component.html',
     styleUrls: ['./inout.component.sass']
 })

@@ -6,9 +6,14 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { UserModel } from '../user.model';
 import { UsersService } from '../users.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-users',
+    standalone: true,
+    imports: [MaterialModule, CommonModule, RouterModule],
     templateUrl: './users.component.html',
     styleUrls: ['./users.component.sass']
 })

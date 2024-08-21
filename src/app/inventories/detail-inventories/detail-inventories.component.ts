@@ -218,31 +218,37 @@ export class DetailInventoriesComponent implements OnInit {
         })
 
         this.salesService.getSaleItemsByPageProduct(this.pageIndexSale, this.pageSize, this.productId, this.params).subscribe(saleItems => {
+            this.saleItems = saleItems
             this.dataSourceSales = new MatTableDataSource(saleItems)
             this.dataSourceSales.sort = this.sort
         })
 
         this.purchasesService.getPurchaseItemsByPageProduct(this.pageIndexPurchase, this.pageSize, this.productId, this.params).subscribe(purchaseItems => {
+            this.purchaseItems = purchaseItems
             this.dataSourcePurchases = new MatTableDataSource(purchaseItems)
             this.dataSourcePurchases.sort = this.sort
         })
 
         this.incidentsService.getIncidentItemsByPageProduct(this.pageIndexIncident, this.pageSize, this.productId, this.params).subscribe(incidentItems => {
+            this.incidentItems = incidentItems
             this.dataSourceIncidents = new MatTableDataSource(incidentItems)
             this.dataSourceIncidents.sort = this.sort
         })
 
         this.creditNotesService.getCreditNoteItemsByPageProduct(this.pageIndexCreditNote, this.pageSize, this.productId, this.params).subscribe(creditNoteItems => {
+            this.creditNoteItems = creditNoteItems
             this.dataSourceCreditNotes = new MatTableDataSource(creditNoteItems)
             this.dataSourceCreditNotes.sort = this.sort
         })
 
         this.movesService.getMoveInItemsByPageProduct(this.pageIndexMoveIn, this.pageSize, this.productId, this.params).subscribe(moveInItems => {
+            this.moveInItems = moveInItems
             this.dataSourceMovesIn = new MatTableDataSource(moveInItems)
             this.dataSourceMovesIn.sort = this.sort
         })
 
         this.movesService.getMoveOutItemsByPageProduct(this.pageIndexMoveOut, this.pageSize, this.productId, this.params).subscribe(moveOutItems => {
+            this.moveOutItems = moveOutItems
             this.dataSourceMovesOut = new MatTableDataSource(moveOutItems)
             this.dataSourceMovesOut.sort = this.sort
         })

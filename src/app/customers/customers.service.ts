@@ -15,11 +15,11 @@ export class CustomersService {
     ) { }
 
     getCustomersAdvance(): Observable<any> {
-        return this.httpService.get('customers/advance');
+        return this.httpService.get('customers/advance')
     }
 
     getCustomersByIds(customerIds: string[]): Observable<CustomerModel[]> {
-        return this.httpService.post('customers/byCustomerIds', { customerIds });
+        return this.httpService.post('customers/byCustomerIds', { customerIds })
     }
 
     joinCustomers(customerIds: string[]) {
@@ -27,51 +27,31 @@ export class CustomersService {
     }
 
     updateLocation(latitude: number, longitude: number, customerId: string) {
-        return this.httpService.put(`customers/${latitude}/${longitude}/${customerId}`, {});
-    }
-
-    getCustomersByLocation(locationCode: string): Observable<CustomerModel[]> {
-        return this.httpService.get(`customers/byLocation/${locationCode}`);
-    }
-
-    getCustomersByPageLocation(
-        pageIndex: number,
-        pageSize: number,
-        locationCode: string
-    ): Observable<CustomerModel[]> {
-        return this.httpService.get(`customers/byPageLocation/${pageIndex}/${pageSize}/${locationCode}`);
+        return this.httpService.put(`customers/${latitude}/${longitude}/${customerId}`, {})
     }
 
     getCustomersByLocationWithSales(locationCode: string): Observable<CustomerModel[]> {
-        return this.httpService.get(`customers/byLocationWithSales/${locationCode}`);
-    }
-
-    getCustomersByLocationWithDistribution(locationCode: string): Observable<CustomerModel[]> {
-        return this.httpService.get(`customers/byLocationWithDistribution/${locationCode}`);
-    }
-
-    getCustomersByDistribution(distributionId: string): Observable<CustomerModel[]> {
-        return this.httpService.get(`customers/byDistribution/${distributionId}`);
+        return this.httpService.get(`customers/byLocationWithSales/${locationCode}`)
     }
 
     getCustomersByKey(key: string): Observable<CustomerModel[]> {
-        return this.httpService.get(`customers/byKey/${key}`);
+        return this.httpService.get(`customers/byKey/${key}`)
     }
 
     getCustomersByMobileNumber(mobileNumber: string): Observable<CustomerModel[]> {
-        return this.httpService.get(`customers/byMobileNumber/${mobileNumber}`);
+        return this.httpService.get(`customers/byMobileNumber/${mobileNumber}`)
     }
 
     getCustomersByRuc(key: string): Observable<CustomerModel[]> {
-        return this.httpService.get(`customers/byRuc/${key}`);
+        return this.httpService.get(`customers/byRuc/${key}`)
     }
 
     getCustomersByDni(key: string): Observable<CustomerModel[]> {
-        return this.httpService.get(`customers/byDni/${key}`);
+        return this.httpService.get(`customers/byDni/${key}`)
     }
 
     getCustomersByCe(key: string): Observable<CustomerModel[]> {
-        return this.httpService.get(`customers/byCe/${key}`);
+        return this.httpService.get(`customers/byCe/${key}`)
     }
 
     getCustomersByPage(
@@ -79,7 +59,7 @@ export class CustomersService {
         pageSize: number,
         params: Params
     ): Observable<CustomerModel[]> {
-        return this.httpService.get(`customers/byPage/${pageIndex}/${pageSize}`, params);
+        return this.httpService.get(`customers/byPage/${pageIndex}/${pageSize}`, params)
     }
 
     getCustomersByPageWithLastSale(
@@ -87,37 +67,26 @@ export class CustomersService {
         pageSize: number,
         params: Params
     ): Observable<CustomerModel[]> {
-        return this.httpService.get(`customers/byPageWithLastSale/${pageIndex}/${pageSize}`, params);
+        return this.httpService.get(`customers/byPageWithLastSale/${pageIndex}/${pageSize}`, params)
     }
 
     getDeletedCustomersByPage(
         pageIndex: number,
         pageSize: number
     ): Observable<CustomerModel[]> {
-        return this.httpService.get(`customers/deletedByPage/${pageIndex}/${pageSize}`);
-    }
-
-    getCustomersWithoutLocationByPage(
-        pageIndex: number,
-        pageSize: number
-    ): Observable<CustomerModel[]> {
-        return this.httpService.get(`customers/withoutLocationCodeByPage/${pageIndex}/${pageSize}`);
+        return this.httpService.get(`customers/deletedByPage/${pageIndex}/${pageSize}`)
     }
 
     getDeletedCustomersCount(): Observable<number> {
-        return this.httpService.get('customers/countDeletedCustomers');
+        return this.httpService.get('customers/countDeletedCustomers')
     }
 
     getCustomersCount(params: Params): Observable<number> {
-        return this.httpService.get('customers/countCustomers', params);
-    }
-
-    getCustomersWithoutLocationCodeCount(): Observable<number> {
-        return this.httpService.get('customers/countCustomersWithoutLocationCode');
+        return this.httpService.get('customers/countCustomers', params)
     }
 
     getCustomerById(customerId: string): Observable<CustomerModel> {
-        return this.httpService.get(`customers/byId/${customerId}`);
+        return this.httpService.get(`customers/byId/${customerId}`)
     }
 
     getSummarySalesByRangeDateCustomers(
@@ -125,23 +94,23 @@ export class CustomersService {
         endDate: Date,
         params: Params
     ): Observable<SummaryCustomerSaleModel[]> {
-        return this.httpService.get(`customers/summarySalesByRangeDateCustomers/${startDate}/${endDate}`, params);
+        return this.httpService.get(`customers/summarySalesByRangeDateCustomers/${startDate}/${endDate}`, params)
     }
 
     create(customer: any): Observable<CustomerModel> {
-        return this.httpService.post('customers', { customer });
+        return this.httpService.post('customers', { customer })
     }
 
     update(customer: any, customerId: string): Observable<CustomerModel> {
-        return this.httpService.put(`customers/${customerId}`, { customer });
+        return this.httpService.put(`customers/${customerId}`, { customer })
     }
 
     delete(customerId: string): Observable<void> {
-        return this.httpService.delete(`customers/${customerId}`);
+        return this.httpService.delete(`customers/${customerId}`)
     }
 
     restore(customerId: string): Observable<void> {
-        return this.httpService.delete(`customers/restore/${customerId}`);
+        return this.httpService.delete(`customers/restore/${customerId}`)
     }
 
 }

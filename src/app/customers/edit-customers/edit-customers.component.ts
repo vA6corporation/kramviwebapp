@@ -1,14 +1,17 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CustomerForm } from '../customer.form';
 import { CustomersService } from '../customers.service';
 import { DocumentType } from '../document-type.enum';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-edit-customers',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule],
     templateUrl: './edit-customers.component.html',
     styleUrls: ['./edit-customers.component.sass']
 })

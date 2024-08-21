@@ -18,19 +18,19 @@
         <ng-container matColumnDef="customer">
             <th mat-header-cell *matHeaderCellDef mat-sort-header="name">Cliente</th>
             <td mat-cell *matCellDef="let element" class="text-capitalize">{{ element.name | uppercase }}</td>
-            <td mat-footer-cell *matFooterCellDef>Total</td>
+            <td mat-footer-cell *matFooterCellDef class="font-weight-bold">Total</td>
         </ng-container>
         <ng-container matColumnDef="countSale">
             <th mat-header-cell *matHeaderCellDef mat-sort-header="countSale">Ventas</th>
             <td mat-cell *matCellDef="let element">{{ element.countSale }}</td>
-            <td mat-footer-cell *matFooterCellDef>{{ totalCountSale }}</td>
+            <td mat-footer-cell *matFooterCellDef class="font-weight-bold">{{ totalCountSale }}</td>
         </ng-container>
         <ng-container matColumnDef="totalSale">
             <th mat-header-cell *matHeaderCellDef mat-sort-header="totalSale">Importe total</th>
             <td mat-cell *matCellDef="let element">
                 {{ (element.totalSale || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
             </td>
-            <td mat-footer-cell *matFooterCellDef>{{ totalTotalSale.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
+            <td mat-footer-cell *matFooterCellDef class="font-weight-bold">{{ totalTotalSale.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

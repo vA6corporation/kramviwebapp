@@ -44,7 +44,7 @@ export class PurchasesComponent implements OnInit {
         }),
         startDate: [null, Validators.required],
         endDate: [null, Validators.required],
-    });
+    })
 
     displayedColumns: string[] = ['created', 'serial', 'customer', 'user', 'purchaseOrder', 'charge', 'observations', 'actions']
     dataSource: PurchaseModel[] = []
@@ -76,8 +76,6 @@ export class PurchasesComponent implements OnInit {
 
     ngOnInit(): void {
         this.navigationService.setTitle('Compras')
-
-        this.purchasesService.setPurchaseItems([])
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.business = auth.business
@@ -197,23 +195,27 @@ export class PurchasesComponent implements OnInit {
 
     onPrint(purchaseId: string) {
         this.navigationService.loadBarStart()
-        this.purchasesService.getPurchaseById(purchaseId).subscribe(purchase => {
-            this.navigationService.loadBarFinish()
-            this.printService.printPurchaseA4(purchase)
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.loadBarFinish()
-            this.navigationService.showMessage(error.error.message)
+        this.purchasesService.getPurchaseById(purchaseId).subscribe({
+            next: purchase => {
+                this.navigationService.loadBarFinish()
+                this.printService.printPurchaseA4(purchase)
+            }, error: (error: HttpErrorResponse) => {
+                this.navigationService.loadBarFinish()
+                this.navigationService.showMessage(error.error.message)
+            }
         })
     }
 
     onExportPdf(purchaseId: string) {
         this.navigationService.loadBarStart()
-        this.purchasesService.getPurchaseById(purchaseId).subscribe(purchase => {
-            this.navigationService.loadBarFinish()
-            this.printService.exportPurchaseA4(purchase)
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.loadBarFinish()
-            this.navigationService.showMessage(error.error.message)
+        this.purchasesService.getPurchaseById(purchaseId).subscribe({
+            next: purchase => {
+                this.navigationService.loadBarFinish()
+                this.printService.exportPurchaseA4(purchase)
+            }, error: (error: HttpErrorResponse) => {
+                this.navigationService.loadBarFinish()
+                this.navigationService.showMessage(error.error.message)
+            }
         })
     }
 
@@ -260,13 +262,14 @@ export class PurchasesComponent implements OnInit {
 
     fetchData() {
         this.navigationService.loadBarStart()
-        this.purchasesService.getPurchasesByPage(this.pageIndex + 1, this.pageSize, this.params).subscribe(purchases => {
-            this.navigationService.loadBarFinish()
-            console.log(purchases)
-            this.dataSource = purchases
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.loadBarFinish()
-            this.navigationService.showMessage(error.error.message)
+        this.purchasesService.getPurchasesByPage(this.pageIndex + 1, this.pageSize, this.params).subscribe({
+            next: purchases => {
+                this.navigationService.loadBarFinish()
+                this.dataSource = purchases
+            }, error: (error: HttpErrorResponse) => {
+                this.navigationService.loadBarFinish()
+                this.navigationService.showMessage(error.error.message)
+            }
         })
     }
 

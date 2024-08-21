@@ -1,0 +1,66 @@
+<section class="container py-4">
+    @if (patient) {
+        <button type="button" mat-button color="primary" (click)="onEditPatient()" class="w-100">
+            <span class="mat-h1">{{ patient.name | uppercase }}</span>
+        </button>
+        <div class="mb-5">
+            <p class="text-center mb-0">{{ patient.documentType }}: {{ patient.document }}</p>
+        </div>
+    }
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+        <mat-form-field appearance="fill">
+            <mat-label>Medico</mat-label>
+            <mat-select formControlName="workerId">
+                <mat-option *ngFor="let element of workers" [value]="element._id">
+                    {{ element.name | uppercase }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Funciones vitales</mat-label>
+            <input type="text" matInput formControlName="vitalFunction">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Enfermedad actual</mat-label>
+            <input type="text" matInput formControlName="diseace">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Sistomas principales</mat-label>
+            <input type="email" matInput formControlName="symptoms">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Relato</mat-label>
+            <input type="text" matInput formControlName="story">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Examenes de laboratorio</mat-label>
+            <input type="text" matInput formControlName="laboratoryExams">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Diagnostico</mat-label>
+            <input type="text" matInput formControlName="diagnosis">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Tratamiento</mat-label>
+            <input type="text" matInput formControlName="treatment">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Plan de trabajo</mat-label>
+            <input type="text" matInput formControlName="workPlan">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Proxima cita</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="appointmentAt">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <div class="d-flex">
+            <span class="spacer"></span>
+            <div class="py-3">
+                <button type="button" mat-raised-button routerLink="/generals" color="primary">CANCELAR</button>
+                <span class="divider"></span>
+                <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
+            </div>
+        </div>
+    </form>
+</section>

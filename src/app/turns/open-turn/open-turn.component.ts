@@ -309,6 +309,10 @@ export class OpenTurnComponent implements OnInit {
                                 this.printService.printTurn80mm(printTurnData)
                                 break
                         }
+                        this.turn = null
+                        this.summaryPayments = []
+                        this.expenses = []
+                        this.sales = []
                     })
                 })
             }

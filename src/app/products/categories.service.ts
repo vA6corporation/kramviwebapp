@@ -13,26 +13,26 @@ export class CategoriesService {
         private readonly httpService: HttpService,
     ) { }
 
-    private categories$: BehaviorSubject<CategoryModel[]> | null = null;
+    private categories$: BehaviorSubject<CategoryModel[]> | null = null
 
     handleCategories(): Observable<CategoryModel[]> {
         if (this.categories$ === null) {
-            this.categories$ = new BehaviorSubject<CategoryModel[]>([]);
-            this.loadCategories();
+            this.categories$ = new BehaviorSubject<CategoryModel[]>([])
+            this.loadCategories()
         }
-        return this.categories$.asObservable().pipe(filter(e => e.length > 0));
+        return this.categories$.asObservable().pipe(filter(e => e.length > 0))
     }
 
     joinCategories(categoriesId: string[]) {
-        return this.httpService.post('categories/join', { categoriesId });
+        return this.httpService.post('categories/join', { categoriesId })
     }
 
     loadCategories(): void {
         this.httpService.get('categories').subscribe(categories => {
             if (this.categories$) {
-                this.categories$.next(categories);
+                this.categories$.next(categories)
             }
-        });
+        })
     }
 
     getCategoriesByPage(pageIndex: number, pageSize: number): Observable<CategoryModel[]> {
@@ -44,15 +44,15 @@ export class CategoriesService {
     }
 
     create(category: any): Observable<CategoryModel> {
-        return this.httpService.post('categories', { category });
+        return this.httpService.post('categories', { category })
     }
 
     update(category: any, categoryId: string) {
-        return this.httpService.put(`categories/${categoryId}`, { category });
+        return this.httpService.put(`categories/${categoryId}`, { category })
     }
 
     delete(categoryId: string) {
-        return this.httpService.delete(`categories/${categoryId}`);
+        return this.httpService.delete(`categories/${categoryId}`)
     }
 
 }

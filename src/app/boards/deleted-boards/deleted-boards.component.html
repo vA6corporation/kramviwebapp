@@ -56,6 +56,10 @@
                 <th mat-header-cell *matHeaderCellDef>N° de mesa</th>
                 <td mat-cell *matCellDef="let element">{{ element.table.name || 'NINGUNO' }}</td>
             </ng-container>
+            <ng-container matColumnDef="charge">
+                <th mat-header-cell *matHeaderCellDef>Importe T.</th>
+                <td mat-cell *matCellDef="let element">{{ (element.charge || 0).toFixed(2) }}</td>
+            </ng-container>
             <ng-container matColumnDef="deletedBoardItems">
                 <th mat-header-cell *matHeaderCellDef>Producto anulados</th>
                 <td mat-cell *matCellDef="let element">{{ element.deletedBoardItems }}</td>

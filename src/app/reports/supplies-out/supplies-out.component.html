@@ -13,7 +13,9 @@
             <mat-form-field appearance="fill" class="text-uppercase">
                 <mat-label>Sucursal</mat-label>
                 <mat-select (selectionChange)="onOfficeChange()" formControlName="officeId">
-                    <mat-option [value]="element._id" *ngFor="let element of offices">{{ element.name }}</mat-option>
+                    @for (office of offices; track $index) {
+                        <mat-option [value]="office._id">{{ office.name }}</mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
         </div>
@@ -22,16 +24,18 @@
         <canvas #incomesChart width="300" height="300"></canvas>
     </div>
     <mat-list>
-        <mat-list-item *ngFor="let element of supplyItems; let i = index" class="text-uppercase"
-            [style.backgroundColor]="colors[i]">
-            {{ element.fullName }}
-            <span class="spacer"></span>
-            <div>
-                <span class="mr-3">
-                    {{ (element.totalOut * element.cost || 0).toFixed(2) }}
-                </span>
-                {{ (element.totalOut || 0).toFixed(2) }}
-            </div>
-        </mat-list-item>
+        @for (supplyItem of supplyItems; track supplyItem._id; let i = $index) {
+            <mat-list-item class="text-uppercase"
+                [style.backgroundColor]="colors[i]">
+                {{ supplyItem.fullName }}
+                <span class="spacer"></span>
+                <div>
+                    <span class="mr-3">
+                        {{ (supplyItem.totalOut * supplyItem.cost || 0).toFixed(2) }}
+                    </span>
+                    {{ (supplyItem.totalOut || 0).toFixed(2) }}
+                </div>
+            </mat-list-item>
+        }
     </mat-list>
 </section>

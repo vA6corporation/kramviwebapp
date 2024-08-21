@@ -3,9 +3,13 @@ import { Subscription } from 'rxjs';
 import { NavigationService } from '../../navigation/navigation.service';
 import { UserModel } from '../user.model';
 import { UsersService } from '../users.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-disabled-users',
+    standalone: true,
+    imports: [MaterialModule, CommonModule],
     templateUrl: './disabled-users.component.html',
     styleUrls: ['./disabled-users.component.sass']
 })

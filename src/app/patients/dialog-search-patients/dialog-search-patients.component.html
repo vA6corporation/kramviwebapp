@@ -1,30 +1,34 @@
 <form [formGroup]="formGroup" autocomplete="off">
-    <h2 mat-dialog-title>Buscar Paciente</h2>
+    <h2 mat-dialog-title>Buscar paciente</h2>
     <div mat-dialog-content>
         <mat-form-field appearance="fill">
             <mat-label>Tipo de Busqueda</mat-label>
             <mat-select formControlName="searchType" #searchType tabindex="-1">
-                <mat-option *ngFor="let element of searchTypes" [value]="element.code">{{ element.label }}</mat-option>
+                @for (searchType of searchTypes; track $index) {
+                    <mat-option [value]="searchType.code">{{ searchType.label }}</mat-option>
+                }
             </mat-select>
         </mat-form-field>
-        <mat-form-field appearance="fill" *ngIf="searchType.value === 'NAME'; else elseBlock">
-            <mat-label>Busqueda</mat-label>
-            <input type="text" matInput formControlName="key" (keyup.enter)="onChangeKey()">
-            <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
-        <ng-template #elseBlock>
+        @if (searchType.value === 'NAME') {
+            <mat-form-field appearance="fill">
+                <mat-label>Busqueda</mat-label>
+                <input type="text" matInput formControlName="key" (keyup.enter)="onChangeKey()">
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+        } @else {
             <mat-form-field appearance="fill">
                 <mat-label>Busqueda</mat-label>
                 <input type="text" matInput formControlName="key" (input)="onChangeKey()">
                 <mat-icon matSuffix>search</mat-icon>
             </mat-form-field>
-        </ng-template>
+        }
         <mat-action-list>
-            <button mat-list-item *ngFor="let patient of patients" (click)="onSetPatient(patient)">
-                {{ patient.name | uppercase }}
-                <span class="spacer"></span>
-                <span class="caption text-muted">{{ patient.documentType }}: {{ patient.document }}</span>
-            </button>
+            @for (patient of patients; track patient._id) {
+                <button mat-list-item (click)="onSelectPatient(patient)">
+                    <span matListItemTitle>{{ patient.name | uppercase }}</span>
+                    <span matListItemLine>{{ patient.documentType }}: {{ patient.document }}</span>
+                </button>
+            }
         </mat-action-list>
         <div class="my-3"></div>
     </div>

@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, Subscription, lastValueFrom } from 'rxjs';
+import { Subscription, lastValueFrom } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { BusinessModel } from '../../auth/business.model';
 import { OfficeModel } from '../../auth/office.model';
@@ -124,6 +124,16 @@ export class SheetInvoicesComponent implements OnInit {
                     this.navigationService.showMessage(error.message)
                 }
             }
+        } else {
+            this.invoicesService.sendInvoice(this.saleId).subscribe({
+                next: () => {
+                    this.onSendInvoice$.emit()
+                    this.onDownloadXmlCdr()
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                    this.navigationService.loadBarFinish()
+                }
+            })
         }
     }
 

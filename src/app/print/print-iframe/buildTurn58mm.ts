@@ -13,16 +13,17 @@ export function buildTurn58mm(
     summarySaleItems: SummarySaleItemModel[],
     setting: SettingModel,
 ): jsPDF {
-    const header = 11
-    const body = 8
+    const header = 9
+    const body = 7
     const marginLeft = setting.marginLeft
-    const pageCenter = 23
+    const marginRight = setting.marginRight
+    const pageCenter = 24
 
     const totalCollected = summaryPayments.map(e => e.totalCharge).reduce((a, b) => a + b, 0)
     const totalCash = summaryPayments.filter(e => e.paymentMethod.name === 'EFECTIVO').map(e => e.totalCharge).reduce((a, b) => a + b, 0)
     const totalExpenses = expenses.map(e => e.charge).reduce((a, b) => a + b, 0)
 
-    const pdf = new jsPDF('p', 'mm', [3276, 72])
+    const pdf = new jsPDF('p', 'mm', [297 + (4 * summarySaleItems.length), 48])
     pdf.setFont('Helvetica', 'bold')
     pdf.setFontSize(header)
     let text: string = ''
@@ -44,22 +45,12 @@ export function buildTurn58mm(
     pdf.setFont('Helvetica', 'normal')
     pdf.setFontSize(body)
 
-    for (const summarySaleItem of summarySaleItems) {
-        strArr = pdf.splitTextToSize(`${summarySaleItem.fullName.toUpperCase()}`, 47)
-        pdf.text(strArr, 0 + marginLeft, positionY)
-        positionY += 4 * strArr.length
-        pdf.text(`${Number(summarySaleItem.totalQuantity.toFixed(2))}`, 0 + marginLeft, positionY)
-        pdf.text(`${Number((summarySaleItem.totalSale / summarySaleItem.totalQuantity).toFixed(2))}`, 25, positionY)
-        pdf.text(summarySaleItem.totalSale.toFixed(2), 47, positionY, { align: 'right' })
-        positionY += 4
-    }
-
     for (const expense of expenses) {
         strArr = pdf.splitTextToSize(expense.concept.toUpperCase(), 47)
         pdf.text(strArr, 0, positionY)
         text = expense.charge.toFixed(2)
-        positionY += 4 * strArr.length
         pdf.text(text, 47, positionY, { align: 'right' })
+        positionY += 4 * strArr.length
     }
 
     positionY += 4
@@ -73,6 +64,9 @@ export function buildTurn58mm(
     }
 
     positionY += 4
+
+    pdf.setFont('Helvetica', 'bold')
+    pdf.setFontSize(header)
 
     text = `T. RECAUDADO`
     pdf.text(text, 25, positionY, { align: 'right' })
@@ -97,5 +91,29 @@ export function buildTurn58mm(
     text = (turn.openCash + totalCash - totalExpenses).toFixed(2)
     pdf.text(text, 29, positionY)
     positionY += 4
+
+    pdf.setFont('Helvetica', 'normal')
+    pdf.setFontSize(body)
+
+    strArr = pdf.splitTextToSize(turn.observations || '', 47)
+    pdf.text(strArr, pageCenter + marginLeft, positionY, { align: 'center' })
+    positionY += 4 * strArr.length
+
+    pdf.text('Cantidad', 0 + marginLeft, positionY)
+    pdf.text('Precio U.', pageCenter, positionY, { align: 'center' })
+    pdf.text('Sub total', 47 - marginRight, positionY, { align: 'right' })
+
+    positionY += 4
+
+    for (const summarySaleItem of summarySaleItems) {
+        strArr = pdf.splitTextToSize(`${summarySaleItem.fullName.toUpperCase()}`, 47)
+        pdf.text(strArr, 0 + marginLeft, positionY)
+        positionY += 4 * strArr.length
+        pdf.text(`${Number(summarySaleItem.totalQuantity.toFixed(2))}`, 0 + marginLeft, positionY)
+        pdf.text(`${Number((summarySaleItem.totalSale / summarySaleItem.totalQuantity).toFixed(2))}`, 25, positionY)
+        pdf.text(summarySaleItem.totalSale.toFixed(2), 47, positionY, { align: 'right' })
+        positionY += 4
+    }
+
     return pdf
 }

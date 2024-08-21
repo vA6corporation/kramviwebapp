@@ -34,9 +34,11 @@ export async function buildBarcode110x30mm(
 
         text = 'S/'
         if (product.price > 99) {
-            pdf.text(text, 53, positionY + 5)
+            pdf.text(text, 50, positionY + 5)
+        } else if(product.price > 9) {
+            pdf.text(text, 55, positionY + 5)
         } else {
-            pdf.text(text, 53, positionY + 5)
+            pdf.text(text, 60, positionY + 5)
         }
 
         pdf.setFontSize(header)

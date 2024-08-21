@@ -1,14 +1,17 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CustomerForm } from '../customer.form';
 import { CustomersService } from '../customers.service';
 import { DocumentType } from '../document-type.enum';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-create-customers',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule],
     templateUrl: './create-customers.component.html',
     styleUrls: ['./create-customers.component.sass']
 })

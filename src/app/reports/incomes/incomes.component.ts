@@ -1,7 +1,7 @@
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Chart, registerables } from 'chart.js';
@@ -18,25 +18,28 @@ import { PaymentsService } from '../../payments/payments.service';
 import { SummaryPaymentModel } from '../../payments/summary-payment.model';
 import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
+import { MaterialModule } from '../../material.module';
 Chart.register(...registerables);
 
 @Component({
     selector: 'app-incomes',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './incomes.component.html',
     styleUrls: ['./incomes.component.sass']
 })
 export class IncomesComponent implements OnInit {
 
     constructor(
-        private readonly paymentsService: PaymentsService,
         private readonly paymentMethodsService: PaymentMethodsService,
+        private readonly navigationService: NavigationService,
+        private readonly paymentsService: PaymentsService,
+        private readonly activatedRoute: ActivatedRoute,
+        private readonly usersService: UsersService,
         private readonly authService: AuthService,
         private readonly formBuilder: FormBuilder,
-        private readonly navigationService: NavigationService,
-        private readonly usersService: UsersService,
         private readonly matDialog: MatDialog,
         private readonly router: Router,
-        private readonly activatedRoute: ActivatedRoute
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
@@ -45,44 +48,44 @@ export class IncomesComponent implements OnInit {
         paymentMethodId: '',
         userId: '',
         officeId: '',
-    });
-    users: UserModel[] = [];
-    payments: PaymentModel[] = [];
-    offices: OfficeModel[] = [];
-    office: OfficeModel = new OfficeModel();
-    summaryPayments: SummaryPaymentModel[] = [];
-    paymentMethods: PaymentMethodModel[] = [];
-    totalCollected: number = 0;
-    length = 0;
-    private pageIndex: number = 0;
-    private params: Params = {};
+    })
+    users: UserModel[] = []
+    payments: PaymentModel[] = []
+    offices: OfficeModel[] = []
+    office: OfficeModel = new OfficeModel()
+    summaryPayments: SummaryPaymentModel[] = []
+    paymentMethods: PaymentMethodModel[] = []
+    totalCollected: number = 0
+    length = 0
+    private pageIndex: number = 0
+    private params: Params = {}
 
-    private handleClickMenu$: Subscription = new Subscription();
-    private handleAuth$: Subscription = new Subscription();
-    private handleOffices$: Subscription = new Subscription();
-    private handleUsers$: Subscription = new Subscription();
-    private handlePaymentMethods$: Subscription = new Subscription();
+    private handleClickMenu$: Subscription = new Subscription()
+    private handleAuth$: Subscription = new Subscription()
+    private handleOffices$: Subscription = new Subscription()
+    private handleUsers$: Subscription = new Subscription()
+    private handlePaymentMethods$: Subscription = new Subscription()
 
     ngOnDestroy() {
-        this.handleClickMenu$.unsubscribe();
-        this.handleAuth$.unsubscribe();
-        this.handleOffices$.unsubscribe();
-        this.handleUsers$.unsubscribe();
-        this.handlePaymentMethods$.unsubscribe();
+        this.handleClickMenu$.unsubscribe()
+        this.handleAuth$.unsubscribe()
+        this.handleOffices$.unsubscribe()
+        this.handleUsers$.unsubscribe()
+        this.handlePaymentMethods$.unsubscribe()
     }
 
     ngOnInit() {
         this.navigationService.setMenu([
             { id: 'export_excel', label: 'Exportar Excel', icon: 'file_download', show: false },
-        ]);
+        ])
 
         this.handleUsers$ = this.usersService.handleUsers().subscribe(users => {
-            this.users = users;
-        });
+            this.users = users
+        })
 
         this.handleOffices$ = this.authService.handleOffices().subscribe(offices => {
-            this.offices = offices;
-        });
+            this.offices = offices
+        })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.office = auth.office
@@ -90,45 +93,46 @@ export class IncomesComponent implements OnInit {
             this.formGroup.patchValue({ officeId: this.office._id })
 
             const { startDate, endDate } = this.activatedRoute.snapshot.queryParams
+            
             if (startDate && endDate) {
                 this.formGroup.patchValue({
                     startDate: new Date(Number(startDate)),
                     endDate: new Date(Number(endDate))
-                });
+                })
             }
 
             this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
-                this.paymentMethods = paymentMethods;
-                this.fetchData();
-                this.fetchCount();
-            });
-        });
+                this.paymentMethods = paymentMethods
+                this.fetchData()
+                this.fetchCount()
+            })
+        })
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
             switch (id) {
                 case 'export_excel': {
-                    this.exportIncomes();
-                    break;
+                    this.exportIncomes()
+                    break
                 }
                 default:
-                    break;
+                    break
             }
-        });
+        })
     }
 
     fetchCount() {
         if (this.formGroup.valid) {
-            const { startDate, endDate } = this.formGroup.value;
+            const { startDate, endDate } = this.formGroup.value
             this.paymentsService.getCountPaymentsByRangeDate(startDate, endDate, this.params).subscribe(count => {
-                this.length = count;
-            });
+                this.length = count
+            })
         }
     }
 
     fetchData() {
         if (this.formGroup.valid) {
-            const { startDate, endDate } = this.formGroup.value;
-            this.navigationService.loadBarStart();
+            const { startDate, endDate } = this.formGroup.value
+            this.navigationService.loadBarStart()
             this.paymentsService.getSummaryPaymentsByRangeDate(
                 startDate,
                 endDate,
@@ -140,39 +144,41 @@ export class IncomesComponent implements OnInit {
                 for (const summaryPayment of this.summaryPayments) {
                     this.totalCollected += summaryPayment.totalCharge
                 }
-            });
+            })
 
-            this.paymentsService.getPaymentsByRangeDatePage(startDate, endDate, this.pageIndex + 1, 500, this.params).subscribe(payments => {
-                this.payments = payments
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message)
-            });
+            this.paymentsService.getPaymentsByRangeDatePage(startDate, endDate, this.pageIndex + 1, 500, this.params).subscribe({
+                next: payments => {
+                    this.payments = payments
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                }
+            })
         }
     }
 
     exportIncomes() {
-        this.navigationService.loadBarStart();
-        const { startDate, endDate } = this.formGroup.value;
-        const chunk = 500;
-        const promises: Promise<any>[] = [];
+        this.navigationService.loadBarStart()
+        const { startDate, endDate } = this.formGroup.value
+        const chunk = 500
+        const promises: Promise<any>[] = []
 
         for (let index = 0; index < this.length / chunk; index++) {
             const promise = lastValueFrom(this.paymentsService.getPaymentsByRangeDatePageWithSale(startDate, endDate, index + 1, chunk, this.params))
-            promises.push(promise);
+            promises.push(promise)
         }
 
         Promise.all(promises).then(values => {
-            this.navigationService.loadBarFinish();
-            const payments = values.flat();
-            const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20];
-            let body = [];
+            this.navigationService.loadBarFinish()
+            const payments = values.flat()
+            const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+            let body = []
             body.push([
                 'F. DE PAGO',
                 'MEDIO DE PAGO',
                 'MONTO',
                 'COMPROBANTE',
                 'USUARIO',
-            ]);
+            ])
             for (const payment of payments) {
                 body.push([
                     formatDate(payment.createdAt || new Date(), 'dd/MM/yyyy', 'en-US'),
@@ -180,34 +186,34 @@ export class IncomesComponent implements OnInit {
                     payment.charge,
                     `${payment.sale.invoicePrefix}${this.office.serialPrefix}-${payment.sale.invoiceNumber}`,
                     (payment || { name: 'NINGUNO' }).user.name
-                ]);
+                ])
             }
-            const name = `PAGOS_DESDE_${formatDate(startDate, 'dd-MM-yyyy', 'en-US')}_HASTA_${formatDate(endDate, 'dd-MM-yyyy', 'en-US')}`;
-            buildExcel(body, name, wscols, [], []);
-        });
+            const name = `PAGOS_DESDE_${formatDate(startDate, 'dd-MM-yyyy', 'en-US')}_HASTA_${formatDate(endDate, 'dd-MM-yyyy', 'en-US')}`
+            buildExcel(body, name, wscols, [], [])
+        })
     }
 
     onRangeChange() {
         if (this.formGroup.valid) {
-            const { startDate, endDate } = this.formGroup.value;
+            const { startDate, endDate } = this.formGroup.value
 
-            const queryParams: Params = { startDate: startDate.getTime(), endDate: endDate.getTime(), pageIndex: 0, key: null };
+            const queryParams: Params = { startDate: startDate.getTime(), endDate: endDate.getTime(), pageIndex: 0, key: null }
 
             this.router.navigate([], {
                 relativeTo: this.activatedRoute,
                 queryParams: queryParams,
                 queryParamsHandling: 'merge', // remove to replace all query params by provided
-            });
-            this.fetchData();
-            this.fetchCount();
+            })
+            this.fetchData()
+            this.fetchCount()
         }
     }
 
     onPaymentMethodChange() {
         const { paymentMethodId } = this.formGroup.value
-        Object.assign(this.params, { paymentMethodId });
-        this.fetchData();
-        this.fetchCount();
+        Object.assign(this.params, { paymentMethodId })
+        this.fetchData()
+        this.fetchCount()
     }
 
     onPaymentSelected(saleId: string) {
@@ -215,21 +221,21 @@ export class IncomesComponent implements OnInit {
             width: '600px',
             position: { top: '20px' },
             data: saleId,
-        });
+        })
     }
 
     onOfficeChange() {
         const { officeId } = this.formGroup.value
         Object.assign(this.params, { officeId })
-        this.fetchData();
-        this.fetchCount();
+        this.fetchData()
+        this.fetchCount()
     }
 
     onChangeUser() {
         const { userId } = this.formGroup.value
         Object.assign(this.params, { userId })
-        this.fetchData();
-        this.fetchCount();
+        this.fetchData()
+        this.fetchCount()
     }
 
 }

@@ -1,0 +1,47 @@
+<section class="container">
+    <div class="mat-elevation-z2">
+        <table mat-table [dataSource]="dataSource" class="w-100">
+            <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef>F. de registro</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize">
+                    {{ element.createdAt | date: 'dd/MM/yyyy' }}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="patient">
+                <th mat-header-cell *matHeaderCellDef>Paciente</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize">{{ element.patient.name }}</td>
+            </ng-container>
+            <ng-container matColumnDef="worker">
+                <th mat-header-cell *matHeaderCellDef>Medico</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize">{{ element.worker.name }}</td>
+            </ng-container>
+            <ng-container matColumnDef="symptoms">
+                <th mat-header-cell *matHeaderCellDef>Sintomas</th>
+                <td mat-cell *matCellDef="let element">{{ element.symptoms }}</td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" class="text-right">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu" xPosition="before">
+                        <button [routerLink]="['/generals', element._id, 'edit']" mat-menu-item>
+                            <mat-icon>edit</mat-icon>
+                            <span>Editar</span>
+                        </button>
+                    </mat-menu>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex"
+            [length]="length" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
+    </div>
+    <div class="fixed-bottom p-3" style="right: 0; left: unset; width: auto;">
+        <button mat-fab color="primary" class="float-right" routerLink="/generals/create">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+</section>

@@ -93,7 +93,7 @@ export class AppComponent {
         const kvtoken = urlParams.get('kvtoken')
         const accessToken = kvtoken || localStorage.getItem('accessToken')
 
-        this.authService.handleAuthStatus().subscribe(isAuth => {
+        this.authService.handleIsAuth().subscribe(isAuth => {
             this.isAuth = isAuth
         })
 

@@ -7,17 +7,20 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { SaleItemModel } from '../../sales/sale-item.model';
 import { SalesService } from '../../sales/sales.service';
 import { CustomersService } from '../customers.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription, lastValueFrom } from 'rxjs';
 import { DialogProgressComponent } from '../../navigation/dialog-progress/dialog-progress.component';
 import { CustomerModel } from '../customer.model';
 import { buildExcel } from '../../buildExcel';
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { OfficeModel } from '../../auth/office.model';
 import { AuthService } from '../../auth/auth.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-sale-customers',
+    standalone: true,
+    imports: [MaterialModule, CommonModule, ReactiveFormsModule],
     templateUrl: './sale-customers.component.html',
     styleUrls: ['./sale-customers.component.sass']
 })

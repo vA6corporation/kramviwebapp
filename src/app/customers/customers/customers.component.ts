@@ -1,9 +1,9 @@
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Subscription, lastValueFrom } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { BusinessModel } from '../../auth/business.model';
@@ -13,9 +13,14 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { CustomerModel } from '../customer.model';
 import { CustomersService } from '../customers.service';
 import { DialogDetailCustomersComponent } from '../dialog-detail-customers/dialog-detail-customers.component';
+import { MaterialModule } from '../../material.module';
+import { DeletedCustomersComponent } from '../deleted-customers/deleted-customers.component';
+import { DialogSearchProductsComponent } from '../../products/dialog-search-products/dialog-search-products.component';
 
 @Component({
     selector: 'app-customers',
+    standalone: true,
+    imports: [MaterialModule, CommonModule, RouterModule, DeletedCustomersComponent],
     templateUrl: './customers.component.html',
     styleUrls: ['./customers.component.sass']
 })
@@ -97,7 +102,7 @@ export class CustomersComponent implements OnInit {
                     })
 
                     for (let index = 0; index < this.length / chunk; index++) {
-                        const values = await lastValueFrom(this.customersService.getCustomersByPageWithLastSale(index + 1, chunk, {}))
+                        const values = await lastValueFrom(this.customersService.getCustomersByPageWithLastSale(index + 1, chunk, this.params))
                         dialogRef.componentInstance.onComplete()
                         customers.push(...values)
                     }
@@ -153,6 +158,21 @@ export class CustomersComponent implements OnInit {
                     this.navigationService.showMessage(error.error.message)
                 }
             })
+        })
+    }
+
+    onOpenDialogProducts() {
+        const dialogRef = this.matDialog.open(DialogSearchProductsComponent, {
+            width: '600px',
+            position: { top: '20px' },
+        })
+
+        dialogRef.afterClosed().subscribe(product => {
+            if (product) {
+                Object.assign(this.params, { productId: product._id })
+                this.fetchData()
+                this.fetchCount()
+            }
         })
     }
 

@@ -1,11 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Params } from '@angular/router';
 import { Chart, ChartOptions, ChartType } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategoriesService } from '../../products/categories.service';
 import { CategoryModel } from '../../products/category.model';
@@ -13,10 +14,12 @@ import { randomColor } from '../../randomColor';
 import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
 import { ReportsService } from '../reports.service';
-import { InvoiceType } from '../../sales/invoice-type.enum';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-invoices',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './invoices.component.html',
     styleUrls: ['./invoices.component.sass']
 })

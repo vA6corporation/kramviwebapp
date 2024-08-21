@@ -4,26 +4,31 @@
         <mat-form-field appearance="fill">
             <mat-label>Tipo de Busqueda</mat-label>
             <mat-select formControlName="searchType" #searchType tabindex="-1">
-                <mat-option *ngFor="let element of searchTypes" [value]="element.code">{{ element.label }}</mat-option>
+                @for (searchType of searchTypes; track $index) {
+                    <mat-option [value]="searchType.code">{{ searchType.label }}</mat-option>
+                }
             </mat-select>
         </mat-form-field>
-        <mat-form-field appearance="fill" *ngIf="searchType.value === 'NAME'; else elseBlock">
-            <mat-label>Busqueda</mat-label>
-            <input type="text" matInput formControlName="key" (keyup.enter)="onChangeKey()">
-            <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
-        <ng-template #elseBlock>
+        @if (searchType.value === 'NAME') {
+            <mat-form-field appearance="fill">
+                <mat-label>Busqueda</mat-label>
+                <input type="text" matInput formControlName="key" (keyup.enter)="onChangeKey()">
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+        } @else {
             <mat-form-field appearance="fill">
                 <mat-label>Busqueda</mat-label>
                 <input type="text" matInput formControlName="key" (input)="onChangeKey()">
                 <mat-icon matSuffix>search</mat-icon>
             </mat-form-field>
-        </ng-template>
+        }
         <mat-action-list>
-            <button mat-list-item *ngFor="let customer of customers" (click)="onSelectCustomer(customer)">
-                <span matListItemTitle>{{ customer.name | uppercase }}</span>
-                <span matListItemLine>{{ customer.documentType }}: {{ customer.document }}</span>
-            </button>
+            @for (customer of customers; track customer._id) {
+                <button mat-list-item (click)="onSelectCustomer(customer)">
+                    <span matListItemTitle>{{ customer.name | uppercase }}</span>
+                    <span matListItemLine>{{ customer.documentType }}: {{ customer.document }}</span>
+                </button>
+            }
         </mat-action-list>
         <div class="my-3"></div>
     </div>

@@ -16,11 +16,13 @@
             <mat-label>Nombres/Rason Social</mat-label>
             <input type="text" matInput formControlName="name">
         </mat-form-field>
-        <ng-container formArrayName="addresses" *ngFor="let control of formArray.controls; let i = index;">
-            <mat-form-field appearance="fill">
-                <mat-label>Direccion {{ i + 1 }}</mat-label>
-                <input type="text" matInput [formControlName]="i">
-            </mat-form-field>
+        <ng-container formArrayName="addresses">
+            @for (control of formArray.controls; track $index; let i = $index) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Direccion {{ i + 1 }}</mat-label>
+                    <input type="text" matInput [formControlName]="i">
+                </mat-form-field>
+            }
         </ng-container>
         <button type="button" class="mb-4 w-100" [disabled]="isLoading" (click)="onAddAddress()" mat-flat-button
             color="primary">AGREGAR DIRECCION</button>

@@ -1,52 +1,50 @@
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NavigationService } from '../../navigation/navigation.service';
-import { SalesService } from '../../sales/sales.service';
-import { PaymentMethodsService } from '../../payment-methods/payment-methods.service';
-import { TurnsService } from '../../turns/turns.service';
 import { MatDialog } from '@angular/material/dialog';
-import { PrintService } from '../../print/print.service';
-import { AuthService } from '../../auth/auth.service';
-import { ReceptionsService } from '../receptions.service';
 import { Params, Router } from '@angular/router';
-import { CreatePaymentModel } from '../../payments/create-payment.model';
-import { CreateSaleItemModel } from '../../sales/create-sale-item.model';
-import { CustomerModel } from '../../customers/customer.model';
-import { WorkerModel } from '../../workers/worker.model';
-import { SpecialtyModel } from '../../events/specialty.model';
-import { SettingModel } from '../../auth/setting.model';
-import { RoomModel } from '../../rooms/room.model';
-import { ReceptionModel } from '../reception.model';
-import { TurnModel } from '../../turns/turn.model';
-import { UserModel } from '../../users/user.model';
-import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
 import { Subscription } from 'rxjs';
-import { DialogTurnsComponent } from '../../turns/dialog-turns/dialog-turns.component';
-import { DialogSearchCustomersComponent } from '../../customers/dialog-search-customers/dialog-search-customers.component';
+import { AuthService } from '../../auth/auth.service';
+import { SettingModel } from '../../auth/setting.model';
+import { CustomerModel } from '../../customers/customer.model';
 import { DialogCreateCustomersComponent } from '../../customers/dialog-create-customers/dialog-create-customers.component';
-import { DialogSplitPaymentsComponent, DialogSplitPaymentsData } from '../../payments/dialog-split-payments/dialog-split-payments.component';
-import { IgvType } from '../../products/igv-type.enum';
-import { SaleForm } from '../../sales/sale.form';
-import { CreateSaleModel } from '../../sales/create-sale.model';
-import { HttpErrorResponse } from '@angular/common/http';
 import { DialogEditCustomersComponent } from '../../customers/dialog-edit-customers/dialog-edit-customers.component';
-import { CommonModule, Location } from '@angular/common';
-import { MaterialModule } from '../../material.module';
+import { DialogSearchCustomersComponent } from '../../customers/dialog-search-customers/dialog-search-customers.component';
 import { DirectivesModule } from '../../directives/directives.module';
+import { MaterialModule } from '../../material.module';
+import { NavigationService } from '../../navigation/navigation.service';
+import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
+import { PaymentMethodsService } from '../../payment-methods/payment-methods.service';
+import { CreatePaymentModel } from '../../payments/create-payment.model';
+import { DialogSplitPaymentsComponent, DialogSplitPaymentsData } from '../../payments/dialog-split-payments/dialog-split-payments.component';
+import { PrintService } from '../../print/print.service';
+import { IgvType } from '../../products/igv-type.enum';
+import { RoomModel } from '../../rooms/room.model';
+import { CreateSaleItemModel } from '../../sales/create-sale-item.model';
+import { CreateSaleModel } from '../../sales/create-sale.model';
+import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component';
+import { SaleForm } from '../../sales/sale.form';
+import { SalesService } from '../../sales/sales.service';
+import { DialogTurnsComponent } from '../../turns/dialog-turns/dialog-turns.component';
+import { TurnModel } from '../../turns/turn.model';
+import { TurnsService } from '../../turns/turns.service';
+import { UserModel } from '../../users/user.model';
+import { ReceptionModel } from '../reception.model';
+import { ReceptionsService } from '../receptions.service';
 
 @Component({
-  selector: 'app-charge-receptions',
-  standalone: true,
-  imports: [MaterialModule, ReactiveFormsModule, CommonModule, DirectivesModule],
-  templateUrl: './charge-receptions.component.html',
-  styleUrls: ['./charge-receptions.component.sass']
+    selector: 'app-charge-receptions',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule, DirectivesModule, SaleItemsComponent],
+    templateUrl: './charge-receptions.component.html',
+    styleUrls: ['./charge-receptions.component.sass']
 })
 export class ChargeReceptionsComponent implements OnInit {
 
     constructor(
         private readonly formBuilder: FormBuilder,
         private readonly navigationService: NavigationService,
-        private readonly location: Location,
         private readonly salesService: SalesService,
         private readonly paymentMethodsService: PaymentMethodsService,
         private readonly turnsService: TurnsService,
@@ -117,6 +115,16 @@ export class ChargeReceptionsComponent implements OnInit {
         this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
             this.paymentMethods = paymentMethods
             this.formGroup.patchValue({ paymentMethodId: (this.paymentMethods[0] || { _id: '' })._id })
+        })
+
+        this.handleSaleItems$ = this.salesService.handleSaleItems().subscribe(saleItems => {
+            this.saleItems = saleItems
+            this.charge = 0
+            for (const saleItem of this.saleItems) {
+                if (saleItem.igvCode !== '11') {
+                    this.charge += saleItem.price * saleItem.quantity
+                }
+            }
         })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
@@ -225,6 +233,21 @@ export class ChargeReceptionsComponent implements OnInit {
 
         if (this.room === null || this.reception === null) {
             this.router.navigate(['/receptions'])
+        } else {
+            const saleItem: CreateSaleItemModel = {
+                fullName: this.room.name,
+                onModel: 'Room',
+                productId: this.room._id,
+                price: this.reception.charge,
+                quantity: 1,
+                isTrackStock: false,
+                unitCode: 'ZZ',
+                igvCode: IgvType.GRAVADO,
+                preIgvCode: IgvType.GRAVADO,
+                observations: '',
+                prices: [],
+            }
+            this.salesService.setSaleItems([saleItem])
         }
     }
 
@@ -305,21 +328,21 @@ export class ChargeReceptionsComponent implements OnInit {
                 rcPercent: this.setting.defaultRcPercent
             }
 
-            const saleItem: CreateSaleItemModel = {
-                fullName: this.room.name,
-                onModel: 'Room',
-                productId: this.room._id,
-                price: this.reception.charge,
-                quantity: 1,
-                isTrackStock: false,
-                unitCode: 'ZZ',
-                igvCode: IgvType.GRAVADO,
-                preIgvCode: IgvType.GRAVADO,
-                observations: '',
-                prices: [],
-            }
+            // const saleItem: CreateSaleItemModel = {
+            //     fullName: this.room.name,
+            //     onModel: 'Room',
+            //     productId: this.room._id,
+            //     price: this.reception.charge,
+            //     quantity: 1,
+            //     isTrackStock: false,
+            //     unitCode: 'ZZ',
+            //     igvCode: IgvType.GRAVADO,
+            //     preIgvCode: IgvType.GRAVADO,
+            //     observations: '',
+            //     prices: [],
+            // }
 
-            this.saleItems = [saleItem]
+            // this.saleItems = this.receptionItems
 
             if (!this.saleItems.length) {
                 throw new Error("Agrega un producto")
@@ -338,52 +361,54 @@ export class ChargeReceptionsComponent implements OnInit {
             this.isLoading = true
             this.navigationService.loadBarStart()
 
-            this.salesService.saveSale(createdSale, this.saleItems, this.payments, this.params).subscribe(sale => {
+            this.salesService.saveSale(createdSale, this.saleItems, this.payments, this.params).subscribe({
+                next: sale => {
 
-                let payments: CreatePaymentModel[] = []
+                    let payments: CreatePaymentModel[] = []
 
-                if (this.payments.length) {
-                    payments = this.payments
-                } else {
-                    payments[0] = {
-                        paymentMethodId: createdSale.paymentMethodId || '',
-                        charge: sale.charge,
-                        turnId: sale.turnId,
-                        createdAt: new Date(),
+                    if (this.payments.length) {
+                        payments = this.payments
+                    } else {
+                        payments[0] = {
+                            paymentMethodId: createdSale.paymentMethodId || '',
+                            charge: sale.charge,
+                            turnId: sale.turnId,
+                            createdAt: new Date(),
+                        }
                     }
+
+                    Object.assign(sale, {
+                        user: this.user,
+                        customer: this.customer,
+                        saleItems: this.saleItems,
+                        payments,
+                    })
+
+                    switch (this.setting.papelImpresion) {
+                        case 'a4':
+                            this.printService.printA4Invoice(sale)
+                            break
+                        case 'a5':
+                            this.printService.printA5Invoice(sale)
+                            break
+                        case 'ticket80mm':
+                            this.printService.printTicket80mm(sale)
+                            break
+                        default:
+                            this.printService.printTicket58mm(sale)
+                            break
+                    }
+
+                    this.salesService.setSaleItems([])
+                    this.router.navigate(['/receptions'])
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage('Registrado correctamente')
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
                 }
-
-                Object.assign(sale, {
-                    user: this.user,
-                    customer: this.customer,
-                    saleItems: this.saleItems,
-                    payments,
-                })
-
-                switch (this.setting.papelImpresion) {
-                    case 'a4':
-                        this.printService.printA4Invoice(sale)
-                        break
-                    case 'a5':
-                        this.printService.printA5Invoice(sale)
-                        break
-                    case 'ticket80mm':
-                        this.printService.printTicket80mm(sale)
-                        break
-                    default:
-                        this.printService.printTicket58mm(sale)
-                        break
-                }
-
-                this.salesService.setSaleItems([])
-                this.router.navigate(['/receptions'])
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
-                this.navigationService.showMessage('Registrado correctamente')
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message)
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
             })
         } catch (error) {
             if (error instanceof Error) {

@@ -13,4 +13,5 @@ export interface BoardModel {
     createdAt: string
     user: UserModel
     tableId: string
+    charge: number
 }

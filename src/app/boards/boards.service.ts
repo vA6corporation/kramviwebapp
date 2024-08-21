@@ -9,6 +9,7 @@ import { SaleModel } from '../sales/sale.model';
 import { BoardItemModel } from './board-item.model';
 import { BoardModel } from './board.model';
 import { CreateBoardItemModel } from './create-board-item.model';
+import { SummaryBoardModel } from './summary-board.model';
 
 @Injectable({
     providedIn: 'root'
@@ -128,6 +129,10 @@ export class BoardsService {
 
     getBoardsOfTheDay(): Observable<BoardModel[]> {
         return this.httpService.get('boards/boardsOfTheDay')
+    }
+
+    getSummaryBoardsByRangeDate(startDate: string, endDate: string): Observable<SummaryBoardModel[]> {
+        return this.httpService.get(`boards/summaryBoardsByRangeDate/${startDate}/${endDate}`)
     }
 
     getBoardsByPage(

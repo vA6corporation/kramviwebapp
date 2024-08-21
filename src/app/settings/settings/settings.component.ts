@@ -229,7 +229,7 @@ export class SettingsComponent implements OnInit {
     onDeleteLogo() {
         this.navigationService.loadBarStart()
         this.ngZone.run(() => {
-            this.settingsService.updateImage({ logo: null }).subscribe(() => {
+            this.settingsService.updateImage({ logo: '' }).subscribe(() => {
                 this.navigationService.showMessage('Logo eliminado correctamente')
                 this.navigationService.loadBarFinish()
                 this.setting.logo = ""
@@ -240,7 +240,7 @@ export class SettingsComponent implements OnInit {
     onDeleteBanner() {
         this.navigationService.loadBarStart()
         this.ngZone.run(() => {
-            this.settingsService.updateImage({ banner: null }).subscribe(() => {
+            this.settingsService.updateImage({ banner: '' }).subscribe(() => {
                 this.navigationService.showMessage('Banner eliminado correctamente')
                 this.navigationService.loadBarFinish()
                 this.setting.banner = ""
@@ -251,7 +251,7 @@ export class SettingsComponent implements OnInit {
     onDeleteTittle() {
         this.navigationService.loadBarStart()
         this.ngZone.run(() => {
-            this.settingsService.updateImage({ tittle: null }).subscribe(() => {
+            this.settingsService.updateImage({ tittle: '' }).subscribe(() => {
                 this.navigationService.showMessage('Titulo eliminado correctamente')
                 this.navigationService.loadBarFinish()
                 this.setting.header = ""

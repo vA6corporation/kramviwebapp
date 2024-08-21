@@ -10,9 +10,13 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
 import { ReportsService } from '../reports.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-collections',
+    standalone: true,
+    imports: [MaterialModule, CommonModule],
     templateUrl: './collections.component.html',
     styleUrls: ['./collections.component.sass']
 })
@@ -88,121 +92,123 @@ export class CollectionsComponent implements OnInit {
         this.reportsService.getInOutByYearOfficeUser(
             this.year,
             this.params
-        ).subscribe(res => {
-            this.chart?.destroy()
-            const { sales, purchases, paymentOrders } = res
-            const dataSource = []
+        ).subscribe({
+            next: res => {
+                this.chart?.destroy()
+                const { sales, purchases, paymentOrders } = res
+                const dataSource = []
 
-            for (let index = 0; index < 12; index++) {
-                const sale = sales.find((e: any) => e.mes === index + 1) || { total: 0, }
-                const purchase = purchases.find((e: any) => e.mes === index + 1) || { total: 0 }
-                const paymentOrder = paymentOrders.find((e: any) => e.mes === index + 1) || { total: 0 }
+                for (let index = 0; index < 12; index++) {
+                    const sale = sales.find((e: any) => e.mes === index + 1) || { total: 0, }
+                    const purchase = purchases.find((e: any) => e.mes === index + 1) || { total: 0 }
+                    const paymentOrder = paymentOrders.find((e: any) => e.mes === index + 1) || { total: 0 }
 
-                const data: any = {}
+                    const data: any = {}
 
-                data.month = this.months[index]
+                    data.month = this.months[index]
 
-                if (sale.mes === index + 1) {
-                    data.sale = sale.total
+                    if (sale.mes === index + 1) {
+                        data.sale = sale.total
+                    }
+
+                    if (purchase.mes === index + 1) {
+                        data.purchase = purchase.total
+                    }
+
+                    if (paymentOrder.mes === index + 1) {
+                        data.paymentOrder = paymentOrder.total
+                    }
+
+                    dataSource.push(data)
                 }
 
-                if (purchase.mes === index + 1) {
-                    data.purchase = purchase.total
+                this.dataSource = dataSource
+
+                const data = {
+                    labels: this.months,
+                    datasets: [
+                        {
+                            label: 'Ventas',
+                            data: sales.map((e: any) => e.total),
+                            borderColor: '#3f51b5',
+                            backgroundColor: 'rgba(63, 81, 181, 0.3)',
+                            fill: true,
+                            datalabels: {
+                                align: 'end',
+                                anchor: 'end'
+                            } as any
+                        },
+                        {
+                            label: 'Compras',
+                            data: purchases.map((e: any) => e.total),
+                            borderColor: '#e32929',
+                            backgroundColor: 'rgba(227, 41, 41, 0.3)',
+                            fill: true,
+                            datalabels: {
+                                align: 'start',
+                                anchor: 'start'
+                            } as any
+                        },
+                        {
+                            label: 'Ordenes de pago',
+                            data: paymentOrders.map((e: any) => e.total),
+                            borderColor: '#ffff35',
+                            backgroundColor: 'rgba(255, 255, 53, 0.3)',
+                            fill: true,
+                            datalabels: {
+                                align: 'start',
+                                anchor: 'start'
+                            } as any
+                        },
+                    ]
                 }
 
-                if (paymentOrder.mes === index + 1) {
-                    data.paymentOrder = paymentOrder.total
+                const config = {
+                    type: 'line' as ChartType,
+                    data: data,
+                    plugins: [ChartDataLabels],
+                    options: {
+                        plugins: {
+                            datalabels: {
+                                backgroundColor: function (context) {
+                                    return 'rgba(73, 79, 87, 0.5)'
+                                    // return context.dataset.backgroundColor
+                                },
+                                borderRadius: 4,
+                                color: 'white',
+                                font: {
+                                    weight: 'bold'
+                                },
+                                formatter: function (value) {
+                                    if (value === 0) {
+                                        return null
+                                    } else {
+                                        return Math.round(value)
+                                    }
+                                },
+                                padding: 6
+                            }
+                        },
+
+                        // Core options
+                        aspectRatio: 5 / 3,
+                        layout: {
+                            padding: {
+                                top: 32,
+                                right: 16,
+                                bottom: 16,
+                                left: 8
+                            }
+                        },
+                        maintainAspectRatio: false,
+                    } as ChartOptions,
                 }
 
-                dataSource.push(data)
+                const canvas = this.incomesChart.nativeElement
+                this.chart = new Chart(canvas, config)
+            }, error: (error: HttpErrorResponse) => {
+                this.navigationService.showMessage(error.error.message)
             }
-
-            this.dataSource = dataSource
-
-            const data = {
-                labels: this.months,
-                datasets: [
-                    {
-                        label: 'Ventas',
-                        data: sales.map((e: any) => e.total),
-                        borderColor: '#3f51b5',
-                        backgroundColor: 'rgba(63, 81, 181, 0.3)',
-                        fill: true,
-                        datalabels: {
-                            align: 'end',
-                            anchor: 'end'
-                        } as any
-                    },
-                    {
-                        label: 'Compras',
-                        data: purchases.map((e: any) => e.total),
-                        borderColor: '#e32929',
-                        backgroundColor: 'rgba(227, 41, 41, 0.3)',
-                        fill: true,
-                        datalabels: {
-                            align: 'start',
-                            anchor: 'start'
-                        } as any
-                    },
-                    {
-                        label: 'Ordenes de pago',
-                        data: paymentOrders.map((e: any) => e.total),
-                        borderColor: '#ffff35',
-                        backgroundColor: 'rgba(255, 255, 53, 0.3)',
-                        fill: true,
-                        datalabels: {
-                            align: 'start',
-                            anchor: 'start'
-                        } as any
-                    },
-                ]
-            }
-
-            const config = {
-                type: 'line' as ChartType,
-                data: data,
-                plugins: [ChartDataLabels],
-                options: {
-                    plugins: {
-                        datalabels: {
-                            backgroundColor: function (context) {
-                                return 'rgba(73, 79, 87, 0.5)'
-                                // return context.dataset.backgroundColor
-                            },
-                            borderRadius: 4,
-                            color: 'white',
-                            font: {
-                                weight: 'bold'
-                            },
-                            formatter: function (value) {
-                                if (value === 0) {
-                                    return null
-                                } else {
-                                    return Math.round(value)
-                                }
-                            },
-                            padding: 6
-                        }
-                    },
-
-                    // Core options
-                    aspectRatio: 5 / 3,
-                    layout: {
-                        padding: {
-                            top: 32,
-                            right: 16,
-                            bottom: 16,
-                            left: 8
-                        }
-                    },
-                    maintainAspectRatio: false,
-                } as ChartOptions,
-            }
-
-            const canvas = this.incomesChart.nativeElement
-            this.chart = new Chart(canvas, config)
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.showMessage(error.error.message)
         })
     }
 

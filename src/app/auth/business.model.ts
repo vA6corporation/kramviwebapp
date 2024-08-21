@@ -1,5 +1,11 @@
 import { OfficeModel } from "./office.model";
 
+export enum BusinessType {
+    TIENDA = 'TIENDA',
+    RESTAURANTE = 'RESTAURANTE',
+    HOTEL = 'HOTEL'
+}
+
 export class BusinessModel {
     _id: string = ''
     businessName: string = ''
@@ -17,5 +23,5 @@ export class BusinessModel {
     clientId: string = ''
     clientSecret: string = ''
     paymentGroup: string = ''
-    businessType: string = ''
+    businessType: BusinessType = BusinessType.TIENDA
 }

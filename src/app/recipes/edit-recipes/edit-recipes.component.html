@@ -26,14 +26,12 @@
         <mat-action-list>
             <button type="button" mat-list-item *ngFor="let element of recipes; let i = index"
                 (click)="onClickRecipe(i)">
-                <div class="d-flex flex-column">
-                    {{ element.name }}
-                </div>
-                <span class="divider"></span>
-                <span class="text-muted">x{{ element.quantity }}</span>
-                <span class="spacer"></span>
-                <div class="d-flex flex-column">
-                    {{ (element.cost * element.quantity).toFixed(2) }}
+                <span matListItemTitle>{{ element.name }}</span>
+                <div matListItemLine class="d-flex my-1">
+                    <span class="mr-2">x{{ element.quantity }}</span>
+                    <span class="spacer"></span>
+                    <span class="d-flex flex-column">{{ (element.cost * element.quantity).toFixed(2) }}
+                    </span>
                 </div>
             </button>
             <mat-list-item role="listitem">

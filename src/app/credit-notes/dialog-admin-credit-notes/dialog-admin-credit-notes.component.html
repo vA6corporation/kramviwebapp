@@ -2,7 +2,7 @@
     {{ creditNote?.invoicePrefix }}{{ office?.serialPrefix }}-{{ creditNote?.invoiceNumber }}
 </h2>
 <div mat-dialog-content>
-    <h4 class="text-danger">Opciones de administrador</h4>
+    <h3 class="text-danger mat-title-medium">Opciones de administrador</h3>
     <table class="w-100">
         <tbody>
         </tbody>
@@ -10,7 +10,7 @@
     <form [formGroup]="formDate" autocomplete="off" (submit)="onSubmitDate()" class="d-flex">
         <mat-form-field appearance="fill">
             <mat-label>Fecha emision</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="createdAt">
+            <input matInput [matDatepicker]="picker" formControlName="emitionAt">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>

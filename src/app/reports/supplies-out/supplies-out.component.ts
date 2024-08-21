@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Params } from '@angular/router';
 import { Chart, ChartOptions, ChartType, registerables } from 'chart.js';
 import { Subscription } from 'rxjs';
@@ -11,10 +11,13 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { CategoryModel } from '../../products/category.model';
 import { randomColor } from '../../randomColor';
 import { ReportsService } from '../reports.service';
+import { MaterialModule } from '../../material.module';
 Chart.register(...registerables);
 
 @Component({
     selector: 'app-supplies-out',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './supplies-out.component.html',
     styleUrls: ['./supplies-out.component.sass']
 })

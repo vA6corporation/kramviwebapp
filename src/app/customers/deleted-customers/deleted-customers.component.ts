@@ -6,9 +6,13 @@ import { Subscription } from 'rxjs';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CustomerModel } from '../customer.model';
 import { CustomersService } from '../customers.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-deleted-customers',
+    standalone: true,
+    imports: [MaterialModule, CommonModule],
     templateUrl: './deleted-customers.component.html',
     styleUrls: ['./deleted-customers.component.sass']
 })

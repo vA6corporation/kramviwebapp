@@ -41,7 +41,7 @@ export async function buildBarcode70x30mmTwo(
         let currencyCodePosition = 17
 
         if (product.price > 99) {
-            currencyCodePosition = 12
+            currencyCodePosition = 13
         }
 
         text = 'S/'
@@ -50,7 +50,7 @@ export async function buildBarcode70x30mmTwo(
         pdf.setFontSize(title)
 
         text = product.price.toFixed(2)
-        pdf.text(text, 38, positionY + 20, { align: 'center' })
+        pdf.text(text, 39, positionY + 20, { align: 'center' })
 
         if (index + 1 < products.length) {
             pdf.addPage()

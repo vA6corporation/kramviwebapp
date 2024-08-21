@@ -18,8 +18,9 @@
             <mat-label>Usuario</mat-label>
             <mat-select [(value)]="userId" (selectionChange)="onChangeUser()">
                 <mat-option value="">TODOS LOS USUARIOS</mat-option>
-                <mat-option *ngFor="let element of users" [value]="element._id">{{ element.name | uppercase
-                    }}</mat-option>
+                <mat-option *ngFor="let element of users" [value]="element._id">
+                    {{ element.name | uppercase }}
+                </mat-option>
             </mat-select>
         </mat-form-field>
     </div>
@@ -34,8 +35,9 @@
             </ng-container>
             <ng-container matColumnDef="sales">
                 <th mat-header-cell *matHeaderCellDef>Ventas</th>
-                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">{{ (element.sale ||
-                    0).toFixed(2) }}</td>
+                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">
+                    {{ (element.sale || 0).toFixed(2) }}
+                </td>
             </ng-container>
             <ng-container matColumnDef="purchases">
                 <th mat-header-cell *matHeaderCellDef>Compras</th>
@@ -47,8 +49,9 @@
             </ng-container>
             <ng-container matColumnDef="final">
                 <th mat-header-cell *matHeaderCellDef>Final</th>
-                <td mat-cell *matCellDef="let element">{{ ((element.sale || 0) - (element.purchase || 0) -
-                    (element.paymentOrder || 0)).toFixed(2) }}</td>
+                <td mat-cell *matCellDef="let element">
+                    {{ ((element.sale || 0) - (element.purchase || 0) - (element.paymentOrder || 0)).toFixed(2) }}
+                </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

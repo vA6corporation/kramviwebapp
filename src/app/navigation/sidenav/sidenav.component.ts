@@ -26,15 +26,15 @@ export class SidenavComponent {
     isAuth: boolean = false
 
     private handleAuth$: Subscription = new Subscription()
-    private handleAuthStatus$: Subscription = new Subscription()
+    private handleIsAuth$: Subscription = new Subscription()
 
     ngOnDestroy(): void {
         this.handleAuth$.unsubscribe()
-        this.handleAuthStatus$.unsubscribe()
+        this.handleIsAuth$.unsubscribe()
     }
 
     ngOnInit(): void {
-        this.handleAuthStatus$ = this.authService.handleAuthStatus().subscribe(isAuth => {
+        this.handleIsAuth$ = this.authService.handleIsAuth().subscribe(isAuth => {
             this.isAuth = isAuth
         })
 

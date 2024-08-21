@@ -372,7 +372,6 @@ export async function buildA4Invoice(
             pdf.addPage()
             positionYitems = 5
         }
-
     }
 
     pdf.line(5, positionYitems, 205, positionYitems)

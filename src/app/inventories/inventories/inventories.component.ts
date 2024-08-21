@@ -591,7 +591,7 @@ export class InventoriesComponent implements OnInit {
         }
     }
 
-    deleteProduct(productId: string) {
+    onDeleteProduct(productId: string) {
         const ok = confirm('Esta seguro de eliminar?...')
         if (ok) {
             this.productsService.delete(productId).subscribe(() => {

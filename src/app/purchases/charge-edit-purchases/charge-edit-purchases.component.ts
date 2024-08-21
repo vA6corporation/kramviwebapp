@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { NavigationService } from '../../navigation/navigation.service';
 import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
@@ -15,6 +15,9 @@ import { CreatePurchaseItemModel } from '../create-purchase-item.model';
 import { PurchasesService } from '../purchases.service';
 import { UpdatePurchaseModel } from '../update-purchase.model';
 import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component';
+import { OfficesService } from '../../offices/offices.service';
+import { OfficeModel } from '../../auth/office.model';
+import { AuthService } from '../../auth/auth.service';
 
 interface FormData {
     invoiceType: string
@@ -37,7 +40,9 @@ export class ChargeEditPurchasesComponent implements OnInit {
         private readonly navigationService: NavigationService,
         private readonly purchasesService: PurchasesService,
         private readonly paymentMethodsService: PaymentMethodsService,
+        private readonly officesService: OfficesService,
         private readonly matDialog: MatDialog,
+        private readonly authService: AuthService,
         private readonly router: Router,
     ) { }
 
@@ -47,6 +52,7 @@ export class ChargeEditPurchasesComponent implements OnInit {
         purchasedAt: new Date(),
         createdAt: new Date(),
         serie: null,
+        officeId: ['', Validators.required],
         observations: '',
     } as FormData)
     invoiceTypes = [
@@ -59,18 +65,24 @@ export class ChargeEditPurchasesComponent implements OnInit {
     charge: number = 0
     provider: ProviderModel | null = null
     isLoading: boolean = false
+    offices: OfficeModel[] = []
+    params: Params = {}
 
     paymentMethods: PaymentMethodModel[] = []
-    private purchaseId: string | null = null
+    private purchaseId: string = ''
 
     private handlePaymentMethods$: Subscription = new Subscription()
     private handleClickMenu$: Subscription = new Subscription()
     private handlePurchaseItems$: Subscription = new Subscription()
+    private handleOffices$: Subscription = new Subscription()
+    private handleAuth$: Subscription = new Subscription()
 
     ngOnDestroy() {
         this.handleClickMenu$.unsubscribe()
         this.handlePurchaseItems$.unsubscribe()
         this.handlePaymentMethods$.unsubscribe()
+        this.handleOffices$.unsubscribe()
+        this.handleAuth$.unsubscribe()
     }
 
     ngOnInit(): void {
@@ -90,6 +102,13 @@ export class ChargeEditPurchasesComponent implements OnInit {
             this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
                 this.paymentMethods = paymentMethods
                 this.formGroup.patchValue({ paymentMethodId: (this.paymentMethods[0] || { _id: '' })._id })
+            })
+
+            this.handleOffices$ = this.officesService.handleOfficesByActivity().subscribe(offices => {
+                this.offices = offices
+                this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
+                    this.formGroup.patchValue({ officeId: auth.office._id })
+                })
             })
 
             this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
@@ -136,53 +155,60 @@ export class ChargeEditPurchasesComponent implements OnInit {
         }
     }
 
+    onOfficeChange() {
+        const { officeId } = this.formGroup.value
+        Object.assign(this.params, { officeId })
+    }
+
     onSubmit() {
-        try {
-            const formData: FormData = this.formGroup.value
-            const purchase: UpdatePurchaseModel = {
-                invoiceType: formData.invoiceType,
-                serie: formData.serie,
-                purchasedAt: formData.purchasedAt,
-                createdAt: formData.createdAt,
-                observations: formData.observations,
-                paymentMethodId: formData.paymentMethodId,
-                providerId: this.provider ? this.provider._id : null,
-            }
-
-            if (this.purchaseItems.length === 0) {
-                throw new Error('Agrega un producto')
-            }
-
-            if (purchase.invoiceType === 'FACTURA' && this.provider === null) {
-                throw new Error('Agrega un proveedor')
-            }
-
-            if (purchase.invoiceType === 'FACTURA' && this.provider?.documentType !== 'RUC') {
-                throw new Error('El proveedor debe tener un RUC')
-            }
-
-            this.isLoading = true
-            this.navigationService.loadBarStart()
-
-            this.purchasesService.updatePurchase(purchase, this.purchaseItems, this.purchaseId || '').subscribe({
-                next: () => {
-                    this.purchasesService.setPurchaseItems([])
-                    this.router.navigate(['/purchases'])
-                    this.isLoading = false
-                    this.navigationService.loadBarFinish()
-                    this.navigationService.showMessage('Se han guardado los cambios')
-                }, error: (error: HttpErrorResponse) => {
-                    this.navigationService.showMessage(error.error.message)
-                    this.isLoading = false
-                    this.navigationService.loadBarFinish()
+        if (this.formGroup.valid) {
+            try {
+                const formData: FormData = this.formGroup.value
+                const purchase: UpdatePurchaseModel = {
+                    invoiceType: formData.invoiceType,
+                    serie: formData.serie,
+                    purchasedAt: formData.purchasedAt,
+                    createdAt: formData.createdAt,
+                    observations: formData.observations,
+                    paymentMethodId: formData.paymentMethodId,
+                    providerId: this.provider ? this.provider._id : null,
                 }
-            })
-        } catch (error) {
-            if (error instanceof Error) {
-                this.navigationService.showMessage(error.message)
+    
+                if (this.purchaseItems.length === 0) {
+                    throw new Error('Agrega un producto')
+                }
+    
+                if (purchase.invoiceType === 'FACTURA' && this.provider === null) {
+                    throw new Error('Agrega un proveedor')
+                }
+    
+                if (purchase.invoiceType === 'FACTURA' && this.provider?.documentType !== 'RUC') {
+                    throw new Error('El proveedor debe tener un RUC')
+                }
+    
+                this.isLoading = true
+                this.navigationService.loadBarStart()
+    
+                this.purchasesService.updatePurchase(purchase, this.purchaseItems, this.purchaseId, this.params).subscribe({
+                    next: () => {
+                        this.purchasesService.setPurchaseItems([])
+                        this.router.navigate(['/purchases'])
+                        this.isLoading = false
+                        this.navigationService.loadBarFinish()
+                        this.navigationService.showMessage('Se han guardado los cambios')
+                    }, error: (error: HttpErrorResponse) => {
+                        this.navigationService.showMessage(error.error.message)
+                        this.isLoading = false
+                        this.navigationService.loadBarFinish()
+                    }
+                })
+            } catch (error) {
+                if (error instanceof Error) {
+                    this.navigationService.showMessage(error.message)
+                }
+                this.isLoading = false
+                this.navigationService.loadBarFinish()
             }
-            this.isLoading = false
-            this.navigationService.loadBarFinish()
         }
     }
 

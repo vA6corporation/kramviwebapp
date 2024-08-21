@@ -1,6 +1,6 @@
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Params } from '@angular/router';
 import { Chart, ChartOptions, ChartType, registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -18,10 +18,13 @@ import { SummaryProformaModel } from '../../proformas/summary-proforma.model';
 import { randomColor } from '../../randomColor';
 import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
+import { MaterialModule } from '../../material.module';
 Chart.register(...registerables);
 
 @Component({
     selector: 'app-proformas',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './proformas.component.html',
     styleUrls: ['./proformas.component.sass']
 })

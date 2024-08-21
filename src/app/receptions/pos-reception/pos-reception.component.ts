@@ -12,11 +12,15 @@ import { RoomsService } from '../../rooms/rooms.service';
 import { ReceptionModel } from '../reception.model';
 import { ReceptionsService } from '../receptions.service';
 import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
+import { DialogCreateReservationData, DialogCreateReservationsComponent } from '../../reservations/dialog-create-reservations/dialog-create-reservations.component';
+import { ReservationsService } from '../../reservations/reservations.service';
+import { SalesService } from '../../sales/sales.service';
 
 @Component({
     selector: 'app-pos-reception',
     standalone: true,
-    imports: [MaterialModule, ReactiveFormsModule, RouterModule],
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './pos-reception.component.html',
     styleUrls: ['./pos-reception.component.sass']
 })
@@ -24,7 +28,9 @@ export class PosReceptionComponent implements OnInit {
 
     constructor(
         private readonly navigationService: NavigationService,
+        private readonly reservationsService: ReservationsService,
         private readonly receptionsService: ReceptionsService,
+        private readonly salesService: SalesService,
         private readonly roomsService: RoomsService,
         private readonly matDialog: MatDialog,
         private readonly formBuilder: FormBuilder,
@@ -32,33 +38,41 @@ export class PosReceptionComponent implements OnInit {
         private readonly router: Router,
     ) { }
 
+    reservations: any[] = []
     room: RoomModel | null = null
     reception: ReceptionModel | null = null
     customer: CustomerModel | null = null
     customers: CustomerModel[] = []
     formGroup: FormGroup = this.formBuilder.group({
-        startDate: [new Date(), Validators.required],
-        endDate: [new Date(), Validators.required],
+        hours: [24, Validators.required],
+        charge: [0, Validators.required],
         observations: '',
-        charge: [null, Validators.required]
     })
+    checkinTime = new Date()
+    checkoutTime = new Date()
     receptionId: string = ''
     saleId: string | null = null
     isLoading: boolean = true
     private roomId: string = ''
 
     ngOnInit(): void {
-        const tomorrow = new Date()
-        tomorrow.setDate(tomorrow.getDate() + 1)
-        this.formGroup.get('endDate')?.patchValue(tomorrow)
+        const { hours } = this.formGroup.value
+        this.checkoutTime = new Date(this.checkoutTime.setTime(this.checkoutTime.getTime() + (hours * 60 * 60 * 1000)))
         this.roomId = this.activatedRoute.snapshot.params['roomId']
         this.navigationService.loadBarStart()
+        this.reservationsService.getReservationsByRoom(this.roomId).subscribe(reservations => {
+            this.reservations = reservations
+        })
+        this.salesService.setSaleItems([])
         this.roomsService.getRoomById(this.roomId).subscribe({
             next: room => {
                 this.isLoading = false
                 this.navigationService.loadBarFinish()
                 this.room = room
                 this.reception = room.reception
+                if (this.reception) {
+                    this.room.price = this.reception.charge
+                }
                 this.receptionsService.setRoom(this.room)
 
                 if (this.reception) {
@@ -69,7 +83,7 @@ export class PosReceptionComponent implements OnInit {
                     this.receptionsService.setReception(this.reception)
                     this.receptionsService.setCustomers(this.reception.customers)
                 } else {
-                    this.formGroup.get('charge')?.patchValue(this.room.price)
+                    this.formGroup.patchValue({ charge: this.room.price })
                 }
                 this.navigationService.setTitle(`Habitacion N° ${room.roomNumber}`)
             }, error: (error: HttpErrorResponse) => {
@@ -80,25 +94,99 @@ export class PosReceptionComponent implements OnInit {
         })
     }
 
+    changePrice() {
+        const { charge } = this.formGroup.value
+        if (this.room) {
+            this.room.price = (charge || 0)
+        }
+    }
+
+    changeHours() {
+        const { hours } = this.formGroup.value
+        const startDate = new Date(this.checkinTime)
+        this.checkoutTime = new Date(startDate.setTime(startDate.getTime() + ((hours || 1) * 60 * 60 * 1000)))
+    }
+
     onCheckOut() {
         this.navigationService.loadBarStart()
-        this.receptionsService.checkOut(this.receptionId).subscribe(() => {
-            this.navigationService.loadBarFinish()
-            this.router.navigate(['/receptions'])
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.loadBarFinish()
-            this.navigationService.showMessage(error.error.message)
+        this.receptionsService.checkOut(this.receptionId).subscribe({
+            next: () => {
+                this.navigationService.loadBarFinish()
+                this.router.navigate(['/receptions'])
+            }, error: (error: HttpErrorResponse) => {
+                this.navigationService.loadBarFinish()
+                this.navigationService.showMessage(error.error.message)
+            }
         })
     }
 
     onCleaned() {
         this.navigationService.loadBarStart()
-        this.receptionsService.cleaned(this.receptionId).subscribe(() => {
-            this.navigationService.loadBarFinish()
-            this.router.navigate(['/receptions'])
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.loadBarFinish()
-            this.navigationService.showMessage(error.error.message)
+        this.receptionsService.cleaned(this.receptionId).subscribe({
+            next: () => {
+                this.navigationService.loadBarFinish()
+                this.router.navigate(['/receptions'])
+            }, error: (error: HttpErrorResponse) => {
+                this.navigationService.loadBarFinish()
+                this.navigationService.showMessage(error.error.message)
+            }
+        })
+    }
+
+    createReservation(customer: CustomerModel) {
+        if (this.room) {
+            const data: DialogCreateReservationData = {
+                customer,
+                room: this.room
+            }
+
+            const dialogRef = this.matDialog.open(DialogCreateReservationsComponent, {
+                width: '600px',
+                position: { top: '20px' },
+                data
+            })
+
+            dialogRef.afterClosed().subscribe(reservation => {
+                if (reservation) {
+                    this.navigationService.loadBarStart()
+                    this.reservationsService.create(reservation).subscribe({
+                        next: reservation => {
+                            this.navigationService.loadBarFinish()
+                            this.reservations.push(reservation)
+                        }, error: (error: HttpErrorResponse) => {
+                            this.navigationService.showMessage(error.error.message)
+                            this.navigationService.loadBarFinish()
+                        }
+                    })
+                }
+            })
+        }
+    }
+
+    onCreateReservation() {
+        const dialogRef = this.matDialog.open(DialogSearchCustomersComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: 'DNI'
+        })
+
+        dialogRef.afterClosed().subscribe(customer => {
+            if (customer) {
+                this.createReservation(customer)
+            }
+        })
+
+        dialogRef.componentInstance.handleCreateCustomer().subscribe(() => {
+            const dialogRef = this.matDialog.open(DialogCreateCustomersComponent, {
+                width: '600px',
+                position: { top: '20px' },
+            })
+
+            dialogRef.afterClosed().subscribe(customer => {
+                if (customer) {
+                    this.createReservation(customer)
+                }
+            })
         })
     }
 
@@ -131,6 +219,17 @@ export class PosReceptionComponent implements OnInit {
 
     onDeleteCustomer(customerId: string) {
         this.customers = this.customers.filter(e => e._id !== customerId)
+    }
+
+    onDeleteReservation(reservationId: string) {
+        const ok = confirm('Estas seguro de eliminar?...')
+        if (ok) {
+            this.navigationService.loadBarStart()
+            this.reservationsService.delete(reservationId).subscribe(() => {
+                this.navigationService.loadBarFinish()
+                this.reservations = this.reservations.filter(e => e._id !== reservationId)
+            })
+        }
     }
 
     onSubmit() {

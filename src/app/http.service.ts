@@ -70,12 +70,12 @@ export class HttpService {
         return this.http.post(`${this.baseUrl}${url}`, body, { headers })
     }
 
-    put(url: string, body: any): Observable<any> {
+    put(url: string, body: any, params?: Params): Observable<any> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.accessToken}`
         })
-        return this.http.put(`${this.baseUrl}${url}`, body, { headers })
+        return this.http.put(`${this.baseUrl}${url}`, body, { headers, params })
     }
 
     delete(url: string): Observable<any> {

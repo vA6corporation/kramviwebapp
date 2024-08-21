@@ -173,8 +173,9 @@ export class PurchasesService {
         purchase: UpdatePurchaseModel,
         purchaseItems: CreatePurchaseItemModel[],
         purchaseId: string,
+        params: Params
     ): Observable<PurchaseModel> {
-        return this.httpService.put(`purchases/${purchaseId}`, { purchase, purchaseItems })
+        return this.httpService.put(`purchases/${purchaseId}`, { purchase, purchaseItems }, params)
     }
 
     deletePurchase(purchaseId: string): Observable<void> {

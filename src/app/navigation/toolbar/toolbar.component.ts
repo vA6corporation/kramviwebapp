@@ -38,7 +38,7 @@ export class ToolbarComponent implements OnInit {
     private handleChangeTitle$: Subscription = new Subscription()
     private handleIsBackScreen$: Subscription = new Subscription()
     private handleBackTo$: Subscription = new Subscription()
-    private handleAuthStatus$: Subscription = new Subscription()
+    private handleIsAuth$: Subscription = new Subscription()
     private handleLoadBar$: Subscription = new Subscription()
     private handleShowSearch$: Subscription = new Subscription()
     private handleSetMenu$: Subscription = new Subscription()
@@ -48,7 +48,7 @@ export class ToolbarComponent implements OnInit {
         this.handleChangeTitle$.unsubscribe()
         this.handleIsBackScreen$.unsubscribe()
         this.handleBackTo$.unsubscribe()
-        this.handleAuthStatus$.unsubscribe()
+        this.handleIsAuth$.unsubscribe()
         this.handleLoadBar$.unsubscribe()
         this.handleShowSearch$.unsubscribe()
         this.handleSetMenu$.unsubscribe()
@@ -64,7 +64,7 @@ export class ToolbarComponent implements OnInit {
             this.isMainScreen = isMainScreen
         })
 
-        this.handleAuthStatus$ = this.authService.handleAuthStatus().subscribe(isAuth => {
+        this.handleIsAuth$ = this.authService.handleIsAuth().subscribe(isAuth => {
             this.isAuth = isAuth
         })
 

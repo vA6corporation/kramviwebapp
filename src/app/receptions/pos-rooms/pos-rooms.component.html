@@ -11,6 +11,11 @@
                         <div class="text-center">
                             {{ room.name | uppercase }}
                         </div>
+                        @if (room.isReserved) {
+                            <div class="text-center">
+                                RESERVADO
+                            </div>
+                        }
                     </div>
                 </mat-grid-tile>
             }
@@ -23,6 +28,11 @@
                         <div class="text-center">
                             {{ room.name | uppercase }}
                         </div>
+                        @if (room.isReserved) {
+                            <div class="text-center">
+                                RESERVADO
+                            </div>
+                        }
                     </div>
                 </mat-grid-tile>
             }
@@ -35,6 +45,11 @@
                         <div class="text-center">
                             {{ room.name | uppercase }}
                         </div>
+                        @if (room.isReserved) {
+                            <div class="text-center">
+                                RESERVADO
+                            </div>
+                        }
                     </div>
                 </mat-grid-tile>
             }

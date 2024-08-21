@@ -1,16 +1,19 @@
+import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
+import { buildExcel } from '../../buildExcel';
 import { NavigationService } from '../../navigation/navigation.service';
 import { PatientModel } from '../patient.model';
 import { PatientsService } from '../patients.service';
-import { formatDate } from '@angular/common';
-import { buildExcel } from '../../buildExcel';
+import { MaterialModule } from '../../material.module';
+import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-patients',
+    standalone: true,
+    imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './patients.component.html',
     styleUrls: ['./patients.component.sass']
 })
@@ -19,23 +22,21 @@ export class PatientsComponent implements OnInit {
     constructor(
         private readonly patientsService: PatientsService,
         private readonly navigationService: NavigationService,
-        private readonly matDialog: MatDialog,
     ) { }
 
-    displayedColumns: string[] = ['document', 'name', 'email', 'mobileNumber', 'actions'];
-    dataSource: PatientModel[] = [];
-    length: number = 0;
-    pageSize: number = 10;
-    pageSizeOptions: number[] = [10, 30, 50];
-    pageIndex: number = 0;
+    displayedColumns: string[] = ['document', 'name', 'email', 'mobileNumber', 'actions']
+    dataSource: PatientModel[] = []
+    length: number = 0
+    pageSize: number = 10
+    pageSizeOptions: number[] = [10, 30, 50]
+    pageIndex: number = 0
 
-    private handleClickMenu$: Subscription = new Subscription();
-    private handleSearch$: Subscription = new Subscription();
+    private handleClickMenu$: Subscription = new Subscription()
+    private handleSearch$: Subscription = new Subscription()
 
-    handlePageEvent(event: PageEvent): void {
-        this.patientsService.getPatientsByPage(event.pageIndex + 1, event.pageSize).subscribe(patients => {
-            this.dataSource = patients
-        })
+    ngOnDestroy() {
+        this.handleSearch$.unsubscribe()
+        this.handleClickMenu$.unsubscribe()
     }
 
     ngOnInit(): void {
@@ -100,9 +101,10 @@ export class PatientsComponent implements OnInit {
         })
     }
 
-    ngOnDestroy() {
-        this.handleSearch$.unsubscribe()
-        this.handleClickMenu$.unsubscribe()
+    handlePageEvent(event: PageEvent): void {
+        this.patientsService.getPatientsByPage(event.pageIndex + 1, event.pageSize).subscribe(patients => {
+            this.dataSource = patients
+        })
     }
 
 }

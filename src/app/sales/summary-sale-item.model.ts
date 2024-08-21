@@ -1,4 +1,5 @@
 export interface SummarySaleItemModel {
+    _id: string
     productId: string
     categoryId: string
     sku: string,

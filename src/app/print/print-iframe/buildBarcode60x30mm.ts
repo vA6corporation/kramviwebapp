@@ -38,13 +38,19 @@ export async function buildBarcode60x30mm(
         text = formatDate(new Date(), 'dd.MM.yy', 'en-US')
         pdf.text(text, 3, positionY + 23, { align: 'left' })
 
+        let currencyCodePosition = 32
+
+        if (product.price > 99) {
+            currencyCodePosition = 30
+        }
+
         text = 'S/'
-        pdf.text(text, 32, positionY + 11, { align: 'left' })
+        pdf.text(text, currencyCodePosition, positionY + 11, { align: 'left' })
 
         pdf.setFontSize(title)
 
         text = product.price.toFixed(2)
-        pdf.text(text, 36, positionY + 15, { align: 'left' })
+        pdf.text(text, 46, positionY + 15, { align: 'center' })
 
         if (index + 1 < products.length) {
             pdf.addPage()

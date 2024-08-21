@@ -1,6 +1,6 @@
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Params } from '@angular/router';
@@ -16,9 +16,12 @@ import { SalesService } from '../../sales/sales.service';
 import { SummarySaleItemModel } from '../../sales/summary-sale-item.model';
 import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-utilities',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './utilities.component.html',
     styleUrls: ['./utilities.component.sass']
 })

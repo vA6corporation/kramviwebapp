@@ -58,4 +58,9 @@ export class SheetPrintBarcodesComponent implements OnInit {
         this.bottomSheetRef.dismiss()
     }
 
+    onPrintBarcodes50x25mmTwo() {
+        this.printService.printBarcodes50x25mmTwo(this.products)
+        this.bottomSheetRef.dismiss()
+    }
+
 }

@@ -45,7 +45,7 @@ export class DeletedBoardsComponent implements OnInit {
         filterCommands: false,
         tableId: '',
     })
-    displayedColumns: string[] = ['createdAt', 'ticketNumber', 'boardNumber', 'sale', 'user', 'deletedBoardItems', 'deletedObservations', 'actions']
+    displayedColumns: string[] = ['createdAt', 'ticketNumber', 'boardNumber', 'sale', 'user', 'charge', 'deletedBoardItems', 'deletedObservations', 'actions']
     dataSource: BoardModel[] = []
     length: number = 0
     pageSize: number = 10

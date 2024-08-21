@@ -1,17 +1,21 @@
 <mat-card class="m-3">
-  <div class="d-flex flex-row">
-    <h2 class="mat-title-large">Compras</h2>
-    <span class="spacer"></span>
-    <div>
-      <mat-form-field appearance="fill" class="text-uppercase my-form-field">
-        <mat-select [(value)]="officeId" (selectionChange)="onChange()">
-          <mat-option value="">TODAS LAS SUCURSALES</mat-option>
-          <mat-option [value]="element._id" *ngFor="let element of offices">{{ element.name | uppercase }}</mat-option>
-        </mat-select>
-      </mat-form-field>
+    <div class="d-flex flex-row">
+        <h2 class="mat-title-large">Compras</h2>
+        <span class="spacer"></span>
+        <div>
+            <mat-form-field appearance="fill" class="text-uppercase my-form-field">
+                <mat-select [(value)]="officeId" (selectionChange)="onChange()">
+                    <mat-option value="">TODAS LAS SUCURSALES</mat-option>
+                    @for (office of offices; track office._id) {
+                        <mat-option [value]="office._id">
+                            {{ office.name | uppercase }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
     </div>
-  </div>
-  <mat-card-content>
-    <canvas #incomesChart></canvas>
-  </mat-card-content>
+    <mat-card-content>
+        <canvas #incomesChart></canvas>
+    </mat-card-content>
 </mat-card>

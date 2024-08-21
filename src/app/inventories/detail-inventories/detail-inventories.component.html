@@ -55,240 +55,252 @@
         </mat-card-actions>
     </mat-card>
     <div class="d-flex mb-3">
-        <div class="w-100">
-            <h2 class="mat-title-large">Compras</h2>
-            <table mat-table [dataSource]="dataSourcePurchases" class="w-100" matSort matSortActive="createdAt"
-                matSortDirection="desc">
-                <ng-container matColumnDef="createdAt">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">F. de registro</th>
-                    <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'MMM d, y hh:mm a' }}</td>
-                </ng-container>
-                <ng-container matColumnDef="quantity">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">Cantidad</th>
-                    <td mat-cell *matCellDef="let element">
-                        <ng-container *ngIf="element.isOutput; else elseBlock">-{{ element.quantity }}</ng-container>
-                        <ng-template #elseBlock>+{{ element.quantity }}</ng-template>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="type">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="type">Tipo</th>
-                    <td mat-cell *matCellDef="let element">{{ element.type }}</td>
-                </ng-container>
-                <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let element" class="text-right">
-                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                            <mat-icon>more_vert</mat-icon>
-                        </button>
-                        <mat-menu #menu="matMenu" xPosition="before">
-                            <button type="button" (click)="onDetailPurchases(element.purchaseId)" mat-menu-item>
-                                <mat-icon>info</mat-icon>
-                                <span>Detalles</span>
+        @if (this.purchaseItems.length) {
+            <div class="w-100">
+                <h2 class="mat-title-large">Compras</h2>
+                <table mat-table [dataSource]="dataSourcePurchases" class="w-100" matSort matSortActive="createdAt"
+                    matSortDirection="desc">
+                    <ng-container matColumnDef="createdAt">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">F. de registro</th>
+                        <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'MMM d, y hh:mm a' }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="quantity">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">Cantidad</th>
+                        <td mat-cell *matCellDef="let element">
+                            <ng-container *ngIf="element.isOutput; else elseBlock">-{{ element.quantity }}</ng-container>
+                            <ng-template #elseBlock>+{{ element.quantity }}</ng-template>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="type">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="type">Tipo</th>
+                        <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let element" class="text-right">
+                            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                                <mat-icon>more_vert</mat-icon>
                             </button>
-                        </mat-menu>
-                    </td>
-                </ng-container>
-                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                    [ngClass]="{ 'bg-danger': row.isOutput, 'bg-success': !row.isOutput }"></tr>
-            </table>
-        </div>
-        <span class="divider px-2"></span>
-        <div class="w-100">
-            <h2 class="mat-title-large">Ventas</h2>
-            <table mat-table [dataSource]="dataSourceSales" class="w-100" matSort matSortActive="createdAt"
-                matSortDirection="desc">
-                <ng-container matColumnDef="createdAt">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">F. de registro</th>
-                    <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'MMM d, y hh:mm a' }}</td>
-                </ng-container>
-                <ng-container matColumnDef="quantity">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">Cantidad</th>
-                    <td mat-cell *matCellDef="let element">
-                        <ng-container *ngIf="element.isOutput; else elseBlock">-{{ element.quantity }}</ng-container>
-                        <ng-template #elseBlock>+{{ element.quantity }}</ng-template>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="type">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="type">Tipo</th>
-                    <td mat-cell *matCellDef="let element">{{ element.type }}</td>
-                </ng-container>
-                <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let element" class="text-right">
-                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                            <mat-icon>more_vert</mat-icon>
-                        </button>
-                        <mat-menu #menu="matMenu" xPosition="before">
-                            <button type="button" (click)="onDetailSales(element.saleId)" mat-menu-item>
-                                <mat-icon>info</mat-icon>
-                                <span>Detalles</span>
+                            <mat-menu #menu="matMenu" xPosition="before">
+                                <button type="button" (click)="onDetailPurchases(element.purchaseId)" mat-menu-item>
+                                    <mat-icon>info</mat-icon>
+                                    <span>Detalles</span>
+                                </button>
+                            </mat-menu>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                        [ngClass]="{ 'bg-danger': row.isOutput, 'bg-success': !row.isOutput }"></tr>
+                </table>
+            </div>
+        }
+        @if (this.saleItems.length) {
+            <span class="divider px-2"></span>
+            <div class="w-100">
+                <h2 class="mat-title-large">Ventas</h2>
+                <table mat-table [dataSource]="dataSourceSales" class="w-100" matSort matSortActive="createdAt"
+                    matSortDirection="desc">
+                    <ng-container matColumnDef="createdAt">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">F. de registro</th>
+                        <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'MMM d, y hh:mm a' }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="quantity">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">Cantidad</th>
+                        <td mat-cell *matCellDef="let element">
+                            <ng-container *ngIf="element.isOutput; else elseBlock">-{{ element.quantity }}</ng-container>
+                            <ng-template #elseBlock>+{{ element.quantity }}</ng-template>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="type">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="type">Tipo</th>
+                        <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let element" class="text-right">
+                            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                                <mat-icon>more_vert</mat-icon>
                             </button>
-                        </mat-menu>
-                    </td>
-                </ng-container>
-                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                    [ngClass]="{ 'bg-danger': row.isOutput, 'bg-success': !row.isOutput }"></tr>
-            </table>
-        </div>
+                            <mat-menu #menu="matMenu" xPosition="before">
+                                <button type="button" (click)="onDetailSales(element.saleId)" mat-menu-item>
+                                    <mat-icon>info</mat-icon>
+                                    <span>Detalles</span>
+                                </button>
+                            </mat-menu>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                        [ngClass]="{ 'bg-danger': row.isOutput, 'bg-success': !row.isOutput }"></tr>
+                </table>
+            </div>
+        }
     </div>
     <div class="d-flex mb-3">
-        <div class="w-100">
-            <h2 class="mat-title-large">Notas de credito</h2>
-            <table mat-table [dataSource]="dataSourceCreditNotes" class="w-100" matSort matSortActive="createdAt"
-                matSortDirection="desc">
-                <ng-container matColumnDef="createdAt">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">F. de registro</th>
-                    <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'MMM d, y hh:mm a' }}</td>
-                </ng-container>
-                <ng-container matColumnDef="quantity">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">Cantidad</th>
-                    <td mat-cell *matCellDef="let element">
-                        <ng-container *ngIf="element.isOutput; else elseBlock">-{{ element.quantity }}</ng-container>
-                        <ng-template #elseBlock>+{{ element.quantity }}</ng-template>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="type">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="type">Tipo</th>
-                    <td mat-cell *matCellDef="let element">{{ element.type }}</td>
-                </ng-container>
-                <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let element" class="text-right">
-                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                            <mat-icon>more_vert</mat-icon>
-                        </button>
-                        <mat-menu #menu="matMenu" xPosition="before">
-                            <button type="button" (click)="onDetailCreditNotes(element.creditNoteId)" mat-menu-item>
-                                <mat-icon>info</mat-icon>
-                                <span>Detalles</span>
+        @if (creditNoteItems.length) {
+            <div class="w-100">
+                <h2 class="mat-title-large">Notas de credito</h2>
+                <table mat-table [dataSource]="dataSourceCreditNotes" class="w-100" matSort matSortActive="createdAt"
+                    matSortDirection="desc">
+                    <ng-container matColumnDef="createdAt">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">F. de registro</th>
+                        <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'MMM d, y hh:mm a' }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="quantity">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">Cantidad</th>
+                        <td mat-cell *matCellDef="let element">
+                            <ng-container *ngIf="element.isOutput; else elseBlock">-{{ element.quantity }}</ng-container>
+                            <ng-template #elseBlock>+{{ element.quantity }}</ng-template>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="type">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="type">Tipo</th>
+                        <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let element" class="text-right">
+                            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                                <mat-icon>more_vert</mat-icon>
                             </button>
-                        </mat-menu>
-                    </td>
-                </ng-container>
-                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                    [ngClass]="{ 'bg-danger': row.isOutput, 'bg-success': !row.isOutput }"></tr>
-            </table>
-        </div>
-        <span class="divider px-2"></span>
-        <div class="w-100">
-            <h2 class="mat-title-large">Incidencias</h2>
-            <table mat-table [dataSource]="dataSourceIncidents" class="w-100" matSort matSortActive="createdAt"
-                matSortDirection="desc">
-                <ng-container matColumnDef="createdAt">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">F. de registro</th>
-                    <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'MMM d, y hh:mm a' }}</td>
-                </ng-container>
-                <ng-container matColumnDef="quantity">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">Cantidad</th>
-                    <td mat-cell *matCellDef="let element">
-                        <ng-container *ngIf="element.isOutput; else elseBlock">-{{ element.quantity }}</ng-container>
-                        <ng-template #elseBlock>+{{ element.quantity }}</ng-template>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="type">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="type">Tipo</th>
-                    <td mat-cell *matCellDef="let element">{{ element.type }}</td>
-                </ng-container>
-                <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let element" class="text-right">
-                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                            <mat-icon>more_vert</mat-icon>
-                        </button>
-                        <mat-menu #menu="matMenu" xPosition="before">
-                            <button type="button" (click)="onDetailIncidents(element.incidentId)" mat-menu-item>
-                                <mat-icon>info</mat-icon>
-                                <span>Detalles</span>
+                            <mat-menu #menu="matMenu" xPosition="before">
+                                <button type="button" (click)="onDetailCreditNotes(element.creditNoteId)" mat-menu-item>
+                                    <mat-icon>info</mat-icon>
+                                    <span>Detalles</span>
+                                </button>
+                            </mat-menu>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                        [ngClass]="{ 'bg-danger': row.isOutput, 'bg-success': !row.isOutput }"></tr>
+                </table>
+            </div>
+        }
+        @if (incidentItems.length) {
+            <span class="divider px-2"></span>
+            <div class="w-100">
+                <h2 class="mat-title-large">Incidencias</h2>
+                <table mat-table [dataSource]="dataSourceIncidents" class="w-100" matSort matSortActive="createdAt"
+                    matSortDirection="desc">
+                    <ng-container matColumnDef="createdAt">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">F. de registro</th>
+                        <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'MMM d, y hh:mm a' }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="quantity">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">Cantidad</th>
+                        <td mat-cell *matCellDef="let element">
+                            <ng-container *ngIf="element.isOutput; else elseBlock">-{{ element.quantity }}</ng-container>
+                            <ng-template #elseBlock>+{{ element.quantity }}</ng-template>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="type">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="type">Tipo</th>
+                        <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let element" class="text-right">
+                            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                                <mat-icon>more_vert</mat-icon>
                             </button>
-                        </mat-menu>
-                    </td>
-                </ng-container>
-                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                    [ngClass]="{ 'bg-danger': row.isOutput, 'bg-success': !row.isOutput }"></tr>
-            </table>
-        </div>
+                            <mat-menu #menu="matMenu" xPosition="before">
+                                <button type="button" (click)="onDetailIncidents(element.incidentId)" mat-menu-item>
+                                    <mat-icon>info</mat-icon>
+                                    <span>Detalles</span>
+                                </button>
+                            </mat-menu>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                        [ngClass]="{ 'bg-danger': row.isOutput, 'bg-success': !row.isOutput }"></tr>
+                </table>
+            </div>
+        }
     </div>
     <div class="d-flex">
-        <div class="w-100">
-            <h2 class="mat-title-large">Traspasos a esta sucursal</h2>
-            <table mat-table [dataSource]="dataSourceMovesIn" class="w-100" matSort matSortActive="createdAt"
-                matSortDirection="desc">
-                <ng-container matColumnDef="createdAt">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">F. de registro</th>
-                    <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'MMM d, y hh:mm a' }}</td>
-                </ng-container>
-                <ng-container matColumnDef="quantity">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">Cantidad</th>
-                    <td mat-cell *matCellDef="let element">
-                        <ng-container *ngIf="element.isOutput; else elseBlock">-{{ element.quantity }}</ng-container>
-                        <ng-template #elseBlock>+{{ element.quantity }}</ng-template>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="type">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="type">Tipo</th>
-                    <td mat-cell *matCellDef="let element">{{ element.type }}</td>
-                </ng-container>
-                <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let element" class="text-right">
-                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                            <mat-icon>more_vert</mat-icon>
-                        </button>
-                        <mat-menu #menu="matMenu" xPosition="before">
-                            <button type="button" (click)="onDetailMoves(element.moveId)" mat-menu-item>
-                                <mat-icon>info</mat-icon>
-                                <span>Detalles</span>
+        @if (moveInItems.length) {
+            <div class="w-100">
+                <h2 class="mat-title-large">Traspasos a esta sucursal</h2>
+                <table mat-table [dataSource]="dataSourceMovesIn" class="w-100" matSort matSortActive="createdAt"
+                    matSortDirection="desc">
+                    <ng-container matColumnDef="createdAt">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">F. de registro</th>
+                        <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'MMM d, y hh:mm a' }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="quantity">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">Cantidad</th>
+                        <td mat-cell *matCellDef="let element">
+                            <ng-container *ngIf="element.isOutput; else elseBlock">-{{ element.quantity }}</ng-container>
+                            <ng-template #elseBlock>+{{ element.quantity }}</ng-template>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="type">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="type">Tipo</th>
+                        <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let element" class="text-right">
+                            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                                <mat-icon>more_vert</mat-icon>
                             </button>
-                        </mat-menu>
-                    </td>
-                </ng-container>
-                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                    [ngClass]="{ 'bg-danger': row.isOutput, 'bg-success': !row.isOutput }"></tr>
-            </table>
-        </div>
-        <span class="divider px-2"></span>
-        <div class="w-100">
-            <h2 class="mat-title-large">Traspasos a otras sucursales</h2>
-            <table mat-table [dataSource]="dataSourceMovesOut" class="w-100" matSort matSortActive="createdAt"
-                matSortDirection="desc">
-                <ng-container matColumnDef="createdAt">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">F. de registro</th>
-                    <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'MMM d, y hh:mm a' }}</td>
-                </ng-container>
-                <ng-container matColumnDef="quantity">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">Cantidad</th>
-                    <td mat-cell *matCellDef="let element">
-                        <ng-container *ngIf="element.isOutput; else elseBlock">-{{ element.quantity }}</ng-container>
-                        <ng-template #elseBlock>+{{ element.quantity }}</ng-template>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="type">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="type">Tipo</th>
-                    <td mat-cell *matCellDef="let element">{{ element.type }}</td>
-                </ng-container>
-                <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let element" class="text-right">
-                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                            <mat-icon>more_vert</mat-icon>
-                        </button>
-                        <mat-menu #menu="matMenu" xPosition="before">
-                            <button type="button" (click)="onDetailMoves(element.moveId)" mat-menu-item>
-                                <mat-icon>info</mat-icon>
-                                <span>Detalles</span>
+                            <mat-menu #menu="matMenu" xPosition="before">
+                                <button type="button" (click)="onDetailMoves(element.moveId)" mat-menu-item>
+                                    <mat-icon>info</mat-icon>
+                                    <span>Detalles</span>
+                                </button>
+                            </mat-menu>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                        [ngClass]="{ 'bg-danger': row.isOutput, 'bg-success': !row.isOutput }"></tr>
+                </table>
+            </div>
+        }
+        @if (moveOutItems.length) {
+            <span class="divider px-2"></span>
+            <div class="w-100">
+                <h2 class="mat-title-large">Traspasos a otras sucursales</h2>
+                <table mat-table [dataSource]="dataSourceMovesOut" class="w-100" matSort matSortActive="createdAt"
+                    matSortDirection="desc">
+                    <ng-container matColumnDef="createdAt">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">F. de registro</th>
+                        <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'MMM d, y hh:mm a' }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="quantity">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">Cantidad</th>
+                        <td mat-cell *matCellDef="let element">
+                            <ng-container *ngIf="element.isOutput; else elseBlock">-{{ element.quantity }}</ng-container>
+                            <ng-template #elseBlock>+{{ element.quantity }}</ng-template>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="type">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header="type">Tipo</th>
+                        <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let element" class="text-right">
+                            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                                <mat-icon>more_vert</mat-icon>
                             </button>
-                        </mat-menu>
-                    </td>
-                </ng-container>
-                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                    [ngClass]="{ 'bg-danger': row.isOutput, 'bg-success': !row.isOutput }"></tr>
-            </table>
-        </div>
+                            <mat-menu #menu="matMenu" xPosition="before">
+                                <button type="button" (click)="onDetailMoves(element.moveId)" mat-menu-item>
+                                    <mat-icon>info</mat-icon>
+                                    <span>Detalles</span>
+                                </button>
+                            </mat-menu>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                        [ngClass]="{ 'bg-danger': row.isOutput, 'bg-success': !row.isOutput }"></tr>
+                </table>
+            </div>
+        }
     </div>
 </section>

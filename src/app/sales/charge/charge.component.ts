@@ -362,69 +362,8 @@ export class ChargeComponent implements OnInit {
             this.navigationService.loadBarStart()
 
             if (this.setting.allowFreeStock) {
-                this.salesService.saveSale(createdSale, this.saleItems, this.payments, this.params).subscribe(sale => {
-
-                    let payments: CreatePaymentModel[] = []
-
-                    if (this.payments.length) {
-                        payments = this.payments
-                    } else {
-                        payments[0] = {
-                            paymentMethodId: createdSale.paymentMethodId || '',
-                            charge: sale.charge,
-                            turnId: sale.turnId,
-                            createdAt: new Date()
-                        }
-                    }
-
-                    Object.assign(sale, {
-                        user: this.user,
-                        customer: this.customer,
-                        saleItems: this.saleItems,
-                        worker: this.workers.find(e => e._id === sale.workerId),
-                        referred: this.workers.find(e => e._id === sale.referredId),
-                        payments,
-                    })
-
-                    switch (this.setting.papelImpresion) {
-                        case 'a4':
-                            this.printService.printA4Invoice(sale)
-                            break
-                        case 'a5':
-                            this.printService.printA5Invoice(sale)
-                            break
-                        case 'ticket80mm':
-                            this.printService.printTicket80mm(sale)
-                            break
-                        default:
-                            this.printService.printTicket58mm(sale)
-                            break
-                    }
-
-                    this.salesService.setSaleItems([])
-                    this.location.back()
-                    this.isLoading = false
-                    this.navigationService.loadBarFinish()
-                    this.navigationService.showMessage('Registrado correctamente')
-                }, (error: HttpErrorResponse) => {
-                    this.navigationService.showMessage(error.error.message)
-                    this.isLoading = false
-                    this.navigationService.loadBarFinish()
-                })
-            } else {
-                this.salesService.saveSaleStock(createdSale, this.saleItems, this.payments, this.params).subscribe(res => {
-
-                    const { sale, outStocks } = res
-
-                    if (outStocks.length || sale === null) {
-                        this.navigationService.loadBarFinish()
-                        this.isLoading = false
-                        this.matDialog.open(DialogOutStockComponent, {
-                            width: '600px',
-                            position: { top: '20px' },
-                            data: outStocks,
-                        })
-                    } else {
+                this.salesService.saveSale(createdSale, this.saleItems, this.payments, this.params).subscribe({
+                    next: sale => {
 
                         let payments: CreatePaymentModel[] = []
 
@@ -464,17 +403,79 @@ export class ChargeComponent implements OnInit {
                         }
 
                         this.salesService.setSaleItems([])
-
                         this.location.back()
-
                         this.isLoading = false
                         this.navigationService.loadBarFinish()
                         this.navigationService.showMessage('Registrado correctamente')
+                    }, error: (error: HttpErrorResponse) => {
+                        this.navigationService.showMessage(error.error.message)
+                        this.isLoading = false
+                        this.navigationService.loadBarFinish()
                     }
-                }, (error: HttpErrorResponse) => {
-                    this.navigationService.showMessage(error.error.message)
-                    this.isLoading = false
-                    this.navigationService.loadBarFinish()
+                })
+            } else {
+                this.salesService.saveSaleStock(createdSale, this.saleItems, this.payments, this.params).subscribe({
+                    next: res => {
+
+                        const { sale, outStocks } = res
+
+                        if (outStocks.length || sale === null) {
+                            this.navigationService.loadBarFinish()
+                            this.isLoading = false
+                            this.matDialog.open(DialogOutStockComponent, {
+                                width: '600px',
+                                position: { top: '20px' },
+                                data: outStocks,
+                            })
+                        } else {
+                            let payments: CreatePaymentModel[] = []
+
+                            if (this.payments.length) {
+                                payments = this.payments
+                            } else {
+                                payments[0] = {
+                                    paymentMethodId: createdSale.paymentMethodId || '',
+                                    charge: sale.charge,
+                                    turnId: sale.turnId,
+                                    createdAt: new Date()
+                                }
+                            }
+
+                            Object.assign(sale, {
+                                user: this.user,
+                                customer: this.customer,
+                                saleItems: this.saleItems,
+                                worker: this.workers.find(e => e._id === sale.workerId),
+                                referred: this.workers.find(e => e._id === sale.referredId),
+                                payments,
+                            })
+
+                            switch (this.setting.papelImpresion) {
+                                case 'a4':
+                                    this.printService.printA4Invoice(sale)
+                                    break
+                                case 'a5':
+                                    this.printService.printA5Invoice(sale)
+                                    break
+                                case 'ticket80mm':
+                                    this.printService.printTicket80mm(sale)
+                                    break
+                                default:
+                                    this.printService.printTicket58mm(sale)
+                                    break
+                            }
+
+                            this.salesService.setSaleItems([])
+                            this.location.back()
+                            this.isLoading = false
+                            this.navigationService.loadBarFinish()
+                            this.navigationService.showMessage('Registrado correctamente')
+                        }
+                    }, error: (error: HttpErrorResponse) => {
+                        this.navigationService.showMessage(error.error.message)
+                        this.isLoading = false
+                        this.navigationService.loadBarFinish()
+                    }
                 })
             }
         } catch (error) {

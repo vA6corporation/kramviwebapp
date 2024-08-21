@@ -1,30 +1,28 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, NgZone, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { AuthService } from '../../auth/auth.service';
+import { OfficeModel } from '../../auth/office.model';
+import { SettingModel } from '../../auth/setting.model';
+import { LotModel } from '../../lots/lot.model';
+import { MaterialModule } from '../../material.module';
+import { NavigationService } from '../../navigation/navigation.service';
+import { OfficesService } from '../../offices/offices.service';
+import { CategoriesService } from '../categories.service';
+import { CategoryModel } from '../category.model';
 import { DialogAnnotationsComponent } from '../dialog-annotations/dialog-annotations.component';
 import { DialogCreateCategoriesComponent } from '../dialog-create-categories/dialog-create-categories.component';
 import { DialogImageComponent } from '../dialog-image/dialog-image.component';
 import { DialogSearchProductsComponent } from '../dialog-search-products/dialog-search-products.component';
+import { PriceListModel } from '../price-list.model';
 import { PriceType } from '../price-type.enum';
 import { ProductModel } from '../product.model';
 import { IgvCodeModel, ProductsService, UnitCodeModel } from '../products.service';
-import { NavigationService } from '../../navigation/navigation.service';
-import { CategoriesService } from '../categories.service';
-import { AuthService } from '../../auth/auth.service';
-import { OfficesService } from '../../offices/offices.service';
-import { LotsService } from '../../lots/lots.service';
-import { CategoryModel } from '../category.model';
-import { OfficeModel } from '../../auth/office.model';
-import { PriceListModel } from '../price-list.model';
-import { SettingModel } from '../../auth/setting.model';
-import { LotModel } from '../../lots/lot.model';
-import { environment } from '../../../environments/environment';
-import { DialogCreateLotsComponent } from '../../lots/dialog-create-lots/dialog-create-lots.component';
-import { MaterialModule } from '../../material.module';
-import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-edit-products',
@@ -43,7 +41,6 @@ export class EditProductsComponent implements OnInit {
         private readonly authService: AuthService,
         private readonly activatedRoute: ActivatedRoute,
         private readonly officesService: OfficesService,
-        // private readonly lotsService: LotsService,
         private readonly matDialog: MatDialog,
         private readonly ngZone: NgZone
     ) { }

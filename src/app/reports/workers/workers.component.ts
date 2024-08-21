@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -10,9 +10,13 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { DialogDetailSaleItemsComponent } from '../../sales/dialog-detail-sale-items/dialog-detail-sale-items.component';
 import { WorkerModel } from '../../workers/worker.model';
 import { WorkersService } from '../../workers/workers.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-workers',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './workers.component.html',
     styleUrls: ['./workers.component.sass']
 })

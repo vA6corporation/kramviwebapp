@@ -3,9 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationService } from '../../navigation/navigation.service';
 import { SuppliesService } from '../../supplies/supplies.service';
 import { SupplyModel } from '../../supplies/supply.model';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-supplies',
+    standalone: true,
+    imports: [MaterialModule],
     templateUrl: './supplies.component.html',
     styleUrls: ['./supplies.component.sass']
 })

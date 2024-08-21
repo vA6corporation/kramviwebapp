@@ -36,6 +36,7 @@ export class PrintService {
     private printBarcodes70x30mmTwo$: EventEmitter<ProductModel[]> = new EventEmitter()
     private printBarcodes60x30mm$: EventEmitter<ProductModel[]> = new EventEmitter()
     private printBarcodes50x25mm$: EventEmitter<ProductModel[]> = new EventEmitter()
+    private printBarcodes50x25mmTwo$: EventEmitter<ProductModel[]> = new EventEmitter()
 
     // private printTurn80mm$: EventEmitter<PrintTurnData> = new EventEmitter()
     private exportPdfEvent80mm$: EventEmitter<EventModel> = new EventEmitter()
@@ -158,6 +159,10 @@ export class PrintService {
         return this.printBarcodes50x25mm$.asObservable()
     }
 
+    handlePrintBarcodes50x25mmTwo() {
+        return this.printBarcodes50x25mmTwo$.asObservable()
+    }
+
     printBarcodes110x30mm(products: ProductModel[]) {
         this.printBarcodes110x30mm$.emit(products)
     }
@@ -184,6 +189,10 @@ export class PrintService {
 
     printBarcodes50x25mm(products: ProductModel[]) {
         this.printBarcodes50x25mm$.emit(products)
+    }
+
+    printBarcodes50x25mmTwo(products: ProductModel[]) {
+        this.printBarcodes50x25mmTwo$.emit(products)
     }
 
     exportPdfCreditCustomer80mm(customer: CustomerModel, credits: any[]) {

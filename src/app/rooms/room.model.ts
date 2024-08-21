@@ -8,4 +8,5 @@ export interface RoomModel {
     description: string
     price: number
     reception: ReceptionModel | null
+    isReserved: boolean
 }

@@ -34,6 +34,13 @@
             <app-invoices></app-invoices>
         </ng-template>
     </mat-tab>
+    @if (business.businessType === 'RESTAURANTE') {
+        <mat-tab label="Mozos">
+            <ng-template matTabContent>
+                <app-boards></app-boards>
+            </ng-template>
+        </mat-tab>
+    }
     <mat-tab label="Proformas">
         <ng-template matTabContent>
             <app-proformas></app-proformas>

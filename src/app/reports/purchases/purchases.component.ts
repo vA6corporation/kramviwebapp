@@ -8,9 +8,13 @@ import { OfficeModel } from '../../auth/office.model';
 import { PurchasesService } from '../../purchases/purchases.service';
 import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-purchases',
+    standalone: true,
+    imports: [MaterialModule, CommonModule],
     templateUrl: './purchases.component.html',
     styleUrls: ['./purchases.component.sass']
 })

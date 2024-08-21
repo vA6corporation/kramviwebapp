@@ -1,12 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
 import { NavigationService } from '../../navigation/navigation.service';
 import { SaleItemModel } from '../../sales/sale-item.model';
 import { ReportsService } from '../reports.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 export interface Section {
     name: string;
@@ -15,6 +17,8 @@ export interface Section {
 
 @Component({
     selector: 'app-summary',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './summary.component.html',
     styleUrls: ['./summary.component.sass']
 })
@@ -32,7 +36,6 @@ export class SummaryComponent implements OnInit {
         endDate: [new Date(), Validators.required],
         officeId: '',
     })
-
     offices: OfficeModel[] = []
     saleItems: SaleItemModel[] = []
     summarySales: number = 0
@@ -64,17 +67,18 @@ export class SummaryComponent implements OnInit {
         if (this.formGroup.valid) {
             this.navigationService.loadBarStart()
             this.summaryTotal = 0
-            this.reportsService.getSummariesByRangeDate(this.formGroup.value).subscribe(res => {
-                this.navigationService.loadBarFinish()
-                console.log(res)
-                const { summaryPayments, summaryPurchaseSupplies, summaryExpenses } = res
-                this.summaryPayments = summaryPayments
-                this.summaryPurchaseSupplies = summaryPurchaseSupplies
-                this.summaryExpenses = summaryExpenses
-                this.summaryTotal = summaryPayments - summaryExpenses - summaryExpenses
-            }, (error: HttpErrorResponse) => {
-                console.log(error)
-                this.navigationService.showMessage(error.error.message)
+            this.reportsService.getSummariesByRangeDate(this.formGroup.value).subscribe({
+                next: res => {
+                    this.navigationService.loadBarFinish()
+                    const { summaryPayments, summaryPurchaseSupplies, summaryExpenses } = res
+                    this.summaryPayments = summaryPayments
+                    this.summaryPurchaseSupplies = summaryPurchaseSupplies
+                    this.summaryExpenses = summaryExpenses
+                    this.summaryTotal = summaryPayments - summaryExpenses - summaryExpenses
+                }, error: (error: HttpErrorResponse) => {
+                    console.log(error)
+                    this.navigationService.showMessage(error.error.message)
+                }
             })
         }
     }

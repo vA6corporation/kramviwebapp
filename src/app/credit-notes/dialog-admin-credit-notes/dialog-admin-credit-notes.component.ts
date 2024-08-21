@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
@@ -37,7 +37,7 @@ export class DialogAdminCreditNotesComponent implements OnInit {
     })
 
     formDate: FormGroup = this.formBuilder.group({
-        createdAt: new Date(),
+        emitionAt: new Date(),
     })
 
     ngOnDestroy() {
@@ -72,11 +72,13 @@ export class DialogAdminCreditNotesComponent implements OnInit {
     onSubmitDate() {
         if (this.creditNote) {
             Object.assign(this.creditNote, this.formDate.value)
-            this.creditNotesService.updateDate(this.creditNote, this.creditNoteId).subscribe(() => {
-                this.navigationService.showMessage('Se han guardado los cambios')
-                this.onUpdate$.emit()
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message)
+            this.creditNotesService.updateDate(this.creditNote, this.creditNoteId).subscribe({
+                next: () => {
+                    this.navigationService.showMessage('Se han guardado los cambios')
+                    this.onUpdate$.emit()
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                }
             })
         }
     }
@@ -84,12 +86,14 @@ export class DialogAdminCreditNotesComponent implements OnInit {
     onSubmit() {
         if (this.creditNote) {
             Object.assign(this.creditNote, this.formGroup.value)
-            this.creditNotesService.updateCreditNote(this.creditNoteId, this.creditNote).subscribe(() => {
-                this.onUpdate$.next()
-                this.navigationService.showMessage('Se han guardado los cambios')
-                this.onUpdate$.emit()
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message)
+            this.creditNotesService.updateCreditNote(this.creditNoteId, this.creditNote).subscribe({
+                next: () => {
+                    this.onUpdate$.next()
+                    this.navigationService.showMessage('Se han guardado los cambios')
+                    this.onUpdate$.emit()
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                }
             })
         }
     }

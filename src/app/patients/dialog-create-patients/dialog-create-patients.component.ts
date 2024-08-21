@@ -1,12 +1,15 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { PatientsService } from '../patients.service';
 
 @Component({
     selector: 'app-dialog-create-patients',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-create-patients.component.html',
     styleUrls: ['./dialog-create-patients.component.sass']
 })
@@ -32,13 +35,25 @@ export class DialogCreatePatientsComponent implements OnInit {
         occupation: null,
         instruction: null,
         criminalRecord: null
-    });
-
-    documentTypes: string[] = ['DNI', 'CE'];
-    maxLength: number = 11;
-    isLoading: boolean = false;
+    })
+    documentTypes: string[] = ['DNI', 'CE']
+    maxLength: number = 8
+    isLoading: boolean = false
 
     ngOnInit(): void {
+        this.formGroup.get('documentType')?.valueChanges.subscribe(value => {
+            switch (value) {
+                case 'DNI':
+                    this.formGroup.get('document')?.setValidators([Validators.minLength(8), Validators.maxLength(8)])
+                    this.maxLength = 8
+                    break
+                case 'CE':
+                    this.formGroup.get('document')?.setValidators([Validators.minLength(9), Validators.maxLength(9)])
+                    this.maxLength = 9
+                    break
+            }
+            this.formGroup.get('document')?.updateValueAndValidity()
+        })
     }
 
     onSubmit() {

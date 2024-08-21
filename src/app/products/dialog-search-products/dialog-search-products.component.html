@@ -9,7 +9,7 @@
             @for (product of products; track product._id) {
                 <button mat-list-item (click)="onSelectProduct(product)">
                     <span matListItemTitle>{{ product.fullName }}</span>
-                    <span matListItemLine>{{ product.price.toFixed(2) }}</span>
+                    <!-- <span matListItemLine>{{ product.price.toFixed(2) }}</span> -->
                 </button>
             }
         </mat-action-list>

@@ -54,30 +54,30 @@ export class IncidentsService {
     }
 
     handleIncidentItems(): Observable<CreateIncidentItemModel[]> {
-        return this.incidentItems$.asObservable();
+        return this.incidentItems$.asObservable()
     }
 
     getIncidentItem(index: number): CreateIncidentItemModel {
-        return this.incidentItems[index];
+        return this.incidentItems[index]
     }
 
     setIncidentItems(incidentItems: IncidentItemModel[]) {
-        this.incidentItems = incidentItems;
-        this.incidentItems$.next(this.incidentItems);
+        this.incidentItems = incidentItems
+        this.incidentItems$.next(this.incidentItems)
     }
 
     updateIncidentItem(index: number, purchaseItem: CreateIncidentItemModel) {
-        this.incidentItems.splice(index, 1, purchaseItem);
-        this.incidentItems$.next(this.incidentItems);
+        this.incidentItems.splice(index, 1, purchaseItem)
+        this.incidentItems$.next(this.incidentItems)
     }
 
     removeIncidentItem(index: number) {
-        this.incidentItems.splice(index, 1);
-        this.incidentItems$.next(this.incidentItems);
+        this.incidentItems.splice(index, 1)
+        this.incidentItems$.next(this.incidentItems)
     }
 
     addIncidentItem(product: ProductModel) {
-        const index = this.incidentItems.findIndex(e => e.productId === product._id && e.igvCode === product.igvCode);
+        const index = this.incidentItems.findIndex(e => e.productId === product._id && e.igvCode === product.igvCode)
         if (index < 0) {
             const incidentItem: CreateIncidentItemModel = {
                 fullName: product.fullName,
@@ -87,28 +87,28 @@ export class IncidentsService {
                 igvCode: product.igvCode,
                 preIgvCode: product.igvCode,
                 productId: product._id,
-            };
-            this.incidentItems.push(incidentItem);
+            }
+            this.incidentItems.push(incidentItem)
         } else {
-            const incidentItem: CreateIncidentItemModel = this.incidentItems[index];
-            incidentItem.quantity += 1;
-            this.incidentItems.splice(index, 1, incidentItem);
+            const incidentItem: CreateIncidentItemModel = this.incidentItems[index]
+            incidentItem.quantity += 1
+            this.incidentItems.splice(index, 1, incidentItem)
         }
-        this.incidentItems$.next(this.incidentItems);
+        this.incidentItems$.next(this.incidentItems)
     }
 
     create(
         incident: CreateIncidentModel,
         incidentItems: CreateIncidentItemModel[]
     ) {
-        return this.httpService.post('incidents', { incident, incidentItems });
+        return this.httpService.post('incidents', { incident, incidentItems })
     }
 
     deleteIncident(incidentId: string) {
-        return this.httpService.delete(`incidents/deleteIncident/${incidentId}`);
+        return this.httpService.delete(`incidents/deleteIncident/${incidentId}`)
     }
 
     deleteIncidentItem(incidentId: string, incidentItemId: string) {
-        return this.httpService.delete(`incidents/deleteIncidentItem/${incidentId}/${incidentItemId}`);
+        return this.httpService.delete(`incidents/deleteIncidentItem/${incidentId}/${incidentItemId}`)
     }
 }
