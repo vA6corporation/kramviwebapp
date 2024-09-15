@@ -19,38 +19,35 @@ export class PrintersComponent implements OnInit {
         private readonly printersService: PrintersService,
     ) { }
 
-    dataSource: PrinterModel[] = [];
-    displayedColumns: string[] = ['name', 'invoice', 'preaccount', 'cocina', 'barra', 'horno', 'caja', 'actions'];
-    private handlePrinters$: Subscription = new Subscription();
+    dataSource: PrinterModel[] = []
+    displayedColumns: string[] = ['name', 'invoice', 'preaccount', 'cocina', 'barra', 'horno', 'caja', 'actions']
+    private handlePrinters$: Subscription = new Subscription()
 
     ngOnDestroy() {
-        this.handlePrinters$.unsubscribe();
+        this.handlePrinters$.unsubscribe()
     }
 
     ngOnInit(): void {
-        this.navigationService.setTitle('Impresoras');
+        this.navigationService.setTitle('Impresoras')
         this.handlePrinters$ = this.printersService.handlePrinters().subscribe(printers => {
-            this.dataSource = printers;
-        });
-        this.printersService.loadDb();
+            this.dataSource = printers
+        })
+        this.printersService.loadDb()
     }
 
     onAddPrinter() {
         const dialogRef = this.matDialog.open(DialogAddPrintersComponent, {
             width: '600px',
             position: { top: '20px' }
-        });
+        })
 
         dialogRef.afterClosed().subscribe(() => {
 
-        });
+        })
     }
 
     onDeletePrinter(_id: string) {
-        const ok = confirm('Esta seguro de eliminar?...');
-        if (ok) {
-            this.printersService.deletePrinter(_id);
-        }
+        this.printersService.deletePrinter(_id)
     }
 
 }

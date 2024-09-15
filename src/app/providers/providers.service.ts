@@ -5,49 +5,51 @@ import { BankModel } from './bank.model';
 import { ProviderModel } from './provider.model';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class ProvidersService {
 
-  constructor(
-    private readonly httpService: HttpService,
-  ) { }
+    constructor(
+        private readonly httpService: HttpService,
+    ) { }
 
-  getProvidersByKey(key: string): Observable<ProviderModel[]> {
-    return this.httpService.get(`providers/byKey/${key}`);
-  }
+    getProvidersByKey(key: string): Observable<ProviderModel[]> {
+        return this.httpService.get(`providers/byKey/${key}`)
+    }
 
-  getProvidersByRuc(key: string): Observable<ProviderModel[]> {
-    return this.httpService.get(`providers/byRuc/${key}`);
-  }
+    getProvidersByRuc(key: string): Observable<ProviderModel[]> {
+        return this.httpService.get(`providers/byRuc/${key}`)
+    }
 
-  getProvidersByDni(key: string): Observable<ProviderModel[]> {
-    return this.httpService.get(`providers/byDni/${key}`);
-  }
+    getProvidersByDni(key: string): Observable<ProviderModel[]> {
+        return this.httpService.get(`providers/byDni/${key}`)
+    }
 
-  getProvidersByMobile(key: string): Observable<ProviderModel[]> {
-    return this.httpService.get(`providers/byMobile/${key}`);
-  }
+    getProvidersByMobile(key: string): Observable<ProviderModel[]> {
+        return this.httpService.get(`providers/byMobile/${key}`)
+    }
 
-  getProvidersByPage(pageIndex: number, pageSize: number): Observable<ProviderModel[]> {
-    return this.httpService.get(`providers/byPage/${pageIndex}/${pageSize}`);
-  }
+    getProvidersByPage(pageIndex: number, pageSize: number): Observable<ProviderModel[]> {
+        return this.httpService.get(`providers/byPage/${pageIndex}/${pageSize}`)
+    }
 
-  getProvidersCount(): Observable<number> {
-    return this.httpService.get('providers/count');
-  }
+    getCountProviders(): Observable<number> {
+        return this.httpService.get('providers/countProviders')
+    }
 
-  getProviderById(providerId: string): Observable<ProviderModel> {
-    return this.httpService.get(`providers/byId/${providerId}`);
-  }
+    getProviderById(providerId: string): Observable<ProviderModel> {
+        return this.httpService.get(`providers/byId/${providerId}`)
+    }
 
-  update(provider: ProviderModel, banks: BankModel[], providerId: string): Observable<ProviderModel> {
-    return this.httpService.put(`providers/${providerId}`, { provider, banks });
-  }
+    update(provider: ProviderModel, banks: BankModel[], providerId: string): Observable<ProviderModel> {
+        return this.httpService.put(`providers/${providerId}`, { provider, banks })
+    }
 
-  create(provider: ProviderModel, banks: BankModel[]) {
-    console.log(provider);
-    
-    return this.httpService.post('providers', { provider, banks });
-  }
+    create(provider: ProviderModel, banks: BankModel[]) {
+        return this.httpService.post('providers', { provider, banks })
+    }
+
+    delete(providerId: string) {
+        return this.httpService.delete(`providers/${providerId}`)
+    }
 }

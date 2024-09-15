@@ -1,4 +1,4 @@
-<section class="container">
+<div class="container">
     <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
         <mat-form-field appearance="fill">
             <mat-label>Tipo de Documento</mat-label>
@@ -13,6 +13,7 @@
             <input type="text" matInput formControlName="document" [maxlength]="maxLength">
         </mat-form-field>
         <mat-form-field appearance="fill">
+            <mat-label>Nombres/Rason Social</mat-label>
             <input type="text" matInput formControlName="name">
         </mat-form-field>
         <mat-form-field appearance="fill">
@@ -57,4 +58,4 @@
             </div>
         </div>
     </form>
-</section>
+</div>

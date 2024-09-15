@@ -23,6 +23,8 @@ import { PriceListModel } from '../price-list.model';
 import { PriceType } from '../price-type.enum';
 import { ProductModel } from '../product.model';
 import { IgvCodeModel, ProductsService, UnitCodeModel } from '../products.service';
+import { ProviderModel } from '../../providers/provider.model';
+import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component';
 
 @Component({
     selector: 'app-edit-products',
@@ -80,6 +82,7 @@ export class EditProductsComponent implements OnInit {
     office: OfficeModel = new OfficeModel()
     linkProducts: ProductModel[] = []
     lots: LotModel[] = []
+    providers: ProviderModel[] = []
 
     private handleCategories$: Subscription = new Subscription()
     private handleAuth$: Subscription = new Subscription()
@@ -110,6 +113,7 @@ export class EditProductsComponent implements OnInit {
                 this.formGroup.patchValue(product)
                 this.linkProducts = product.linkProducts
                 this.lots = product.lots
+                this.providers = product.providers
                 this.navigationService.loadBarFinish()
                 if (product.imageId) {
                     this.imgUri = `${environment.baseUrl}images/${product.imageId}`
@@ -249,7 +253,7 @@ export class EditProductsComponent implements OnInit {
         })
     }
 
-    onOpenDialogAnnotations() {
+    onDialogAnnotations() {
         const dialogRef = this.matDialog.open(DialogAnnotationsComponent, {
             width: '600px',
             position: { top: '20px' },
@@ -262,7 +266,7 @@ export class EditProductsComponent implements OnInit {
         })
     }
 
-    onOpenDialogProducts() {
+    onDialogProducts() {
         const dialogRef = this.matDialog.open(DialogSearchProductsComponent, {
             width: '600px',
             position: { top: '20px' },
@@ -283,14 +287,33 @@ export class EditProductsComponent implements OnInit {
         this.annotations.splice(index, 1)
     }
 
+    onDialogProviders() {
+        const dialogRef = this.matDialog.open(DialogSearchProvidersComponent, {
+            width: '600px',
+            position: { top: '20px' },
+        })
+
+        dialogRef.afterClosed().subscribe(provider => {
+            if (provider) {
+                this.providers.push(provider)
+            }
+        })
+    }
+
+    onRemoveProvider(index: number) {
+        this.providers.splice(index, 1)
+    }
+
     onSubmit(): void {
         if (this.formGroup.valid) {
             this.isLoading = true
             const product = this.formGroup.value
             const linkProductIds = this.linkProducts.map(e => e._id)
+            const providerIds = this.providers.map(e => e._id)
             product.annotations = this.annotations
             product.excluded = this.excluded
             product.linkProductIds = linkProductIds
+            product.providerIds = providerIds
             this.navigationService.loadBarStart()
             this.productsService.updateWithPrices(product, this.formArray.value, this.productId, this.setting.defaultPrice).subscribe({
                 next: () => {

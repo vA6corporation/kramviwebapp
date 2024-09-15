@@ -1,4 +1,4 @@
-<section class="container">
+<div class="container">
     <div class="mat-elevation-z2">
         <table mat-table [dataSource]="dataSource" class="w-100">
             <ng-container matColumnDef="name">
@@ -47,4 +47,4 @@
         <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex"
             [length]="length" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
     </div>
-</section>
+</div>

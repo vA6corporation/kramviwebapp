@@ -50,6 +50,7 @@ export class ExcelKramvi {
         sales: SaleModel[],
         office: OfficeModel
     ) {
+        sales.reverse()
         for (const sale of sales) {
             const { customer } = sale
             const declare = this.getStatusDeclare(sale)

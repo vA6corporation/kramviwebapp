@@ -1,4 +1,5 @@
 import { LotModel } from "../lots/lot.model";
+import { ProviderModel } from "../providers/provider.model";
 import { CategoryModel } from "./category.model";
 import { IgvType } from "./igv-type.enum";
 import { PriceModel } from "./price.model";
@@ -30,6 +31,7 @@ export interface ProductModel {
     printZone: string
     recipes: any[]
     linkProducts: ProductModel[]
+    providers: ProviderModel[]
     linkProductIds: string[]
     excluded: string[]
     stock: number

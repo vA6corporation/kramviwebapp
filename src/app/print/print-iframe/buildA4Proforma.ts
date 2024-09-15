@@ -203,7 +203,7 @@ export async function buildA4Proforma(
     pdf.line(45, positionYColumns, 45, positionYColumns + 7)
     pdf.line(65, positionYColumns, 65, positionYColumns + 7)
     pdf.line(160, positionYColumns, 160, positionYColumns + 7)
-    pdf.line(180, positionYColumns, 180, positionYColumns + 7)
+    pdf.line(182, positionYColumns, 182, positionYColumns + 7)
 
     text = 'Codigo'
     pdf.text(text, 6, positionYColumns + 5)
@@ -221,7 +221,7 @@ export async function buildA4Proforma(
     pdf.text(text, 162, positionYColumns + 5)
 
     text = 'Sub. Total'
-    pdf.text(text, 182, positionYColumns + 5)
+    pdf.text(text, 185, positionYColumns + 5)
 
     positionYColumns += 5
 
@@ -249,10 +249,10 @@ export async function buildA4Proforma(
         pdf.text(strArr, 66, positionYitems)
 
         text = proformaItem.price.toFixed(2)
-        pdf.text(text, 163, positionYitems)
+        pdf.text(text, 180, positionYitems, { align: 'right' })
 
         text = (proformaItem.price * proformaItem.quantity).toFixed(2)
-        pdf.text(text, 183, positionYitems)
+        pdf.text(text, 200, positionYitems, { align: 'right' })
 
         positionYitems += 5 * strArr.length
 

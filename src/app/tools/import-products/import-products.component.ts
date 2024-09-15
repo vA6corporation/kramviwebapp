@@ -31,8 +31,6 @@ export class ImportProductsComponent implements OnInit {
     ) { }
 
     displayedColumns: string[] = [
-        'sku',
-        'upc',
         'name',
         'feature',
         'brand',
@@ -40,11 +38,7 @@ export class ImportProductsComponent implements OnInit {
         'description',
         'stock',
         'unidad',
-        'cost',
-        'lotNumber',
-        'expirationAt',
-        'printZone',
-    ];
+    ]
     dataSource: any[] = []
     length: number = 0
     pageSize: number = 10
@@ -71,9 +65,7 @@ export class ImportProductsComponent implements OnInit {
 
             if (this.setting.defaultPrice === PriceType.GLOBAL) {
                 this.displayedColumns.push('price')
-                this.displayedColumns.push('actions')
             } else {
-                this.displayedColumns.push('actions')
             }
 
             this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
@@ -116,7 +108,9 @@ export class ImportProductsComponent implements OnInit {
                         sku: String(product.codigoInterno || ''),
                         unidad: product.unidad || 'UNIDADES',
                         expirationAt,
-                        lotNumber: product.lote || null
+                        lotNumber: product.lote || null,
+                        providerName: product.nombreProveedor || '',
+                        providerDocument: product.documentoProveedor || '',
                     }
 
                     for (const priceList of this.priceLists) {
@@ -126,6 +120,23 @@ export class ImportProductsComponent implements OnInit {
                     this.dataSource.push(importProduct)
                 }
             }
+            if (products.find(e => e.codigo)) {
+                this.displayedColumns.unshift('sku')
+                this.displayedColumns.unshift('upc')
+            }
+            if (products.find(e => e.nombreProveedor || e.documentoProveedor)) {
+                this.displayedColumns.push('providerName')
+                this.displayedColumns.push('providerDocument')
+            }
+            if (products.find(e => e.costo)) {
+                this.displayedColumns.push('cost')
+                
+            }
+            if (products.find(e => e.fechaVencimiento)) {
+                this.displayedColumns.push('expirationAt')
+                this.displayedColumns.push('lotNumber')
+            }
+            this.displayedColumns.push('actions')
             table.renderRows()
         }
     }

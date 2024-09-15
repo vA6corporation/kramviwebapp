@@ -46,7 +46,7 @@ export class PurchasesComponent implements OnInit {
         endDate: [null, Validators.required],
     })
 
-    displayedColumns: string[] = ['created', 'serial', 'customer', 'user', 'purchaseOrder', 'charge', 'observations', 'actions']
+    displayedColumns: string[] = ['createdAt', 'purchasedAt', 'serial', 'customer', 'user', 'purchaseOrder', 'charge', 'observations', 'actions']
     dataSource: PurchaseModel[] = []
     length: number = 0
     pageSize: number = 10
@@ -92,8 +92,9 @@ export class PurchasesComponent implements OnInit {
                 this.navigationService.loadBarStart()
                 const chunk = 500
                 const promises: Promise<any>[] = []
+                const params = { ...this.params, sortBy: '-purchasedAt' }
                 for (let index = 0; index < this.length / chunk; index++) {
-                    const promise = lastValueFrom(this.purchasesService.getPurchasesByPage(index + 1, chunk, this.params))
+                    const promise = lastValueFrom(this.purchasesService.getPurchasesByPage(index + 1, chunk, params))
                     promises.push(promise)
                 }
 
@@ -103,7 +104,8 @@ export class PurchasesComponent implements OnInit {
                     const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
                     let body = []
                     body.push([
-                        'F. EMISION',
+                        'F. DE REGISTRO',
+                        'F. DE COMPRA',
                         'RUC/DNI',
                         'CLIENTE',
                         'COMPROBANTE',
@@ -123,6 +125,7 @@ export class PurchasesComponent implements OnInit {
                         const { provider } = purchase
                         body.push([
                             formatDate(purchase.createdAt, 'dd/MM/yyyy', 'en-US'),
+                            formatDate(purchase.purchasedAt, 'dd/MM/yyyy', 'en-US'),
                             provider?.document,
                             (provider?.name || 'VARIOS').toUpperCase(),
                             purchase.invoiceType.toUpperCase(),

@@ -1,4 +1,4 @@
-<section>
+<div>
     <mat-grid-list cols="5" rowHeight="100px">
         @for (table of tables; track table._id; let i = $index) {
         <mat-grid-tile (click)="onChangeBoard(table)" [style.background]="table.board ? '#ff0000' : 'lightblue'"
@@ -7,4 +7,4 @@
         </mat-grid-tile>
         }
     </mat-grid-list>
-</section>
+</div>

@@ -25,6 +25,8 @@ import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
 import { DialogCreateLotsComponent } from '../../lots/dialog-create-lots/dialog-create-lots.component';
 import { MaterialModule } from '../../material.module';
 import { CommonModule } from '@angular/common';
+import { ProviderModel } from '../../providers/provider.model';
+import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component';
 
 @Component({
     selector: 'app-create-products',
@@ -81,6 +83,7 @@ export class CreateProductsComponent implements OnInit {
     imgUri: string = ''
     linkProducts: ProductModel[] = []
     lots: LotModel[] = []
+    providers: ProviderModel[] = []
     private file: File | null = null
     private paymentMethodId: string = ''
     private paymentMethods: PaymentMethodModel[] = []
@@ -280,13 +283,32 @@ export class CreateProductsComponent implements OnInit {
         }
     }
 
+    onDialogProviders() {
+        const dialogRef = this.matDialog.open(DialogSearchProvidersComponent, {
+            width: '600px',
+            position: { top: '20px' },
+        })
+
+        dialogRef.afterClosed().subscribe(provider => {
+            if (provider) {
+                this.providers.push(provider)
+            }
+        })
+    }
+
+    onRemoveProvider(index: number) {
+        this.providers.splice(index, 1)
+    }
+
     onSubmit(): void {
         if (this.formGroup.valid) {
             this.isLoading = true
             const product = this.formGroup.value
             const linkProductIds = this.linkProducts.map(e => e._id)
+            const providerIds = this.providers.map(e => e._id)
             product.annotations = this.annotations
             product.linkProductIds = linkProductIds
+            product.providerIds = providerIds
             this.navigationService.loadBarStart()
             this.productsService.create(product, this.formArray.value, this.lots, this.paymentMethodId).subscribe({
                 next: product => {

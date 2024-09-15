@@ -25,7 +25,7 @@ export class ToolbarComponent implements OnInit {
     title: string = 'Kramvi'
     showSearch: boolean = false
     showInputSearch: boolean = false
-    isLoadingBar: boolean = true
+    isLoadBar: boolean = true
     isMainScreen: boolean = false
 
     @Output()
@@ -36,20 +36,20 @@ export class ToolbarComponent implements OnInit {
     buttons: any[] = []
 
     private handleChangeTitle$: Subscription = new Subscription()
-    private handleIsBackScreen$: Subscription = new Subscription()
+    private handleIsMainScreen$: Subscription = new Subscription()
     private handleBackTo$: Subscription = new Subscription()
     private handleIsAuth$: Subscription = new Subscription()
-    private handleLoadBar$: Subscription = new Subscription()
+    private handleIsLoadBar$: Subscription = new Subscription()
     private handleShowSearch$: Subscription = new Subscription()
     private handleSetMenu$: Subscription = new Subscription()
     private handleClearSearch$: Subscription = new Subscription()
 
     ngOnDestroy() {
         this.handleChangeTitle$.unsubscribe()
-        this.handleIsBackScreen$.unsubscribe()
+        this.handleIsMainScreen$.unsubscribe()
         this.handleBackTo$.unsubscribe()
         this.handleIsAuth$.unsubscribe()
-        this.handleLoadBar$.unsubscribe()
+        this.handleIsLoadBar$.unsubscribe()
         this.handleShowSearch$.unsubscribe()
         this.handleSetMenu$.unsubscribe()
         this.handleClearSearch$.unsubscribe()
@@ -60,7 +60,7 @@ export class ToolbarComponent implements OnInit {
             this.title = title
         })
 
-        this.handleIsBackScreen$ = this.navigationService.handleIsMainScreen().subscribe(isMainScreen => {
+        this.handleIsMainScreen$ = this.navigationService.handleIsMainScreen().subscribe(isMainScreen => {
             this.isMainScreen = isMainScreen
         })
 
@@ -68,8 +68,8 @@ export class ToolbarComponent implements OnInit {
             this.isAuth = isAuth
         })
 
-        this.handleLoadBar$ = this.navigationService.handleLoadBar().subscribe(isLoadingBar => {
-            this.isLoadingBar = isLoadingBar
+        this.handleIsLoadBar$ = this.navigationService.handleIsLoadBar().subscribe(isLoadBar => {
+            this.isLoadBar = isLoadBar
         })
 
         this.handleShowSearch$ = this.navigationService.handleShowSearch().subscribe(() => {

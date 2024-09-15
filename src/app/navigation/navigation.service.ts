@@ -15,8 +15,8 @@ interface MenuToolbar {
 export class NavigationService {
 
     constructor(
-        private router: Router,
-        private readonly matSnackBar: MatSnackBar
+        private readonly matSnackBar: MatSnackBar,
+        private readonly router: Router,
     ) {
         this.router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
@@ -32,12 +32,12 @@ export class NavigationService {
 
     private handleSearch$: EventEmitter<string> = new EventEmitter()
     private handleShowDialogMessage$: EventEmitter<string> = new EventEmitter()
-    private loadBarState$: EventEmitter<boolean> = new EventEmitter()
-    private changeTitle$: EventEmitter<string> = new EventEmitter()
-    private isMainScreen$: EventEmitter<boolean> = new EventEmitter()
-    private setMenu$: EventEmitter<MenuToolbar[]> = new EventEmitter()
-    private onClickMenu$: EventEmitter<string> = new EventEmitter()
-    private showSearch$: EventEmitter<void> = new EventEmitter()
+    private handleIsLoadBar$: EventEmitter<boolean> = new EventEmitter()
+    private handleChangeTitle$: EventEmitter<string> = new EventEmitter()
+    private handleIsMainScreen$: EventEmitter<boolean> = new EventEmitter()
+    private handleSetMenu$: EventEmitter<MenuToolbar[]> = new EventEmitter()
+    private handleClickMenu$: EventEmitter<string> = new EventEmitter()
+    private handleShowSearch$: EventEmitter<void> = new EventEmitter()
 
     back(): void {
         this.history.pop()
@@ -64,7 +64,7 @@ export class NavigationService {
     }
 
     handleClickMenu() {
-        return this.onClickMenu$.asObservable()
+        return this.handleClickMenu$.asObservable()
     }
 
     handleShowDialogMessage() {
@@ -72,31 +72,31 @@ export class NavigationService {
     }
 
     handleShowSearch() {
-        return this.showSearch$.asObservable()
+        return this.handleShowSearch$.asObservable()
     }
 
     handleSetMenu() {
-        return this.setMenu$.asObservable()
+        return this.handleSetMenu$.asObservable()
     }
 
-    handleLoadBar() {
-        return this.loadBarState$.asObservable()
+    handleIsLoadBar() {
+        return this.handleIsLoadBar$.asObservable()
     }
 
     handleChangeTitle() {
-        return this.changeTitle$.asObservable()
+        return this.handleChangeTitle$.asObservable()    
     }
 
     handleIsMainScreen() {
-        return this.isMainScreen$.asObservable()
+        return this.handleIsMainScreen$.asObservable()
     }
 
     clickMenu(id: string) {
-        return this.onClickMenu$.emit(id)
+        return this.handleClickMenu$.emit(id)
     }
 
     showSearch() {
-        this.showSearch$.emit()
+        this.handleShowSearch$.emit()
     }
 
     showDialogMessage(message: string) {
@@ -104,7 +104,7 @@ export class NavigationService {
     }
 
     setMenu(menus: MenuToolbar[]) {
-        this.setMenu$.emit(menus)
+        this.handleSetMenu$.emit(menus)
     }
 
     search(key: string) {
@@ -112,11 +112,11 @@ export class NavigationService {
     }
 
     loadBarStart() {
-        this.loadBarState$.emit(true)
+        this.handleIsLoadBar$.emit(true)
     }
 
     loadBarFinish() {
-        this.loadBarState$.emit(false)
+        this.handleIsLoadBar$.emit(false)
     }
 
     showMessage(message: string) {
@@ -126,12 +126,11 @@ export class NavigationService {
     }
 
     setTitle(title: string) {
-        this.changeTitle$.emit(title)
-        document.title = title
+        this.handleChangeTitle$.emit(title)
     }
 
     setIsMainScreen(isMainScreen: boolean) {
-        this.isMainScreen$.emit(isMainScreen)
+        this.handleIsMainScreen$.emit(isMainScreen)
     }
 
 }

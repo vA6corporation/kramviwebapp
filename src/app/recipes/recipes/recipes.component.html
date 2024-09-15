@@ -1,4 +1,4 @@
-<section class="container">
+<div class="container">
   <form [formGroup]="formGroup" autocomplete="off">
     <mat-form-field appearance="fill">
       <mat-label>Seleccione una categoria</mat-label>
@@ -48,4 +48,4 @@
     </table>
     <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex" [length]="length" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
   </div>
-</section>
+</div>

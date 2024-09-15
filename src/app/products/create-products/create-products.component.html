@@ -1,4 +1,4 @@
-<section class="container">
+<div class="container">
     <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
         <mat-form-field appearance="fill">
             <mat-label>Nombre/Modelo</mat-label>
@@ -127,6 +127,24 @@
             <button type="button" class="w-100" mat-flat-button color="primary"
                 (click)="onOpenDialogAnnotations()">AGREGAR ANOTACION</button>
         </div>
+        <mat-list>
+            <div mat-subheader>Proveedores</div>
+            @for (provider of providers; track provider._id; let i = $index) {
+                <mat-list-item>
+                    <span matListItemTitle>{{ provider.name }}</span>
+                    <span matListItemLine>{{ provider.documentType }}: {{ provider.document }}</span>
+                    <div matListItemMeta>
+                        <button type="button" mat-icon-button (click)="onRemoveProvider(i)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </mat-list-item>
+            }
+        </mat-list>
+        <div class="mb-3">
+            <button type="button" class="w-100" mat-flat-button color="primary"
+                (click)="onDialogProviders()">AGREGAR PROVEEDOR</button>
+        </div>
         <div class="py-3">
             <mat-slide-toggle formControlName="isTrackStock" (change)="onIsTrackStockChange()">Trackear
                 stock</mat-slide-toggle>
@@ -142,4 +160,4 @@
             <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
         </div>
     </form>
-</section>
+</div>

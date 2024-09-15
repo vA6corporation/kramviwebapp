@@ -1,4 +1,4 @@
-<section class="container">
+<div class="container">
     <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
         @if (provider) {
         <button type="button" mat-button color="primary" (click)="onEditProvider()" class="w-100">
@@ -63,4 +63,4 @@
             <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
         </div>
     </form>
-</section>
+</div>
