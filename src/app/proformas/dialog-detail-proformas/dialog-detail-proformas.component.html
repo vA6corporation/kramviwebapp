@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>
     Detalles P{{ office.serialPrefix }}-{{ proforma?.proformaNumber }}
     @if (proforma?.deletedAt) {
-        <span class="ml-2 text-danger">ANULADO</span>
+    <span class="ml-2 text-danger">ANULADO</span>
     }
 </h2>
 <div mat-dialog-content>
@@ -27,13 +27,24 @@
                 <td>Inafecto</td>
                 <td align="right">{{ (proforma?.inafecto || 0).toFixed(2) }}</td>
             </tr>
+            <tr>
+                <td>
+                    I.G.V.
+                    <span class="font-weight-bold">({{ proforma?.igvPercent }}%)</span>
+                </td>
+                <td align="right">{{ (proforma?.igv || 0).toFixed(2) }}</td>
+            </tr>
+            <tr>
+                <td>Descuento Global</td>
+                <td align="right">{{ (proforma?.discount || 0).toFixed(2) }}</td>
+            </tr>
         </tbody>
     </table>
     <mat-divider class="mb-3"></mat-divider>
     <table class="w-100">
         <tbody>
             <tr>
-                <td>F/H venta</td>
+                <td>F/H proforma</td>
                 <td align="right">{{ proforma?.createdAt | date: 'medium' }}</td>
             </tr>
             <tr>
@@ -64,23 +75,30 @@
             <tr>
                 <td>Celular:</td>
                 <td align="right" [ngClass]="{ 'text-muted': customer.mobileNumber === null }">
-                {{ customer.mobileNumber || 'NINGUNO' }}
-            </td>
+                    {{ customer.mobileNumber || 'NINGUNO' }}
+                </td>
             </tr>
         </table>
     </ng-container>
     <mat-divider class="mb-0"></mat-divider>
     <mat-list class="m-0">
         @for (proformaItem of proformaItems; track $index) {
-            <mat-list-item>
-                {{ proformaItem.fullName }}
-                <span class="ml-2 text-muted">x{{ proformaItem.quantity }}</span>
-                <span class="text-success ml-2" *ngIf="proformaItem.igvCode === '11'">Bon</span>
-                <span class="text-primary ml-2" *ngIf="proformaItem.igvCode === '20'">Exo</span>
-                <span class="text-primary ml-2" *ngIf="proformaItem.igvCode === '30'">Ina</span>
-                <span class="spacer"></span>
-                {{ (proformaItem.price * proformaItem.quantity).toFixed(2) }}
-            </mat-list-item>
+        <mat-list-item>
+            <span matListItemTitle>{{ proformaItem.fullName }} ({{ proformaItem.quantity }})</span>
+            <span matListItemLine>{{ (proformaItem.price * proformaItem.quantity).toFixed(2) }}</span>
+            @if (proformaItem.igvCode === '11') {
+            <span class="divider"></span>
+            <span class="text-success">Bon</span>
+            }
+            @if (proformaItem.igvCode === '20') {
+            <span class="divider"></span>
+            <span class="text-primary">Exo</span>
+            }
+            @if (proformaItem.igvCode === '30') {
+            <span class="divider"></span>
+            <span class="text-primary">Ina</span>
+            }
+        </mat-list-item>
         }
     </mat-list>
 </div>

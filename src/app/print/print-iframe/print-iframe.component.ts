@@ -336,7 +336,7 @@ export class PrintIframeComponent implements OnInit {
         })
 
         this.printService.handlePrintA4ProformaImage().subscribe(async proforma => {
-            const pdf = await buildA4ProformaImage(proforma, this.setting, this.business, this.office)
+            const pdf = await buildA4ProformaImage(proforma, this.setting, this.business, this.office, this.banks)
             if (main) {
                 const file = pdf.output('arraybuffer')
                 main.print(file)
@@ -348,7 +348,7 @@ export class PrintIframeComponent implements OnInit {
         })
 
         this.printService.handleExportPdfA4ProformaImage().subscribe(async proforma => {
-            const pdf = await buildA4ProformaImage(proforma, this.setting, this.business, this.office)
+            const pdf = await buildA4ProformaImage(proforma, this.setting, this.business, this.office, this.banks)
             pdf.save(`P${this.office.serialPrefix}-${proforma.proformaNumber}`)
         })
 
@@ -596,7 +596,15 @@ export class PrintIframeComponent implements OnInit {
             const pdf = buildPreaccount58mm(board, this.setting)
             if (main) {
                 const file = pdf.output('arraybuffer')
-                main.print(file)
+                const printers = this.printers.filter(e => e.printAccount)
+
+                if (printers.length) {
+                    for (const printer of printers) {
+                        main.print(file, printer.name)
+                    }
+                } else {
+                    main.print(file)
+                }
             } else {
                 pdf.autoPrint({ variant: 'non-conform' })
                 const urlString = pdf.output('datauristring')

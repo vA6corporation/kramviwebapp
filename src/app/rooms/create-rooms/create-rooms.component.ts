@@ -5,6 +5,9 @@ import { Router, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
 import { RoomsService } from '../rooms.service';
 import { MaterialModule } from '../../material.module';
+import { AuthService } from '../../auth/auth.service';
+import { Subscription } from 'rxjs';
+import { SettingModel } from '../../auth/setting.model';
 
 @Component({
     selector: 'app-create-rooms',
@@ -19,20 +22,34 @@ export class CreateRoomsComponent implements OnInit {
         private readonly navigationService: NavigationService,
         private readonly roomsService: RoomsService,
         private readonly formBuilder: FormBuilder,
+        private readonly authService: AuthService,
         private readonly router: Router
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        name: [null, Validators.required],
-        roomNumber: [null, Validators.required],
-        beds: [null, Validators.required],
-        description: [null, Validators.required],
-        price: [null, Validators.required]
-    });
+        name: ['', Validators.required],
+        roomNumber: ['', Validators.required],
+        beds: ['', Validators.required],
+        description: ['', Validators.required],
+        price: ['', Validators.required],
+        igvCode: '10'
+    })
     isLoading: boolean = false
+    setting: SettingModel = new SettingModel() 
+
+    private handleAuth$: Subscription = new Subscription()
+
+    ngOnDestroy() {
+        this.handleAuth$.unsubscribe()
+    }
 
     ngOnInit(): void {
         this.navigationService.setTitle('Nueva habitacion')
+
+        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
+            this.setting = auth.setting
+            this.formGroup.patchValue({ igvCode: this.setting.defaultIgvCode })
+        })
     }
 
     onSubmit() {

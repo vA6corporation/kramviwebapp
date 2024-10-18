@@ -1,30 +1,3 @@
-<!-- <mat-action-list>
-    <button type="button" mat-list-item *ngFor="let item of incidentItems; let i = index"
-        (click)="onClickPurchaseItem(i)">
-        <div class="d-flex flex-column w-100">
-            <div>
-                {{ item.fullName.slice(0, 60) }}
-            </div>
-            <div class="d-flex">
-                <span class="text-muted mr-2">x{{ item.quantity }}</span>
-                <span class="mr-2" [style.color]="'green'" [hidden]="item.igvCode !== '11'">bonificacion</span>
-                <span class="text-primary mr-2" *ngIf="item.igvCode === '20'">Exonerado</span>
-                <span class="text-primary mr-2" *ngIf="item.igvCode === '30'">Inafecto</span>
-                <span class="spacer"></span>
-                <span class="text-muted">
-                    {{ (item.cost * item.quantity).toFixed(2) }}
-                </span>
-            </div>
-        </div>
-    </button>
-    <mat-list-item role="listitem">
-        <div class="d-flex font-weight-bold">
-            Total
-            <span class="spacer"></span>
-            {{ charge.toFixed(2) }}
-        </div>
-    </mat-list-item>
-</mat-action-list> -->
 <mat-action-list>
     @for (incidentItem of incidentItems; track incidentItem.productId; let i = $index) {
         <button mat-list-item (click)="onSelectIncidentItem(i)">
@@ -40,7 +13,6 @@
                 @if (incidentItem.igvCode === igvType.INAFECTO) {
                     <span class="text-primary mr-2">Inafecto</span>
                 }
-                <!-- <span class="text-muted">{{ incidentItem.observations }}</span> -->
                 <span class="spacer"></span>
                 <span>{{ (incidentItem.cost * incidentItem.quantity).toFixed(2) }}</span>
             </div>

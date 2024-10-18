@@ -255,8 +255,9 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Bucar cliente por defecto</mat-label>
                     <mat-select formControlName="defaultSearchCustomer">
-                        <mat-option *ngFor="let element of searchTypes" [value]="element.code">{{ element.label
-                            }}</mat-option>
+                        <mat-option *ngFor="let element of searchTypes" [value]="element.code">
+                            {{ element.label }}
+                        </mat-option>
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
@@ -300,6 +301,11 @@
                     <mat-list-item>
                         <mat-slide-toggle formControlName="showTotalDiscount">
                             Mostrar descuento global
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="showTotalDiscountPercent">
+                            Mostrar descuento global (En porcentaje)
                         </mat-slide-toggle>
                     </mat-list-item>
                     <mat-list-item>

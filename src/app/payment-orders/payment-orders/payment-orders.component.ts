@@ -1,10 +1,10 @@
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { BusinessModel } from '../../auth/business.model';
@@ -14,9 +14,12 @@ import { PrintService } from '../../print/print.service';
 import { PaymentOrderModel } from '../payment-order.model';
 import { PaymentOrdersService } from '../payment-orders.service';
 import { DialogPdfComponent } from '../dialog-pdf/dialog-pdf.component';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-payment-orders',
+    standalone: true,
+    imports: [MaterialModule, RouterModule, ReactiveFormsModule, CommonModule],
     templateUrl: './payment-orders.component.html',
     styleUrls: ['./payment-orders.component.sass']
 })
@@ -40,10 +43,11 @@ export class PaymentOrdersComponent implements OnInit {
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
     formGroup: FormGroup = this.formBuilder.group({
-        startDate: [new Date(), Validators.required],
-        endDate: [new Date(), Validators.required],
+        startDate: ['', Validators.required],
+        endDate: ['', Validators.required],
     })
     private business: BusinessModel = new BusinessModel()
+    private params: Params = {}
 
     private handleClickMenu$: Subscription = new Subscription()
     private handleSearch$: Subscription = new Subscription()
@@ -73,54 +77,56 @@ export class PaymentOrdersComponent implements OnInit {
         this.pageSize = Number(pageSize || 10)
 
         if (startDate && endDate) {
-            this.formGroup.get('startDate')?.patchValue(new Date(Number(startDate)))
-            this.formGroup.get('endDate')?.patchValue(new Date(Number(endDate)))
+            this.formGroup.patchValue({ startDate: new Date(Number(startDate)) })
+            this.formGroup.patchValue({ endDate: new Date(Number(endDate)) })
         }
 
-        this.paymentOrdersService.getCountPaymentOrdersByRangeDate(this.formGroup.value.startDate, this.formGroup.value.endDate).subscribe(count => {
-            this.length = count
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.showMessage(error.error.message)
-        })
-
         this.fetchData()
+        this.fetchCount()
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
             switch (id) {
                 case 'export_excel': {
-                    this.navigationService.loadBarStart()
                     const { startDate, endDate } = this.formGroup.value
-                    this.paymentOrdersService.getPaymentOrdersByRangeDate(startDate, endDate).subscribe(paymentOrders => {
-                        this.navigationService.loadBarFinish()
-                        const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
-                        let body = []
-                        body.push([
-                            'DESCRIPCION',
-                            'M. DE PAGO',
-                            'IMPORTE',
-                            'SERIE',
-                            'OBSERVACIONES',
-                            'FECHA DE PAGO',
-                            'N° DE OPERACION',
-                            'PAGADO',
-                        ])
-                        for (const paymentOrder of paymentOrders) {
-                            body.push([
-                                paymentOrder.concept.toUpperCase(),
-                                paymentOrder.paymentType,
-                                paymentOrder.charge,
-                                paymentOrder.serie,
-                                (paymentOrder.observations || '').toUpperCase(),
-                                formatDate(new Date(paymentOrder.paymentAt), 'dd/MM/yyyy', 'en-US'),
-                                paymentOrder.operationNumber,
-                                paymentOrder.isPaid ? 'SI' : 'NO',
-                            ])
-                        }
-                        const name = `ORDENES_DE_PAGO_${formatDate(new Date(), 'dd/MM/yyyy', 'en-US')}_${this.business.businessName.replace(/ /g, '_')}`
-                        buildExcel(body, name, wscols, [])
-                    }, (error: HttpErrorResponse) => {
-                        this.navigationService.showMessage(error.error.message)
-                    })
+                    if (startDate && endDate) {
+                        this.navigationService.loadBarStart()
+                        this.paymentOrdersService.getPaymentOrdersByRangeDate(startDate, endDate, this.params).subscribe({
+                            next: paymentOrders => {
+                                this.navigationService.loadBarFinish()
+                                const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+                                let body = []
+                                body.push([
+                                    'DESCRIPCION',
+                                    'M. DE PAGO',
+                                    'IMPORTE',
+                                    'SERIE',
+                                    'OBSERVACIONES',
+                                    'FECHA DE PAGO',
+                                    'N° DE OPERACION',
+                                    'PAGADO',
+                                ])
+                                for (const paymentOrder of paymentOrders) {
+                                    body.push([
+                                        paymentOrder.concept.toUpperCase(),
+                                        paymentOrder.paymentMethod.name,
+                                        paymentOrder.charge,
+                                        paymentOrder.serie,
+                                        (paymentOrder.observations || '').toUpperCase(),
+                                        formatDate(paymentOrder.paymentAt, 'dd/MM/yyyy', 'en-US'),
+                                        paymentOrder.operationNumber,
+                                        paymentOrder.isPaid ? 'SI' : 'NO',
+                                    ])
+                                }
+                                const name = `ORDENES_DE_PAGO_${formatDate(new Date(), 'dd/MM/yyyy', 'en-US')}_${this.business.businessName.replace(/ /g, '_')}`
+                                buildExcel(body, name, wscols, [])
+                            }, error: (error: HttpErrorResponse) => {
+                                this.navigationService.loadBarFinish()
+                                this.navigationService.showMessage(error.error.message)
+                            }
+                        })
+                    } else {
+                        this.navigationService.showMessage('Seleccione un rango de fechas')
+                    }
                 }
             }
         })
@@ -157,12 +163,8 @@ export class PaymentOrdersComponent implements OnInit {
         if (this.formGroup.valid) {
             this.pageIndex = 0
             const { startDate, endDate } = this.formGroup.value
-
-            this.paymentOrdersService.getCountPaymentOrdersByRangeDate(startDate, endDate).subscribe(count => {
-                this.length = count
-            })
-
-            const queryParams: Params = { startDate: startDate.getTime(), endDate: endDate.getTime(), pageIndex: 0 }
+            const queryParams: Params = { startDate: startDate, endDate: endDate, pageIndex: 0 }
+            Object.assign(this.params, queryParams)
 
             this.router.navigate([], {
                 relativeTo: this.activatedRoute,
@@ -171,6 +173,7 @@ export class PaymentOrdersComponent implements OnInit {
             })
 
             this.fetchData()
+            this.fetchCount()
         }
     }
 
@@ -189,50 +192,63 @@ export class PaymentOrdersComponent implements OnInit {
         this.fetchData()
     }
 
+    fetchCount() {
+        this.paymentOrdersService.getCountPaymentOrders(this.params).subscribe(count => {
+            this.length = count
+        }, (error: HttpErrorResponse) => {
+            this.navigationService.showMessage(error.error.message)
+        })
+    }
+
     fetchData() {
-        if (this.formGroup.valid) {
-            const { startDate, endDate } = this.formGroup.value
-            this.navigationService.loadBarStart()
-            this.paymentOrdersService.getPaymentOrdersByRangeDatePage(startDate, endDate, this.pageIndex + 1, this.pageSize).subscribe(paymentOrders => {
+        this.navigationService.loadBarStart()
+        this.paymentOrdersService.getPaymentOrdersByPage(this.pageIndex + 1, this.pageSize, this.params).subscribe({
+            next: paymentOrders => {
                 this.navigationService.loadBarFinish()
                 this.dataSource = paymentOrders
-            }, (error: HttpErrorResponse) => {
+            }, error: (error: HttpErrorResponse) => {
                 this.navigationService.loadBarFinish()
                 this.navigationService.showMessage(error.error.message)
-            })
-        }
+            }
+        })
     }
 
     onPrint(paymentOrderId: string) {
         this.navigationService.loadBarStart()
-        this.paymentOrdersService.getPaymentOrderById(paymentOrderId).subscribe(paymentOrder => {
-            this.navigationService.loadBarFinish()
-            this.printService.printPaymentOrderA4(paymentOrder)
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.loadBarFinish()
-            this.navigationService.showMessage(error.error.message)
+        this.paymentOrdersService.getPaymentOrderById(paymentOrderId).subscribe({
+            next: paymentOrder => {
+                this.navigationService.loadBarFinish()
+                this.printService.printPaymentOrderA4(paymentOrder)
+            }, error: (error: HttpErrorResponse) => {
+                this.navigationService.loadBarFinish()
+                this.navigationService.showMessage(error.error.message)
+            }
         })
     }
 
     onExportPdf(paymentOrderId: string) {
         this.navigationService.loadBarStart()
-        this.paymentOrdersService.getPaymentOrderById(paymentOrderId).subscribe(paymentOrder => {
-            this.navigationService.loadBarFinish()
-            this.printService.exportPaymentOrderA4(paymentOrder)
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.loadBarFinish()
-            this.navigationService.showMessage(error.error.message)
+        this.paymentOrdersService.getPaymentOrderById(paymentOrderId).subscribe({
+            next: paymentOrder => {
+                this.navigationService.loadBarFinish()
+                this.printService.exportPaymentOrderA4(paymentOrder)
+            }, error: (error: HttpErrorResponse) => {
+                this.navigationService.loadBarFinish()
+                this.navigationService.showMessage(error.error.message)
+            }
         })
     }
 
     onDelete(providerId: string) {
         const ok = confirm('Esta seguro de eliminar?...')
         if (ok) {
-            this.paymentOrdersService.delete(providerId).subscribe(() => {
-                this.navigationService.showMessage('Eliminado correctamente')
-                this.fetchData()
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message)
+            this.paymentOrdersService.delete(providerId).subscribe({
+                next: () => {
+                    this.navigationService.showMessage('Eliminado correctamente')
+                    this.fetchData()
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                }
             })
         }
     }

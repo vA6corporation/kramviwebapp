@@ -34,7 +34,6 @@ export class DialogCreateCustomersComponent implements OnInit {
         birthDate: new FormControl('', { nonNullable: true }),
         observations: new FormControl('', { nonNullable: true }),
     })
-    documentTypes: string[] = ['RUC', 'DNI', 'CE']
     isLoading: boolean = false
     maxLength: number = 8
 

@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BanksService } from '../../banks/banks.service';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -15,9 +15,13 @@ import { ProviderModel } from '../../providers/provider.model';
 import { PaymentOrdersService } from '../payment-orders.service';
 import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component';
 import { DialogAttachFileComponent } from '../dialog-attach-file/dialog-attach-file.component';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-create-payment-orders',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './create-payment-orders.component.html',
     styleUrls: ['./create-payment-orders.component.sass']
 })
@@ -35,16 +39,13 @@ export class CreatePaymentOrdersComponent implements OnInit {
 
     formGroup: FormGroup = this.formBuilder.group({
         paymentMethodId: '',
-        concept: [null, Validators.required],
-        charge: [null, Validators.required],
-        serie: [null, Validators.required],
+        concept: ['', Validators.required],
+        charge: ['', Validators.required],
+        serie: ['', Validators.required],
         observations: '',
         paymentAt: [new Date(), Validators.required],
-        operationNumber: null,
-        providerBankName: '',
-        providerAccountNumber: '',
-        bankName: '',
-        accountNumber: '',
+        operationNumber: '',
+        bankId: null,
         isPaid: true,
     })
     paymentMethods: PaymentMethodModel[] = []

@@ -130,7 +130,7 @@ export async function buildA4PaymentOrder(
     pdf.roundedRect(5, 45, 200, 30 + plusHeight, 1, 1, 'S')
 
     pdf.setFont('Helvetica', 'bold')
-    pdf.text('OBS.', 8, positionYCustomer)
+    pdf.text('OBSER.', 8, positionYCustomer)
     pdf.text(':', 30, positionYCustomer)
 
     pdf.setFont('Helvetica', 'normal')

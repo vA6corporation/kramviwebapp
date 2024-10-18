@@ -6,9 +6,13 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { SpecialtiesService } from '../../specialties/specialties.service';
 import { ToolsService } from '../tools.service';
 import { lastValueFrom } from 'rxjs';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-update-prices',
+    standalone: true,
+    imports: [MaterialModule, CommonModule],
     templateUrl: './update-prices.component.html',
     styleUrls: ['./update-prices.component.sass']
 })

@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpService } from '../http.service';
 import { CreatePaymentOrderModel } from './create-payment-order.model';
 import { PaymentOrderModel } from './payment-order.model';
+import { Params } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -17,27 +18,24 @@ export class PaymentOrdersService {
         return this.httpService.get(`paymentOrders/byId/${paymentOrderId}`)
     }
 
-    getCountPaymentOrdersByRangeDate(
-        startDate: string,
-        endDate: string
-    ): Observable<number> {
-        return this.httpService.get(`paymentOrders/countPaymentOrdersByRangeDate/${startDate}/${endDate}`)
+    getCountPaymentOrders(params: Params): Observable<number> {
+        return this.httpService.get('paymentOrders/countPaymentOrders', params)
+    }
+
+    getPaymentOrdersByPage(
+        pageIndex: number,
+        pageSize: number,
+        params: Params
+    ): Observable<PaymentOrderModel[]> {
+        return this.httpService.get(`paymentOrders/byPage/${pageIndex}/${pageSize}`, params)
     }
 
     getPaymentOrdersByRangeDate(
         startDate: string,
-        endDate: string
-    ): Observable<PaymentOrderModel[]> {
-        return this.httpService.get(`paymentOrders/paymentOrdersByRangeDate/${startDate}/${endDate}`)
-    }
-
-    getPaymentOrdersByRangeDatePage(
-        startDate: string,
         endDate: string,
-        pageIndex: number,
-        pageSize: number
+        params: Params
     ): Observable<PaymentOrderModel[]> {
-        return this.httpService.get(`paymentOrders/byRangeDatePage/${startDate}/${endDate}/${pageIndex}/${pageSize}`)
+        return this.httpService.get(`paymentOrders/byRangeDate/${startDate}/${endDate}`, params)
     }
 
     getPaymentOrdersByKey(key: string): Observable<PaymentOrderModel[]> {

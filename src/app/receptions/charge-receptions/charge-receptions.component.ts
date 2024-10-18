@@ -242,8 +242,8 @@ export class ChargeReceptionsComponent implements OnInit {
                 quantity: 1,
                 isTrackStock: false,
                 unitCode: 'ZZ',
-                igvCode: IgvType.GRAVADO,
-                preIgvCode: IgvType.GRAVADO,
+                igvCode: this.room.igvCode,
+                preIgvCode: this.room.igvCode,
                 observations: '',
                 prices: [],
             }

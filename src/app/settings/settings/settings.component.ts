@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, NgZone, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import Compressor from 'compressorjs';
 import { Subscription } from 'rxjs';
@@ -15,13 +15,17 @@ import { ProductsService } from '../../products/products.service';
 import { DialogEditPriceListsComponent, DialogEditPriceListsData } from '../dialog-edit-price-lists/dialog-edit-price-lists.component';
 import { DialogPriceListsComponent } from '../dialog-price-lists/dialog-price-lists.component';
 import { SettingsService } from '../settings.service';
-import { Params } from '@angular/router';
+import { Params, RouterModule } from '@angular/router';
 import { RemissionGuidesService } from '../../remission-guides/remission-guides.service';
 import { ToolsService } from '../../tools/tools.service';
 import { environment } from '../../../environments/environment';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-settings',
+    standalone: true,
+    imports: [MaterialModule, RouterModule, ReactiveFormsModule, CommonModule],
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.sass']
 })
@@ -54,6 +58,7 @@ export class SettingsComponent implements OnInit {
             printOrder: true,
             showCurrencyCode: false,
             showTotalDiscount: false,
+            showTotalDiscountPercent: false,
             showObservationItems: false,
             showSpecialty: false,
             showChargeCommand: false,

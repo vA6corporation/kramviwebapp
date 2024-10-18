@@ -126,6 +126,7 @@ export class NavigationService {
     }
 
     setTitle(title: string) {
+        document.title = title
         this.handleChangeTitle$.emit(title)
     }
 

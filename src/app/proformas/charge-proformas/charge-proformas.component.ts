@@ -23,9 +23,10 @@ import { CommonModule } from '@angular/common';
 
 interface FormData {
     addressIndex: number
-    observations: string,
-    currencyCode: string,
-    discount: any,
+    observations: string
+    currencyCode: string
+    igvPercent: number
+    discount: any
 }
 
 @Component({
@@ -51,6 +52,7 @@ export class ChargeProformasComponent implements OnInit {
         addressIndex: 0,
         observations: '',
         currencyCode: 'PEN',
+        igvPercent: 18,
         discount: null,
     } as FormData)
     proformaItems: ProformaItemModel[] = []
@@ -133,6 +135,15 @@ export class ChargeProformasComponent implements OnInit {
         })
     }
 
+    onChangePercent() {
+        const { igvPercent } = this.formGroup.value
+        if (igvPercent) {
+            this.formGroup.patchValue({ igvPercent: 18 })
+        } else {
+            this.formGroup.patchValue({ igvPercent: 0 })
+        }
+    }
+
     addCash(cash: number) {
         this.cash += cash
         this.formGroup.get('cash')?.patchValue(this.cash)
@@ -169,6 +180,7 @@ export class ChargeProformasComponent implements OnInit {
                 addressIndex: formData.addressIndex,
                 observations: formData.observations,
                 discount: formData.discount,
+                igvPercent: formData.igvPercent,
                 currencyCode: formData.currencyCode || 'PEN',
                 customerId: this.customer?._id || null,
             }

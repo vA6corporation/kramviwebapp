@@ -1,13 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { DialogCreateCustomersComponent } from '../../customers/dialog-create-customers/dialog-create-customers.component';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { ProvidersService } from '../../providers/providers.service';
 
 @Component({
     selector: 'app-dialog-create-providers',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-create-providers.component.html',
     styleUrls: ['./dialog-create-providers.component.sass']
 })
@@ -20,17 +23,14 @@ export class DialogCreateProvidersComponent implements OnInit {
         private readonly navigationService: NavigationService,
     ) { }
 
-    formArray: FormArray = this.formBuilder.array([])
     formGroup: FormGroup = this.formBuilder.group({
-        documentType: 'RUC',
-        document: null,
-        name: [null, Validators.required],
-        address: null,
-        mobileNumber: null,
-        email: [null, Validators.email],
-        banks: this.formArray,
+        documentType: 'DNI',
+        document: '',
+        name: ['', Validators.required],
+        address: '',
+        mobileNumber: '',
+        email: ['', Validators.email],
     })
-    documentTypes: string[] = ['RUC', 'DNI', 'CE']
     isLoading: boolean = false
     maxLength: number = 11
 
@@ -54,29 +54,18 @@ export class DialogCreateProvidersComponent implements OnInit {
         })
     }
 
-    onAddAccount() {
-        const formGroup = this.formBuilder.group({
-            bankName: 'BCP',
-            accountNumber: [null, Validators.required],
-        })
-        this.formArray.push(formGroup)
-    }
-
-    onRemoveAccount(index: number) {
-        this.formArray.removeAt(index)
-    }
-
     onSubmit() {
         if (this.formGroup.valid) {
             this.isLoading = true
-            this.providersService.create(this.formGroup.value, this.formArray.value).subscribe(provider => {
-                this.isLoading = false
-                this.dialogRef.close(provider)
-                this.navigationService.showMessage('Registrado correctamente')
-            }, (error: HttpErrorResponse) => {
-                this.isLoading = false
-                console.log(error)
-                this.navigationService.showMessage(error.error.message)
+            this.providersService.create(this.formGroup.value).subscribe({
+                next: provider => {
+                    this.isLoading = false
+                    this.dialogRef.close(provider)
+                    this.navigationService.showMessage('Registrado correctamente')
+                }, error: (error: HttpErrorResponse) => {
+                    this.isLoading = false
+                    this.navigationService.showMessage(error.error.message)
+                }
             })
         }
     }

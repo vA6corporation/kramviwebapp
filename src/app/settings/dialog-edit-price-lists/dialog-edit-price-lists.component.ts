@@ -1,10 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NavigationService } from '../../navigation/navigation.service';
 import { ProductsService } from '../../products/products.service';
 import { SettingsService } from '../settings.service';
+import { MaterialModule } from '../../material.module';
 
 export interface DialogEditPriceListsData {
     priceListId: string
@@ -13,6 +14,8 @@ export interface DialogEditPriceListsData {
 
 @Component({
     selector: 'app-dialog-edit-price-lists',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-edit-price-lists.component.html',
     styleUrls: ['./dialog-edit-price-lists.component.sass']
 })
@@ -40,13 +43,15 @@ export class DialogEditPriceListsComponent implements OnInit {
             this.dialogRef.close()
             const { name } = this.formGroup.value
             this.navigationService.loadBarStart()
-            this.settingsService.updatePriceList(name, this.data.priceListId).subscribe(() => {
-                this.navigationService.loadBarFinish()
-                this.navigationService.showMessage('Se han guardado los cambios')
-                this.productsService.loadPriceLists()
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.loadBarFinish()
-                this.navigationService.showMessage(error.error.message)
+            this.settingsService.updatePriceList(name, this.data.priceListId).subscribe({
+                next: () => {
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage('Se han guardado los cambios')
+                    this.productsService.loadPriceLists()
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage(error.error.message)
+                }
             })
         }
     }

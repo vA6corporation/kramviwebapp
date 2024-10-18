@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BanksService } from '../../banks/banks.service';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -15,9 +15,13 @@ import { ProviderModel } from '../../providers/provider.model';
 import { PaymentOrdersService } from '../payment-orders.service';
 import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component';
 import { DialogPdfComponent } from '../dialog-pdf/dialog-pdf.component';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-edit-payment-orders',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './edit-payment-orders.component.html',
     styleUrls: ['./edit-payment-orders.component.sass']
 })
@@ -35,20 +39,16 @@ export class EditPaymentOrdersComponent implements OnInit {
 
     formGroup: FormGroup = this.formBuilder.group({
         paymentMethodId: '',
-        concept: [null, Validators.required],
-        charge: [null, Validators.required],
-        serie: [null, Validators.required],
+        concept: ['', Validators.required],
+        charge: ['', Validators.required],
+        serie: ['', Validators.required],
         observations: '',
         paymentAt: [new Date(), Validators.required],
-        operationNumber: null,
-        providerBankName: '',
-        providerAccountNumber: '',
-        bankName: '',
-        accountNumber: '',
+        operationNumber: '',
+        bankId: null,
         isPaid: true,
     })
     paymentMethods: PaymentMethodModel[] = []
-
     isLoading: boolean = false
     provider: ProviderModel | null = null
     providerBanks: BankModel[] = []
@@ -122,7 +122,12 @@ export class EditPaymentOrdersComponent implements OnInit {
         })
 
         this.paymentOrderId = this.activatedRoute.snapshot.params['paymentOrderId']
-        this.fetchData()
+        this.paymentOrdersService.getPaymentOrderById(this.paymentOrderId).subscribe(paymentOrder => {
+            this.urlPdf = paymentOrder.urlPdf
+            this.providerBanks = paymentOrder.provider.banks
+            this.formGroup.patchValue(paymentOrder)
+            this.provider = paymentOrder.provider
+        })
     }
 
     onDialogPdf() {
@@ -158,15 +163,6 @@ export class EditPaymentOrdersComponent implements OnInit {
         })
     }
 
-    fetchData() {
-        this.paymentOrdersService.getPaymentOrderById(this.paymentOrderId).subscribe(paymentOrder => {
-            this.urlPdf = paymentOrder.urlPdf
-            this.providerBanks = paymentOrder.provider.banks
-            this.formGroup.patchValue(paymentOrder)
-            this.provider = paymentOrder.provider
-        })
-    }
-
     onEditProvider() {
         const dialogRef = this.matDialog.open(DialogEditProvidersComponent, {
             width: '600px',
@@ -194,7 +190,6 @@ export class EditPaymentOrdersComponent implements OnInit {
         if (this.provider === null) {
             this.navigationService.showMessage('Agrege un proveedor')
         } else {
-
             if (this.formGroup.valid) {
                 this.isLoading = true
                 this.navigationService.loadBarStart()
@@ -202,15 +197,16 @@ export class EditPaymentOrdersComponent implements OnInit {
                     ...this.formGroup.value,
                     providerId: this.provider._id,
                 }
-                this.paymentOrdersService.update(createdPaymentOrder, this.paymentOrderId).subscribe(res => {
-                    console.log(res)
-                    this.isLoading = false
-                    this.navigationService.loadBarFinish()
-                    this.navigationService.showMessage('Se han guardado los cambios')
-                }, (error: HttpErrorResponse) => {
-                    this.isLoading = false
-                    this.navigationService.loadBarFinish()
-                    this.navigationService.showMessage(error.error.message)
+                this.paymentOrdersService.update(createdPaymentOrder, this.paymentOrderId).subscribe({
+                    next: () => {
+                        this.isLoading = false
+                        this.navigationService.loadBarFinish()
+                        this.navigationService.showMessage('Se han guardado los cambios')
+                    }, error: (error: HttpErrorResponse) => {
+                        this.isLoading = false
+                        this.navigationService.loadBarFinish()
+                        this.navigationService.showMessage(error.error.message)
+                    }
                 })
             }
 

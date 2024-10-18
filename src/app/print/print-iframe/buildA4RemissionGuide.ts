@@ -232,8 +232,6 @@ export async function buildA4RemissionGuide(
     pdf.line(20, positionYColumns, 20, positionYColumns + 7)
     pdf.line(45, positionYColumns, 45, positionYColumns + 7)
     pdf.line(140, positionYColumns, 140, positionYColumns + 7)
-    // pdf.line(160, positionYColumns, 160, positionYColumns + 7)
-    // pdf.line(180, positionYColumns, 180, positionYColumns + 7)
 
     text = 'Cant.'
     pdf.text(text, 7, positionYColumns + 5)
@@ -246,12 +244,6 @@ export async function buildA4RemissionGuide(
 
     text = 'Unidad'
     pdf.text(text, 142, positionYColumns + 5)
-
-    // text = 'Pre. Unit'
-    // pdf.text(text, 163, positionYColumns + 5)
-
-    // text = 'Sub. Total'
-    // pdf.text(text, 183, positionYColumns + 5)
 
     positionYColumns += 5
 

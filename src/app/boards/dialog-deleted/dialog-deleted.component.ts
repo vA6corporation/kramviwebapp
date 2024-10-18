@@ -10,7 +10,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './dialog-deleted.component.html',
     styleUrls: ['./dialog-deleted.component.sass']
 })
-export class DialogDeletedComponent implements OnInit {
+export class DialogDeletedComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -18,13 +18,9 @@ export class DialogDeletedComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        observations: [null, Validators.required]
+        observations: ['', Validators.required]
     })
     isLoading: boolean = false
-
-    ngOnInit(): void {
-
-    }
 
     onSubmit() {
         if (this.formGroup.valid) {

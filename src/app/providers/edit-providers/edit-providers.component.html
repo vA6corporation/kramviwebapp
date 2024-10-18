@@ -28,27 +28,6 @@
             <mat-label>Email</mat-label>
             <input type="text" matInput formControlName="email">
         </mat-form-field>
-        <ng-container formArrayName="banks" *ngFor="let item of formArray.controls; let i = index;">
-            <div class="d-flex" [formGroupName]="i">
-                <mat-form-field appearance="fill">
-                    <mat-select formControlName="bankName">
-                        <mat-option value="BCP">BCP</mat-option>
-                        <mat-option value="BBVA">BBVA</mat-option>
-                        <mat-option value="INTERBANK">INTERBANK</mat-option>
-                        <mat-option value="SCOTIABANK">SCOTIABANK</mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field appearance="fill">
-                    <mat-label>N° de cuenta</mat-label>
-                    <input type="text" matInput formControlName="accountNumber">
-                    <button type="button" mat-icon-button matSuffix (click)="onRemoveAccount(i)">
-                        <mat-icon>delete</mat-icon>
-                    </button>
-                </mat-form-field>
-            </div>
-        </ng-container>
-        <button type="button" mat-flat-button color="primary" (click)="onAddAccount()">AGREGAR NUMERO DE
-            CUENTA</button>
         <div class="d-flex">
             <span class="spacer"></span>
             <div class="py-3">

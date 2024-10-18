@@ -1,3 +1,4 @@
+import { PaymentMethodModel } from "../payment-methods/payment-method.model";
 import { ProviderModel } from "../providers/provider.model";
 
 export interface PaymentOrderModel {
@@ -17,7 +18,6 @@ export interface PaymentOrderModel {
     providerAccountNumber: string
     bankName: string
     accountNumber: string
-    paymentCode: string
-    paymentType: string
     provider: ProviderModel
+    paymentMethod: PaymentMethodModel
 }

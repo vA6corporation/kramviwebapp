@@ -1,3 +1,4 @@
+import { IgvType } from "../products/igv-type.enum"
 import { ReceptionModel } from "../receptions/reception.model"
 
 export interface RoomModel {
@@ -9,4 +10,5 @@ export interface RoomModel {
     price: number
     reception: ReceptionModel | null
     isReserved: boolean
+    igvCode: IgvType
 }

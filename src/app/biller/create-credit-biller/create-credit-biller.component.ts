@@ -63,7 +63,7 @@ export class CreateCreditBillerComponent implements OnInit {
         cash: null,
         currencyCode: 'PEN',
         discount: null,
-        emitionAt: null,
+        emitionAt: '',
         isRetainer: false,
 
         workerId: null,

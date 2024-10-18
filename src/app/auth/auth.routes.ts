@@ -10,8 +10,3 @@ export const routes: Routes = [
     { path: 'setOffice', component: SetOfficeComponent },
     { path: 'signup', component: SignupComponent },
 ];
-
-// @NgModule({
-//     imports: [RouterModule.forChild(routes)]
-// })
-// export class AuthRoutes { }

@@ -4,7 +4,9 @@
         <mat-form-field appearance="fill">
             <mat-label>Tipo de Documento</mat-label>
             <mat-select formControlName="documentType" tabindex="-1">
-                <mat-option *ngFor="let element of documentTypes" [value]="element">{{ element }}</mat-option>
+                <mat-option value="RUC">RUC</mat-option>
+                <mat-option value="DNI">DNI</mat-option>
+                <mat-option value="CE">CE</mat-option>
             </mat-select>
         </mat-form-field>
         <mat-form-field appearance="fill">
@@ -27,28 +29,6 @@
             <mat-label>Email</mat-label>
             <input type="text" matInput formControlName="email">
         </mat-form-field>
-        <ng-container formArrayName="banks" *ngFor="let item of formArray.controls; let i = index;">
-            <div class="d-flex" [formGroupName]="i">
-                <mat-form-field appearance="fill">
-                    <mat-select formControlName="bankName">
-                        <mat-option value="BCP">BCP</mat-option>
-                        <mat-option value="BBVA">BBVA</mat-option>
-                        <mat-option value="INTERBANK">INTERBANK</mat-option>
-                        <mat-option value="SCOTIABANK">SCOTIABANK</mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field appearance="fill">
-                    <mat-label>N° de cuenta</mat-label>
-                    <input type="text" matInput formControlName="accountNumber">
-                    <button type="button" mat-icon-button matSuffix (click)="onRemoveAccount(i)">
-                        <mat-icon>delete</mat-icon>
-                    </button>
-                </mat-form-field>
-            </div>
-        </ng-container>
-        <button type="button" class="w-100" mat-flat-button color="primary" (click)="onAddAccount()">
-            AGREGAR NUMERO DE CUENTA
-        </button>
     </div>
     <mat-dialog-actions>
         <span class="spacer"></span>

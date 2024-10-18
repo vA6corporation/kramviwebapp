@@ -38,12 +38,11 @@
                 </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                [ngClass]="{ 'bg-success': row.cdr && row.cdr.sunatCode === '0' && row.deletedAt === null, 'bg-danger': row.deletedAt, 'bg-warning': row.warning }">
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
             </tr>
         </table>
-        <!-- <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex"
-            [length]="length" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator> -->
+        <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex"
+            [length]="length" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
     </div>
     <div class="fixed-bottom p-3" style="right: 0; left: unset; width: auto;">
         <button mat-fab color="primary" class="float-right" routerLink="/banks/create">

@@ -13,9 +13,13 @@ import { PriceType } from '../../products/price-type.enum';
 import { ProductsService } from '../../products/products.service';
 import { SpecialtiesService } from '../../specialties/specialties.service';
 import { ToolsService } from '../tools.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-import-products',
+    standalone: true,
+    imports: [MaterialModule, CommonModule],
     templateUrl: './import-products.component.html',
     styleUrls: ['./import-products.component.sass']
 })

@@ -3,8 +3,9 @@
     <div class="d-flex">
         <button type="button" mat-flat-button color="primary" (click)="fileInput.click()">CARGAR EXCEL</button>
         <span class="divider"></span>
-        <button type="button" [disabled]="isLoading" mat-flat-button color="primary" (click)="onSubmit()">SUBIR {{
-            dataSource.length }} ITEMS</button>
+        <button type="button" [disabled]="isLoading" mat-flat-button color="primary" (click)="onSubmit()">
+            SUBIR {{ dataSource.length }} ITEMS
+        </button>
         <span class="divider"></span>
         <a href="assets/PlantillaProductos.ods" download mat-flat-button color="primary">
             DESCARGAR PLANTILLA

@@ -11,9 +11,13 @@ import { PaymentMethodsService } from '../../payment-methods/payment-methods.ser
 import { PriceListModel } from '../../products/price-list.model';
 import { SpecialtiesService } from '../../specialties/specialties.service';
 import { ToolsService } from '../tools.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-add-stock',
+    standalone: true,
+    imports: [MaterialModule, CommonModule],
     templateUrl: './add-stock.component.html',
     styleUrls: ['./add-stock.component.sass']
 })

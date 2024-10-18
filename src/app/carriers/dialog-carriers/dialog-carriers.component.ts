@@ -26,7 +26,7 @@ export class DialogCarriersComponent implements OnInit {
 
     formGroup: FormGroup = this.formBuilder.group({
         searchType: 'RUC',
-        key: [null, Validators.required],
+        key: ['', Validators.required],
     })
 
     carriers: CarrierModel[] = []
@@ -87,35 +87,41 @@ export class DialogCarriersComponent implements OnInit {
             case 'RUC':
                 if (key.length === 11) {
                     this.formGroup.get('key')?.disable()
-                    this.carriersService.getCarriersByRuc(key).subscribe(carriers => {
-                        this.carriers = carriers
-                        this.formGroup.get('key')?.enable()
-                    }, (error: HttpErrorResponse) => {
-                        this.formGroup.get('key')?.enable()
-                        this.navigationService.showMessage(error.error.message)
+                    this.carriersService.getCarriersByRuc(key).subscribe({
+                        next: carriers => {
+                            this.carriers = carriers
+                            this.formGroup.get('key')?.enable()
+                        }, error: (error: HttpErrorResponse) => {
+                            this.formGroup.get('key')?.enable()
+                            this.navigationService.showMessage(error.error.message)
+                        }
                     })
                 }
                 break
             case 'DNI':
                 if (key.length === 8) {
                     this.formGroup.get('key')?.disable()
-                    this.carriersService.getCarriersByDni(key).subscribe(carriers => {
-                        this.carriers = carriers
-                        this.formGroup.get('key')?.enable()
-                    }, (error: HttpErrorResponse) => {
-                        this.formGroup.get('key')?.enable()
-                        this.navigationService.showMessage(error.error.message)
+                    this.carriersService.getCarriersByDni(key).subscribe({
+                        next: carriers => {
+                            this.carriers = carriers
+                            this.formGroup.get('key')?.enable()
+                        }, error: (error: HttpErrorResponse) => {
+                            this.formGroup.get('key')?.enable()
+                            this.navigationService.showMessage(error.error.message)
+                        }
                     })
                 }
                 break
             default:
                 this.formGroup.get('key')?.disable()
-                this.carriersService.getCarriersByKey(key).subscribe(carriers => {
-                    this.carriers = carriers
-                    this.formGroup.get('key')?.enable()
-                }, (error: HttpErrorResponse) => {
-                    this.formGroup.get('key')?.enable()
-                    this.navigationService.showMessage(error.error.message)
+                this.carriersService.getCarriersByKey(key).subscribe({
+                    next: carriers => {
+                        this.carriers = carriers
+                        this.formGroup.get('key')?.enable()
+                    }, error: (error: HttpErrorResponse) => {
+                        this.formGroup.get('key')?.enable()
+                        this.navigationService.showMessage(error.error.message)
+                    }
                 })
                 break
         }

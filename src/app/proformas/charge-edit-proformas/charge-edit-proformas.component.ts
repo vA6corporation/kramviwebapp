@@ -23,6 +23,7 @@ interface FormData {
     addressIndex: number
     observations: string
     currencyCode: string
+    igvPercent: number
     discount: any
 }
 
@@ -48,6 +49,7 @@ export class ChargeEditProformasComponent implements OnInit {
         addressIndex: 0,
         observations: '',
         currencyCode: 'PEN',
+        igvPercent: 18,
         discount: null,
     } as FormData)
 
@@ -137,6 +139,15 @@ export class ChargeEditProformasComponent implements OnInit {
         })
     }
 
+    onChangePercent() {
+        const { igvPercent } = this.formGroup.value
+        if (igvPercent) {
+            this.formGroup.patchValue({ igvPercent: 18 })
+        } else {
+            this.formGroup.patchValue({ igvPercent: 0 })
+        }
+    }
+
     addCash(cash: number) {
         this.cash += cash
         this.formGroup.get('cash')?.patchValue(this.cash)
@@ -173,6 +184,7 @@ export class ChargeEditProformasComponent implements OnInit {
                 addressIndex: formData.addressIndex,
                 observations: formData.observations,
                 discount: formData.discount,
+                igvPercent: formData.igvPercent,
                 currencyCode: formData.currencyCode || 'PEN',
                 customerId: this.customer?._id || null,
             }

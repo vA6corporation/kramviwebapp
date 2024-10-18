@@ -120,7 +120,6 @@ export class EditBillerComponent implements OnInit {
             if (this.sale.isCredit) {
                 this.navigationService.showDialogMessage('Esta venta a sido generada al credito, debera revisar las cuotas pagadas si hace una modificacion')
                 this.navigationService.setMenu([
-                    // { id: 'split_payment', label: 'Dividir pago', icon: 'add_card', show: true },
                     { id: 'add_customer', label: 'Desc Excel', icon: 'person_add', show: true },
                 ])
             } else {

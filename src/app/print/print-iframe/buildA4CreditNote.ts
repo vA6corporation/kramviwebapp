@@ -91,7 +91,7 @@ export async function buildA4CreditNote(
 
     pdf.setDrawColor(0)
     pdf.setFillColor(255, 255, 255)
-    pdf.roundedRect(5, 45, 200, 15 + plusHeight, 1, 1, 'FD')
+    pdf.roundedRect(5, 45, 200, 20 + plusHeight, 1, 1, 'FD')
 
     let positionYCustomer = 51
 
@@ -131,8 +131,8 @@ export async function buildA4CreditNote(
     pdf.text('SUSTENTO', 8, positionYCustomer)
     pdf.text(':', 30, positionYCustomer)
 
-    pdf.setFont('Helvetica', 'normal')
 
+    pdf.setFont('Helvetica', 'normal')
     text = creditNote.reasonDescription
     strArr = pdf.splitTextToSize(text, 85)
     pdf.text(strArr, 35, positionYCustomer)
@@ -140,14 +140,23 @@ export async function buildA4CreditNote(
     positionYCustomer += 5
 
     pdf.setFont('Helvetica', 'bold')
+    pdf.text('OBSER.', 8, positionYCustomer)
+    pdf.text(':', 30, positionYCustomer)
+    
+    pdf.setFont('Helvetica', 'normal')
+    text = creditNote?.observations || 'NINGUNO'
+    strArr = pdf.splitTextToSize(text, 150)
+    pdf.text(strArr, 35, positionYCustomer)
+
+    positionYCustomer += 5
+    
+    pdf.setFont('Helvetica', 'bold')
     pdf.text('FECHA EMISIÓN', 120, 50)
     pdf.text(':', 155, 50)
     pdf.text('HORA EMISIÓN', 120, 55)
     pdf.text(':', 155, 55)
     pdf.text('COMPROBANTE', 120, 60)
     pdf.text(':', 155, 60)
-    pdf.text('OBSERVACIONES', 120, 65)
-    pdf.text(':', 155, 65)
 
     pdf.setFont('Helvetica', 'normal')
 
@@ -159,10 +168,6 @@ export async function buildA4CreditNote(
 
     text = `${sale.invoicePrefix}${office.serialPrefix}-${sale.invoiceNumber}`
     pdf.text(text, 160, 60)
-
-    text = creditNote?.observations || 'NINGUNO'
-    strArr = pdf.splitTextToSize(text, 85)
-    pdf.text(strArr, 160, 65)
 
     let positionYColumns = positionYCustomer
     positionYColumns += 5
@@ -242,7 +247,7 @@ export async function buildA4CreditNote(
 
     positionYitems += 5
 
-    text = `SON: ${sale.chargeLetters}`
+    text = `SON: ${creditNote.chargeLetters}`
     pdf.text(text, 5, positionYitems)
 
     if (worker) {

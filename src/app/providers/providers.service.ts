@@ -41,12 +41,17 @@ export class ProvidersService {
         return this.httpService.get(`providers/byId/${providerId}`)
     }
 
-    update(provider: ProviderModel, banks: BankModel[], providerId: string): Observable<ProviderModel> {
-        return this.httpService.put(`providers/${providerId}`, { provider, banks })
+    update(
+        provider: ProviderModel, 
+        providerId: string
+    ): Observable<void> {
+        return this.httpService.put(`providers/${providerId}`, { provider })
     }
 
-    create(provider: ProviderModel, banks: BankModel[]) {
-        return this.httpService.post('providers', { provider, banks })
+    create(
+        provider: ProviderModel, 
+    ): Observable<ProviderModel> {
+        return this.httpService.post('providers', { provider })
     }
 
     delete(providerId: string) {

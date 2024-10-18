@@ -38,16 +38,16 @@ export class PosReceptionComponent implements OnInit {
         private readonly router: Router,
     ) { }
 
-    reservations: any[] = []
-    room: RoomModel | null = null
-    reception: ReceptionModel | null = null
-    customer: CustomerModel | null = null
-    customers: CustomerModel[] = []
     formGroup: FormGroup = this.formBuilder.group({
         hours: [24, Validators.required],
         charge: [0, Validators.required],
         observations: '',
     })
+    reservations: any[] = []
+    room: RoomModel | null = null
+    reception: ReceptionModel | null = null
+    customer: CustomerModel | null = null
+    customers: CustomerModel[] = []
     checkinTime = new Date()
     checkoutTime = new Date()
     receptionId: string = ''
@@ -251,6 +251,7 @@ export class PosReceptionComponent implements OnInit {
                             Object.assign(this.reception, this.formGroup.value)
                             this.receptionsService.setCustomers(this.customers)
                         }
+                        this.router.navigate(['/receptions'])
                     }, error: (error: HttpErrorResponse) => {
                         this.isLoading = false
                         this.navigationService.loadBarFinish()
@@ -267,6 +268,7 @@ export class PosReceptionComponent implements OnInit {
                         this.receptionId = reception._id
                         this.receptionsService.setReception(reception)
                         this.receptionsService.setCustomers(this.customers)
+                        this.router.navigate(['/receptions'])
                     }, error: (error: HttpErrorResponse) => {
                         this.isLoading = false
                         this.navigationService.loadBarFinish()

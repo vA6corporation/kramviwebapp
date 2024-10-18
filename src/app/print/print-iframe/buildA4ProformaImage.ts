@@ -1,17 +1,18 @@
 import { formatDate } from "@angular/common";
 import jsPDF from "jspdf";
-import * as QRCode from 'qrcode';
 import { ProformaModel } from "../../proformas/proforma.model";
 import { SettingModel } from "../../auth/setting.model";
 import { BusinessModel } from "../../auth/business.model";
 import { OfficeModel } from "../../auth/office.model";
 import { environment } from "../../../environments/environment";
+import { BankModel } from "../../providers/bank.model";
 
 export async function buildA4ProformaImage(
     proforma: ProformaModel,
     setting: SettingModel,
     business: BusinessModel,
     office: OfficeModel,
+    banks: BankModel[]
 ): Promise<jsPDF> {
     const header = 11
     const body = 8
@@ -21,6 +22,8 @@ export async function buildA4ProformaImage(
     let text: string = ''
     let strArr: string[] = []
     const pageHeight = pdf.internal.pageSize.height
+    const currency = proforma.currencyCode === 'PEN' ? 'S/' : '$'
+
     if (setting?.logo) {
         pdf.addImage(setting.logo, "JPEG", 5, 5, 35, 35)
     }
@@ -75,6 +78,7 @@ export async function buildA4ProformaImage(
 
     plusHeight += 5 * strArr.length
 
+    pdf.setFont('Helvetica', 'normal')
     text = (customer?.addresses[proforma.addressIndex] || '').toUpperCase()
     strArr = pdf.splitTextToSize(text, 85)
 
@@ -119,12 +123,12 @@ export async function buildA4ProformaImage(
     positionYCustomer += 5 * strArr.length
 
     pdf.setFont('Helvetica', 'bold')
-    pdf.text('TELEFONO', 8, positionYCustomer)
+    pdf.text('OBSER.', 8, positionYCustomer)
     pdf.text(':', 30, positionYCustomer)
-
+    
     pdf.setFont('Helvetica', 'normal')
-    text = (customer?.mobileNumber || '').toUpperCase()
-    strArr = pdf.splitTextToSize(text, 85)
+    text = (proforma.observations || 'NINGUNA').toUpperCase()
+    strArr = pdf.splitTextToSize(text, 160)
     pdf.text(strArr, 35, positionYCustomer)
 
     positionYCustomer += 5
@@ -134,8 +138,6 @@ export async function buildA4ProformaImage(
     pdf.text(':', 165, 50)
     pdf.text('HORA EMISIÓN', 130, 55)
     pdf.text(':', 165, 55)
-    pdf.text('OBSERVACIONES', 130, 60)
-    pdf.text(':', 165, 60)
 
     pdf.setFont('Helvetica', 'normal')
 
@@ -144,10 +146,6 @@ export async function buildA4ProformaImage(
 
     text = `${formatDate(proforma?.createdAt || '', 'h:mm a', 'en-US')}`
     pdf.text(text, 170, 55)
-
-    text = proforma?.observations || 'NINGUNO'
-    strArr = pdf.splitTextToSize(text, 85)
-    pdf.text(strArr, 170, 60)
 
     let positionYColumns = positionYCustomer
     positionYColumns += 5
@@ -214,21 +212,54 @@ export async function buildA4ProformaImage(
     pdf.line(5, positionYItems, 205, positionYItems)
 
     positionYItems += 5
+    
+    text = `SON: ${proforma.chargeLetters}`
+    pdf.text(text, 7, positionYItems)
 
-    if (proforma && business && office) {
-        const qrcode = await getQRDataUrl(proforma, business, office)
-        pdf.addImage(qrcode, "JPEG", 5, positionYItems, 35, 35)
+    text = `Usuario: ${user.name.toUpperCase()}`
+    pdf.text(text, 205, positionYItems, { align: 'right' })
+
+    if (banks.length) {
+        positionYItems += 3
+        pdf.setDrawColor(0)
+        pdf.setFillColor(255, 255, 255)
+        pdf.roundedRect(5, positionYItems, 200, (4 * banks.length) + 4, 1, 1, 'FD')
+        pdf.setFont('Helvetica', 'bold')
+        text = 'BANCO'
+        pdf.text(text, 20, positionYItems + 3, { align: 'center' })
+        text = 'MONEDA'
+        pdf.text(text, 70, positionYItems + 3, { align: 'center' })
+        text = 'CUENTA'
+        pdf.text(text, 120, positionYItems + 3, { align: 'center' })
+        text = 'CCI'
+        pdf.text(text, 170, positionYItems + 3, { align: 'center' })
+
+        pdf.setFont('Helvetica', 'normal')
+
+        positionYItems += 4
+
+        for (const bank of banks) {
+            text = bank.bankName
+            pdf.text(text, 20, positionYItems + 3, { align: 'center' })
+            text = bank.currencyName
+            pdf.text(text, 70, positionYItems + 3, { align: 'center' })
+            text = bank.accountNumber
+            pdf.text(text, 120, positionYItems + 3, { align: 'center' })
+            text = bank.cci
+            pdf.text(text, 170, positionYItems + 3, { align: 'center' })
+            positionYItems += 4
+        }
     }
 
-    text = `SON: ${proforma?.chargeLetters}`
-    pdf.text(text, 45, positionYItems + 4)
+    positionYItems += 3
 
     text = `${setting.textSale}`
-    pdf.text(text, 45, positionYItems + 12)
+    pdf.text(text, 7, positionYItems + 3)
 
     pdf.setDrawColor(0)
     pdf.setFillColor(255, 255, 255)
-    pdf.roundedRect(140, positionYItems, 65, 14, 1, 1, 'FD')
+    let heightDrawer = 35
+    pdf.roundedRect(140, positionYItems, 65, heightDrawer, 1, 1, 'FD')
 
     let positionYSummary = positionYItems
     let positionYSummaryRight = positionYItems
@@ -237,31 +268,99 @@ export async function buildA4ProformaImage(
     positionYSummaryRight += 5
     pdf.setFont('Helvetica', 'bold')
 
-    text = 'DSCTO GLOBAL'
+    if (proforma.discount) {
+        text = 'DSCTO GLOBAL'
+        pdf.text(text, 170, positionYSummary, { align: 'right' })
+        positionYSummary += 4
+    }
+
+    text = 'SUB TOTAL'
     pdf.text(text, 170, positionYSummary, { align: 'right' })
-    positionYSummary += 5
+    positionYSummary += 4
+
+    if (proforma.gravado) {
+        text = 'OP. GRAVADO'
+        pdf.text(text, 170, positionYSummary, { align: 'right' })
+        positionYSummary += 4
+    }
+
+    if (proforma.exonerado) {
+        text = 'OP. EXONERADO'
+        pdf.text(text, 170, positionYSummary, { align: 'right' })
+        positionYSummary += 4
+    }
+
+    if (proforma.inafecto) {
+        text = 'OP. INAFECTO'
+        pdf.text(text, 170, positionYSummary, { align: 'right' })
+        positionYSummary += 4
+    }
+
+    if (proforma.gratuito) {
+        text = 'OP. GRATUITO'
+        pdf.text(text, 170, positionYSummary, { align: 'right' })
+        positionYSummary += 4
+    }
+
+    text = `I.G.V. (${proforma.igvPercent}%)`
+    pdf.text(text, 170, positionYSummary, { align: 'right' })
+    positionYSummary += 4
 
     text = 'IMPORTE TOTAL'
     pdf.text(text, 170, positionYSummary, { align: 'right' })
-    positionYSummary += 5
+    positionYSummary += 4
 
     pdf.setFont('Helvetica', 'normal')
 
-    const currency = proforma.currencyCode === 'PEN' ? 'S/' : '$'
+    if (proforma.discount) {
+        text = (proforma.discount || 0).toFixed(2)
+        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+        positionYSummaryRight += 4
+    }
 
-    text = (proforma?.discount || 0).toFixed(2)
+    text = ((proforma.charge || 0) - (proforma?.igv || 0)).toFixed(2)
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-    positionYSummaryRight += 5
+    positionYSummaryRight += 4
 
-    text = (proforma?.charge || 0).toFixed(2)
+    if (proforma.gravado) {
+        text = (proforma.gravado || 0).toFixed(2)
+        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+        positionYSummaryRight += 4
+    }
+
+    if (proforma.exonerado) {
+        text = (proforma.exonerado || 0).toFixed(2)
+        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+        positionYSummaryRight += 4
+    }
+
+    if (proforma.inafecto) {
+        text = (proforma.inafecto || 0).toFixed(2)
+        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+        positionYSummaryRight += 4
+    }
+
+    if (proforma.gratuito) {
+        text = (proforma.gratuito || 0).toFixed(2)
+        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+        positionYSummaryRight += 4
+    }
+
+    text = proforma.igv.toFixed(2)
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-    positionYSummaryRight += 5
+    positionYSummaryRight += 4
+
+    text = (proforma.charge || 0).toFixed(2)
+    pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+    pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+    positionYSummaryRight += 4
 
     return pdf
-}
-
-async function getQRDataUrl(proforma: ProformaModel, business: BusinessModel, office: OfficeModel): Promise<string> {
-    return await QRCode.toDataURL(`${business.ruc}|${office.serialPrefix}|${proforma.charge.toFixed(2)}|${proforma.createdAt}`, { margin: 0 })
 }

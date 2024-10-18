@@ -117,7 +117,6 @@ export class PosBoardComponent implements OnInit {
                 }
                 case 'split_board': {
                     if (this.board) {
-                        // this.router.navigate(['/boards/splitBoard', this.board._id])
                         const dialogRef = this.matDialog.open(DialogSplitBoardsComponent, {
                             width: '600px',
                             position: { top: '20px' },

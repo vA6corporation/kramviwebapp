@@ -66,6 +66,7 @@ export class ChargeComponent implements OnInit {
         currencyCode: 'PEN',
         observations: '',
         discount: null,
+        discountPercent: null,
         deliveryAt: null,
         emitionAt: null,
         cash: null,
@@ -259,6 +260,13 @@ export class ChargeComponent implements OnInit {
                     this.charge += saleItem.price * saleItem.quantity
                 }
             }
+            const { discount, discountPercent } = this.formGroup.value
+            if (discount) {
+                this.onChangeDiscount()
+            }
+            if (discountPercent) {
+                this.onChangeDiscountPercent()
+            }
         })
 
         const { proformaId } = this.activatedRoute.snapshot.queryParams
@@ -297,6 +305,25 @@ export class ChargeComponent implements OnInit {
             }
         }
         this.charge -= discount
+    }
+
+    onChangeDiscountPercent() {
+        const { discountPercent } = this.formGroup.value
+        let charge = 0
+        for (const saleItem of this.saleItems) {
+            if (saleItem.igvCode !== '11') {
+                charge += saleItem.price * saleItem.quantity
+            }
+        }
+        let discount = 0
+        if (discountPercent) {
+            discount = (charge / 100) * discountPercent
+            this.charge = charge - discount
+            this.formGroup.patchValue({ discount })
+        } else {
+            this.charge = charge
+            this.formGroup.patchValue({ discount })
+        }
     }
 
     resetCash() {

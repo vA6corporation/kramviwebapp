@@ -19,6 +19,7 @@ export interface ProformaModel {
     exonerado: number
     inafecto: number
     igv: number
+    igvPercent: number
     deletedAt: string | null
     expirationAt: Date
     chargeLetters: String

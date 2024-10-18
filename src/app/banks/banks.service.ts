@@ -31,23 +31,27 @@ export class BanksService {
     }
 
     getBankById(bankId: string): Observable<BankModel> {
-        return this.httpService.get(`banks/byId/${bankId}`);
+        return this.httpService.get(`banks/byId/${bankId}`)
     }
 
     getBanks(): Observable<BankModel[]> {
-        return this.httpService.get('banks');
+        return this.httpService.get('banks')
+    }
+
+    getCountBanks(): Observable<number> {
+        return this.httpService.get('banks/countBanks')
     }
 
     create(bank: BankModel): Observable<BankModel> {
-        return this.httpService.post('banks', { bank });
+        return this.httpService.post('banks', { bank })
     }
 
     update(bank: BankModel, bankId: string): Observable<void> {
-        return this.httpService.put(`banks/${bankId}`, { bank });
+        return this.httpService.put(`banks/${bankId}`, { bank })
     }
 
     delete(bankId: string): Observable<void> {
-        return this.httpService.delete(`banks/${bankId}`);
+        return this.httpService.delete(`banks/${bankId}`)
     }
 
 }

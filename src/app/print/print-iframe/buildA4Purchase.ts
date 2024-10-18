@@ -150,7 +150,7 @@ export async function buildA4Purchase(
     pdf.roundedRect(5, 45, 200, 20 + plusHeight, 1, 1, 'S')
 
     pdf.setFont('Helvetica', 'bold')
-    pdf.text('OBS.', 8, positionYCustomer)
+    pdf.text('OBSER.', 8, positionYCustomer)
     pdf.text(':', 30, positionYCustomer)
 
     pdf.setFont('Helvetica', 'normal')
@@ -314,7 +314,3 @@ export async function buildA4Purchase(
 
     return pdf
 }
-
-// async function getQRDataUrl(sale: SaleModel, business: BusinessModel, office: OfficeModel): Promise<string> {
-//   return await QRCode.toDataURL(`${business.ruc}|${sale.invoiceType.toUpperCase()}|${sale.invoicePrefix}${office.serialPrefix}|${sale.invoiceNumber}|${sale.igv.toFixed(2)}|${sale.charge.toFixed(2)}|${sale.createdAt}`, { margin: 0 });
-// }

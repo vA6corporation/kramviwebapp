@@ -26,8 +26,8 @@ export class LoginWaiterComponent implements OnInit {
 
     version: string = environment.version
     loginForm: FormGroup = this.formBuilder.group({
-        email: [null, [Validators.required, Validators.email]],
-        password: [null, [Validators.required, Validators.minLength(3)]],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(3)]],
         rememberme: false,
     })
     isLoading: boolean = false

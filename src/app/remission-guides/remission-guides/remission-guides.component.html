@@ -81,26 +81,10 @@
                             <mat-icon>print</mat-icon>
                             <span>Imprimir Ticket 80mm</span>
                         </button>
-                        <!-- <button type="button" mat-menu-item (click)="onExportPdf(element._id)">
-                            <mat-icon>download</mat-icon>
-                            <span>Exportar PDF A4</span>
-                        </button>
-                        <button type="button" mat-menu-item (click)="onExportPdfTicket(element._id)">
-                            <mat-icon>download</mat-icon>
-                            <span>Exportar PDF Ticket 80mm</span>
-                        </button> -->
-                        <!-- <button type="button" mat-menu-item (click)="onDownloadXmlCdr(element)">
-                            <mat-icon>download</mat-icon>
-                            <span>Descargar XML/CDR</span>
-                        </button> -->
                         <button [routerLink]="['/remissionGuides', element._id, 'edit']" mat-menu-item>
                             <mat-icon>edit</mat-icon>
                             <span>Editar</span>
                         </button>
-                        <!-- <button (click)="onSendRemissionGuide(element._id)" mat-menu-item>
-                            <mat-icon>near_me</mat-icon>
-                            <span>Enviar a Sunat</span>
-                        </button> -->
                         <button type="button" mat-menu-item (click)="onDeleteInvoice(element)">
                             <mat-icon>delete</mat-icon>
                             <span>Anular</span>

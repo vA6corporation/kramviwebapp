@@ -136,6 +136,7 @@ export async function buildA4Invoice(
 
     plusHeight += 5 * strArr.length
 
+    pdf.setFont('Helvetica', 'normal')
     text = (customer?.addresses[sale.addressIndex] || '').toUpperCase()
     strArr = pdf.splitTextToSize(text, 85)
 
@@ -176,16 +177,6 @@ export async function buildA4Invoice(
 
     positionYCustomer += 5 * strArr.length
 
-    pdf.setFont('Helvetica', 'bold')
-    pdf.text('CELULAR', 8, positionYCustomer)
-    pdf.text(':', 30, positionYCustomer)
-
-    pdf.setFont('Helvetica', 'normal')
-    text = customer?.mobileNumber || ''
-    pdf.text(text, 35, positionYCustomer)
-
-    positionYCustomer += 5
-
     if (customer?.email) {
         pdf.setFont('Helvetica', 'bold')
         pdf.text('EMAIL', 8, positionYCustomer)
@@ -201,14 +192,14 @@ export async function buildA4Invoice(
 
     pdf.setDrawColor(0)
     pdf.setFillColor(255, 255, 255)
-    pdf.roundedRect(5, 45, 200, 20 + plusHeight, 1, 1, 'S')
+    pdf.roundedRect(5, 45, 200, 15 + plusHeight, 1, 1, 'S')
 
     pdf.setFont('Helvetica', 'bold')
-    pdf.text('OBS.', 8, positionYCustomer)
+    pdf.text('OBSER.', 8, positionYCustomer)
     pdf.text(':', 30, positionYCustomer)
 
     pdf.setFont('Helvetica', 'normal')
-    text = (sale.observations || '').toUpperCase()
+    text = (sale.observations || 'NINGUNA').toUpperCase()
     strArr = pdf.splitTextToSize(text, 160)
     pdf.text(strArr, 35, positionYCustomer)
 
@@ -478,11 +469,11 @@ export async function buildA4Invoice(
 
     text = `${setting.textSale}`
     strArr = pdf.splitTextToSize(text, 100)
-    pdf.text(strArr, 40, positionFooter + 2)
+    pdf.text(strArr, 38, positionFooter + 2)
 
     pdf.setDrawColor(0)
     pdf.setFillColor(255, 255, 255)
-    let heightDrawer = 40
+    let heightDrawer = 35
     if (!sale.rc) {
         heightDrawer -= 4
     }
@@ -495,30 +486,40 @@ export async function buildA4Invoice(
     positionYSummaryRight += 5
     pdf.setFont('Helvetica', 'bold')
 
-    text = 'DSCTO GLOBAL'
-    pdf.text(text, 170, positionYSummary, { align: 'right' })
-    positionYSummary += 4
+    if (sale.discount) {
+        text = 'DSCTO GLOBAL'
+        pdf.text(text, 170, positionYSummary, { align: 'right' })
+        positionYSummary += 4
+    }
 
     if (sale.invoiceType !== 'NOTA DE VENTA') {
         text = 'SUB TOTAL'
         pdf.text(text, 170, positionYSummary, { align: 'right' })
         positionYSummary += 4
 
-        text = 'OP. GRAVADO'
-        pdf.text(text, 170, positionYSummary, { align: 'right' })
-        positionYSummary += 4
+        if (sale.gravado) {
+            text = 'OP. GRAVADO'
+            pdf.text(text, 170, positionYSummary, { align: 'right' })
+            positionYSummary += 4
+        }
 
-        text = 'OP. EXONERADO'
-        pdf.text(text, 170, positionYSummary, { align: 'right' })
-        positionYSummary += 4
+        if (sale.exonerado) {
+            text = 'OP. EXONERADO'
+            pdf.text(text, 170, positionYSummary, { align: 'right' })
+            positionYSummary += 4
+        }
 
-        text = 'OP. INAFECTO'
-        pdf.text(text, 170, positionYSummary, { align: 'right' })
-        positionYSummary += 4
+        if (sale.inafecto) {
+            text = 'OP. INAFECTO'
+            pdf.text(text, 170, positionYSummary, { align: 'right' })
+            positionYSummary += 4
+        }
 
-        text = 'OP. GRATUITO'
-        pdf.text(text, 170, positionYSummary, { align: 'right' })
-        positionYSummary += 4
+        if (sale.gratuito) {
+            text = 'OP. GRATUITO'
+            pdf.text(text, 170, positionYSummary, { align: 'right' })
+            positionYSummary += 4
+        }
 
         text = `I.G.V. (${sale.igvPercent}%)`
         pdf.text(text, 170, positionYSummary, { align: 'right' })
@@ -537,10 +538,12 @@ export async function buildA4Invoice(
 
     pdf.setFont('Helvetica', 'normal')
 
-    text = (sale.discount || 0).toFixed(2)
-    pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
-    pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-    positionYSummaryRight += 4
+    if (sale.discount) {
+        text = (sale.discount || 0).toFixed(2)
+        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+        positionYSummaryRight += 4
+    }
 
     if (sale.invoiceType !== 'NOTA DE VENTA') {
         text = ((sale.charge || 0) - (sale?.igv || 0)).toFixed(2)
@@ -548,25 +551,33 @@ export async function buildA4Invoice(
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
 
-        text = (sale.gravado || 0).toFixed(2)
-        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
-        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-        positionYSummaryRight += 4
+        if (sale.gravado) {
+            text = (sale.gravado || 0).toFixed(2)
+            pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+            pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+            positionYSummaryRight += 4
+        }
 
-        text = (sale.exonerado || 0).toFixed(2)
-        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
-        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-        positionYSummaryRight += 4
+        if (sale.exonerado) {
+            text = (sale.exonerado || 0).toFixed(2)
+            pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+            pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+            positionYSummaryRight += 4
+        }
 
-        text = (sale.inafecto || 0).toFixed(2)
-        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
-        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-        positionYSummaryRight += 4
+        if (sale.inafecto) {
+            text = (sale.inafecto || 0).toFixed(2)
+            pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+            pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+            positionYSummaryRight += 4
+        }
 
-        text = (sale.gratuito || 0).toFixed(2)
-        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
-        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-        positionYSummaryRight += 4
+        if (sale.gratuito) {
+            text = (sale.gratuito || 0).toFixed(2)
+            pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+            pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+            positionYSummaryRight += 4
+        }
 
         text = sale.igv.toFixed(2)
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })

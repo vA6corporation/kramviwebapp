@@ -20,13 +20,20 @@
             <mat-label>Precio</mat-label>
             <input type="text" matInput formControlName="price">
         </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Declaracion</mat-label>
+            <mat-select formControlName="igvCode">
+                <mat-option value="10">GRAVADO</mat-option>
+                <mat-option value="20">EXONERADO</mat-option>
+                <mat-option value="30">INAFECTO</mat-option>
+                <mat-option value="11">BONIFICACION</mat-option>
+            </mat-select>
+        </mat-form-field>
         <div class="d-flex">
             <span class="spacer"></span>
-            <div class="py-3">
-                <button type="button" mat-raised-button routerLink="/rooms" color="primary">CANCELAR</button>
-                <span class="divider"></span>
-                <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
-            </div>
+            <button type="button" mat-raised-button routerLink="/rooms" color="primary">CANCELAR</button>
+            <span class="divider"></span>
+            <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
         </div>
     </form>
 </div>

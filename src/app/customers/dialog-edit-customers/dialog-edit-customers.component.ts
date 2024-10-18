@@ -37,7 +37,6 @@ export class DialogEditCustomersComponent implements OnInit {
         birthDate: new FormControl('', { nonNullable: true }),
         observations: new FormControl('', { nonNullable: true }),
     })
-    documentTypes: string[] = ['RUC', 'DNI', 'CE']
     isLoading: boolean = false
     maxLength: number = 11
     private customerId: string = this.customer._id

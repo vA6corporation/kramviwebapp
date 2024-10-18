@@ -39,6 +39,9 @@
                 <mat-label>Observaciones</mat-label>
                 <input type="text" matInput formControlName="observations">
             </mat-form-field>
+            <mat-slide-toggle class="mb-3" formControlName="igvPercent" (change)="onChangePercent()">
+                18% de IGV incluido
+            </mat-slide-toggle>
             <div class="p-1"></div>
             <button type="submit" class="w-100" mat-flat-button [disabled]="isLoading" color="primary">
                 GUARDAR

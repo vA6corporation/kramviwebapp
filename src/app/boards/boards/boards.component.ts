@@ -49,7 +49,6 @@ export class BoardsComponent implements OnInit {
         }
 
         this.navigationService.setMenu([
-            // { id: 'search', label: 'Buscar', icon: 'search', show: true },
             { id: 'detail_boards', label: 'Detalles de mesas', icon: 'info', show: false },
         ])
 

@@ -89,8 +89,9 @@
             <input type="number" matInput formControlName="cost">
         </mat-form-field>
         <div class="mb-3">
-            <button type="button" mat-flat-button color="primary" (click)="fileImageInput.click()" class="w-100">AGREGAR
-                IMAGEN</button>
+            <button type="button" mat-flat-button color="primary" (click)="fileImageInput.click()" class="w-100">
+                AGREGAR IMAGEN
+            </button>
             <input type="file" #fileImageInput (change)="onFileImageSelected(fileImageInput.files, fileImageInput)"
                 hidden>
         </div>

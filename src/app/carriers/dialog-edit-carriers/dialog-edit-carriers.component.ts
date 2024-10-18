@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CarrierModel } from '../carrier.model';
 import { CarriersService } from '../carriers.service';
@@ -11,7 +11,7 @@ import { CarriersService } from '../carriers.service';
     templateUrl: './dialog-edit-carriers.component.html',
     styleUrls: ['./dialog-edit-carriers.component.sass']
 })
-export class DialogEditCarriersComponent implements OnInit {
+export class DialogEditCarriersComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -31,29 +31,25 @@ export class DialogEditCarriersComponent implements OnInit {
         licenseNumber: this.carrier.licenseNumber,
         mobileNumber: this.carrier.mobileNumber,
         email: [this.carrier.email, Validators.email]
-    });
-
-    carrierId: string = this.carrier._id;
-    documentTypes: string[] = ['RUC', 'DNI', 'CE'];
-    isLoading: boolean = false;
-    customerId: string = '';
-    maxlength: number = 11;
-
-    ngOnInit(): void {
-    }
+    })
+    carrierId: string = this.carrier._id
+    isLoading: boolean = false
+    customerId: string = ''
+    maxlength: number = 11
 
     onSubmit() {
         if (this.formGroup.valid) {
-            this.isLoading = true;
-            this.carriersService.update(this.formGroup.value, this.carrierId).subscribe(() => {
-                this.isLoading = false;
-                Object.assign(this.carrier, this.formGroup.value);
-                this.dialogRef.close(this.carrier);
-                this.navigationService.showMessage('Se han guardado los cambios');
-            }, (error: HttpErrorResponse) => {
-                this.isLoading = false;
-                this.navigationService.showMessage(error.error.message);
-            });
+            this.isLoading = true
+            this.carriersService.update(this.formGroup.value, this.carrierId).subscribe({
+                next: () => {
+                    this.isLoading = false
+                    this.dialogRef.close(this.formGroup.value)
+                    this.navigationService.showMessage('Se han guardado los cambios')
+                }, error: (error: HttpErrorResponse) => {
+                    this.isLoading = false
+                    this.navigationService.showMessage(error.error.message)
+                }
+            })
         }
     }
 

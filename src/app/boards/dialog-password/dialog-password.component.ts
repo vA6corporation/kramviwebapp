@@ -24,7 +24,7 @@ export class DialogPasswordComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        password: [null, Validators.required]
+        password: ['', Validators.required]
     })
     isLoading: boolean = false
     hide: boolean = true

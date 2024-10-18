@@ -21,7 +21,7 @@ export class EditActivitiesComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        name: [null, Validators.required],
+        name: ['', Validators.required],
     })
     isLoading: boolean = false
     private activityId: string = ''
@@ -44,14 +44,16 @@ export class EditActivitiesComponent implements OnInit {
         if (this.formGroup.valid) {
             this.isLoading = true
             this.navigationService.loadBarStart()
-            this.activitiesService.update(this.formGroup.value, this.activityId).subscribe(activity => {
-                this.navigationService.loadBarFinish()
-                this.isLoading = false
-                this.router.navigate(['/activities'])
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.loadBarFinish()
-                this.isLoading = false
-                this.navigationService.showMessage(error.error.message)
+            this.activitiesService.update(this.formGroup.value, this.activityId).subscribe({
+                next: () => {
+                    this.navigationService.loadBarFinish()
+                    this.isLoading = false
+                    this.router.navigate(['/activities'])
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.loadBarFinish()
+                    this.isLoading = false
+                    this.navigationService.showMessage(error.error.message)
+                }
             })
         }
     }

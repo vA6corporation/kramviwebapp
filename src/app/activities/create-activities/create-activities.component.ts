@@ -20,27 +20,29 @@ export class CreateActivitiesComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        name: [null, Validators.required],
-    });
-    isLoading: boolean = false;
+        name: ['', Validators.required],
+    })
+    isLoading: boolean = false
 
     ngOnInit(): void {
-        this.navigationService.setTitle('Nueva actividad');
+        this.navigationService.setTitle('Nueva actividad')
     }
 
     onSubmit() {
         if (this.formGroup.valid) {
-            this.isLoading = true;
-            this.navigationService.loadBarStart();
-            this.activitiesService.create(this.formGroup.value).subscribe(activity => {
-                this.navigationService.loadBarFinish();
-                this.isLoading = false;
-                this.router.navigate(['/activities']);
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.loadBarFinish();
-                this.isLoading = false;
-                this.navigationService.showMessage(error.error.message);
-            });
+            this.isLoading = true
+            this.navigationService.loadBarStart()
+            this.activitiesService.create(this.formGroup.value).subscribe({
+                next: () => {
+                    this.navigationService.loadBarFinish()
+                    this.isLoading = false
+                    this.router.navigate(['/activities'])
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.loadBarFinish()
+                    this.isLoading = false
+                    this.navigationService.showMessage(error.error.message)
+                }
+            })
         }
     }
 

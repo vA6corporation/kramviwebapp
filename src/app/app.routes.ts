@@ -128,7 +128,7 @@ export const routes: Routes = [
     },
     {
         path: 'settings',
-        loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule)
+        loadChildren: () => import('./settings/settings.routes').then(m => m.routes)
     },
     {
         path: 'expenses',
@@ -156,7 +156,7 @@ export const routes: Routes = [
     },
     {
         path: 'providers',
-        loadChildren: () => import('./providers/providers.module').then(m => m.ProvidersModule)
+        loadChildren: () => import('./providers/providers.routes').then(m => m.routes)
     },
     {
         path: 'printers',
@@ -192,7 +192,7 @@ export const routes: Routes = [
     },
     {
         path: 'tools',
-        loadChildren: () => import('./tools/tools.module').then(m => m.ToolsModule)
+        loadChildren: () => import('./tools/tools.routes').then(m => m.routes)
     },
     {
         path: 'proformas',
@@ -204,7 +204,7 @@ export const routes: Routes = [
     },
     {
         path: 'paymentOrders',
-        loadChildren: () => import('./payment-orders/payment-orders.module').then(m => m.PaymentOrdersModule)
+        loadChildren: () => import('./payment-orders/payment-orders.routes').then(m => m.routes)
     },
     {
         path: 'payments',
@@ -212,7 +212,7 @@ export const routes: Routes = [
     },
     {
         path: 'banks',
-        loadChildren: () => import('./banks/banks.module').then(m => m.BanksModule)
+        loadChildren: () => import('./banks/banks.routes').then(m => m.routes)
     },
     {
         path: 'activities',

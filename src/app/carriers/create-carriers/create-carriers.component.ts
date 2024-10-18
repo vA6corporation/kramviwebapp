@@ -21,53 +21,52 @@ export class CreateCarriersComponent implements OnInit {
 
     formGroup: FormGroup = this.formBuilder.group({
         documentType: ['RUC', Validators.required],
-        document: [null, Validators.required],
-        name: [null, Validators.required],
+        document: ['', Validators.required],
+        name: ['', Validators.required],
         carriagePlate: '',
         licenseNumber: '',
         mobileNumber: '',
         email: '',
-    });
-
-    isLoading: boolean = false;
-    maxLength: number = 11;
+    })
+    isLoading: boolean = false
+    maxLength: number = 11
 
     ngOnInit(): void {
-        this.navigationService.setTitle('Nuevo transportista');
+        this.navigationService.setTitle('Nuevo transportista')
 
         this.formGroup.get('documentType')?.valueChanges.subscribe(value => {
             switch (value) {
                 case 'RUC':
-                    this.formGroup.get('document')?.setValidators([Validators.required, Validators.minLength(11), Validators.maxLength(11)]);
-                    this.maxLength = 11;
-                    break;
+                    this.formGroup.get('document')?.setValidators([Validators.required, Validators.minLength(11), Validators.maxLength(11)])
+                    this.maxLength = 11
+                    break
                 case 'DNI':
-                    this.formGroup.get('document')?.setValidators([Validators.minLength(8), Validators.maxLength(8)]);
-                    this.maxLength = 8;
-                    break;
+                    this.formGroup.get('document')?.setValidators([Validators.minLength(8), Validators.maxLength(8)])
+                    this.maxLength = 8
+                    break
                 case 'CE':
-                    this.formGroup.get('document')?.setValidators([Validators.minLength(9), Validators.maxLength(9)]);
-                    this.maxLength = 9;
-                    break;
+                    this.formGroup.get('document')?.setValidators([Validators.minLength(9), Validators.maxLength(9)])
+                    this.maxLength = 9
+                    break
             }
-            this.formGroup.get('document')?.updateValueAndValidity();
-        });
+            this.formGroup.get('document')?.updateValueAndValidity()
+        })
     }
 
     onSubmit(): void {
         if (this.formGroup.valid) {
-            this.isLoading = true;
-            this.navigationService.loadBarStart();
+            this.isLoading = true
+            this.navigationService.loadBarStart()
             this.carriersService.create(this.formGroup.value).subscribe({
                 next: () => {
-                    this.isLoading = false;
-                    this.navigationService.loadBarFinish();
-                    this.router.navigate(['/carriers']);
-                    this.navigationService.showMessage('Registrado correctamente');
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.router.navigate(['/carriers'])
+                    this.navigationService.showMessage('Registrado correctamente')
                 }, error: (error: HttpErrorResponse) => {
-                    this.isLoading = false;
-                    this.navigationService.loadBarFinish();
-                    this.navigationService.showMessage(error.error.message);
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage(error.error.message)
                 }
             })
         }

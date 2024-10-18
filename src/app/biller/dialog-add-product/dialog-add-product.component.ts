@@ -25,7 +25,7 @@ export class DialogAddProductComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        fullName: [null, Validators.required],
+        fullName: ['', Validators.required],
         price: [null, Validators.required],
         quantity: [1, Validators.required],
         observations: '',

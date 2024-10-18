@@ -154,7 +154,7 @@ export async function buildA4PurchaseOrder(
     positionYCustomer += 5 * strArr.length
 
     pdf.setFont('Helvetica', 'bold')
-    pdf.text('OBS.', 8, positionYCustomer)
+    pdf.text('OBSER.', 8, positionYCustomer)
     pdf.text(':', 30, positionYCustomer)
 
     pdf.setFont('Helvetica', 'normal')

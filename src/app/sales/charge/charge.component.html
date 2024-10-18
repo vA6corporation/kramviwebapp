@@ -96,6 +96,12 @@
                     <input type="number" matInput formControlName="discount" (input)="onChangeDiscount()">
                 </mat-form-field>
             }
+            @if (setting.showTotalDiscountPercent) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Descuento global (Porcentaje)</mat-label>
+                    <input type="number" matInput formControlName="discountPercent" (input)="onChangeDiscountPercent()">
+                </mat-form-field>
+            }
             @if (setting.showCurrencyCode) {
                 <mat-form-field appearance="fill">
                     <mat-label>Moneda</mat-label>

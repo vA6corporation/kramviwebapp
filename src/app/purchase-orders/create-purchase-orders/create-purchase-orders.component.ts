@@ -54,6 +54,7 @@ export class CreatePurchaseOrdersComponent implements OnInit {
 
     ngOnInit(): void {
         this.navigationService.setTitle('Nueva orden de compra')
+        this.navigationService.showSearch()
 
         this.navigationService.setMenu([
             { id: 'search', icon: 'search', show: true, label: '' }

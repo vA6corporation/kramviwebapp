@@ -23,46 +23,48 @@ export class EditRoomsComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        name: [null, Validators.required],
-        roomNumber: [null, Validators.required],
-        beds: [null, Validators.required],
-        description: [null, Validators.required],
-        price: [null, Validators.required]
-    });
-    isLoading: boolean = false;
-    private roomId: string = '';
+        name: ['', Validators.required],
+        roomNumber: ['', Validators.required],
+        beds: ['', Validators.required],
+        description: ['', Validators.required],
+        price: ['', Validators.required],
+        igvCode: '10'
+    })
+    isLoading: boolean = false
+    private roomId: string = ''
 
     ngOnInit(): void {
-        this.navigationService.setTitle('Editar habitacion');
-        this.navigationService.loadBarStart();
+        this.navigationService.setTitle('Editar habitacion')
+        this.navigationService.loadBarStart()
 
-        this.roomId = this.activatedRoute.snapshot.params['roomId'];
+        this.roomId = this.activatedRoute.snapshot.params['roomId']
         this.roomsService.getRoomById(this.roomId).subscribe({
             next: room => {
-                this.navigationService.loadBarFinish();
-                this.formGroup.patchValue(room);
-            }, 
+                this.navigationService.loadBarFinish()
+                this.formGroup.patchValue(room)
+            },
             error: (error: HttpErrorResponse) => {
-                this.navigationService.loadBarFinish();
-                this.navigationService.showMessage(error.error.message);
+                this.navigationService.loadBarFinish()
+                this.navigationService.showMessage(error.error.message)
             }
-        });
-
+        })
     }
 
     onSubmit() {
         if (this.formGroup.valid) {
-            this.navigationService.loadBarStart();
-            this.isLoading = true;
-            this.roomsService.update(this.formGroup.value, this.roomId).subscribe(() => {
-                this.navigationService.loadBarFinish();
-                this.isLoading = false;
-                this.navigationService.showMessage('Se han guardado los cambios');
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.loadBarFinish();
-                this.isLoading = false;
-                this.navigationService.showMessage(error.error.message);
-            });
+            this.navigationService.loadBarStart()
+            this.isLoading = true
+            this.roomsService.update(this.formGroup.value, this.roomId).subscribe({
+                next: () => {
+                    this.navigationService.loadBarFinish()
+                    this.isLoading = false
+                    this.navigationService.showMessage('Se han guardado los cambios')
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.loadBarFinish()
+                    this.isLoading = false
+                    this.navigationService.showMessage(error.error.message)
+                }
+            })
         }
     }
 

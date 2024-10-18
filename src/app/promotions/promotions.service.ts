@@ -5,16 +5,16 @@ import { PromotionItemModel } from './promotion-item.model';
 import { PromotionModel } from './promotion.model';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class PromotionsService {
 
-  constructor(
-    private readonly httpService: HttpService,
-  ) { }
+    constructor(
+        private readonly httpService: HttpService,
+    ) { }
 
-  private promotion: PromotionModel|null = null;
-  private saleItems: PromotionItemModel[] = [];
-  
-  private promotionItems$: Subject<PromotionItemModel[]> = new Subject();
+    private promotion: PromotionModel | null = null
+    private saleItems: PromotionItemModel[] = []
+
+    private promotionItems$: Subject<PromotionItemModel[]> = new Subject()
 }

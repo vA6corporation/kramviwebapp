@@ -8,9 +8,13 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { SpecialtiesService } from '../../specialties/specialties.service';
 import { WorkerModel } from '../../workers/worker.model';
 import { ToolsService } from '../tools.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-import-customers',
+    standalone: true,
+    imports: [MaterialModule, CommonModule],
     templateUrl: './import-customers.component.html',
     styleUrls: ['./import-customers.component.sass']
 })

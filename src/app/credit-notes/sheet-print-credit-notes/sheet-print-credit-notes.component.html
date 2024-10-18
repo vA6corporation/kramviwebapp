@@ -1,10 +1,10 @@
 <mat-action-list>
-  <button type="button" mat-list-item (click)="onPrintA4()">
-    <span mat-line>A4</span>
-    <span mat-line>Imprimir A4</span>
-  </button>
-  <button type="button" mat-list-item (click)="onPrintTicket()">
-    <span mat-line>Ticket</span>
-    <span mat-line>Imprimir Ticket</span>
-  </button>
+    <button type="button" mat-list-item (click)="onPrintA4()">
+        <mat-icon matListItemIcon class="color-black">printer</mat-icon>
+        <span matListItemTitle>Imprimir A4</span>
+    </button>
+    <button type="button" mat-list-item (click)="onPrintTicket()">
+        <mat-icon matListItemIcon class="color-black">printer</mat-icon>
+        <span matListItemTitle>Imprimir Ticket</span>
+    </button>
 </mat-action-list>

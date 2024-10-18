@@ -20,6 +20,7 @@ export class SettingModel {
     showChargeCommand: boolean = false
     showWorker: boolean = false
     showTotalDiscount: boolean = false
+    showTotalDiscountPercent: boolean = false
     showReferred: boolean = false
     showDeliveryAt: boolean = false
     showEmitionAt: boolean = false

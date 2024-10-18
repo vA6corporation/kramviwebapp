@@ -102,7 +102,8 @@ export class ProductsComponent implements OnInit {
             let body = []
             body.push([
                 'PRODUCTO',
-                'CODIGO',
+                'CODIGO INTERNO',
+                'CODIGO FABRICANTE',
                 'CATEGORIA',
                 'UNIDADES',
                 'PRECIO UNITARIO',
@@ -117,6 +118,7 @@ export class ProductsComponent implements OnInit {
                 body.push([
                     summarySaleItem.fullName.toUpperCase(),
                     summarySaleItem.sku,
+                    summarySaleItem.upc,
                     this.categories.find(e => e._id === summarySaleItem.categoryId)?.name.toUpperCase(),
                     summarySaleItem.totalQuantity,
                     Number((summarySaleItem.totalSale / summarySaleItem.totalQuantity).toFixed(2)),

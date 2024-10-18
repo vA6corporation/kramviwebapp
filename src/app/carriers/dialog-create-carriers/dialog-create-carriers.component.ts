@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -10,7 +10,7 @@ import { CarriersService } from '../carriers.service';
     templateUrl: './dialog-create-carriers.component.html',
     styleUrls: ['./dialog-create-carriers.component.sass']
 })
-export class DialogCreateCarriersComponent implements OnInit {
+export class DialogCreateCarriersComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -21,30 +21,28 @@ export class DialogCreateCarriersComponent implements OnInit {
 
     formGroup: FormGroup = this.formBuilder.group({
         documentType: 'RUC',
-        document: [null, Validators.required],
-        name: [null, Validators.required],
+        document: ['', Validators.required],
+        name: ['', Validators.required],
         carriagePlate: '',
         licenseNumber: '',
         mobileNumber: '',
         email: ''
-    });
-    documentTypes: string[] = ['RUC', 'DNI', 'CE'];
-    isLoading: boolean = false;
-
-    ngOnInit(): void {
-    }
+    })
+    isLoading: boolean = false
 
     onSubmit() {
         if (this.formGroup.valid) {
-            this.isLoading = true;
-            this.carriersService.create(this.formGroup.value).subscribe(carrier => {
-                this.isLoading = false;
-                this.dialogRef.close(carrier);
-                this.navigationService.showMessage('Registrado correctamente');
-            }, (error: HttpErrorResponse) => {
-                this.isLoading = false;
-                this.navigationService.showMessage(error.error.message);
-            });
+            this.isLoading = true
+            this.carriersService.create(this.formGroup.value).subscribe({
+                next: carrier => {
+                    this.isLoading = false
+                    this.dialogRef.close(carrier)
+                    this.navigationService.showMessage('Registrado correctamente')
+                }, error: (error: HttpErrorResponse) => {
+                    this.isLoading = false
+                    this.navigationService.showMessage(error.error.message)
+                }
+            })
         }
     }
 
