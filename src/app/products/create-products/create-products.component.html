@@ -88,15 +88,17 @@
             <mat-label>Costo</mat-label>
             <input type="number" matInput formControlName="cost">
         </mat-form-field>
+        @if (imgUri) {
+            <div class="text-center mb-3">
+                <img [src]="imgUri" alt="producto" width="400" class="mat-elevation-z2">
+            </div>
+        }
         <div class="mb-3">
             <button type="button" mat-flat-button color="primary" (click)="fileImageInput.click()" class="w-100">
                 AGREGAR IMAGEN
             </button>
-            <input type="file" #fileImageInput (change)="onFileImageSelected(fileImageInput.files, fileImageInput)"
+            <input type="file" #fileImageInput accept="image/png, image/gif, image/jpeg" (change)="onFileImageSelected(fileImageInput.files, fileImageInput)"
                 hidden>
-        </div>
-        <div class="text-center" *ngIf="imgUri">
-            <img [src]="imgUri" alt="producto" width="400" class="mat-elevation-z2">
         </div>
         <mat-list>
             <div mat-subheader>Productos vinculados</div>

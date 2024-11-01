@@ -72,7 +72,7 @@ export class CreateBillerComponent implements OnInit {
         paymentMethodId: null,
         workerId: null,
         referredId: null,
-        especialtyId: null,
+        specialtyId: null,
     })
     payments: PaymentModel[] = []
     billItems: BillItemModel[] = []

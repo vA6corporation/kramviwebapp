@@ -38,6 +38,7 @@ import { DialogEditCustomersComponent } from '../../customers/dialog-edit-custom
 import { MaterialModule } from '../../material.module';
 import { SaleItemsComponent } from '../sale-items/sale-items.component';
 import { DirectivesModule } from '../../directives/directives.module';
+import { PreSalesService } from '../../pre-sales/pre-sales.service';
 
 @Component({
     selector: 'app-charge-credit',
@@ -53,6 +54,7 @@ export class ChargeCreditComponent implements OnInit {
         private readonly navigationService: NavigationService,
         private readonly proformasService: ProformasService,
         private readonly paymentMethodsService: PaymentMethodsService,
+        private readonly preSalesService: PreSalesService,
         private readonly workersService: WorkersService,
         private readonly specialtiesService: SpecialtiesService,
         private readonly location: Location,
@@ -268,6 +270,13 @@ export class ChargeCreditComponent implements OnInit {
                 this.customer = customer
             })
         }
+
+        let preSale = this.preSalesService.getPreSale()
+        if (preSale) {
+            this.customer = preSale.customer
+            Object.assign(this.params, { preSaleId: preSale._id })
+            this.formGroup.patchValue({ workerId: preSale.workerId })
+        }
     }
 
     onClickSaleItem(index: number) {
@@ -352,54 +361,8 @@ export class ChargeCreditComponent implements OnInit {
             }
 
             if (this.setting.allowFreeStock) {
-                this.salesService.saveCredit(createdCredit, this.saleItems, this.payments, this.dues, this.params).subscribe(sale => {
-
-                    Object.assign(sale, {
-                        user: this.user,
-                        customer: this.customer,
-                        saleItems: this.saleItems,
-                        worker: this.workers.find(e => e._id === sale.workerId),
-                        referred: this.workers.find(e => e._id === sale.referredId),
-                        payments: this.payments,
-                    })
-
-                    switch (this.setting.papelImpresion) {
-                        case 'a4':
-                            this.printService.printA4Invoice(sale)
-                            break
-                        case 'ticket80mm':
-                            this.printService.printTicket80mm(sale)
-                            break
-                        default:
-                            this.printService.printTicket58mm(sale)
-                            break
-                    }
-
-                    this.salesService.setSaleItems([])
-                    this.location.back()
-                    this.isLoading = false
-                    this.navigationService.loadBarFinish()
-                    this.navigationService.showMessage('Registrado correctamente')
-                }, (error: HttpErrorResponse) => {
-                    this.navigationService.showMessage(error.error.message)
-                    this.isLoading = false
-                    this.navigationService.loadBarFinish()
-                })
-            } else {
-                this.salesService.saveCreditStock(createdCredit, this.saleItems, this.payments, this.dues, this.params).subscribe(res => {
-
-                    const { sale, outStocks } = res
-
-                    if (outStocks.length || sale === null) {
-                        this.navigationService.loadBarFinish()
-                        this.isLoading = false
-                        console.log(outStocks)
-                        this.matDialog.open(DialogOutStockComponent, {
-                            width: '600px',
-                            position: { top: '20px' },
-                            data: outStocks,
-                        })
-                    } else {
+                this.salesService.saveCredit(createdCredit, this.saleItems, this.payments, this.dues, this.params).subscribe({
+                    next: sale => {
 
                         Object.assign(sale, {
                             user: this.user,
@@ -427,12 +390,62 @@ export class ChargeCreditComponent implements OnInit {
                         this.isLoading = false
                         this.navigationService.loadBarFinish()
                         this.navigationService.showMessage('Registrado correctamente')
+                    }, error: (error: HttpErrorResponse) => {
+                        this.navigationService.showMessage(error.error.message)
+                        this.isLoading = false
+                        this.navigationService.loadBarFinish()
                     }
+                })
+            } else {
+                this.salesService.saveCreditStock(createdCredit, this.saleItems, this.payments, this.dues, this.params).subscribe({
+                    next: res => {
 
-                }, (error: HttpErrorResponse) => {
-                    this.navigationService.showMessage(error.error.message)
-                    this.isLoading = false
-                    this.navigationService.loadBarFinish()
+                        const { sale, outStocks } = res
+
+                        if (outStocks.length || sale === null) {
+                            this.navigationService.loadBarFinish()
+                            this.isLoading = false
+                            console.log(outStocks)
+                            this.matDialog.open(DialogOutStockComponent, {
+                                width: '600px',
+                                position: { top: '20px' },
+                                data: outStocks,
+                            })
+                        } else {
+
+                            Object.assign(sale, {
+                                user: this.user,
+                                customer: this.customer,
+                                saleItems: this.saleItems,
+                                worker: this.workers.find(e => e._id === sale.workerId),
+                                referred: this.workers.find(e => e._id === sale.referredId),
+                                payments: this.payments,
+                            })
+
+                            switch (this.setting.papelImpresion) {
+                                case 'a4':
+                                    this.printService.printA4Invoice(sale)
+                                    break
+                                case 'ticket80mm':
+                                    this.printService.printTicket80mm(sale)
+                                    break
+                                default:
+                                    this.printService.printTicket58mm(sale)
+                                    break
+                            }
+
+                            this.salesService.setSaleItems([])
+                            this.location.back()
+                            this.isLoading = false
+                            this.navigationService.loadBarFinish()
+                            this.navigationService.showMessage('Registrado correctamente')
+                        }
+
+                    }, error: (error: HttpErrorResponse) => {
+                        this.navigationService.showMessage(error.error.message)
+                        this.isLoading = false
+                        this.navigationService.loadBarFinish()
+                    }
                 })
             }
 

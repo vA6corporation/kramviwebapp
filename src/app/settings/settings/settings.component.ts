@@ -66,6 +66,7 @@ export class SettingsComponent implements OnInit {
             showReferred: false,
             showDeliveryAt: false,
             showEmitionAt: false,
+            hideIgvTicket: false,
             showQrCode: true,
             showAddressOnTicket: false,
             showQrOnTicket: false,
@@ -323,7 +324,7 @@ export class SettingsComponent implements OnInit {
             const file: File = files[0]
             input.value = ''
             new Compressor(file, {
-                quality: 0.2,
+                quality: 0.6,
                 success: (result) => {
                     const reader = new FileReader()
                     reader.readAsDataURL(result)
@@ -352,7 +353,7 @@ export class SettingsComponent implements OnInit {
             const file: File = files[0]
             input.value = ''
             new Compressor(file, {
-                quality: 0.5,
+                quality: 0.6,
                 success: (result) => {
                     const reader = new FileReader()
                     reader.readAsDataURL(result)
@@ -379,7 +380,7 @@ export class SettingsComponent implements OnInit {
             const file: File = files[0]
             input.value = ''
             new Compressor(file, {
-                quality: 0.5,
+                quality: 0.6,
                 success: (result) => {
                     const reader = new FileReader()
                     reader.readAsDataURL(result)

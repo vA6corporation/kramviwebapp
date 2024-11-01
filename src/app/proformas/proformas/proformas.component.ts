@@ -50,18 +50,15 @@ export class ProformasComponent implements OnInit {
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
     office: OfficeModel = new OfficeModel()
-    private business: BusinessModel = new BusinessModel()
     users: UserModel[] = []
     formGroup: FormGroup = this.formBuilder.group({
+        startDate: ['', Validators.required],
+        endDate: ['', Validators.required],
         userId: '',
         isBilled: '',
-        startDate: [new Date(), Validators.required],
-        endDate: [new Date(), Validators.required],
     })
     private params: Params = {}
-    private startDate: Date = new Date()
-    private endDate: Date = new Date()
-    private key: string = ''
+    private business: BusinessModel = new BusinessModel()
 
     private handleAuth$: Subscription = new Subscription()
     private handleSearch$: Subscription = new Subscription()
@@ -92,82 +89,79 @@ export class ProformasComponent implements OnInit {
         })
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
-            const chunk = 500
-            const { startDate, endDate, userId, isBilled } = this.formGroup.value
-            const params: Params = { userId, isBilled }
-            const promises: Promise<any>[] = []
-            this.navigationService.loadBarStart()
-            for (let index = 0; index < this.length / chunk; index++) {
-                const promise = lastValueFrom(this.proformasService.getProformasByRangeDatePage(startDate, endDate, index + 1, chunk, params))
-                promises.push(promise)
-            }
-            Promise.all(promises).then(values => {
-                this.navigationService.loadBarFinish()
-                const proformas = values.flat() as ProformaModel[]
-                const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
-                let body = []
-                body.push([
-                    'F. DE REGISTRO',
-                    'H. DE REGISTRO',
-                    'CLIENTE',
-                    'RUC/DNI/CE',
-                    'COMPROBANTE',
-                    'Nº COMPROBANTE',
-                    'TOTAL',
-                    'USUARIO',
-                    'ANULADO',
-                    'OBSERVACIONES'
-                ])
-                for (const proforma of proformas) {
-                    const { customer, sale } = proforma
-                    body.push([
-                        formatDate(proforma.createdAt, 'dd/MM/yyyy', 'en-US'),
-                        formatDate(proforma.createdAt, 'hh:mm a', 'en-US'),
-                        (customer?.name || 'VARIOS').toUpperCase(),
-                        customer?.documentType,
-                        sale ? sale.invoiceType : '',
-                        sale ? `${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}` : '',
-                        Number(proforma.charge.toFixed(2)),
-                        proforma.user.name.toUpperCase(),
-                        proforma.deletedAt ? 'SI' : 'NO',
-                        proforma.observations
-                    ])
+            const { startDate, endDate } = this.formGroup.value
+            if (startDate && endDate) {
+                const chunk = 500
+                const promises: Promise<any>[] = []
+                this.navigationService.loadBarStart()
+                for (let index = 0; index < this.length / chunk; index++) {
+                    const promise = lastValueFrom(this.proformasService.getProformasByPage(index + 1, chunk, this.params))
+                    promises.push(promise)
                 }
-                const name = `PROFORMAS_DESDE_${formatDate(startDate, 'dd/MM/yyyy', 'en-US')}_HASTA_${formatDate(endDate, 'dd/MM/yyyy', 'en-US')}_${this.office.name.replace(/ /g, '_')}_RUC_${this.business.ruc}`
-                buildExcel(body, name, wscols, [])
-            })
+                Promise.all(promises).then(values => {
+                    this.navigationService.loadBarFinish()
+                    const proformas = values.flat() as ProformaModel[]
+                    const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+                    let body = []
+                    body.push([
+                        'F. DE REGISTRO',
+                        'H. DE REGISTRO',
+                        'CLIENTE',
+                        'RUC/DNI/CE',
+                        'COMPROBANTE',
+                        'Nº COMPROBANTE',
+                        'TOTAL',
+                        'USUARIO',
+                        'ANULADO',
+                        'OBSERVACIONES'
+                    ])
+                    for (const proforma of proformas) {
+                        const { customer, sale } = proforma
+                        body.push([
+                            formatDate(proforma.createdAt, 'dd/MM/yyyy', 'en-US'),
+                            formatDate(proforma.createdAt, 'hh:mm a', 'en-US'),
+                            (customer?.name || 'VARIOS').toUpperCase(),
+                            customer?.documentType,
+                            sale ? sale.invoiceType : '',
+                            sale ? `${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}` : '',
+                            Number(proforma.charge.toFixed(2)),
+                            proforma.user.name.toUpperCase(),
+                            proforma.deletedAt ? 'SI' : 'NO',
+                            proforma.observations
+                        ])
+                    }
+                    const name = `PROFORMAS_DESDE_${formatDate(startDate, 'dd/MM/yyyy', 'en-US')}_HASTA_${formatDate(endDate, 'dd/MM/yyyy', 'en-US')}_${this.office.name.replace(/ /g, '_')}_RUC_${this.business.ruc}`
+                    buildExcel(body, name, wscols, [])
+                })
+            } else {
+                this.navigationService.showMessage('Seleccione un rango de fechas')
+            }
         })
 
         const { startDate, endDate, pageIndex, pageSize, userId, key } = this.activatedRoute.snapshot.queryParams
         this.pageIndex = Number(pageIndex || 0)
         this.pageSize = Number(pageSize || 10)
-        this.formGroup.get('userId')?.patchValue(userId || '')
+        this.formGroup.patchValue({ userId })
 
-        this.key = key
-
-        if (this.key) {
-            this.proformasService.getCountProformasByKey(this.key).subscribe(count => {
-                this.length = count
-            })
+        if (key) {
+            Object.assign(this.params, { key })
         }
 
         if (startDate && endDate) {
-            this.startDate = new Date(Number(startDate))
-            this.endDate = new Date(Number(endDate))
-            this.formGroup.get('startDate')?.patchValue(this.startDate)
-            this.formGroup.get('endDate')?.patchValue(this.endDate)
+            this.formGroup.patchValue({ 
+                startDate: new Date(startDate), 
+                endDate: new Date(endDate) 
+            })
         }
 
         this.fetchData()
-
-        this.proformasService.getCountProformasByRangeDate(this.startDate, this.endDate, this.params).subscribe(count => {
-            this.length = count
-        })
+        this.fetchCount()
 
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {
-            this.key = key
+            // this.key = key
             this.pageIndex = 0
             const queryParams: Params = { pageIndex: 0, key }
+            Object.assign(this.params, { key })
 
             this.router.navigate([], {
                 relativeTo: this.activatedRoute,
@@ -175,12 +169,12 @@ export class ProformasComponent implements OnInit {
                 queryParamsHandling: 'merge', // remove to replace all query params by provided
             })
 
-            this.proformasService.getCountProformasByKey(this.key).subscribe(count => {
-                this.length = count
-            })
+            // this.proformasService.getCountProformasByKey(this.key).subscribe(count => {
+            //     this.length = count
+            // })
 
             this.fetchData()
-
+            this.fetchCount()
         })
     }
 
@@ -195,14 +189,10 @@ export class ProformasComponent implements OnInit {
     onRangeChange() {
         if (this.formGroup.valid) {
             this.pageIndex = 0
-            this.key = ''
 
             const { startDate, endDate } = this.formGroup.value
-
-            this.startDate = startDate
-            this.endDate = endDate
-
-            const queryParams: Params = { startDate: startDate.getTime(), endDate: endDate.getTime(), pageIndex: 0, key: null }
+            const queryParams: Params = { startDate, endDate, pageIndex: 0, key: '' }
+            Object.assign(this.params, queryParams)
 
             this.router.navigate([], {
                 relativeTo: this.activatedRoute,
@@ -210,20 +200,17 @@ export class ProformasComponent implements OnInit {
                 queryParamsHandling: 'merge', // remove to replace all query params by provided
             })
 
-            this.proformasService.getCountProformasByRangeDate(startDate, endDate, this.params).subscribe(count => {
-                this.length = count
-            })
-
             this.fetchData()
+            this.fetchCount()
         }
     }
 
     onUserChange() {
         this.pageIndex = 0
-        this.key = ''
+        // this.key = ''
 
         const { userId } = this.formGroup.value
-        const queryParams: Params = { userId, key: null }
+        const queryParams: Params = { userId, key: '' }
         Object.assign(this.params, queryParams)
 
         this.router.navigate([], {
@@ -232,19 +219,16 @@ export class ProformasComponent implements OnInit {
             queryParamsHandling: 'merge', // remove to replace all query params by provided
         })
 
-        this.proformasService.getCountProformasByRangeDate(this.startDate, this.endDate, this.params).subscribe(count => {
-            this.length = count
-        })
-
         this.fetchData()
+        this.fetchCount()
     }
 
     onIsBilledChange() {
         this.pageIndex = 0
-        this.key = ''
+        // this.key = ''
 
         const { isBilled } = this.formGroup.value
-        const queryParams: Params = { isBilled, key: null }
+        const queryParams: Params = { isBilled, key: '' }
         Object.assign(this.params, queryParams)
 
         this.router.navigate([], {
@@ -253,11 +237,8 @@ export class ProformasComponent implements OnInit {
             queryParamsHandling: 'merge', // remove to replace all query params by provided
         })
 
-        this.proformasService.getCountProformasByRangeDate(this.startDate, this.endDate, this.params).subscribe(count => {
-            this.length = count
-        })
-
         this.fetchData()
+        this.fetchCount()
     }
 
     handlePageEvent(event: PageEvent): void {
@@ -268,31 +249,22 @@ export class ProformasComponent implements OnInit {
     }
 
     fetchData() {
-        if (this.key) {
-            this.navigationService.loadBarStart()
-            this.proformasService.getProformasByPageKey(this.pageIndex + 1, this.pageSize, this.key).subscribe({
-                next: proformas => {
-                    this.navigationService.loadBarFinish()
-                    this.dataSource = proformas
-                }, error: (error: HttpErrorResponse) => {
-                    this.navigationService.loadBarFinish()
-                    this.navigationService.showMessage(error.error.message)
-                }
-            })
-        } else {
-            if (this.formGroup.valid) {
-                this.navigationService.loadBarStart()
-                this.proformasService.getProformasByRangeDatePage(this.startDate, this.endDate, this.pageIndex + 1, this.pageSize, this.params).subscribe({
-                    next: proformas => {
-                        this.dataSource = proformas
-                        this.navigationService.loadBarFinish()
-                    }, error: (error: HttpErrorResponse) => {
-                        this.navigationService.loadBarFinish()
-                        this.navigationService.showMessage(error.error.message)
-                    }
-                })
+        this.navigationService.loadBarStart()
+        this.proformasService.getProformasByPage(this.pageIndex + 1, this.pageSize, this.params).subscribe({
+            next: proformas => {
+                this.dataSource = proformas
+                this.navigationService.loadBarFinish()
+            }, error: (error: HttpErrorResponse) => {
+                this.navigationService.loadBarFinish()
+                this.navigationService.showMessage(error.error.message)
             }
-        }
+        })
+    }
+
+    fetchCount() {
+        this.proformasService.getCountProformas(this.params).subscribe(count => {
+            this.length = count
+        })
     }
 
     onOpenDetails(proformaId: string) {

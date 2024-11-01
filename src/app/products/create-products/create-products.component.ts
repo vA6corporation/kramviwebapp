@@ -224,23 +224,10 @@ export class CreateProductsComponent implements OnInit {
         this.annotations.splice(index, 1)
     }
 
-    getBase64(file: File): Promise<string> {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader()
-            reader.readAsDataURL(file)
-            reader.onload = function () {
-                resolve(String(reader.result))
-            }
-            reader.onerror = function (error) {
-                console.log('Error: ', error)
-                reject(error)
-            }
-        })
-    }
-
     async onFileImageSelected(files: FileList | null, input: HTMLInputElement) {
         if (files && files[0]) {
-            this.imgUri = await this.getBase64(files[0])
+            const objectUrl = URL.createObjectURL(files[0])
+            this.imgUri = objectUrl
             this.file = files[0]
             input.value = ''
         }
@@ -312,10 +299,9 @@ export class CreateProductsComponent implements OnInit {
             this.navigationService.loadBarStart()
             this.productsService.create(product, this.formArray.value, this.lots, this.paymentMethodId).subscribe({
                 next: product => {
-                    this.categoriesService.loadCategories()
                     if (this.file) {
                         new Compressor(this.file, {
-                            quality: 0.5,
+                            quality: 0.6,
                             success: (result: any) => {
                                 const formData = new FormData()
                                 formData.append('file', result, result.name)

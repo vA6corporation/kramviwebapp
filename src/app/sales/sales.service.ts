@@ -74,9 +74,9 @@ export class SalesService {
         return this.httpService.get(`sales/countSaleItemsByCustomer/${customerId}`, params)
     }
 
-    getSalesOfTheDay(): Observable<SaleModel[]> {
-        return this.httpService.get('sales/salesOfTheDay')
-    }
+    // getSalesOfTheDay(): Observable<SaleModel[]> {
+    //     return this.httpService.get('sales/salesOfTheDay')
+    // }
 
     getSalesByKey(key: string): Observable<SaleModel[]> {
         return this.httpService.get(`sales/byKey/${key}`)
@@ -119,22 +119,18 @@ export class SalesService {
         return this.httpService.get(`sales/byPage/${pageIndex}/${pageSize}`)
     }
 
-    getSalesByRangeDatePage(
-        startDate: Date,
-        endDate: Date,
+    getSalesByPage(
         pageIndex: number,
         pageSize: number,
         params: Params,
     ): Observable<SaleModel[]> {
-        return this.httpService.get(`sales/byRangeDatePage/${startDate}/${endDate}/${pageIndex}/${pageSize}`, params)
+        return this.httpService.get(`sales/byPage/${pageIndex}/${pageSize}`, params)
     }
 
-    getCountSalesByRangeDate(
-        startDate: Date,
-        endDate: Date,
+    getCountSales(
         params: Params,
     ): Observable<number> {
-        return this.httpService.get(`sales/countByRangeDate/${startDate}/${endDate}`, params)
+        return this.httpService.get('sales/countSales', params)
     }
 
     getSalesWithDetailsByRangeDatePage(
@@ -157,12 +153,12 @@ export class SalesService {
         return this.httpService.get(`sales/byRangeDatePageTax/${startDate}/${endDate}/${pageIndex}/${pageSize}`, params)
     }
 
-    getCountByRangeDate(startDate: Date, endDate: Date, params: Params): Observable<number> {
-        return this.httpService.get(`sales/countByRangeDate/${startDate}/${endDate}`, params)
+    getCountSalesByRangeDate(startDate: Date, endDate: Date, params: Params): Observable<number> {
+        return this.httpService.get(`sales/countSalesByRangeDate/${startDate}/${endDate}`, params)
     }
 
-    getCountByRangeDateTax(startDate: Date, endDate: Date, params: Params): Observable<number> {
-        return this.httpService.get(`sales/countByRangeDateTax/${startDate}/${endDate}`, params)
+    getCountSalesByRangeDateTax(startDate: Date, endDate: Date, params: Params): Observable<number> {
+        return this.httpService.get(`sales/countSalesByRangeDateTax/${startDate}/${endDate}`, params)
     }
 
     getSummarySaleItemsByTurn(turnId: string): Observable<SummarySaleItemModel[]> {

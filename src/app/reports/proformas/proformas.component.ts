@@ -43,11 +43,11 @@ export class ProformasComponent implements OnInit {
     private chargeChart!: ElementRef<HTMLCanvasElement>;
 
     formGroup: FormGroup = this.formBuilder.group({
-        isBilled: '',
-        userId: '',
         startDate: [new Date(), Validators.required],
         endDate: [new Date(), Validators.required],
-    });
+        isBilled: '',
+        userId: '',
+    })
     categoryId: string = ''
     categories: CategoryModel[] = []
     summaryProformas: SummaryProformaModel[] = []
@@ -89,14 +89,14 @@ export class ProformasComponent implements OnInit {
         })
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
-            const chunk = 500
             const { startDate, endDate, userId, isBilled } = this.formGroup.value
-            const params: Params = { userId, isBilled }
+            const chunk = 500
+            const params: Params = { userId, isBilled, startDate, endDate }
             const promises: Promise<any>[] = []
             this.navigationService.loadBarStart()
-            this.proformasService.getCountProformasByRangeDate(startDate, endDate, params).subscribe(count => {
+            this.proformasService.getCountProformas(params).subscribe(count => {
                 for (let index = 0; index < count / chunk; index++) {
-                    const promise = lastValueFrom(this.proformasService.getProformasByRangeDatePage(startDate, endDate, index + 1, chunk, params))
+                    const promise = lastValueFrom(this.proformasService.getProformasByPage(index + 1, chunk, params))
                     promises.push(promise)
                 }
                 Promise.all(promises).then(values => {
@@ -136,9 +136,7 @@ export class ProformasComponent implements OnInit {
                 })
             })
         })
-    }
-
-    ngAfterViewInit() {
+        
         this.fetchData()
     }
 

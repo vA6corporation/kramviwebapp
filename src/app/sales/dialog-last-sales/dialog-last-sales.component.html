@@ -3,10 +3,13 @@
     <mat-action-list>
         @for (sale of sales; track sale._id) {
             <button mat-list-item (click)="printSale(sale._id)">
-                {{ sale.invoicePrefix }}{{ office.serialPrefix }}-{{ sale.invoiceNumber }}
-                <span class="spacer"></span>
-                {{ sale.charge.toFixed(2) }}
+                <span matListItemTitle>{{ sale.invoicePrefix }}{{ office.serialPrefix }}-{{ sale.invoiceNumber }}</span>
+                <span>{{ sale.charge.toFixed(2) }}</span>
             </button>
         }
     </mat-action-list>
 </div>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

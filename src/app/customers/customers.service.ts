@@ -81,7 +81,7 @@ export class CustomersService {
         return this.httpService.get('customers/countDeletedCustomers')
     }
 
-    getCustomersCount(params: Params): Observable<number> {
+    getCountCustomers(params: Params): Observable<number> {
         return this.httpService.get('customers/countCustomers', params)
     }
 

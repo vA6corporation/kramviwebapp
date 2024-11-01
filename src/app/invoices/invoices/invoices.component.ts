@@ -66,8 +66,8 @@ export class InvoicesComponent implements OnInit {
         invoiceType: '',
         stateType: '',
         userId: '',
-        startDate: [new Date(), Validators.required],
-        endDate: [new Date(), Validators.required],
+        startDate: ['', Validators.required],
+        endDate: ['', Validators.required],
     })
     users: UserModel[] = []
     displayedColumns: string[] = ['checked', 'created', 'serial', 'customer', 'user', 'charge', 'observations', 'actions']
@@ -82,8 +82,8 @@ export class InvoicesComponent implements OnInit {
     private setting: SettingModel = new SettingModel()
 
     private categories: CategoryModel[] = []
-    private startDate: Date = new Date()
-    private endDate: Date = new Date()
+    // private startDate: Date = new Date()
+    // private endDate: Date = new Date()
     private params: Params = {}
     private key: string = ''
     private paymentMethods: PaymentMethodModel[] = []
@@ -149,10 +149,10 @@ export class InvoicesComponent implements OnInit {
         this.formGroup.get('userId')?.patchValue(userId || '')
 
         if (startDate && endDate) {
-            this.startDate = new Date(Number(startDate))
-            this.endDate = new Date(Number(endDate))
-            this.formGroup.get('startDate')?.patchValue(this.startDate)
-            this.formGroup.get('endDate')?.patchValue(this.endDate)
+            this.formGroup.patchValue({ 
+                startDate: new Date(startDate),
+                endDate: new Date(endDate) 
+            })
         }
 
         this.fetchData()
@@ -318,42 +318,45 @@ export class InvoicesComponent implements OnInit {
 
     async excelConcar() {
         const { startDate, endDate } = this.formGroup.value
-
-        const offices: OfficeModel[] = await lastValueFrom(this.officesService.getOffices())
-
-        offices.sort((a, b) => {
-            if (a.serialPrefix > b.serialPrefix) {
-                return 1
-            }
-            if (a.serialPrefix < b.serialPrefix) {
-                return -1
-            }
-            return 0
-        })
-
-        const excelConcar = new ExcelConcar(startDate, endDate, offices, this.business)
-
-        for (const office of offices) {
-            const sales: SaleModel[] = []
-            const length = await lastValueFrom(this.salesService.getCountByRangeDateTax(startDate, endDate, { officeId: office._id }))
-            if (length) {
-                const chunk = 500
-                const dialogRef = this.matDialog.open(DialogProgressComponent, {
-                    width: '600px',
-                    position: { top: '20px' },
-                    data: length / chunk
-                })
-
-                for (let index = 0; index < length / chunk; index++) {
-                    const values = await lastValueFrom(this.salesService.getSalesByRangeDatePageTax(startDate, endDate, index + 1, chunk, { officeId: office._id }))
-                    dialogRef.componentInstance.onComplete()
-                    sales.push(...values)
+        if (startDate && endDate) {
+            const offices: OfficeModel[] = await lastValueFrom(this.officesService.getOffices())
+    
+            offices.sort((a, b) => {
+                if (a.serialPrefix > b.serialPrefix) {
+                    return 1
                 }
-                excelConcar.addSales(sales, office)
+                if (a.serialPrefix < b.serialPrefix) {
+                    return -1
+                }
+                return 0
+            })
+    
+            const excelConcar = new ExcelConcar(startDate, endDate, offices, this.business)
+    
+            for (const office of offices) {
+                const sales: SaleModel[] = []
+                const length = await lastValueFrom(this.salesService.getCountSalesByRangeDateTax(startDate, endDate, { officeId: office._id }))
+                if (length) {
+                    const chunk = 500
+                    const dialogRef = this.matDialog.open(DialogProgressComponent, {
+                        width: '600px',
+                        position: { top: '20px' },
+                        data: length / chunk
+                    })
+    
+                    for (let index = 0; index < length / chunk; index++) {
+                        const values = await lastValueFrom(this.salesService.getSalesByRangeDatePageTax(startDate, endDate, index + 1, chunk, { officeId: office._id }))
+                        dialogRef.componentInstance.onComplete()
+                        sales.push(...values)
+                    }
+                    excelConcar.addSales(sales, office)
+                }
             }
+    
+            excelConcar.builExcel()
+        } else {
+            this.navigationService.showMessage('Seleccione un rango de fechas')
         }
-
-        excelConcar.builExcel()
     }
 
     checkSaleId(isChecked: boolean, saleId: string) {
@@ -423,126 +426,134 @@ export class InvoicesComponent implements OnInit {
 
     async excelKramvi() {
         const { startDate, endDate } = this.formGroup.value
-        const offices: OfficeModel[] = await lastValueFrom(this.officesService.getOffices())
-
-        offices.sort((a, b) => {
-            if (a.serialPrefix > b.serialPrefix) {
-                return 1
-            }
-            if (a.serialPrefix < b.serialPrefix) {
-                return -1
-            }
-            return 0
-        })
-
-        const excelKramvi = new ExcelKramvi(startDate, endDate, this.business)
-
-        for (const office of offices) {
-            const sales: SaleModel[] = []
-            const length = await lastValueFrom(this.salesService.getCountByRangeDateTax(startDate, endDate, { officeId: office._id }))
-            if (length) {
-                const chunk = 500
-                const dialogRef = this.matDialog.open(DialogProgressComponent, {
-                    width: '600px',
-                    position: { top: '20px' },
-                    data: length / chunk
-                })
-
-                for (let index = 0; index < length / chunk; index++) {
-                    const values = await lastValueFrom(this.salesService.getSalesByRangeDatePageTax(startDate, endDate, index + 1, chunk, { officeId: office._id }))
-                    dialogRef.componentInstance.onComplete()
-                    sales.push(...values)
+        if (startDate && endDate) {
+            const offices: OfficeModel[] = await lastValueFrom(this.officesService.getOffices())
+    
+            offices.sort((a, b) => {
+                if (a.serialPrefix > b.serialPrefix) {
+                    return 1
                 }
-                excelKramvi.addSales(sales, office)
+                if (a.serialPrefix < b.serialPrefix) {
+                    return -1
+                }
+                return 0
+            })
+    
+            const excelKramvi = new ExcelKramvi(startDate, endDate, this.business)
+    
+            for (const office of offices) {
+                const sales: SaleModel[] = []
+                const length = await lastValueFrom(this.salesService.getCountSalesByRangeDateTax(startDate, endDate, { officeId: office._id }))
+                if (length) {
+                    const chunk = 500
+                    const dialogRef = this.matDialog.open(DialogProgressComponent, {
+                        width: '600px',
+                        position: { top: '20px' },
+                        data: length / chunk
+                    })
+    
+                    for (let index = 0; index < length / chunk; index++) {
+                        const values = await lastValueFrom(this.salesService.getSalesByRangeDatePageTax(startDate, endDate, index + 1, chunk, { officeId: office._id }))
+                        dialogRef.componentInstance.onComplete()
+                        sales.push(...values)
+                    }
+                    excelKramvi.addSales(sales, office)
+                }
             }
+    
+            excelKramvi.builExcel()
+        } else {
+            this.navigationService.showMessage('Seleccione un rango de fechas')
         }
-
-        excelKramvi.builExcel()
     }
 
     async excelDetails() {
         const { startDate, endDate } = this.formGroup.value
-        const chunk = 500
-        const sales: SaleModel[] = []
-
-        const dialogRef = this.matDialog.open(DialogProgressComponent, {
-            width: '600px',
-            position: { top: '20px' },
-            data: this.length / chunk
-        })
-
-        for (let index = 0; index < this.length / chunk; index++) {
-            const values = await lastValueFrom(this.salesService.getSalesWithDetailsByRangeDatePage(startDate, endDate, index + 1, chunk, {}))
-            dialogRef.componentInstance.onComplete()
-            sales.push(...values)
-        }
-
-        this.navigationService.loadBarFinish()
-        const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
-        let body = []
-        body.push([
-            'F. EMISION',
-            'RUC/DNI/CE',
-            'CLIENTE',
-            'DIRECCION',
-            'DISTRITO',
-            'TELEFONO',
-            'COMPROBANTE',
-            'Nº COMPROBANTE',
-            'PRODUCTO',
-            'CATEGORIA',
-            'CANTIDAD',
-            'PRECIO U.',
-            'TOTAL',
-            'COSTO U.',
-            'UTILIDAD',
-            'MONEDA',
-            'M. DE PAGO',
-            'BONIFICACION',
-            'PERSONAL',
-            'REFERIDO',
-            'USUARIO',
-            'ANULADO',
-            'OBSERVACIONES'
-        ])
-
-        for (const sale of sales) {
-            const { customer, saleItems } = sale
-            for (const saleItem of saleItems) {
-                let paymentNames = ''
-                for (const payment of sale.payments) {
-                    const foundPaymentMethod = this.paymentMethods.find(e => e._id === payment.paymentMethodId)
-                    paymentNames += foundPaymentMethod?.name + ' '
-                }
-                body.push([
-                    formatDate(sale.createdAt, 'dd/MM/yyyy', 'en-US'),
-                    customer?.document,
-                    (customer?.name || 'VARIOS').toUpperCase(),
-                    customer?.addresses[0],
-                    customer?.locationName,
-                    customer?.mobileNumber,
-                    sale.invoiceType,
-                    `${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}`,
-                    saleItem.fullName.toUpperCase(),
-                    this.categories.find(e => e._id === saleItem.categoryId)?.name.toUpperCase(),
-                    Number(saleItem.quantity.toFixed(2)),
-                    saleItem.price,
-                    Number((saleItem.price * saleItem.quantity).toFixed(2)),
-                    saleItem.cost || 0,
-                    Number(((saleItem.price * saleItem.quantity) - (saleItem.cost || 0 * saleItem.quantity)).toFixed(2)),
-                    sale.currencyCode,
-                    paymentNames,
-                    saleItem.igvCode === '11' ? 'SI' : 'NO',
-                    sale.worker ? sale.worker.name.toUpperCase() : null,
-                    sale.referred ? sale.referred.name.toUpperCase() : null,
-                    sale.user.name.toUpperCase(),
-                    sale.deletedAt ? 'SI' : 'NO',
-                    sale.observations,
-                ])
+        if (startDate && endDate) {
+            const chunk = 500
+            const sales: SaleModel[] = []
+    
+            const dialogRef = this.matDialog.open(DialogProgressComponent, {
+                width: '600px',
+                position: { top: '20px' },
+                data: this.length / chunk
+            })
+    
+            for (let index = 0; index < this.length / chunk; index++) {
+                const values = await lastValueFrom(this.salesService.getSalesWithDetailsByRangeDatePage(startDate, endDate, index + 1, chunk, {}))
+                dialogRef.componentInstance.onComplete()
+                sales.push(...values)
             }
+    
+            this.navigationService.loadBarFinish()
+            const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+            let body = []
+            body.push([
+                'F. EMISION',
+                'RUC/DNI/CE',
+                'CLIENTE',
+                'DIRECCION',
+                'DISTRITO',
+                'TELEFONO',
+                'COMPROBANTE',
+                'Nº COMPROBANTE',
+                'PRODUCTO',
+                'CATEGORIA',
+                'CANTIDAD',
+                'PRECIO U.',
+                'TOTAL',
+                'COSTO U.',
+                'UTILIDAD',
+                'MONEDA',
+                'M. DE PAGO',
+                'BONIFICACION',
+                'PERSONAL',
+                'REFERIDO',
+                'USUARIO',
+                'ANULADO',
+                'OBSERVACIONES'
+            ])
+    
+            for (const sale of sales) {
+                const { customer, saleItems } = sale
+                for (const saleItem of saleItems) {
+                    let paymentNames = ''
+                    for (const payment of sale.payments) {
+                        const foundPaymentMethod = this.paymentMethods.find(e => e._id === payment.paymentMethodId)
+                        paymentNames += foundPaymentMethod?.name + ' '
+                    }
+                    body.push([
+                        formatDate(sale.createdAt, 'dd/MM/yyyy', 'en-US'),
+                        customer?.document,
+                        (customer?.name || 'VARIOS').toUpperCase(),
+                        customer?.addresses[0],
+                        customer?.locationName,
+                        customer?.mobileNumber,
+                        sale.invoiceType,
+                        `${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}`,
+                        saleItem.fullName.toUpperCase(),
+                        this.categories.find(e => e._id === saleItem.categoryId)?.name.toUpperCase(),
+                        Number(saleItem.quantity.toFixed(2)),
+                        saleItem.price,
+                        Number((saleItem.price * saleItem.quantity).toFixed(2)),
+                        saleItem.cost || 0,
+                        Number(((saleItem.price * saleItem.quantity) - (saleItem.cost || 0 * saleItem.quantity)).toFixed(2)),
+                        sale.currencyCode,
+                        paymentNames,
+                        saleItem.igvCode === '11' ? 'SI' : 'NO',
+                        sale.worker ? sale.worker.name.toUpperCase() : null,
+                        sale.referred ? sale.referred.name.toUpperCase() : null,
+                        sale.user.name.toUpperCase(),
+                        sale.deletedAt ? 'SI' : 'NO',
+                        sale.observations,
+                    ])
+                }
+            }
+            const name = `VENTAS_DESDE_${formatDate(startDate, 'dd/MM/yyyy', 'en-US')}_HASTA_${formatDate(endDate, 'dd/MM/yyyy', 'en-US')}_${this.office.name.replace(/ /g, '_')}_RUC_${this.business.ruc}`
+            buildExcel(body, name, wscols, [])
+        } else {
+            this.navigationService.showMessage('Seleccione un rango de fechas')
         }
-        const name = `VENTAS_DESDE_${formatDate(this.startDate, 'dd/MM/yyyy', 'en-US')}_HASTA_${formatDate(this.endDate, 'dd/MM/yyyy', 'en-US')}_${this.office.name.replace(/ /g, '_')}_RUC_${this.business.ruc}`
-        buildExcel(body, name, wscols, [])
     }
 
     getStatusDeclare(sale: SaleModel): boolean {
@@ -584,61 +595,65 @@ export class InvoicesComponent implements OnInit {
 
     async excelSimple() {
         const { startDate, endDate } = this.formGroup.value
-        const chunk = 500
-        const sales: SaleModel[] = []
-
-        const dialogRef = this.matDialog.open(DialogProgressComponent, {
-            width: '600px',
-            position: { top: '20px' },
-            data: this.length / chunk
-        })
-
-        for (let index = 0; index < this.length / chunk; index++) {
-            const values = await lastValueFrom(this.salesService.getSalesByRangeDatePage(startDate, endDate, index + 1, chunk, this.params))
-            dialogRef.componentInstance.onComplete()
-            sales.push(...values)
-        }
-
-        const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
-        let body = [];
-        body.push([
-            'F. EMISION',
-            'H. EMISION',
-            'RUC/DNI',
-            'CLIENTE',
-            'DIRECCION',
-            'DISTRITO',
-            'CELULAR',
-            'Nº COMPROBANTE',
-            'IMPORTE T.',
-            'ENTREGA',
-            'USUARIO',
-            'PERSONAL',
-            'REFERENCIA',
-            'OBSERVACIONES',
-            'ANULADO'
-        ])
-        for (const sale of sales) {
-            const { customer, user } = sale
+        if (startDate && endDate) {
+            const chunk = 500
+            const sales: SaleModel[] = []
+    
+            const dialogRef = this.matDialog.open(DialogProgressComponent, {
+                width: '600px',
+                position: { top: '20px' },
+                data: this.length / chunk
+            })
+    
+            for (let index = 0; index < this.length / chunk; index++) {
+                const values = await lastValueFrom(this.salesService.getSalesByPage(index + 1, chunk, this.params))
+                dialogRef.componentInstance.onComplete()
+                sales.push(...values)
+            }
+    
+            const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+            let body = [];
             body.push([
-                formatDate(sale.createdAt, 'dd/MM/yyyy', 'en-US'),
-                formatDate(sale.createdAt, 'h:mm', 'en-US'),
-                customer?.document,
-                customer?.name,
-                customer?.addresses[0],
-                customer?.locationName,
-                customer?.mobileNumber,
-                `${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}`,
-                sale.charge,
-                user.name,
-                sale.worker?.name.toUpperCase(),
-                sale.referred?.name.toUpperCase(),
-                sale.observations,
-                sale.deletedAt ? 'SI' : 'NO'
+                'F. EMISION',
+                'H. EMISION',
+                'RUC/DNI',
+                'CLIENTE',
+                'DIRECCION',
+                'DISTRITO',
+                'CELULAR',
+                'Nº COMPROBANTE',
+                'IMPORTE T.',
+                'ENTREGA',
+                'USUARIO',
+                'PERSONAL',
+                'REFERENCIA',
+                'OBSERVACIONES',
+                'ANULADO'
             ])
+            for (const sale of sales) {
+                const { customer, user } = sale
+                body.push([
+                    formatDate(sale.createdAt, 'dd/MM/yyyy', 'en-US'),
+                    formatDate(sale.createdAt, 'h:mm', 'en-US'),
+                    customer?.document,
+                    customer?.name,
+                    customer?.addresses[0],
+                    customer?.locationName,
+                    customer?.mobileNumber,
+                    `${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}`,
+                    sale.charge,
+                    user.name,
+                    sale.worker?.name.toUpperCase(),
+                    sale.referred?.name.toUpperCase(),
+                    sale.observations,
+                    sale.deletedAt ? 'SI' : 'NO'
+                ])
+            }
+            const name = `VENTAS`
+            buildExcel(body, name, wscols, [], [])
+        } else {
+            this.navigationService.showMessage('Seleccione un rango de fechas')
         }
-        const name = `VENTAS`
-        buildExcel(body, name, wscols, [], [])
     }
 
     onClickOptions(event: MouseEvent, saleId: string) {
@@ -733,11 +748,11 @@ export class InvoicesComponent implements OnInit {
 
             const { startDate, endDate } = this.formGroup.value
 
-            this.startDate = startDate
-            this.endDate = endDate
             this.key = ''
 
-            const queryParams: Params = { startDate: startDate.getTime(), endDate: endDate.getTime(), pageIndex: 0, key: null }
+            Object.assign(this.params, { startDate, endDate })
+
+            const queryParams: Params = { startDate, endDate, pageIndex: 0, key: null }
 
             this.router.navigate([], {
                 relativeTo: this.activatedRoute,
@@ -751,7 +766,7 @@ export class InvoicesComponent implements OnInit {
     }
 
     fetchCount() {
-        this.salesService.getCountSalesByRangeDate(this.startDate, this.endDate, this.params).subscribe(count => {
+        this.salesService.getCountSales(this.params).subscribe(count => {
             this.length = count
         })
     }
@@ -770,19 +785,15 @@ export class InvoicesComponent implements OnInit {
                 }
             })
         } else {
-            if (this.formGroup.valid) {
-                this.navigationService.loadBarStart()
-                this.salesService.getSalesByRangeDatePage(
-                    this.startDate,
-                    this.endDate,
-                    this.pageIndex + 1,
-                    this.pageSize,
-                    this.params
-                ).subscribe(sales => {
-                    this.dataSource = sales
-                    this.navigationService.loadBarFinish()
-                })
-            }
+            this.navigationService.loadBarStart()
+            this.salesService.getSalesByPage(
+                this.pageIndex + 1,
+                this.pageSize,
+                this.params
+            ).subscribe(sales => {
+                this.dataSource = sales
+                this.navigationService.loadBarFinish()
+            })
         }
     }
 
@@ -909,7 +920,7 @@ export class InvoicesComponent implements OnInit {
                     this.navigationService.showMessage('Debe indicar el motivo')
                 }
             })
-        } else {
+        } else if (this.business.certificateId) {
             const today = new Date()
             const saleDate = new Date(sale.createdAt)
 
@@ -950,6 +961,37 @@ export class InvoicesComponent implements OnInit {
                     }
                 })
             }
+        } else {
+            const dialogRef = this.matDialog.open(DialogDeleteSaleComponent, {
+                width: '600px',
+                position: { top: '20px' },
+            })
+            
+            dialogRef.afterClosed().subscribe(deletedReason => {
+                if (deletedReason) {
+                    this.navigationService.loadBarStart()
+                    if (this.business.certificateId) {
+                        this.invoicesService.cancelInvoice(sale._id, deletedReason).subscribe({
+                            next: () => {
+                                this.fetchData()
+                                this.navigationService.loadBarFinish()
+                                this.navigationService.showMessage('Comprobante anulado')
+                            }, error: (error: HttpErrorResponse) => {
+                                this.navigationService.loadBarFinish()
+                                this.navigationService.showMessage(error.error.message)
+                            }
+                        })
+                    } else {
+                        this.invoicesService.softDeleteInvoice(sale._id, deletedReason).subscribe(() => {
+                            this.fetchData()
+                            this.navigationService.loadBarFinish()
+                            this.navigationService.showMessage('Comprobante anulado')
+                        })
+                    }
+                } else {
+                    this.navigationService.showMessage('Debe indicar el motivo')
+                }
+            })
         }
     }
 

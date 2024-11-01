@@ -91,8 +91,8 @@ export class ProductsService {
         }
     }
 
-    uploadImage(formData: FormData, productId: string): Observable<string> {
-        return this.httpService.postFile(`images/${productId}`, formData)
+    uploadImage(formData: FormData, productId: string): Observable<{ urlImage: string }> {
+        return this.httpService.postFile(`products/uploadFile/${productId}`, formData)
     }
 
     getUnitCodes(): UnitCodeModel[] {

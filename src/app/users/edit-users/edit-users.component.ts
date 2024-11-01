@@ -31,6 +31,7 @@ export class EditUsersComponent implements OnInit {
         email: [null, [Validators.required, Validators.email]],
         password: [null, Validators.required],
         assignedOfficeId: null,
+        isAdmin: false,
     })
     isLoading: boolean = false
     offices: OfficeModel[] = []

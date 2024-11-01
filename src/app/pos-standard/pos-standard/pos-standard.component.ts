@@ -242,6 +242,7 @@ export class PosStandardComponent implements OnInit {
     }
 
     urlImage(product: ProductModel) {
+        console.log(product.urlImage)
         const styleObject: any = {}
         if (product.urlImage) {
             styleObject['background-image'] = `url(${decodeURIComponent(product.urlImage)})`

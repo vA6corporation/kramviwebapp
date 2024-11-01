@@ -39,7 +39,7 @@ export class DialogLastSalesComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.salesService.getSalesOfTheDay().subscribe(sales => {
+        this.salesService.getSalesByPage(1, 5, {}).subscribe(sales => {
             this.sales = sales
         })
 

@@ -75,7 +75,7 @@ export class ChargeBoardsComponent implements OnInit {
         paymentMethodId: null,
         workerId: null,
         referredId: null,
-        especialtyId: null,
+        specialtyId: null,
     })
     cashChange: number = 0
     cash: number = 0

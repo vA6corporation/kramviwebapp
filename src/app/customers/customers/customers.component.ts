@@ -16,11 +16,12 @@ import { DialogDetailCustomersComponent } from '../dialog-detail-customers/dialo
 import { MaterialModule } from '../../material.module';
 import { DeletedCustomersComponent } from '../deleted-customers/deleted-customers.component';
 import { DialogSearchProductsComponent } from '../../products/dialog-search-products/dialog-search-products.component';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-customers',
     standalone: true,
-    imports: [MaterialModule, CommonModule, RouterModule, DeletedCustomersComponent],
+    imports: [MaterialModule, CommonModule, RouterModule, ReactiveFormsModule, DeletedCustomersComponent],
     templateUrl: './customers.component.html',
     styleUrls: ['./customers.component.sass']
 })
@@ -33,8 +34,12 @@ export class CustomersComponent implements OnInit {
         private readonly router: Router,
         private readonly activatedRoute: ActivatedRoute,
         private readonly authService: AuthService,
+        private readonly formBuilder: FormBuilder,
     ) { }
 
+    formGroup: FormGroup = this.formBuilder.group({
+        documentType: '',
+    })
     displayedColumns: string[] = ['checked', 'document', 'name', 'address', 'mobileNumber', 'observations', 'actions']
     dataSource: CustomerModel[] = []
     length: number = 0
@@ -161,6 +166,13 @@ export class CustomersComponent implements OnInit {
         })
     }
 
+    onChangeDocumentType() {
+        const { documentType } = this.formGroup.value
+        Object.assign(this.params, { documentType })
+        this.fetchData()
+        this.fetchCount()
+    }
+
     onOpenDialogProducts() {
         const dialogRef = this.matDialog.open(DialogSearchProductsComponent, {
             width: '600px',
@@ -220,7 +232,7 @@ export class CustomersComponent implements OnInit {
     }
 
     fetchCount() {
-        this.customersService.getCustomersCount(this.params).subscribe(count => {
+        this.customersService.getCountCustomers(this.params).subscribe(count => {
             this.length = count
         })
     }

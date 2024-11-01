@@ -223,7 +223,7 @@ export async function buildTicket80mm(
 
     positionY += 2
 
-    if (sale.invoiceType !== 'NOTA DE VENTA') {
+    if (sale.invoiceType !== 'NOTA DE VENTA' && !setting.hideIgvTicket) {
 
         if (sale.gravado) {
             text = `OP. GRAVADAS ${currency}`

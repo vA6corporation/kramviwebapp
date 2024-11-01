@@ -35,7 +35,6 @@ export interface ProductModel {
     linkProductIds: string[]
     excluded: string[]
     stock: number
-    imageId: string
     urlImage: string
     fullName: string
     onModel: string

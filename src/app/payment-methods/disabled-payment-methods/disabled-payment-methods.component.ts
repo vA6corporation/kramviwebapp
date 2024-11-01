@@ -22,57 +22,62 @@ export class DisabledPaymentMethodsComponent implements OnInit {
         private readonly activatedRoute: ActivatedRoute,
     ) { }
 
-    users: UserModel[] = [];
-    displayedColumns: string[] = ['name', 'actions'];
-    dataSource: PaymentMethodModel[] = [];
-    length: number = 0;
-    pageSize: number = 10;
-    pageSizeOptions: number[] = [10, 30, 50];
-    pageIndex: number = 0;
+    users: UserModel[] = []
+    displayedColumns: string[] = ['name', 'actions']
+    dataSource: PaymentMethodModel[] = []
+    length: number = 0
+    pageSize: number = 10
+    pageSizeOptions: number[] = [10, 30, 50]
+    pageIndex: number = 0
 
-    private handlePaymentMethods$: Subscription = new Subscription();
+    private handlePaymentMethods$: Subscription = new Subscription()
 
     ngOnDestroy() {
-        this.handlePaymentMethods$.unsubscribe();
+        this.handlePaymentMethods$.unsubscribe()
     }
 
     ngOnInit(): void {
-        this.navigationService.setTitle('Medios de pago');
-        this.fetchData();
+        this.navigationService.setTitle('Medios de pago')
+        this.fetchData()
     }
 
     handlePageEvent(event: PageEvent): void {
-        this.navigationService.loadBarStart();
-        this.pageIndex = event.pageIndex;
-        this.pageSize = event.pageSize;
+        this.navigationService.loadBarStart()
+        this.pageIndex = event.pageIndex
+        this.pageSize = event.pageSize
 
-        const queryParams: Params = { pageIndex: this.pageIndex, pageSize: this.pageSize };
+        const queryParams: Params = { pageIndex: this.pageIndex, pageSize: this.pageSize }
 
         this.router.navigate([], {
             relativeTo: this.activatedRoute,
             queryParams: queryParams,
             queryParamsHandling: 'merge', // remove to replace all query params by provided
-        });
+        })
     }
 
     fetchData() {
-        this.navigationService.loadBarFinish();
-        this.paymentMethodsService.getDisabledPaymentMethods().subscribe(paymentMethods => {
-            this.dataSource = paymentMethods;
-            this.navigationService.loadBarFinish();
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.showMessage(error.error.message);
-        });
+        this.navigationService.loadBarFinish()
+        this.paymentMethodsService.getDisabledPaymentMethods().subscribe({
+            next: paymentMethods => {
+                this.dataSource = paymentMethods
+                this.navigationService.loadBarFinish()
+            }, error: (error: HttpErrorResponse) => {
+                this.navigationService.showMessage(error.error.message)
+            }
+        })
     }
 
-    // onDelete(paymentMethodId: string) {
-    //   const ok = confirm('Esta seguro de eliminar?...');
-    //   if (ok) {
-    //     this.paymentMethodsService.delete(paymentMethodId).subscribe(() => {
-    //       this.navigationService.showMessage('Eliminado correctamente');
-    //       this.dataSource = this.dataSource.filter(e => e._id !== paymentMethodId);
-    //     });
-    //   }
-    // }
+    onRestore(paymentMethod: PaymentMethodModel) {
+        const ok = confirm('Esta seguro de restaurar?...')
+        if (ok) {
+            paymentMethod.deletedAt = null
+            this.navigationService.loadBarStart()
+            this.paymentMethodsService.update(paymentMethod, paymentMethod._id).subscribe(() => {
+                this.navigationService.showMessage('Restaurado correctamente')
+                this.navigationService.loadBarFinish()
+                this.fetchData()
+            })
+        }
+    }
 
 }

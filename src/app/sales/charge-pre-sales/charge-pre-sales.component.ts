@@ -73,7 +73,7 @@ export class ChargePreSalesComponent implements OnInit {
         paymentMethodId: null,
         workerId: null,
         referredId: null,
-        especialtyId: null
+        specialtyId: null
     })
     payments: CreatePaymentModel[] = []
     saleItems: CreateSaleItemModel[] = []

@@ -68,7 +68,7 @@ export class EditPreSalesComponent implements OnInit {
         paymentMethodId: null,
         workerId: null,
         referredId: null,
-        especialtyId: null
+        specialtyId: null
     })
     payments: CreatePaymentModel[] = []
     saleItems: CreateSaleItemModel[] = []
@@ -146,33 +146,6 @@ export class EditPreSalesComponent implements OnInit {
             if (this.setting.showWorker) {
                 this.formGroup.get('workerId')?.setValidators([Validators.required])
                 this.formGroup.get('workerId')?.updateValueAndValidity()
-            }
-
-            if (this.setting.showReferred) {
-                this.formGroup.get('referredId')?.setValidators([Validators.required])
-                this.formGroup.get('referredId')?.updateValueAndValidity()
-            }
-
-            if (this.setting.showSpecialty) {
-                this.formGroup.get('specialtyId')?.setValidators([Validators.required])
-                this.formGroup.get('specialtyId')?.updateValueAndValidity()
-            }
-
-            if (this.setting.showDeliveryAt) {
-                this.formGroup.get('deliveryAt')?.setValidators([Validators.required])
-                this.formGroup.get('delivaryAt')?.updateValueAndValidity()
-                this.formGroup.get('deliveryAt')?.patchValue(new Date())
-            }
-
-            if (this.setting.showDeliveryAt) {
-                this.formGroup.get('deliveryAt')?.setValidators([Validators.required])
-                this.formGroup.get('deliveryAt')?.updateValueAndValidity()
-            }
-
-            if (this.setting.showEmitionAt) {
-                this.formGroup.get('emitionAt')?.patchValue(new Date())
-                this.formGroup.get('emitionAt')?.setValidators([Validators.required])
-                this.formGroup.get('emitionAt')?.updateValueAndValidity()
             }
 
             this.formGroup.get('invoiceType')?.patchValue(this.setting.defaultInvoice)

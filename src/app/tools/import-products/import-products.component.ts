@@ -36,10 +36,10 @@ export class ImportProductsComponent implements OnInit {
 
     displayedColumns: string[] = [
         'name',
-        'feature',
+        // 'feature',
         'brand',
         'category',
-        'description',
+        // 'description',
         'stock',
         'unidad',
     ]
@@ -124,7 +124,7 @@ export class ImportProductsComponent implements OnInit {
                     this.dataSource.push(importProduct)
                 }
             }
-            if (products.find(e => e.codigo)) {
+            if (products.find(e => e.codigo || e.codigoInterno)) {
                 this.displayedColumns.unshift('sku')
                 this.displayedColumns.unshift('upc')
             }
@@ -139,6 +139,9 @@ export class ImportProductsComponent implements OnInit {
             if (products.find(e => e.fechaVencimiento)) {
                 this.displayedColumns.push('expirationAt')
                 this.displayedColumns.push('lotNumber')
+            }
+            if (products.find(e => e.variante)) {
+                this.displayedColumns.splice(1, 0, 'feature')
             }
             this.displayedColumns.push('actions')
             table.renderRows()

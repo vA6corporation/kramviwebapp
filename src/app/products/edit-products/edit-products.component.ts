@@ -4,8 +4,8 @@ import { Component, NgZone, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import Compressor from 'compressorjs';
 import { Subscription } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
 import { SettingModel } from '../../auth/setting.model';
@@ -13,6 +13,8 @@ import { LotModel } from '../../lots/lot.model';
 import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { OfficesService } from '../../offices/offices.service';
+import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component';
+import { ProviderModel } from '../../providers/provider.model';
 import { CategoriesService } from '../categories.service';
 import { CategoryModel } from '../category.model';
 import { DialogAnnotationsComponent } from '../dialog-annotations/dialog-annotations.component';
@@ -23,8 +25,6 @@ import { PriceListModel } from '../price-list.model';
 import { PriceType } from '../price-type.enum';
 import { ProductModel } from '../product.model';
 import { IgvCodeModel, ProductsService, UnitCodeModel } from '../products.service';
-import { ProviderModel } from '../../providers/provider.model';
-import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component';
 
 @Component({
     selector: 'app-edit-products',
@@ -77,7 +77,7 @@ export class EditProductsComponent implements OnInit {
     excluded: string[] = []
     isExcluded: boolean = false
     imageId: string = ''
-    imgUri: string = ''
+    urlImage: string = ''
     setting: SettingModel = new SettingModel()
     office: OfficeModel = new OfficeModel()
     linkProducts: ProductModel[] = []
@@ -110,13 +110,14 @@ export class EditProductsComponent implements OnInit {
             this.productId = this.activatedRoute.snapshot.params['productId']
             this.navigationService.loadBarStart()
             this.productsService.getProductById(this.productId).subscribe(product => {
+                console.log(product)
                 this.formGroup.patchValue(product)
                 this.linkProducts = product.linkProducts
                 this.lots = product.lots
                 this.providers = product.providers
                 this.navigationService.loadBarFinish()
-                if (product.imageId) {
-                    this.imgUri = `${environment.baseUrl}images/${product.imageId}`
+                if (product.urlImage) {
+                    this.urlImage = product.urlImage + `?ignoreCache=${Math.random()}`
                 }
                 this.annotations = product.annotations
                 this.excluded = product.excluded
@@ -204,17 +205,18 @@ export class EditProductsComponent implements OnInit {
         this.navigationService.loadBarStart()
         if (files && files[0]) {
             new Compressor(files[0], {
-                quality: 0.5,
+                quality: 0.6,
                 success: async (result: any) => {
                     input.value = ''
                     const formData = new FormData()
-                    console.log(result.name)
                     formData.append('file', result, result.name)
                     this.ngZone.run(() => {
-                        this.productsService.uploadImage(formData, this.productId).subscribe(imageId => {
+                        this.productsService.uploadImage(formData, this.productId).subscribe(res => {
+                            const { urlImage } = res
                             this.navigationService.showMessage('Imagen actualizada')
                             this.navigationService.loadBarFinish()
-                            this.imgUri = `${environment.baseUrl}images/${imageId}`
+                            console.log(urlImage)
+                            this.urlImage = urlImage + `?ignoreCache=${Math.random()}`
                         })
                     })
                 }

@@ -16,6 +16,6 @@ export interface ProformaItemModel {
     observations: string
     unitName: string
     description: string
-    imageId: string
+    urlImage: string
     prices: PriceModel[]
 }

@@ -75,7 +75,7 @@ export class ChargeComponent implements OnInit {
         paymentMethodId: null,
         workerId: null,
         referredId: null,
-        especialtyId: null
+        specialtyId: null
     })
 
     payments: CreatePaymentModel[] = []

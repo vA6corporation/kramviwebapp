@@ -199,7 +199,7 @@ export async function buildA4ProformaImage(
 
         subPositionYItems += 4
 
-        pdf.addImage(`${environment.baseUrl}images/${proformaItem.imageId}`, "JPEG", 142, positionYItems, 35, 35)
+        pdf.addImage(proformaItem.urlImage, "JPEG", 142, positionYItems, 35, 35)
 
         positionYItems += 35
     }

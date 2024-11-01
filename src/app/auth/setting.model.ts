@@ -24,6 +24,7 @@ export class SettingModel {
     showReferred: boolean = false
     showDeliveryAt: boolean = false
     showEmitionAt: boolean = false
+    hideIgvTicket: boolean = false
     isConsumption: boolean = false
     isOfficeTurn: boolean = false
     printOrder: boolean = true

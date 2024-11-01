@@ -108,7 +108,30 @@ export class PreSalesComponent implements OnInit {
         }
         this.salesService.setSaleItems(saleItems)
         this.preSalesService.setPreSale(preSale)
-        this.router.navigate([`/preSales/charge`])
+        this.router.navigate(['/preSales/charge'])
+    }
+
+    onChargeCredit(preSale: PreSaleModel) {
+        const saleItems: CreateSaleItemModel[] = []
+        for (const preSaleItem of preSale.preSaleItems) {
+            const saleItem: CreateSaleItemModel = {
+                fullName: preSaleItem.fullName,
+                onModel: preSaleItem.onModel,
+                price: preSaleItem.price,
+                quantity: preSaleItem.quantity,
+                preIgvCode: preSaleItem.igvCode,
+                igvCode: preSaleItem.igvCode,
+                unitCode: preSaleItem.unitCode,
+                isTrackStock: preSaleItem.isTrackStock,
+                observations: preSaleItem.observations,
+                prices: [],
+                productId: preSaleItem.productId,
+            }
+            saleItems.push(saleItem)
+        }
+        this.salesService.setSaleItems(saleItems)
+        this.preSalesService.setPreSale(preSale)
+        this.router.navigate(['/charge/credit'])
     }
 
     onDelete(preSaleId: string) {

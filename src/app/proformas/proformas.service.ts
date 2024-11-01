@@ -70,7 +70,7 @@ export class ProformasService {
                 observations: '',
                 unitName: product.unitName,
                 description: product.description,
-                imageId: product.imageId,
+                urlImage: product.urlImage,
                 prices: product.prices,
             }
 
@@ -95,30 +95,16 @@ export class ProformasService {
         return this.httpService.get(`proformas/summaryProformasByRangeDateWorker/${startDate}/${endDate}`, params)
     }
 
-    getCountProformasByKey(key: string): Observable<number> {
-        return this.httpService.get(`proformas/countProformasByKey/${key}`)
+    getCountProformas(params: Params): Observable<number> {
+        return this.httpService.get(`proformas/countProformas`, params)
     }
 
-    getCountProformasByRangeDate(startDate: Date, endDate: Date, params: Params): Observable<number> {
-        return this.httpService.get(`proformas/countProformasByRangeDate/${startDate}/${endDate}`, params)
-    }
-
-    getProformasByRangeDatePage(
-        startDate: Date,
-        endDate: Date,
+    getProformasByPage(
         pageIndex: number,
         pageSize: number,
         params: Params
     ): Observable<ProformaModel[]> {
-        return this.httpService.get(`proformas/byRangeDatePage/${startDate}/${endDate}/${pageIndex}/${pageSize}`, params)
-    }
-
-    getProformasByPageKey(
-        pageIndex: number,
-        pageSize: number,
-        key: string
-    ): Observable<ProformaModel[]> {
-        return this.httpService.get(`proformas/byPageKey/${pageIndex}/${pageSize}/${key}`)
+        return this.httpService.get(`proformas/byPage/${pageIndex}/${pageSize}`, params)
     }
 
     create(
