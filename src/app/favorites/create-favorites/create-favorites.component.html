@@ -7,9 +7,11 @@
                     Favoritos
                 </ng-template>
                 <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
-                    <mat-grid-tile (click)="onRemoveFavorite(product)" *ngFor="let product of favorites">
+                    @for (product of favorites; track product._id) {
+                    <mat-grid-tile (click)="onRemoveFavorite(product)">
                         {{ product.fullName }}
                     </mat-grid-tile>
+                    }
                 </mat-grid-list>
             </mat-tab>
 
@@ -18,10 +20,11 @@
                     Busqueda
                 </ng-template>
                 <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
-                    <mat-grid-tile (click)="onSelectProduct(product)" *ngFor="let product of products"
-                        [ngStyle]="urlImage(product)">
+                    @for (product of products; track product._id) {
+                    <mat-grid-tile (click)="onSelectProduct(product)" [ngStyle]="urlImage(product)">
                         {{ product.fullName.slice(0, 60) }}
                     </mat-grid-tile>
+                    }
                 </mat-grid-list>
             </mat-tab>
         </mat-tab-group>
@@ -30,13 +33,16 @@
         <app-favorite-items></app-favorite-items>
     </div>
     <div class="fixed-bottom d-flex align-items-center footer-button">
-        <div class="px-3" *ngIf="priceLists.length">
-            <mat-form-field appearance="fill"
-                *ngIf="setting.defaultPrice === 'LISTA' || setting.defaultPrice === 'LISTAOFICINA'">
+        <div class="px-3">
+            @if (setting.defaultPrice === 'LISTA' || setting.defaultPrice === 'LISTAOFICINA') {
+            <mat-form-field appearance="fill">
                 <mat-select [(value)]="priceListId" (selectionChange)="onChangePriceList()">
-                    <mat-option *ngFor="let element of priceLists" [value]="element._id">{{ element.name }}</mat-option>
+                    @for (priceList of priceLists; track $index) {
+                    <mat-option [value]="priceList._id">{{ priceList.name }}</mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
+            }
         </div>
         <span class="spacer"></span>
         <div class="p-3">

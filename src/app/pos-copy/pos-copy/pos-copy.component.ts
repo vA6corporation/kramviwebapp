@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -25,7 +25,7 @@ import { SalesService } from '../../sales/sales.service';
     templateUrl: './pos-copy.component.html',
     styleUrls: ['./pos-copy.component.sass']
 })
-export class PosCopyComponent implements OnInit {
+export class PosCopyComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

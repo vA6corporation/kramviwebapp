@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavigationService } from '../../navigation/navigation.service';
 import { RoomModel } from '../../rooms/room.model';
 import { RoomsService } from '../../rooms/rooms.service';
@@ -14,7 +14,7 @@ import { AuthService } from '../../auth/auth.service';
     templateUrl: './pos-rooms.component.html',
     styleUrls: ['./pos-rooms.component.sass']
 })
-export class PosRoomsComponent implements OnInit {
+export class PosRoomsComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

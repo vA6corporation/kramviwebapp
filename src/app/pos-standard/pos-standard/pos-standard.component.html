@@ -58,14 +58,22 @@
         <app-sale-items></app-sale-items>
     </div>
     <div class="fixed-bottom d-flex align-items-center footer-button">
-        <div class="px-3" *ngIf="priceLists.length">
-            <mat-form-field appearance="fill"
-                *ngIf="setting.defaultPrice === 'LISTA' || setting.defaultPrice === 'LISTAOFICINA'">
-                <mat-select [(value)]="priceListId" (selectionChange)="onChangePriceList()">
-                    <mat-option *ngFor="let element of priceLists" [value]="element._id">{{ element.name }}</mat-option>
-                </mat-select>
-            </mat-form-field>
+        <div class="px-3">
+            @if (setting.defaultPrice === 'LISTA' || setting.defaultPrice === 'LISTAOFICINA') {
+                <mat-form-field appearance="fill">
+                    <mat-select [(value)]="priceListId" (selectionChange)="onChangePriceList()">
+                        @for (priceList of priceLists; track $index) {
+                            <mat-option [value]="priceList._id">{{ priceList.name }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            }
         </div>
+        @if (coupons.length) {
+            <div>
+                <button type="button" mat-raised-button color="primary" (click)="onDialogCoupons()">CUPONES {{ coupons.length }}</button>
+            </div>
+        }
         <span class="spacer"></span>
         <div class="p-3">
             <button type="button" mat-raised-button (click)="onCancel()" color="primary">CANCELAR</button>

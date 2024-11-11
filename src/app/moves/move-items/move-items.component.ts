@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { CreateMoveItemModel } from '../create-move-item.model';
@@ -10,7 +10,7 @@ import { MovesService } from '../moves.service';
     templateUrl: './move-items.component.html',
     styleUrls: ['./move-items.component.sass']
 })
-export class MoveItemsComponent implements OnInit {
+export class MoveItemsComponent {
 
     constructor(
         private readonly movesService: MovesService,

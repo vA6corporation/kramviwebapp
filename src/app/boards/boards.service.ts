@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Params } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { HttpBoardsService } from '../http-boards.service';
 import { CreatePaymentModel } from '../payments/create-payment.model';
 import { ProductModel } from '../products/product.model';
 import { CreateSaleModel } from '../sales/create-sale.model';
@@ -10,6 +9,7 @@ import { BoardItemModel } from './board-item.model';
 import { BoardModel } from './board.model';
 import { CreateBoardItemModel } from './create-board-item.model';
 import { SummaryBoardModel } from './summary-board.model';
+import { HttpService } from '../http.service';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +17,7 @@ import { SummaryBoardModel } from './summary-board.model';
 export class BoardsService {
 
     constructor(
-        private readonly httpService: HttpBoardsService,
+        private readonly httpService: HttpService,
     ) { }
 
     private boardItems: CreateBoardItemModel[] = []

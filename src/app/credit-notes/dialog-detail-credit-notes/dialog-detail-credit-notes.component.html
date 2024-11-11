@@ -29,12 +29,14 @@
     </table>
     <mat-divider class="mb-0"></mat-divider>
     <mat-list class="m-0">
-        <mat-list-item *ngFor="let item of creditNoteItems">
-            <span class="mr-2 text-muted">x{{ item.quantity }}</span>
-            {{ item.fullName }}
-            <span class="spacer"></span>
-            {{ (item.price * item.quantity).toFixed(2) }}
-        </mat-list-item>
+        @for (creditNoteItem of creditNoteItems; track creditNoteItem._id) {
+            <mat-list-item>
+                <span class="mr-2 text-muted">x{{ creditNoteItem.quantity }}</span>
+                {{ creditNoteItem.fullName }}
+                <span class="spacer"></span>
+                {{ (creditNoteItem.price * creditNoteItem.quantity).toFixed(2) }}
+            </mat-list-item>
+        }
     </mat-list>
 </div>
 <mat-dialog-actions>

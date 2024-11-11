@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { PrinterModel } from '../printer.model';
@@ -9,7 +9,7 @@ import { PrintersService } from '../printers.service';
     templateUrl: './dialog-add-printers.component.html',
     styleUrls: ['./dialog-add-printers.component.sass']
 })
-export class DialogAddPrintersComponent implements OnInit {
+export class DialogAddPrintersComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -26,9 +26,6 @@ export class DialogAddPrintersComponent implements OnInit {
         printOven: false,
         printBox: false,
     })
-
-    ngOnInit(): void {
-    }
 
     onSubmit() {
         const { name, printInvoice, printAccount, printKitchen, printBar, printOven, printBox } = this.formGroup.value

@@ -1,5 +1,5 @@
 import { CommonModule, formatDate } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Params } from '@angular/router';
 import { Chart, ChartOptions, ChartType, registerables } from 'chart.js';
@@ -27,7 +27,7 @@ Chart.register(...registerables);
     templateUrl: './products.component.html',
     styleUrls: ['./products.component.sass']
 })
-export class ProductsComponent implements OnInit {
+export class ProductsComponent {
 
     constructor(
         private readonly salesService: SalesService,

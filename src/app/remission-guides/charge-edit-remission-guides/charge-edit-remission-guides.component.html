@@ -20,9 +20,11 @@
             <mat-form-field appearance="fill" *ngIf="customer">
                 <mat-label>Direccion</mat-label>
                 <mat-select formControlName="addressIndex">
-                    <mat-option *ngFor="let element of addresses; let i = index" [value]="i">
-                        {{ element | uppercase }}
+                    @for (address of addresses; track address; let i = $index) {
+                    <mat-option [value]="i">
+                        {{ address | uppercase }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
@@ -42,9 +44,11 @@
             <mat-form-field appearance="fill">
                 <mat-label>Motivo del transporte</mat-label>
                 <mat-select formControlName="remissionGuideTypeCode">
-                    <mat-option *ngFor="let element of remissionGuideTypes" [value]="element.code">
-                        {{ element.label }}
+                    @for (remissionGuideType of remissionGuideTypes; track $index) {
+                    <mat-option [value]="remissionGuideType.code">
+                        {{ remissionGuideType.label }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
@@ -64,26 +68,32 @@
                     <mat-label>Departamento de origen</mat-label>
                     <mat-select formControlName="originDepartment" #originDepartment
                         (selectionChange)="onChangeOriginDepartment(originDepartment.value)">
-                        <mat-option *ngFor="let department of departments" [value]="department.code">
+                        @for (department of departments; track $index) {
+                        <mat-option [value]="department.code">
                             {{ department.name | uppercase }}
                         </mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Provincia de origen</mat-label>
                     <mat-select formControlName="originProvince" #originProvince
                         (selectionChange)="onChangeOriginProvince(originProvince.value)">
-                        <mat-option *ngFor="let province of originProvinces" [value]="province.code">
+                        @for (province of originProvinces; track $index) {
+                        <mat-option [value]="province.code">
                             {{ province.name | uppercase }}
                         </mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Distrito de origen</mat-label>
                     <mat-select formControlName="originLocationCode">
-                        <mat-option *ngFor="let district of originDistricts" [value]="district.code">
+                        @for (district of originDistricts; track $index) {
+                        <mat-option [value]="district.code">
                             {{ district.name | uppercase }}
                         </mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -96,26 +106,32 @@
                     <mat-label>Departamento de destino</mat-label>
                     <mat-select formControlName="destinyDepartment" #destinyDepartment
                         (selectionChange)="onChangeDestinyDepartment(destinyDepartment.value)">
-                        <mat-option *ngFor="let department of destinyDepartments" [value]="department.code">
+                        @for (department of destinyDepartments; track $index) {
+                        <mat-option [value]="department.code">
                             {{ department.name | uppercase }}
                         </mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Provincia de destino</mat-label>
                     <mat-select formControlName="destinyProvince" #destinyProvince
                         (selectionChange)="onChangeDestinyProvince(destinyProvince.value)">
-                        <mat-option *ngFor="let province of destinyProvinces" [value]="province.code">
+                        @for (province of destinyProvinces; track $index) {
+                        <mat-option [value]="province.code">
                             {{ province.name | uppercase }}
                         </mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Distrito de destino</mat-label>
                     <mat-select formControlName="destinyLocationCode">
-                        <mat-option *ngFor="let district of destinyDistricts" [value]="district.code">
+                        @for (district of destinyDistricts; track $index) {
+                        <mat-option [value]="district.code">
                             {{ district.name | uppercase }}
                         </mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
             </div>

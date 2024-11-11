@@ -1,14 +1,17 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SuppliesService } from '../supplies.service';
 import { SupplyModel } from '../supply.model';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-detail-supplies',
+    standalone: true,
+    imports: [MaterialModule],
     templateUrl: './dialog-detail-supplies.component.html',
     styleUrls: ['./dialog-detail-supplies.component.sass']
 })
-export class DialogDetailSuppliesComponent implements OnInit {
+export class DialogDetailSuppliesComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

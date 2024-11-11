@@ -39,16 +39,17 @@
         <app-proforma-items></app-proforma-items>
     </div>
     <div class="fixed-bottom d-flex align-items-center">
-        @if (priceLists.length) {
-            <div class="px-3">
-                <mat-form-field appearance="fill"
-                    *ngIf="setting.defaultPrice === 'LISTA' || setting.defaultPrice === 'LISTAOFICINA'">
+        <div class="px-3">
+            @if (setting.defaultPrice === 'LISTA' || setting.defaultPrice === 'LISTAOFICINA') {
+                <mat-form-field appearance="fill">
                     <mat-select [(value)]="priceListId" (selectionChange)="onChangePriceList()">
-                        <mat-option *ngFor="let element of priceLists" [value]="element._id">{{ element.name }}</mat-option>
+                        @for (priceList of priceLists; track $index) {
+                            <mat-option [value]="priceList._id">{{ priceList.name }}</mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
-            </div>
-        }
+            }
+        </div>
         <span class="spacer"></span>
         <div class="p-3">
             <button type="button" mat-raised-button (click)="onCancel()" color="primary">CANCELAR</button>

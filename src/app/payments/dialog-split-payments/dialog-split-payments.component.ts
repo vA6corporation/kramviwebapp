@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -22,7 +22,7 @@ export interface DialogSplitPaymentsData {
     templateUrl: './dialog-split-payments.component.html',
     styleUrls: ['./dialog-split-payments.component.sass']
 })
-export class DialogSplitPaymentsComponent implements OnInit {
+export class DialogSplitPaymentsComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -22,7 +22,7 @@ export interface Section {
     templateUrl: './summary.component.html',
     styleUrls: ['./summary.component.sass']
 })
-export class SummaryComponent implements OnInit {
+export class SummaryComponent {
 
     constructor(
         private readonly reportsService: ReportsService,

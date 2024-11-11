@@ -20,17 +20,21 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Hora</mat-label>
                     <mat-select formControlName="hours">
-                        <mat-option *ngFor="let element of hours" [value]="element.value">
-                            {{ element.label }}
+                        @for (hour of hours; track $index) {
+                        <mat-option [value]="hour.value">
+                            {{ hour.label }}
                         </mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Minuto</mat-label>
                     <mat-select formControlName="minutes">
-                        <mat-option *ngFor="let element of minutes" [value]="element.value">
-                            {{ element.label }}
+                        @for (minute of minutes; track $index) {
+                        <mat-option [value]="minute.value">
+                            {{ minute.label }}
                         </mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
@@ -44,25 +48,31 @@
             <mat-form-field appearance="fill">
                 <mat-label>Especialidad</mat-label>
                 <mat-select formControlName="specialtyId">
-                    <mat-option *ngFor="let element of specialties" [value]="element._id" class="text-uppercase">
-                        {{ element.name }}
+                    @for (specialty of specialties; track $index) {
+                    <mat-option [value]="specialty._id" class="text-uppercase">
+                        {{ specialty.name }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Personal a cargo</mat-label>
                 <mat-select formControlName="workerId">
-                    <mat-option *ngFor="let element of workers" [value]="element._id" class="text-uppercase">
-                        {{ element.name }}
+                    @for (worker of workers; track $index) {
+                    <mat-option [value]="worker._id" class="text-uppercase">
+                        {{ worker.name }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Referido por</mat-label>
                 <mat-select formControlName="referredId">
-                    <mat-option *ngFor="let element of workers" [value]="element._id" class="text-uppercase">
-                        {{ element.name }}
-                    </mat-option>
+                    @for (worker of workers; track $index) {
+                        <mat-option [value]="worker._id" class="text-uppercase">
+                            {{ worker.name }}
+                        </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">

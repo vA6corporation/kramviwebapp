@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BoardModel } from '../board.model';
 import { BoardsService } from '../boards.service';
 import { TablesService } from '../../tables/tables.service';
@@ -12,7 +12,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './dialog-boards.component.html',
     styleUrls: ['./dialog-boards.component.sass']
 })
-export class DialogBoardsComponent implements OnInit {
+export class DialogBoardsComponent {
 
     constructor(
         private readonly boardsService: BoardsService,

@@ -1,44 +1,47 @@
 <h2 mat-dialog-title>Detalles</h2>
 <div mat-dialog-content>
-  <table class="w-100">
-    <tbody>
-      <tr>
-        <td>F/H de compra</td>
-        <td align="right">{{ purchaseSupply?.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</td>
-      </tr>
-      <tr>
-        <td>Serie</td>
-        <td align="right">{{ purchaseSupply?.serie || 'NINGUNO' }}</td>
-      </tr>
-      <tr>
-        <td>Proveedor</td>
-        <td align="right">{{ provider?.name || 'NINGUNO' }}</td>
-      </tr>
-      <tr>
-        <td>Usuario</td>
-        <td align="right">{{ user?.name }}</td>
-      </tr>
-      <tr>
-        <td>Total</td>
-        <td align="right">{{ (purchaseSupply?.charge || 0).toFixed(2) }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <mat-divider class="mb-0"></mat-divider>
-  <mat-list class="m-0">
-    <mat-list-item *ngFor="let item of purchaseSupplyItems">
-      {{ item.fullName }}
-      <span class="ml-2 text-muted">x{{ item.quantity }}</span>
-      <span class="text-success ml-2" *ngIf="item.igvCode === '11'">Bon</span>
-      <span class="text-primary ml-2" *ngIf="item.igvCode === '20'">Exo</span>
-      <span class="text-primary ml-2" *ngIf="item.igvCode === '30'">Ina</span>
-      <span class="spacer"></span>
-      {{ (item.cost * item.quantity).toFixed(2) }}
-    </mat-list-item>
-  </mat-list>
+    <table class="w-100">
+        <tbody>
+            <tr>
+                <td>F/H de compra</td>
+                <td align="right">{{ purchaseSupply?.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</td>
+            </tr>
+            <tr>
+                <td>Serie</td>
+                <td align="right">{{ purchaseSupply?.serie || 'NINGUNO' }}</td>
+            </tr>
+            <tr>
+                <td>Proveedor</td>
+                <td align="right">{{ provider?.name || 'NINGUNO' }}</td>
+            </tr>
+            <tr>
+                <td>Usuario</td>
+                <td align="right">{{ user?.name }}</td>
+            </tr>
+            <tr>
+                <td>Total</td>
+                <td align="right">{{ (purchaseSupply?.charge || 0).toFixed(2) }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <mat-divider class="mb-0"></mat-divider>
+    <mat-list class="m-0">
+        @for (purchaseSupplyItem of purchaseSupplyItems; track purchaseSupplyItem._id) {
+            <mat-list-item>
+                {{ purchaseSupplyItem.fullName }}
+                <span class="ml-2 text-muted">x{{ purchaseSupplyItem.quantity }}</span>
+                <span class="text-success ml-2" *ngIf="purchaseSupplyItem.igvCode === '11'">Bon</span>
+                <span class="text-primary ml-2" *ngIf="purchaseSupplyItem.igvCode === '20'">Exo</span>
+                <span class="text-primary ml-2" *ngIf="purchaseSupplyItem.igvCode === '30'">Ina</span>
+                <span class="spacer"></span>
+                {{ (purchaseSupplyItem.cost * purchaseSupplyItem.quantity).toFixed(2) }}
+            </mat-list-item>
+        }
+    </mat-list>
 </div>
 <mat-dialog-actions>
-  <button mat-flat-button mat-dialog-close [routerLink]="[ 'purchaseSupplies', purchaseSupply?._id, 'edit' ]" color="primary">EDITAR</button>
-  <span class="spacer"></span>
-  <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+    <button mat-flat-button mat-dialog-close [routerLink]="[ 'purchaseSupplies', purchaseSupply?._id, 'edit' ]"
+        color="primary">EDITAR</button>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
 </mat-dialog-actions>

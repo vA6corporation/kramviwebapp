@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTable } from '@angular/material/table';
 import { parseExcel } from '../../buildExcel';
@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './update-prices.component.html',
     styleUrls: ['./update-prices.component.sass']
 })
-export class UpdatePricesComponent implements OnInit {
+export class UpdatePricesComponent {
 
     constructor(
         private readonly specialtiesService: SpecialtiesService,
@@ -31,9 +31,6 @@ export class UpdatePricesComponent implements OnInit {
     pageSizeOptions: number[] = [10, 30, 50];
     pageIndex: number = 0;
     isLoading: boolean = false;
-
-    ngOnInit(): void {
-    }
 
     async onFileSelected(files: FileList | null, input: HTMLInputElement, table: MatTable<any>) {
         if (files && files[0]) {

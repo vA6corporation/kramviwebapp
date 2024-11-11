@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { CustomerModel } from '../../customers/customer.model';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -10,7 +10,7 @@ import { WorkersService } from '../workers.service';
     templateUrl: './workers.component.html',
     styleUrls: ['./workers.component.sass']
 })
-export class WorkersComponent implements OnInit {
+export class WorkersComponent {
 
     constructor(
         private readonly workersService: WorkersService,

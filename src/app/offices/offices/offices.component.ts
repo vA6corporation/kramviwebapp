@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { OfficeModel } from '../../auth/office.model';
 import { NavigationService } from '../../navigation/navigation.service';
 import { OfficesService } from '../offices.service';
@@ -9,7 +9,7 @@ import { OfficesService } from '../offices.service';
     templateUrl: './offices.component.html',
     styleUrls: ['./offices.component.sass']
 })
-export class OfficesComponent implements OnInit {
+export class OfficesComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

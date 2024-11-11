@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
@@ -17,7 +17,7 @@ import { MovesService } from '../moves.service';
     templateUrl: './pos-moves.component.html',
     styleUrls: ['./pos-moves.component.sass']
 })
-export class PosMovesComponent implements OnInit {
+export class PosMovesComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

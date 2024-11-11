@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -17,7 +17,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './privileges.component.html',
     styleUrls: ['./privileges.component.sass']
 })
-export class PrivilegesComponent implements OnInit {
+export class PrivilegesComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

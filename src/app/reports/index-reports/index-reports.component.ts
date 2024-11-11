@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
 import { AuthService } from '../../auth/auth.service';
@@ -47,7 +47,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './index-reports.component.html',
     styleUrls: ['./index-reports.component.sass']
 })
-export class IndexReportsComponent implements OnInit {
+export class IndexReportsComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

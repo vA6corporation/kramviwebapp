@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './categories.component.html',
     styleUrls: ['./categories.component.sass']
 })
-export class CategoriesComponent implements OnInit {
+export class CategoriesComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

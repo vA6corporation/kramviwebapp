@@ -1,22 +1,25 @@
 <div class="d-flex h-100">
-  <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()" [formGroup]="formGroup">
-    <div class="px-3">
-      <mat-form-field appearance="fill">
-        <mat-label>Seleccione un motivo</mat-label>
-        <mat-select formControlName="incidentType">
-          <mat-option *ngFor="let element of incidentTypes" [value]="element">{{ element }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Observaciones</mat-label>
-        <input type="text" matInput formControlName="observations">
-      </mat-form-field>
-      <button type="submit" class="w-100" mat-flat-button [disabled]="isLoading" color="primary">
-        GUARDAR
-      </button>
+    <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()"
+        [formGroup]="formGroup">
+        <div class="px-3">
+            <mat-form-field appearance="fill">
+                <mat-label>Seleccione un motivo</mat-label>
+                <mat-select formControlName="incidentType">
+                    @for (incidentType of incidentTypes; track $index) {
+                    <mat-option [value]="incidentType">{{ incidentType }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Observaciones</mat-label>
+                <input type="text" matInput formControlName="observations">
+            </mat-form-field>
+            <button type="submit" class="w-100" mat-flat-button [disabled]="isLoading" color="primary">
+                GUARDAR
+            </button>
+        </div>
+    </form>
+    <div class="flex-30 bg-white list-items">
+        <app-incident-items></app-incident-items>
     </div>
-  </form>
-  <div class="flex-30 bg-white list-items">
-    <app-incident-items></app-incident-items>
-  </div>
 </div>

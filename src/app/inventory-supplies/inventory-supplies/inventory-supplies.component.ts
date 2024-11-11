@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
@@ -19,7 +19,7 @@ import { DialogRemoveStockSupplyComponent } from '../dialog-remove-stock-supply/
     templateUrl: './inventory-supplies.component.html',
     styleUrls: ['./inventory-supplies.component.sass']
 })
-export class InventorySuppliesComponent implements OnInit {
+export class InventorySuppliesComponent {
 
     constructor(
         private readonly suppliesService: SuppliesService,

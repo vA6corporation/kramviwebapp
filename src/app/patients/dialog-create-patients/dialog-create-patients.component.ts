@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MaterialModule } from '../../material.module';
@@ -13,7 +13,7 @@ import { PatientsService } from '../patients.service';
     templateUrl: './dialog-create-patients.component.html',
     styleUrls: ['./dialog-create-patients.component.sass']
 })
-export class DialogCreatePatientsComponent implements OnInit {
+export class DialogCreatePatientsComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

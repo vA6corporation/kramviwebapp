@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -17,11 +17,11 @@ import { PurchaseSuppliesService } from '../purchase-supplies.service';
 import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component';
 
 interface FormData {
-    invoiceCode: string,
-    paymentMethodId: string,
-    purchasedAt: Date,
-    serie: string | null,
-    observations: string,
+    invoiceCode: string
+    paymentMethodId: string
+    purchasedAt: Date
+    serie: string | null
+    observations: string
 }
 
 @Component({
@@ -29,7 +29,7 @@ interface FormData {
     templateUrl: './charge-purchase-supplies.component.html',
     styleUrls: ['./charge-purchase-supplies.component.sass']
 })
-export class ChargePurchaseSuppliesComponent implements OnInit {
+export class ChargePurchaseSuppliesComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -149,16 +149,18 @@ export class ChargePurchaseSuppliesComponent implements OnInit {
             this.isLoading = true
             this.navigationService.loadBarStart()
 
-            this.purchaseSuppliesService.savePurchaseSupply(purchaseSupply, this.purchaseSupplyItems).subscribe(purchaseSupply => {
-                this.purchaseSuppliesService.setPurchaseSupplyItems([])
-                this.router.navigate(['/purchaseSupplies'])
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
-                this.navigationService.showMessage('Registrado correctamente')
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message)
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
+            this.purchaseSuppliesService.create(purchaseSupply, this.purchaseSupplyItems).subscribe({
+                next: () => {
+                    this.purchaseSuppliesService.setPurchaseSupplyItems([])
+                    this.router.navigate(['/purchaseSupplies'])
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage('Registrado correctamente')
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                }
             })
         } catch (error) {
             if (error instanceof Error) {

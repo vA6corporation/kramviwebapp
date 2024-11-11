@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -18,7 +18,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './boards.component.html',
     styleUrls: ['./boards.component.sass']
 })
-export class BoardsComponent implements OnInit {
+export class BoardsComponent {
 
     constructor(
         private readonly boardsService: BoardsService,

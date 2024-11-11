@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -28,7 +28,7 @@ import { DialogPaymentComponent, DialogPaymentData } from '../dialog-payment/dia
     templateUrl: './detail-credits.component.html',
     styleUrls: ['./detail-credits.component.sass']
 })
-export class DetailCreditsComponent implements OnInit {
+export class DetailCreditsComponent {
 
     constructor(
         private readonly authService: AuthService,

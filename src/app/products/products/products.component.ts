@@ -1,6 +1,6 @@
 import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
@@ -29,7 +29,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './products.component.html',
     styleUrls: ['./products.component.sass']
 })
-export class ProductsComponent implements OnInit {
+export class ProductsComponent {
 
     constructor(
         private readonly productsService: ProductsService,
@@ -457,7 +457,6 @@ export class ProductsComponent implements OnInit {
         } else {
             this.navigationService.loadBarStart()
             this.productsService.getProductsByPage(this.pageIndex + 1, this.pageSize, this.params).subscribe(products => {
-                console.log(products)
                 this.navigationService.loadBarFinish()
                 switch (this.setting.defaultPrice) {
                     case PriceType.OFICINA:

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './providers.component.html',
     styleUrls: ['./providers.component.sass']
 })
-export class ProvidersComponent implements OnInit {
+export class ProvidersComponent {
 
     constructor(
         private readonly providersService: ProvidersService,

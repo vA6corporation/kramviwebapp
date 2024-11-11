@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Params } from '@angular/router';
 import { Chart, ChartOptions, ChartType } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './purchases.component.html',
     styleUrls: ['./purchases.component.sass']
 })
-export class PurchasesComponent implements OnInit {
+export class PurchasesComponent {
 
     constructor(
         private readonly purchasesService: PurchasesService,

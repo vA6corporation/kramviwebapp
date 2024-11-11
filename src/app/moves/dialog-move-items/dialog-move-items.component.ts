@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MovesService } from '../moves.service';
@@ -9,7 +9,7 @@ import { CreateMoveItemModel } from '../create-move-item.model';
     templateUrl: './dialog-move-items.component.html',
     styleUrls: ['./dialog-move-items.component.sass']
 })
-export class DialogMoveItemsComponent implements OnInit {
+export class DialogMoveItemsComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

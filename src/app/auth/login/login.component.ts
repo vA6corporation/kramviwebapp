@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
@@ -21,7 +21,7 @@ interface UserModel {
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.sass']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
     constructor(
         private readonly router: Router,

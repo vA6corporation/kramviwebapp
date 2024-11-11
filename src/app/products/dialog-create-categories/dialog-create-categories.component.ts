@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Observable, Subject } from 'rxjs';
@@ -11,7 +11,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './dialog-create-categories.component.html',
     styleUrls: ['./dialog-create-categories.component.sass']
 })
-export class DialogCreateCategoriesComponent implements OnInit {
+export class DialogCreateCategoriesComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -22,9 +22,6 @@ export class DialogCreateCategoriesComponent implements OnInit {
         name: [null, Validators.required]
     })
     private onSave$: Subject<string> = new Subject();
-
-    ngOnInit(): void {
-    }
 
     handleSaveCategory(): Observable<string> {
         return this.onSave$.asObservable();

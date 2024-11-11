@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -33,7 +33,7 @@ import { UserModel } from '../../users/user.model';
     templateUrl: './change-invoice.component.html',
     styleUrls: ['./change-invoice.component.sass']
 })
-export class ChangeInvoiceComponent implements OnInit {
+export class ChangeInvoiceComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

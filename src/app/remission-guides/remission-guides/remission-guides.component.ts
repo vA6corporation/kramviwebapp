@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
@@ -26,7 +26,7 @@ import { SheetRemissionGuidesComponent } from '../sheet-remission-guides/sheet-r
     templateUrl: './remission-guides.component.html',
     styleUrls: ['./remission-guides.component.sass']
 })
-export class RemissionGuidesComponent implements OnInit {
+export class RemissionGuidesComponent {
 
     constructor(
         private readonly remissionGuidesService: RemissionGuidesService,

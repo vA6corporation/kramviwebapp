@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -14,7 +14,7 @@ import { InventorySuppliesService } from '../inventory-supplies.service';
     templateUrl: './dialog-move-stock-supply.component.html',
     styleUrls: ['./dialog-move-stock-supply.component.sass']
 })
-export class DialogMoveStockSupplyComponent implements OnInit {
+export class DialogMoveStockSupplyComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -27,7 +27,7 @@ export class DialogMoveStockSupplyComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        quantity: [null, Validators.required],
+        quantity: ['', Validators.required],
         toOfficeId: [null, Validators.required],
         observations: '',
     })
@@ -70,16 +70,18 @@ export class DialogMoveStockSupplyComponent implements OnInit {
                 igvCode: '10',
                 unitCode: 'NIU'
             }
-            this.inventorySuppliesService.moveStock(move, [moveOutItem]).subscribe(() => {
-                this.dialogRef.disableClose = false
-                this.navigationService.loadBarFinish()
-                this.dialogRef.close(quantity)
-                this.navigationService.showMessage('Registrado correctamente')
-            }, (error: HttpErrorResponse) => {
-                this.dialogRef.disableClose = false
-                this.navigationService.loadBarFinish()
-                this.navigationService.showMessage(error.error.message)
-                this.isLoading = false
+            this.inventorySuppliesService.moveStock(move, [moveOutItem]).subscribe({
+                next: () => {
+                    this.dialogRef.disableClose = false
+                    this.navigationService.loadBarFinish()
+                    this.dialogRef.close(quantity)
+                    this.navigationService.showMessage('Registrado correctamente')
+                }, error: (error: HttpErrorResponse) => {
+                    this.dialogRef.disableClose = false
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage(error.error.message)
+                    this.isLoading = false
+                }
             })
         }
     }

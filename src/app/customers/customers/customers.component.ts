@@ -1,6 +1,6 @@
 import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
@@ -25,7 +25,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
     templateUrl: './customers.component.html',
     styleUrls: ['./customers.component.sass']
 })
-export class CustomersComponent implements OnInit {
+export class CustomersComponent {
 
     constructor(
         private readonly customersService: CustomersService,

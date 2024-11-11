@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-incident-supplies',
   templateUrl: './incident-supplies.component.html',
   styleUrls: ['./incident-supplies.component.sass']
 })
-export class IncidentSuppliesComponent implements OnInit {
+export class IncidentSuppliesComponent {
 
   constructor() { }
 

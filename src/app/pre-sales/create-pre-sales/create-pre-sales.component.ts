@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -36,7 +36,7 @@ import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component'
     templateUrl: './create-pre-sales.component.html',
     styleUrls: ['./create-pre-sales.component.sass']
 })
-export class CreatePreSalesComponent implements OnInit {
+export class CreatePreSalesComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

@@ -1,4 +1,5 @@
 export interface CreditNoteItemModel {
+    _id: string
     productId: string
     sku: string | null
     fullName: string

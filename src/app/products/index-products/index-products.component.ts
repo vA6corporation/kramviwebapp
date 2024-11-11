@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { MaterialModule } from '../../material.module';
 import { ProductsComponent } from '../products/products.component';
@@ -13,7 +13,7 @@ import { CategoriesComponent } from '../categories/categories.component';
     templateUrl: './index-products.component.html',
     styleUrls: ['./index-products.component.sass']
 })
-export class IndexProductsComponent implements OnInit {
+export class IndexProductsComponent {
 
     constructor(
         private readonly router: Router,

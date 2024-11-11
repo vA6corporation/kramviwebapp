@@ -1,6 +1,6 @@
 import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
@@ -27,7 +27,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './turns.component.html',
     styleUrls: ['./turns.component.sass']
 })
-export class TurnsComponent implements OnInit {
+export class TurnsComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NavigationService } from '../navigation.service';
@@ -9,7 +9,7 @@ import { AuthService } from '../../auth/auth.service';
     templateUrl: './toolbar.component.html',
     styleUrls: ['./toolbar.component.sass']
 })
-export class ToolbarComponent implements OnInit {
+export class ToolbarComponent {
 
     constructor(
         private readonly authService: AuthService,

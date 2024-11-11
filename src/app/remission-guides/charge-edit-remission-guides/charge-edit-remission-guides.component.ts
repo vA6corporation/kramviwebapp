@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Params, Router } from '@angular/router';
@@ -24,7 +24,7 @@ import { RemissionGuidesService } from '../remission-guides.service';
     templateUrl: './charge-edit-remission-guides.component.html',
     styleUrls: ['./charge-edit-remission-guides.component.sass']
 })
-export class ChargeEditRemissionGuidesComponent implements OnInit {
+export class ChargeEditRemissionGuidesComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -51,7 +51,7 @@ export class ChargeEditRemissionGuidesComponent implements OnInit {
         originAddress: ['', Validators.required],
         destinyAddress: ['', Validators.required],
         destinyLocationCode: ['', Validators.required],
-    });
+    })
 
     remissionGuideTypes: any[] = [
         { code: '01', label: 'VENTA' },
@@ -62,7 +62,7 @@ export class ChargeEditRemissionGuidesComponent implements OnInit {
         { code: '14', label: 'VENTA SUJETA A CONFIRMACION DEL COMPRADOR' },
         { code: '18', label: 'TRASLADO EMISOR ETINERANTE CP' },
         { code: '19', label: 'TRASLADO ZONA PRIMARIA' }
-    ];
+    ]
 
     departments: any[] = [
         { code: '01', name: 'Amazonas' },
@@ -103,7 +103,7 @@ export class ChargeEditRemissionGuidesComponent implements OnInit {
         { name: 'Yauyos ', code: '1510', departmentCode: '15' },
         { name: 'Huaral ', code: '1506', departmentCode: '15' },
         { name: 'Barranca ', code: '1502', departmentCode: '15' }
-    ];
+    ]
 
     districts: any[] = [
         { name: 'La Molina', code: '150114', departmentCode: '15', provinceCode: '1501' },
@@ -149,64 +149,64 @@ export class ChargeEditRemissionGuidesComponent implements OnInit {
         { name: 'San Juan de Miraflores', code: '150133', departmentCode: '15', provinceCode: '1501' },
         { name: 'Villa María del Triunfo', code: '150143', departmentCode: '15', provinceCode: '1501' },
         { name: 'Lince', code: '150116', departmentCode: '15', provinceCode: '1501' }
-    ];
+    ]
 
-    originDepartments: any[] = this.departments;
-    destinyDepartments: any[] = this.departments;
+    originDepartments: any[] = this.departments
+    destinyDepartments: any[] = this.departments
 
-    originProvinces: any[] = this.provinces;
-    destinyProvinces: any[] = this.provinces;
+    originProvinces: any[] = this.provinces
+    destinyProvinces: any[] = this.provinces
 
-    originDistricts: any[] = this.districts;
-    destinyDistricts: any[] = this.districts;
+    originDistricts: any[] = this.districts
+    destinyDistricts: any[] = this.districts
 
-    remissionGuideItems: RemissionGuideItemModel[] = [];
-    carrier: CarrierModel | null = null;
-    customer: CustomerModel | null = null;
-    isLoading: boolean = false;
-    setting = new SettingModel();
-    addresses: string[] = [];
-    private saleId: string | null = null;
-    private remissionGuideId: string = '';
+    remissionGuideItems: RemissionGuideItemModel[] = []
+    carrier: CarrierModel | null = null
+    customer: CustomerModel | null = null
+    isLoading: boolean = false
+    setting = new SettingModel()
+    addresses: string[] = []
+    private saleId: string | null = null
+    private remissionGuideId: string = ''
 
-    private handleClickMenu$: Subscription = new Subscription();
-    private handleRemissionGuideItems$: Subscription = new Subscription();
-    private handleAuth$: Subscription = new Subscription();
+    private handleClickMenu$: Subscription = new Subscription()
+    private handleRemissionGuideItems$: Subscription = new Subscription()
+    private handleAuth$: Subscription = new Subscription()
 
     ngOnDestroy() {
-        this.handleClickMenu$.unsubscribe();
-        this.handleRemissionGuideItems$.unsubscribe();
-        this.handleAuth$.unsubscribe();
+        this.handleClickMenu$.unsubscribe()
+        this.handleRemissionGuideItems$.unsubscribe()
+        this.handleAuth$.unsubscribe()
     }
 
     ngOnInit(): void {
-        this.navigationService.setTitle('Guardar');
+        this.navigationService.setTitle('Guardar')
 
-        const remissionGuide = this.remissionGuidesService.getRemissionGuide();
+        const remissionGuide = this.remissionGuidesService.getRemissionGuide()
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting;
-        });
+            this.setting = auth.setting
+        })
 
         if (remissionGuide) {
-            const { customer, carrier, saleId, _id } = remissionGuide;
-            this.customer = customer;
+            const { customer, carrier, saleId, _id } = remissionGuide
+            this.customer = customer
             if (customer) {
-                this.addresses = customer.addresses;
+                this.addresses = customer.addresses
             }
-            this.carrier = carrier;
-            this.saleId = saleId;
-            this.remissionGuideId = _id;
-            this.formGroup.patchValue(remissionGuide);
+            this.carrier = carrier
+            this.saleId = saleId
+            this.remissionGuideId = _id
+            this.formGroup.patchValue(remissionGuide)
         } else {
-            this.router.navigate(['/remissionGuides']);
+            this.router.navigate(['/remissionGuides'])
         }
 
         this.navigationService.setMenu([
             // { id: 'split_payment', label: 'Dividir pago', icon: 'checklist_rtl', show: true },
             { id: 'add_customer', label: 'Agregar cliente', icon: 'person_add', show: true },
             { id: 'add_carrier', label: 'Agregar transportista', icon: 'local_shipping', show: true },
-        ]);
+        ])
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
             switch (id) {
@@ -214,122 +214,114 @@ export class ChargeEditRemissionGuidesComponent implements OnInit {
                     const dialogRef = this.matDialog.open(DialogCarriersComponent, {
                         width: '600px',
                         position: { top: '20px' },
-                    });
+                    })
 
                     dialogRef.afterClosed().subscribe(carrier => {
                         if (carrier) {
-                            this.carrier = carrier;
+                            this.carrier = carrier
                         }
-                    });
+                    })
 
                     dialogRef.componentInstance.handleAddCarrier().subscribe(() => {
                         const dialogRef = this.matDialog.open(DialogCreateCarriersComponent, {
                             width: '600px',
                             position: { top: '20px' },
-                        });
+                        })
 
                         dialogRef.afterClosed().subscribe(carrier => {
                             if (carrier) {
-                                this.carrier = carrier;
+                                this.carrier = carrier
                             }
-                        });
-                    });
-                    break;
+                        })
+                    })
+                    break
                 }
                 case 'add_customer': {
                     const dialogRef = this.matDialog.open(DialogSearchCustomersComponent, {
                         width: '600px',
                         position: { top: '20px' },
                         data: this.setting.defaultSearchCustomer
-                    });
+                    })
 
                     dialogRef.afterClosed().subscribe(customer => {
                         if (customer) {
-                            this.customer = customer;
-                            this.addresses = customer.addresses;
+                            this.customer = customer
+                            this.addresses = customer.addresses
                         }
-                    });
+                    })
 
                     dialogRef.componentInstance.handleCreateCustomer().subscribe(() => {
                         const dialogRef = this.matDialog.open(DialogCreateCustomersComponent, {
                             width: '600px',
                             position: { top: '20px' },
-                        });
+                        })
 
                         dialogRef.afterClosed().subscribe(customer => {
                             if (customer) {
-                                this.customer = customer;
-                                this.addresses = customer.addresses;
+                                this.customer = customer
+                                this.addresses = customer.addresses
                             }
-                        });
-                    });
-                    break;
+                        })
+                    })
+                    break
                 }
                 default:
-                    break;
+                    break
             }
-        });
+        })
 
-        this.formGroup.get('invoiceType')?.patchValue(this.setting.defaultInvoice);
+        this.formGroup.get('invoiceType')?.patchValue(this.setting.defaultInvoice)
 
         this.handleRemissionGuideItems$ = this.remissionGuidesService.handleRemissionGuideItems().subscribe(remissionGuideItems => {
-            this.remissionGuideItems = remissionGuideItems;
-        });
+            this.remissionGuideItems = remissionGuideItems
+        })
     }
 
     onChangeOriginDepartment(departmentCode: string) {
         this.remissionGuidesService.getProvincesByDepartmentCode(departmentCode).subscribe(provinces => {
-            this.originProvinces = provinces;
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.showMessage(error.error.message);
-        });
+            this.originProvinces = provinces
+        })
     }
 
     async onChangeOriginProvince(provinceCode: string) {
         this.remissionGuidesService.getDistrictsByProvinceCode(provinceCode).subscribe(districts => {
-            this.originDistricts = districts;
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.showMessage(error.error.message);
-        });
+            this.originDistricts = districts
+        })
     }
 
     async onChangeDestinyDepartment(departmentCode: string) {
         this.remissionGuidesService.getProvincesByDepartmentCode(departmentCode).subscribe(provinces => {
-            this.destinyProvinces = provinces;
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.showMessage(error.error.message);
-        });
+            this.destinyProvinces = provinces
+        })
     }
 
     async onChangeDestinyProvince(provinceCode: string) {
         this.remissionGuidesService.getDistrictsByProvinceCode(provinceCode).subscribe(districts => {
-            this.destinyDistricts = districts;
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.showMessage(error.error.message);
-        });
+            this.destinyDistricts = districts
+        })
     }
 
     onSubmit() {
         try {
             if (!this.formGroup.valid) {
-                throw new Error("Complete los campos");
+                throw new Error("Complete los campos")
             }
 
             if (this.customer === null) {
-                throw new Error("Agrege un cliente");
+                throw new Error("Agrege un cliente")
             }
 
             if (this.carrier === null) {
-                throw new Error("Agrege un transportista");
+                throw new Error("Agrege un transportista")
             }
 
             if (!this.remissionGuideItems.length) {
-                throw new Error("Agrega un producto");
+                throw new Error("Agrega un producto")
             }
 
-            this.isLoading = true;
-            this.navigationService.loadBarStart();
-            const formData = this.formGroup.value;
+            this.isLoading = true
+            this.navigationService.loadBarStart()
+            const formData = this.formGroup.value
             const remissionGuide: CreateRemissionGuideModel = {
                 addressIndex: formData.addressIndex,
                 remissionGuideTypeCode: formData.remissionGuideTypeCode,
@@ -347,29 +339,31 @@ export class ChargeEditRemissionGuidesComponent implements OnInit {
                 saleId: this.saleId,
             }
 
-            this.remissionGuidesService.updateRemissionGuide(
+            this.remissionGuidesService.update(
                 remissionGuide,
                 this.remissionGuideItems,
                 this.carrier,
                 this.remissionGuideId
-            ).subscribe(remissionGuide => {
-                this.navigationService.loadBarFinish();
-                this.isLoading = false;
-                this.remissionGuidesService.setRemissionGuideItems([]);
-                const queryParams: Params = { tabIndex: 2 };
-                this.router.navigate(['/remissionGuides'], { queryParams });
-                this.navigationService.showMessage('Se han guardado los cambios');
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.loadBarFinish();
-                this.isLoading = false;
-                this.navigationService.showMessage(error.error.message);
-            });
+            ).subscribe({
+                next: () => {
+                    this.navigationService.loadBarFinish()
+                    this.isLoading = false
+                    this.remissionGuidesService.setRemissionGuideItems([])
+                    const queryParams: Params = { tabIndex: 2 }
+                    this.router.navigate(['/remissionGuides'], { queryParams })
+                    this.navigationService.showMessage('Se han guardado los cambios')
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.loadBarFinish()
+                    this.isLoading = false
+                    this.navigationService.showMessage(error.error.message)
+                }
+            })
         } catch (error) {
             if (error instanceof Error) {
-                this.navigationService.showMessage(error.message);
+                this.navigationService.showMessage(error.message)
             }
-            this.isLoading = false;
-            this.navigationService.loadBarFinish();
+            this.isLoading = false
+            this.navigationService.loadBarFinish()
         }
     }
 
@@ -378,14 +372,14 @@ export class ChargeEditRemissionGuidesComponent implements OnInit {
             width: '600px',
             position: { top: '20px' },
             data: this.customer,
-        });
+        })
 
         dialogRef.afterClosed().subscribe(customer => {
             if (customer) {
-                this.customer = customer;
-                this.addresses = customer.addresses;
+                this.customer = customer
+                this.addresses = customer.addresses
             }
-        });
+        })
     }
 
     onEditCarrier() {
@@ -393,13 +387,13 @@ export class ChargeEditRemissionGuidesComponent implements OnInit {
             width: '600px',
             position: { top: '20px' },
             data: this.carrier,
-        });
+        })
 
         dialogRef.afterClosed().subscribe(carrier => {
             if (carrier) {
-                this.carrier = carrier;
+                this.carrier = carrier
             }
-        });
+        })
     }
 
 }

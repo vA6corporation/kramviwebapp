@@ -1,41 +1,49 @@
 <div class="container">
-  <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
-    <mat-form-field appearance="fill">
-      <mat-label>Nombre</mat-label>
-      <input type="text" matInput formControlName="name">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Variante</mat-label>
-      <input type="text" matInput formControlName="feature">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Marca</mat-label>
-      <input type="email" matInput formControlName="brand">
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Categoria</mat-label>
-      <mat-select formControlName="categorySupplyId" class="text-uppercase">
-        <mat-option *ngFor="let categorySupply of categorySupplies" [value]="categorySupply._id">{{ categorySupply.name | uppercase }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <div class="mb-3">
-      <button type="button" class="w-100" mat-flat-button color="primary" (click)="onAddCategory()">NUEVA CATEGORIA</button>
-    </div>
-    <mat-form-field appearance="fill">
-      <mat-label>Unidad de medida</mat-label>
-      <mat-select formControlName="unitCode">
-        <mat-option *ngFor="let unitCode of unitCodes" [value]="unitCode.code">{{ unitCode.name }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Costo</mat-label>
-      <input type="text" matInput formControlName="cost">
-    </mat-form-field>
-    <div class="d-flex">
-      <span class="spacer"></span>
-      <button type="button" mat-raised-button routerLink="/products" color="primary">CANCELAR</button>
-      <span class="divider"></span>
-      <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
-    </div>
-  </form>
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+        <mat-form-field appearance="fill">
+            <mat-label>Nombre</mat-label>
+            <input type="text" matInput formControlName="name">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Variante</mat-label>
+            <input type="text" matInput formControlName="feature">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Marca</mat-label>
+            <input type="email" matInput formControlName="brand">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Categoria</mat-label>
+            <mat-select formControlName="categorySupplyId" class="text-uppercase">
+                @for (categorySupply of categorySupplies; track categorySupply._id) {
+                <mat-option [value]="categorySupply._id">{{
+                    categorySupply.name | uppercase }}
+                </mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <div class="mb-3">
+            <button type="button" class="w-100" mat-flat-button color="primary" (click)="onAddCategory()">
+                NUEVA CATEGORIA
+            </button>
+        </div>
+        <mat-form-field appearance="fill">
+            <mat-label>Unidad de medida</mat-label>
+            <mat-select formControlName="unitCode">
+                @for (unitCode of unitCodes; track $index) {
+                <mat-option [value]="unitCode.code">{{ unitCode.name }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Costo</mat-label>
+            <input type="text" matInput formControlName="cost">
+        </mat-form-field>
+        <div class="d-flex">
+            <span class="spacer"></span>
+            <button type="button" mat-raised-button routerLink="/products" color="primary">CANCELAR</button>
+            <span class="divider"></span>
+            <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
+        </div>
+    </form>
 </div>

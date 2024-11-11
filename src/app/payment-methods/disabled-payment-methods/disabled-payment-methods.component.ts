@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PaymentMethodsService } from '../payment-methods.service';
 import { NavigationService } from '../../navigation/navigation.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { HttpErrorResponse } from '@angular/common/http';
     templateUrl: './disabled-payment-methods.component.html',
     styleUrls: ['./disabled-payment-methods.component.sass']
 })
-export class DisabledPaymentMethodsComponent implements OnInit {
+export class DisabledPaymentMethodsComponent {
 
     constructor(
         private readonly paymentMethodsService: PaymentMethodsService,

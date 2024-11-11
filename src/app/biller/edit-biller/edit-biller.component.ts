@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -38,7 +38,7 @@ import { DirectivesModule } from '../../directives/directives.module';
     templateUrl: './edit-biller.component.html',
     styleUrls: ['./edit-biller.component.sass']
 })
-export class EditBillerComponent implements OnInit {
+export class EditBillerComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

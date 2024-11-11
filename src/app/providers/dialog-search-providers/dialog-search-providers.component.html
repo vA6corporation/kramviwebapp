@@ -4,28 +4,32 @@
         <mat-form-field appearance="fill">
             <mat-label>Tipo de Busqueda</mat-label>
             <mat-select formControlName="searchType" #searchType tabindex="-1">
-                <mat-option *ngFor="let element of searchTypes" [value]="element.code">{{ element.name }}</mat-option>
+                @for (searchType of searchTypes; track $index) {
+                <mat-option [value]="searchType.code">{{ searchType.name }}</mat-option>
+                }
             </mat-select>
         </mat-form-field>
-        <mat-form-field appearance="fill" *ngIf="searchType.value === 'NAME'; else elseBlock">
-            <mat-label>Busqueda</mat-label>
-            <input type="text" matInput formControlName="key" (keyup.enter)="onChangeKey()">
-            <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
-        <ng-template #elseBlock>
+        @if (searchType.value === 'NAME') {
+            <mat-form-field appearance="fill">
+                <mat-label>Busqueda</mat-label>
+                <input type="text" matInput formControlName="key" (keyup.enter)="onChangeKey()">
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+        } @else {
             <mat-form-field appearance="fill">
                 <mat-label>Busqueda</mat-label>
                 <input type="text" matInput formControlName="key" (input)="onChangeKey()">
                 <mat-icon matSuffix>search</mat-icon>
             </mat-form-field>
-        </ng-template>
+        }
         <mat-action-list>
-            <button mat-list-item *ngFor="let provider of providers" (click)="onSelectProvider(provider)">
-                <span matListItemTitle>{{ provider.name | uppercase }}</span>
-                <span matListItemLine>{{ provider.documentType }}: {{ provider.document }}</span>
-            </button>
+            @for (provider of providers; track provider._id) {
+                <button mat-list-item (click)="onSelectProvider(provider)">
+                    <span matListItemTitle>{{ provider.name | uppercase }}</span>
+                    <span matListItemLine>{{ provider.documentType }}: {{ provider.document }}</span>
+                </button>
+            }
         </mat-action-list>
-        <div class="py-3"></div>
     </div>
     <mat-dialog-actions>
         <span class="spacer"></span>

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -14,7 +14,7 @@ import { PaymentPurchasesService } from '../payment-purchases.service';
     templateUrl: './dialog-payment-purchases.component.html',
     styleUrls: ['./dialog-payment-purchases.component.sass']
 })
-export class DialogPaymentPurchasesComponent implements OnInit {
+export class DialogPaymentPurchasesComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -56,12 +56,14 @@ export class DialogPaymentPurchasesComponent implements OnInit {
                 charge,
                 purchaseId: this.purchaseId,
             }
-            this.paymentPurchasesService.create(createPaymentPurchase, this.purchaseId).subscribe(() => {
-                this.dialogRef.close(true)
-                this.navigationService.showMessage('Registrado correctamente')
-            }, (error: HttpErrorResponse) => {
-                this.isLoading = false
-                this.navigationService.showMessage(error.error.message)
+            this.paymentPurchasesService.create(createPaymentPurchase, this.purchaseId).subscribe({
+                next: () => {
+                    this.dialogRef.close(true)
+                    this.navigationService.showMessage('Registrado correctamente')
+                }, error: (error: HttpErrorResponse) => {
+                    this.isLoading = false
+                    this.navigationService.showMessage(error.error.message)
+                }
             })
         }
     }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FavoritesService } from '../../favorites/favorites.service';
 import { NavigationService } from '../../navigation/navigation.service';
 import { ProductsService } from '../../products/products.service';
@@ -18,7 +18,7 @@ import { ActivatedRoute } from '@angular/router';
     templateUrl: './pos-edit-moves.component.html',
     styleUrls: ['./pos-edit-moves.component.sass']
 })
-export class PosEditMovesComponent implements OnInit {
+export class PosEditMovesComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

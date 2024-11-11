@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -21,7 +21,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './credit-providers.component.html',
     styleUrls: ['./credit-providers.component.sass']
 })
-export class CreditProvidersComponent implements OnInit {
+export class CreditProvidersComponent {
 
     constructor(
         private readonly providersService: ProvidersService,

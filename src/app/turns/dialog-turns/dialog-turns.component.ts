@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './dialog-turns.component.html',
     styleUrls: ['./dialog-turns.component.sass']
 })
-export class DialogTurnsComponent implements OnInit {
+export class DialogTurnsComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -26,7 +26,7 @@ export class DialogTurnsComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        openCash: [null, Validators.required]
+        openCash: ['', Validators.required]
     })
 
     private handleAuth$: Subscription = new Subscription()

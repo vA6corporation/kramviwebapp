@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { DialogDetailIncidentSuppliesComponent } from '../../incident-supplies/dialog-detail-incident-supplies/dialog-detail-incident-supplies.component';
@@ -20,7 +20,7 @@ import { SaleSupplyItemModel } from '../sale-supply-item.model';
     templateUrl: './detail-inventory-supplies.component.html',
     styleUrls: ['./detail-inventory-supplies.component.sass']
 })
-export class DetailInventorySuppliesComponent implements OnInit {
+export class DetailInventorySuppliesComponent {
 
     constructor(
         private readonly activatedRoute: ActivatedRoute,

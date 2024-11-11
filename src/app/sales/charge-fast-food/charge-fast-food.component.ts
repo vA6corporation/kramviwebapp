@@ -1,6 +1,6 @@
 import { CommonModule, Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -39,7 +39,7 @@ import { DirectivesModule } from '../../directives/directives.module';
     templateUrl: './charge-fast-food.component.html',
     styleUrls: ['./charge-fast-food.component.sass']
 })
-export class ChargeFastFoodComponent implements OnInit {
+export class ChargeFastFoodComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -313,48 +313,50 @@ export class ChargeFastFoodComponent implements OnInit {
             this.isLoading = true
             this.navigationService.loadBarStart()
 
-            this.salesService.saveSale(createdSale, this.saleItems, this.payments, {}).subscribe(sale => {
+            this.salesService.createSale(createdSale, this.saleItems, this.payments, [], {}).subscribe({
+                next: sale => {
 
-                let payments: CreatePaymentModel[] = []
+                    let payments: CreatePaymentModel[] = []
 
-                if (this.payments.length) {
-                    payments = this.payments
-                } else {
-                    payments[0] = {
-                        paymentMethodId: createdSale.paymentMethodId || '',
-                        charge: sale.charge,
-                        turnId: sale.turnId,
-                        createdAt: new Date(),
+                    if (this.payments.length) {
+                        payments = this.payments
+                    } else {
+                        payments[0] = {
+                            paymentMethodId: createdSale.paymentMethodId || '',
+                            charge: sale.charge,
+                            turnId: sale.turnId,
+                            createdAt: new Date(),
+                        }
                     }
+
+                    Object.assign(sale, {
+                        user: this.user,
+                        customer: this.customer,
+                        saleItems: this.saleItems,
+                        worker: this.workers.find(e => e._id === sale.workerId),
+                        referred: this.workers.find(e => e._id === sale.referredId),
+                        payments,
+                    })
+
+                    switch (this.setting.papelImpresion) {
+                        case 'ticket58mm':
+                            this.printService.printTicket58mm(sale)
+                            break
+                        default:
+                            this.printService.printTicket80mm(sale)
+                            break
+                    }
+
+                    this.salesService.setSaleItems([])
+                    this.location.back()
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage('Registrado correctamente')
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
                 }
-
-                Object.assign(sale, {
-                    user: this.user,
-                    customer: this.customer,
-                    saleItems: this.saleItems,
-                    worker: this.workers.find(e => e._id === sale.workerId),
-                    referred: this.workers.find(e => e._id === sale.referredId),
-                    payments,
-                })
-
-                switch (this.setting.papelImpresion) {
-                    case 'ticket58mm':
-                        this.printService.printTicket58mm(sale)
-                        break
-                    default:
-                        this.printService.printTicket80mm(sale)
-                        break
-                }
-
-                this.salesService.setSaleItems([])
-                this.location.back()
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
-                this.navigationService.showMessage('Registrado correctamente')
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message)
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
             })
         } catch (error) {
             if (error instanceof Error) {

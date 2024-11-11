@@ -1,17 +1,16 @@
 <h2 mat-dialog-title>Notas de credito</h2>
 <div mat-dialog-content>
-    <ng-container *ngIf="creditNotes.length; else elseBlock">
-        <mat-action-list *ngFor="let element of creditNotes">
-            <button mat-list-item (click)="onPrintCreditNote(element._id)">
-                {{ element.invoicePrefix }}{{ office.serialPrefix }}-{{ element.invoiceNumber }}
+    @for (creditNote of creditNotes; track creditNote._id) {
+        <mat-action-list>
+            <button mat-list-item (click)="onPrintCreditNote(creditNote._id)">
+                {{ creditNote.invoicePrefix }}{{ office.serialPrefix }}-{{ creditNote.invoiceNumber }}
                 <span class="spacer"></span>
-                {{ element.charge.toFixed(2) }}
+                {{ creditNote.charge.toFixed(2) }}
             </button>
         </mat-action-list>
-    </ng-container>
-    <ng-template #elseBlock>
+    } @empty {
         <h2 class="text-center text-muted">Sin notas de credito</h2>
-    </ng-template>
+    }
 </div>
 <mat-dialog-actions>
     <span class="spacer"></span>

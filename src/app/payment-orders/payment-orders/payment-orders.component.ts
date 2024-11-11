@@ -1,6 +1,6 @@
 import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
@@ -23,7 +23,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './payment-orders.component.html',
     styleUrls: ['./payment-orders.component.sass']
 })
-export class PaymentOrdersComponent implements OnInit {
+export class PaymentOrdersComponent {
 
     constructor(
         private readonly paymentOrdersService: PaymentOrdersService,

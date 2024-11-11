@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { CarriersService } from '../carriers.service';
     templateUrl: './carriers.component.html',
     styleUrls: ['./carriers.component.sass']
 })
-export class CarriersComponent implements OnInit {
+export class CarriersComponent {
 
     constructor(
         private readonly carriersService: CarriersService,

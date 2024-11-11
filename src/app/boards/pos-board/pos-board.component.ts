@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -36,7 +36,7 @@ import { BoardItemsComponent } from '../board-items/board-items.component';
     templateUrl: './pos-board.component.html',
     styleUrls: ['./pos-board.component.sass']
 })
-export class PosBoardComponent implements OnInit {
+export class PosBoardComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

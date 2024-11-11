@@ -46,10 +46,12 @@
             </div>
             <table class="w-100">
                 <tbody>
-                    <tr *ngFor="let summaryPayment of summaryPayments">
+                    @for (summaryPayment of summaryPayments; track $index) {
+                    <tr>
                         <td>{{ summaryPayment.paymentMethod.name }} ({{ summaryPayment.totalQuantity }})</td>
                         <td align="right">{{ summaryPayment.totalCharge.toFixed(2) }}</td>
                     </tr>
+                    }
                 </tbody>
             </table>
         </mat-card-content>
@@ -59,12 +61,13 @@
             <mat-card-title>Gastos</mat-card-title>
         </mat-card-header>
         <mat-action-list>
-            <button type="button" (click)="onEditExpense(expense)" class="m-1 text-uppercase" mat-list-item
-                *ngFor="let expense of expenses">
+            @for (expense of expenses; track expense._id) {
+            <button type="button" (click)="onEditExpense(expense)" class="m-1 text-uppercase" mat-list-item>
                 {{ expense.concept }}
                 <span class="spacer"></span>
                 {{ expense.charge.toFixed(2) }}
             </button>
+            }
         </mat-action-list>
     </mat-card>
     <ng-template #elseBlock>
@@ -82,17 +85,17 @@
             <table class="w-100 mb-3">
                 <tbody>
                     @for (summarySaleItem of summarySaleItems; track summarySaleItem._id) {
-                        <tr>
-                            <td>
-                                {{ summarySaleItem.fullName | uppercase }} ({{ summarySaleItem.totalQuantity }})
-                                @if (summarySaleItem.totalQuantityBonus) {
-                                    <span class="ml-3 text-success">
-                                        Bonificacion ({{ summarySaleItem.totalQuantityBonus }})
-                                    </span>
-                                }
-                            </td>
-                            <td align="right">{{ summarySaleItem.totalSale.toFixed(2) }}</td>
-                        </tr>
+                    <tr>
+                        <td>
+                            {{ summarySaleItem.fullName | uppercase }} ({{ summarySaleItem.totalQuantity }})
+                            @if (summarySaleItem.totalQuantityBonus) {
+                            <span class="ml-3 text-success">
+                                Bonificacion ({{ summarySaleItem.totalQuantityBonus }})
+                            </span>
+                            }
+                        </td>
+                        <td align="right">{{ summarySaleItem.totalSale.toFixed(2) }}</td>
+                    </tr>
                     }
                 </tbody>
             </table>
@@ -122,7 +125,8 @@
                     </span>
                     }
                     <span matListItemLine>
-                        {{ credit.user.name | uppercase }} - {{ credit.createdAt | date: 'dd/MM/yyyy' }} - PENDIENTE: {{ (credit.debt).toFixed(2) }}
+                        {{ credit.user.name | uppercase }} - {{ credit.createdAt | date: 'dd/MM/yyyy' }} - PENDIENTE: {{
+                        (credit.debt).toFixed(2) }}
                     </span>
                 </button>
                 }
@@ -137,7 +141,8 @@
             <mat-action-list role="list">
                 @for (sale of sales; track sale._id) {
                 <button mat-list-item (click)="onShowSheet(sale._id)">
-                    <span matListItemTitle>{{ sale.invoicePrefix }}{{ office.serialPrefix }}-{{ sale.invoiceNumber }}</span>
+                    <span matListItemTitle>{{ sale.invoicePrefix }}{{ office.serialPrefix }}-{{ sale.invoiceNumber
+                        }}</span>
                     <span matListItemLine>
                         @for (payment of sale.payments; track payment._id) {
                         @for (paymentMethod of paymentMethods; track paymentMethod._id) {
@@ -147,7 +152,8 @@
                         }
                         }
                     </span>
-                    <span matListItemLine>{{ sale.user.name | uppercase }} - {{ sale.createdAt | date: 'dd/MM/yyyy' }}</span>
+                    <span matListItemLine>{{ sale.user.name | uppercase }} - {{ sale.createdAt | date: 'dd/MM/yyyy'
+                        }}</span>
                 </button>
                 }
             </mat-action-list>

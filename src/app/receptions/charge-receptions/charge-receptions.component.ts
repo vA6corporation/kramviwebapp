@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Params, Router } from '@angular/router';
@@ -40,7 +40,7 @@ import { ReceptionsService } from '../receptions.service';
     templateUrl: './charge-receptions.component.html',
     styleUrls: ['./charge-receptions.component.sass']
 })
-export class ChargeReceptionsComponent implements OnInit {
+export class ChargeReceptionsComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -328,22 +328,6 @@ export class ChargeReceptionsComponent implements OnInit {
                 rcPercent: this.setting.defaultRcPercent
             }
 
-            // const saleItem: CreateSaleItemModel = {
-            //     fullName: this.room.name,
-            //     onModel: 'Room',
-            //     productId: this.room._id,
-            //     price: this.reception.charge,
-            //     quantity: 1,
-            //     isTrackStock: false,
-            //     unitCode: 'ZZ',
-            //     igvCode: IgvType.GRAVADO,
-            //     preIgvCode: IgvType.GRAVADO,
-            //     observations: '',
-            //     prices: [],
-            // }
-
-            // this.saleItems = this.receptionItems
-
             if (!this.saleItems.length) {
                 throw new Error("Agrega un producto")
             }
@@ -361,7 +345,7 @@ export class ChargeReceptionsComponent implements OnInit {
             this.isLoading = true
             this.navigationService.loadBarStart()
 
-            this.salesService.saveSale(createdSale, this.saleItems, this.payments, this.params).subscribe({
+            this.salesService.createSale(createdSale, this.saleItems, this.payments, [], this.params).subscribe({
                 next: sale => {
 
                     let payments: CreatePaymentModel[] = []

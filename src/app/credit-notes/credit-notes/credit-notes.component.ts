@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
@@ -29,7 +29,7 @@ import { SheetPrintCreditNotesComponent } from '../sheet-print-credit-notes/shee
     templateUrl: './credit-notes.component.html',
     styleUrls: ['./credit-notes.component.sass']
 })
-export class CreditNotesComponent implements OnInit {
+export class CreditNotesComponent {
 
     constructor(
         private readonly creditNotesService: CreditNotesService,

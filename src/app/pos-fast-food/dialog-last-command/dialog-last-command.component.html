@@ -1,8 +1,10 @@
 <h2 class="mat-title-large">Imprimir comanda</h2>
 <div mat-dialog-content>
-    <mat-action-list *ngFor="let element of boards">
-        <button mat-list-item (click)="printBoard(element._id)">
-            N° {{ element.ticketNumber }}
+    @for (board of boards; track board._id) {
+    <mat-action-list>
+        <button mat-list-item (click)="printBoard(board._id)">
+            N° {{ board.ticketNumber }}
         </button>
     </mat-action-list>
+    }
 </div>

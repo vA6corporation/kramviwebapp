@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -16,7 +16,7 @@ import { PurchasesService } from '../../purchases/purchases.service';
     templateUrl: './dialog-add-stock.component.html',
     styleUrls: ['./dialog-add-stock.component.sass']
 })
-export class DialogAddStockComponent implements OnInit {
+export class DialogAddStockComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -29,7 +29,7 @@ export class DialogAddStockComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        quantity: [null, Validators.required],
+        quantity: ['', Validators.required],
         paymentMethodId: '',
         cost: this.product.cost,
         purchasedAt: new Date(),

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -17,7 +17,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './dialog-observation-turn.component.html',
     styleUrls: ['./dialog-observation-turn.component.sass']
 })
-export class DialogObservationTurnComponent implements OnInit {
+export class DialogObservationTurnComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

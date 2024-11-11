@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -16,7 +16,7 @@ import { SettingModel } from '../../auth/setting.model';
     templateUrl: './create-rooms.component.html',
     styleUrls: ['./create-rooms.component.sass']
 })
-export class CreateRoomsComponent implements OnInit {
+export class CreateRoomsComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

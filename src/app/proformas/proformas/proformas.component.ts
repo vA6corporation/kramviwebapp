@@ -1,6 +1,6 @@
 import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
@@ -29,7 +29,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './proformas.component.html',
     styleUrls: ['./proformas.component.sass']
 })
-export class ProformasComponent implements OnInit {
+export class ProformasComponent {
 
     constructor(
         private readonly proformasService: ProformasService,

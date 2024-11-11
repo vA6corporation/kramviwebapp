@@ -7,10 +7,11 @@
                     Categorias
                 </ng-template>
                 <mat-grid-list cols="4" rowHeight="4:2" class="text-uppercase text-center">
-                    <mat-grid-tile (click)="onSelectCategorySupply(categorySupply)" [style.background]="'lightgreen'"
-                        *ngFor="let categorySupply of categorySupplies">
+                    @for (categorySupply of categorySupplies; track categorySupply._id) {
+                    <mat-grid-tile (click)="onSelectCategorySupply(categorySupply)" [style.background]="'lightgreen'">
                         {{ categorySupply.name }}
                     </mat-grid-tile>
+                    }
                 </mat-grid-list>
             </mat-tab>
             <mat-tab>
@@ -18,12 +19,14 @@
                     Categorias
                 </ng-template>
                 <mat-grid-list cols="4" rowHeight="4:2" class="text-uppercase text-center">
-                    <mat-grid-tile (click)="onClickSupply(supply)" *ngFor="let supply of filterSupplies">
+                    @for (supply of filterSupplies; track supply._id) {
+                    <mat-grid-tile (click)="onClickSupply(supply)">
                         {{ supply.fullName }}
                         <small class="text-muted text-price">
                             {{ supply.cost.toFixed(2) }}
                         </small>
                     </mat-grid-tile>
+                    }
                 </mat-grid-list>
             </mat-tab>
         </mat-tab-group>

@@ -1,6 +1,6 @@
 import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -40,7 +40,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './detail-turns.component.html',
     styleUrls: ['./detail-turns.component.sass']
 })
-export class DetailTurnsComponent implements OnInit {
+export class DetailTurnsComponent {
 
     constructor(
         private readonly turnsService: TurnsService,

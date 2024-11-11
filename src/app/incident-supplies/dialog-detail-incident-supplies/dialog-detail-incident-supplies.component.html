@@ -1,35 +1,37 @@
 <h2 mat-dialog-title>Detalles</h2>
 <div mat-dialog-content>
-  <table class="w-100">
-    <tbody>
-      <tr>
-        <td>F/H de registro</td>
-        <td align="right">{{ incidentSupply?.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</td>
-      </tr>
-      <tr>
-        <td>Motivo</td>
-        <td align="right">{{ incidentSupply?.incidentType }}</td>
-      </tr>
-      <tr>
-        <td>Observaciones</td>
-        <td align="right">{{ incidentSupply?.observations || 'NINGUNO' }}</td>
-      </tr>
-      <tr>
-      <tr>
-        <td>Usuario</td>
-        <td align="right">{{ user?.name }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <mat-divider class="mb-0"></mat-divider>
-  <mat-list class="m-0">
-    <mat-list-item *ngFor="let incidentSupplyItem of incidentSupplyItems">
-      {{ incidentSupplyItem.fullName }}
-      <span class="ml-2 text-muted">x{{ incidentSupplyItem.quantity }}</span>
-    </mat-list-item>
-  </mat-list>
+    <table class="w-100">
+        <tbody>
+            <tr>
+                <td>F/H de registro</td>
+                <td align="right">{{ incidentSupply?.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</td>
+            </tr>
+            <tr>
+                <td>Motivo</td>
+                <td align="right">{{ incidentSupply?.incidentType }}</td>
+            </tr>
+            <tr>
+                <td>Observaciones</td>
+                <td align="right">{{ incidentSupply?.observations || 'NINGUNO' }}</td>
+            </tr>
+            <tr>
+            <tr>
+                <td>Usuario</td>
+                <td align="right">{{ user?.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <mat-divider class="mb-0"></mat-divider>
+    <mat-list class="m-0">
+        @for (incidentSupplyItem of incidentSupplyItems; track incidentSupplyItem._id) {
+            <mat-list-item>
+                {{ incidentSupplyItem.fullName }}
+                <span class="ml-2 text-muted">x{{ incidentSupplyItem.quantity }}</span>
+            </mat-list-item>
+        }
+    </mat-list>
 </div>
 <mat-dialog-actions>
-  <span class="spacer"></span>
-  <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
 </mat-dialog-actions>

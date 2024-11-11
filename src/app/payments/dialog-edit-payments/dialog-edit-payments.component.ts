@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -11,7 +11,7 @@ import { PaymentModel } from '../payment.model';
     templateUrl: './dialog-edit-payments.component.html',
     styleUrls: ['./dialog-edit-payments.component.sass']
 })
-export class DialogEditPaymentsComponent implements OnInit {
+export class DialogEditPaymentsComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

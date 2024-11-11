@@ -1,18 +1,21 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Observable, Subject } from 'rxjs';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategorySuppliesService } from '../category-supplies.service';
 import { CategorySupplyModel } from '../category-supply.model';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-create-category-supplies',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-create-category-supplies.component.html',
     styleUrls: ['./dialog-create-category-supplies.component.sass']
 })
-export class DialogCreateCategorySuppliesComponent implements OnInit {
+export class DialogCreateCategorySuppliesComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -22,14 +25,10 @@ export class DialogCreateCategorySuppliesComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        name: [null, Validators.required]
-    });
-
+        name: ['', Validators.required]
+    })
     private onSave$: Subject<CategorySupplyModel> = new Subject()
     isLoading: boolean = false
-
-    ngOnInit(): void {
-    }
 
     handleSaveCategorySupply(): Observable<CategorySupplyModel> {
         return this.onSave$.asObservable()

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavigationService } from '../../navigation/navigation.service';
 import { SuppliesService } from '../../supplies/supplies.service';
 import { SupplyModel } from '../../supplies/supply.model';
@@ -12,7 +12,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './supplies.component.html',
     styleUrls: ['./supplies.component.sass']
 })
-export class SuppliesComponent implements OnInit {
+export class SuppliesComponent {
 
     constructor(
         private readonly suppliesService: SuppliesService,

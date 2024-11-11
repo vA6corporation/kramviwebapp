@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -19,7 +19,7 @@ export interface DialogDueData {
     templateUrl: './dialog-dues.component.html',
     styleUrls: ['./dialog-dues.component.sass']
 })
-export class DialogDuesComponent implements OnInit {
+export class DialogDuesComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -14,7 +14,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './dialog-password.component.html',
     styleUrls: ['./dialog-password.component.sass']
 })
-export class DialogPasswordComponent implements OnInit {
+export class DialogPasswordComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

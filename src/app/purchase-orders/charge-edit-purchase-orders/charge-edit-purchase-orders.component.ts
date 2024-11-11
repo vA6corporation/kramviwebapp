@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -18,7 +18,7 @@ import { DialogSearchProvidersComponent } from '../../providers/dialog-search-pr
     templateUrl: './charge-edit-purchase-orders.component.html',
     styleUrls: ['./charge-edit-purchase-orders.component.sass']
 })
-export class ChargeEditPurchaseOrdersComponent implements OnInit {
+export class ChargeEditPurchaseOrdersComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

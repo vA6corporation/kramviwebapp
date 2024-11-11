@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Params } from '@angular/router';
 import { Chart, ChartOptions, ChartType } from 'chart.js';
@@ -23,7 +23,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './invoices.component.html',
     styleUrls: ['./invoices.component.sass']
 })
-export class InvoicesComponent implements OnInit {
+export class InvoicesComponent {
 
     constructor(
         private readonly reportsService: ReportsService,

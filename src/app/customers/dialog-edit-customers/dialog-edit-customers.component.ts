@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CustomerForm } from '../customer.form';
@@ -16,7 +16,7 @@ import { NavigationService } from '../../navigation/navigation.service';
     templateUrl: './dialog-edit-customers.component.html',
     styleUrls: ['./dialog-edit-customers.component.sass']
 })
-export class DialogEditCustomersComponent implements OnInit {
+export class DialogEditCustomersComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

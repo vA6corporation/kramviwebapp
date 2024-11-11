@@ -28,6 +28,9 @@
             Stock: Venta libre
         </mat-list-item>
     }
+    @if (product.urlImage) {
+        <img [src]="product.urlImage" class="w-100" alt="Product image">
+    }
 </mat-list>
 <mat-dialog-actions>
     <span class="spacer"></span>

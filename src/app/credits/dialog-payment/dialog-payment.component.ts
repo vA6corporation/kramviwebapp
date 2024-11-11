@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,7 @@ export interface DialogPaymentData {
     templateUrl: './dialog-payment.component.html',
     styleUrls: ['./dialog-payment.component.sass']
 })
-export class DialogPaymentComponent implements OnInit {
+export class DialogPaymentComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -30,7 +30,7 @@ export class DialogPaymentComponent implements OnInit {
         saleId: this.data.saleId,
         paymentMethodId: '',
         observations: '',
-        charge: [null, Validators.required],
+        charge: ['', Validators.required],
     })
     paymentMethods: PaymentMethodModel[] = []
 

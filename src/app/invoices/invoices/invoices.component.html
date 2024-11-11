@@ -13,27 +13,33 @@
             <mat-form-field appearance="fill">
                 <mat-label>Tipo de comprobante</mat-label>
                 <mat-select formControlName="invoiceType" (selectionChange)="onInvoiceChange($event.value)">
-                    <mat-option *ngFor="let element of invoiceTypes" [value]="element.code">
-                        {{ element.label }}
+                    @for (invoiceType of invoiceTypes; track $index) {
+                    <mat-option [value]="invoiceType.code">
+                        {{ invoiceType.label }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Estado de comprobante</mat-label>
                 <mat-select formControlName="stateType" (selectionChange)="onStateChange($event.value)">
                     <mat-option value="">TODOS LOS ESTADOS</mat-option>
-                    <mat-option *ngFor="let element of stateTypes" [value]="element.code" class="text-uppercase">
-                        {{ element.label }}
+                    @for (stateType of stateTypes; track $index) {
+                    <mat-option [value]="stateType.code" class="text-uppercase">
+                        {{ stateType.label }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Usuario</mat-label>
                 <mat-select formControlName="userId" (selectionChange)="onUserChange($event.value)">
                     <mat-option value="">TODOS LOS USUARIOS</mat-option>
-                    <mat-option *ngFor="let element of users" [value]="element._id" class="text-uppercase">
-                        {{ element.name | uppercase }}
+                    @for (user of users; track user._id) {
+                    <mat-option [value]="user._id" class="text-uppercase">
+                        {{ user.name | uppercase }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
         </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -11,7 +11,7 @@ import { PrintersService } from '../printers.service';
     templateUrl: './printers.component.html',
     styleUrls: ['./printers.component.sass']
 })
-export class PrintersComponent implements OnInit {
+export class PrintersComponent {
 
     constructor(
         private readonly matDialog: MatDialog,

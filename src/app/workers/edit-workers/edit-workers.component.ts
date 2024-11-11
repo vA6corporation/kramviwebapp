@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -10,7 +10,7 @@ import { WorkersService } from '../workers.service';
     templateUrl: './edit-workers.component.html',
     styleUrls: ['./edit-workers.component.sass']
 })
-export class EditWorkersComponent implements OnInit {
+export class EditWorkersComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -20,41 +20,41 @@ export class EditWorkersComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        documentType: [null, Validators.required],
-        document: [null, Validators.required],
-        name: [null, Validators.required],
-        email: null,
-        mobileNumber: null,
-        birthDate: null,
-        address: null,
-    });
-    isLoading: boolean = false;
-    maxLength: number = 11;
-    private workerId: string = '';
+        documentType: ['', Validators.required],
+        document: ['', Validators.required],
+        name: ['', Validators.required],
+        email: '',
+        mobileNumber: '',
+        birthDate: '',
+        address: '',
+    })
+    isLoading: boolean = false
+    maxLength: number = 11
+    private workerId: string = ''
 
     ngOnInit(): void {
-        this.navigationService.setTitle('Editar personal');
+        this.navigationService.setTitle('Editar personal')
 
-        this.workerId = this.activatedRoute.snapshot.params['workerId'];
+        this.workerId = this.activatedRoute.snapshot.params['workerId']
         this.workersService.getWorkerById(this.workerId).subscribe(worker => {
-            this.formGroup.patchValue(worker);
-        });
+            this.formGroup.patchValue(worker)
+        })
     }
 
     onSubmit(): void {
         if (this.formGroup.valid) {
-            this.isLoading = true;
-            this.navigationService.loadBarStart();
+            this.isLoading = true
+            this.navigationService.loadBarStart()
             this.workersService.update(this.formGroup.value, this.workerId).subscribe({
                 next: () => {
-                    this.isLoading = false;
-                    this.navigationService.loadBarFinish();
-                    this.workersService.loadWorkers();
-                    this.navigationService.showMessage('Se han guardado los cambios');
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.workersService.loadWorkers()
+                    this.navigationService.showMessage('Se han guardado los cambios')
                 }, error: (error: HttpErrorResponse) => {
-                    this.isLoading = false;
-                    this.navigationService.loadBarFinish();
-                    this.navigationService.showMessage(error.error.message);
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage(error.error.message)
                 }
             })
         }

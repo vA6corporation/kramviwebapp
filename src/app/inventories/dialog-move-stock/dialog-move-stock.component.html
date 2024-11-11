@@ -9,8 +9,9 @@
             <mat-form-field appearance="fill">
                 <mat-label>Seleccione sucursal</mat-label>
                 <mat-select formControlName="toOfficeId">
-                    <mat-option *ngFor="let element of offices" [value]="element._id">{{ element.name | uppercase
-                        }}</mat-option>
+                    @for (office of offices; track office._id) {
+                    <mat-option [value]="office._id">{{ office.name | uppercase }}</mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">

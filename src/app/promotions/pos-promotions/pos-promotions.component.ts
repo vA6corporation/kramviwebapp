@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http'
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -27,7 +27,7 @@ import { environment } from '../../../environments/environment';
     templateUrl: './pos-promotions.component.html',
     styleUrls: ['./pos-promotions.component.sass']
 })
-export class PosPromotionsComponent implements OnInit {
+export class PosPromotionsComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

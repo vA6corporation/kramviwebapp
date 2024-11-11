@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -35,7 +35,7 @@ interface FormData {
     templateUrl: './create-credit-notes.component.html',
     styleUrls: ['./create-credit-notes.component.sass']
 })
-export class CreateCreditNotesComponent implements OnInit {
+export class CreateCreditNotesComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

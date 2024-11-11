@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
@@ -23,7 +23,7 @@ import { IncidentsService } from '../incidents.service';
     templateUrl: './incidents.component.html',
     styleUrls: ['./incidents.component.sass']
 })
-export class IncidentsComponent implements OnInit {
+export class IncidentsComponent {
 
     constructor(
         private readonly incidentsService: IncidentsService,
@@ -39,8 +39,8 @@ export class IncidentsComponent implements OnInit {
     formGroup: FormGroup = this.formBuilder.group({
         invoiceType: '',
         userId: '',
-        startDate: [null, Validators.required],
-        endDate: [null, Validators.required],
+        startDate: ['', Validators.required],
+        endDate: ['', Validators.required],
     })
     users: UserModel[] = []
     displayedColumns: string[] = ['created', 'product', 'quantity', 'reason', 'user', 'observations', 'actions']

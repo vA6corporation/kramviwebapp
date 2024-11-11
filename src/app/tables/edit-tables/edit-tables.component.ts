@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -10,7 +10,7 @@ import { TablesService } from '../tables.service';
     templateUrl: './edit-tables.component.html',
     styleUrls: ['./edit-tables.component.sass']
 })
-export class EditTablesComponent implements OnInit {
+export class EditTablesComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -20,7 +20,7 @@ export class EditTablesComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        name: [null, Validators.required],
+        name: ['', Validators.required],
         deletedAt: null
     })
     isLoading: boolean = false

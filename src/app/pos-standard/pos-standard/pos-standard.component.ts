@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -23,6 +23,9 @@ import { DialogLastSalesComponent } from '../../sales/dialog-last-sales/dialog-l
 import { DialogSaleItemsComponent } from '../../sales/dialog-sale-items/dialog-sale-items.component';
 import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component';
 import { SalesService } from '../../sales/sales.service';
+import { CouponsService } from '../../coupons/coupons.service';
+import { CouponModel } from '../../coupons/coupon.model';
+import { DialogCouponsComponent } from '../../coupons/dialog-coupons/dialog-coupons.component';
 
 @Component({
     selector: 'app-pos-standard',
@@ -31,13 +34,14 @@ import { SalesService } from '../../sales/sales.service';
     templateUrl: './pos-standard.component.html',
     styleUrls: ['./pos-standard.component.sass']
 })
-export class PosStandardComponent implements OnInit {
+export class PosStandardComponent {
 
     constructor(
         private readonly navigationService: NavigationService,
         private readonly productsService: ProductsService,
         private readonly categoriesService: CategoriesService,
         private readonly favoritesService: FavoritesService,
+        private readonly couponsService: CouponsService,
         private readonly salesService: SalesService,
         private readonly authService: AuthService,
         private readonly matDialog: MatDialog,
@@ -55,11 +59,12 @@ export class PosStandardComponent implements OnInit {
     setting: SettingModel = new SettingModel()
     office: OfficeModel = new OfficeModel()
     lots: LotModel[] = []
+    coupons: CouponModel[] = []
     private sortByName: boolean = true
 
     private handleSearch$: Subscription = new Subscription()
     private handleClickMenu$: Subscription = new Subscription()
-    private handleSaleItems$: Subscription = new Subscription()
+    private handleCoupons$: Subscription = new Subscription()
     private handlePriceLists$: Subscription = new Subscription()
     private handleFavorites$: Subscription = new Subscription()
     private handleCategories$: Subscription = new Subscription()
@@ -68,7 +73,7 @@ export class PosStandardComponent implements OnInit {
     ngOnDestroy() {
         this.handleSearch$.unsubscribe()
         this.handleClickMenu$.unsubscribe()
-        this.handleSaleItems$.unsubscribe()
+        this.handleCoupons$.unsubscribe()
         this.handlePriceLists$.unsubscribe()
         this.handleFavorites$.unsubscribe()
         this.handleCategories$.unsubscribe()
@@ -102,6 +107,10 @@ export class PosStandardComponent implements OnInit {
                 ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
                 this.favorites = products
             })
+        })
+
+        this.handleCoupons$ = this.couponsService.handleCoupons().subscribe(coupons => {
+            this.coupons = coupons
         })
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
@@ -185,6 +194,13 @@ export class PosStandardComponent implements OnInit {
         })
     }
 
+    onDialogCoupons() {
+        this.matDialog.open(DialogCouponsComponent, {
+            width: '600px',
+            position: { top: '20px' },
+        })
+    }
+
     onSelectCategory(category: CategoryModel) {
         this.selectedIndex = 2
         this.products = []
@@ -242,7 +258,6 @@ export class PosStandardComponent implements OnInit {
     }
 
     urlImage(product: ProductModel) {
-        console.log(product.urlImage)
         const styleObject: any = {}
         if (product.urlImage) {
             styleObject['background-image'] = `url(${decodeURIComponent(product.urlImage)})`

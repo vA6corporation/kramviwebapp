@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterModule } from '@angular/router';
@@ -35,7 +35,7 @@ import { DialogSearchProvidersComponent } from '../../providers/dialog-search-pr
     templateUrl: './create-products.component.html',
     styleUrls: ['./create-products.component.sass']
 })
-export class CreateProductsComponent implements OnInit {
+export class CreateProductsComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

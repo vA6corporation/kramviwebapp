@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -33,7 +33,7 @@ import { IgvCodeModel, ProductsService, UnitCodeModel } from '../products.servic
     templateUrl: './edit-products.component.html',
     styleUrls: ['./edit-products.component.sass']
 })
-export class EditProductsComponent implements OnInit {
+export class EditProductsComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -110,7 +110,6 @@ export class EditProductsComponent implements OnInit {
             this.productId = this.activatedRoute.snapshot.params['productId']
             this.navigationService.loadBarStart()
             this.productsService.getProductById(this.productId).subscribe(product => {
-                console.log(product)
                 this.formGroup.patchValue(product)
                 this.linkProducts = product.linkProducts
                 this.lots = product.lots
@@ -215,7 +214,6 @@ export class EditProductsComponent implements OnInit {
                             const { urlImage } = res
                             this.navigationService.showMessage('Imagen actualizada')
                             this.navigationService.loadBarFinish()
-                            console.log(urlImage)
                             this.urlImage = urlImage + `?ignoreCache=${Math.random()}`
                         })
                     })

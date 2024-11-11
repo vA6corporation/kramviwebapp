@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { BoardsService } from '../boards.service';
@@ -19,7 +19,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './board-items.component.html',
     styleUrls: ['./board-items.component.sass']
 })
-export class BoardItemsComponent implements OnInit {
+export class BoardItemsComponent {
 
     constructor(
         private readonly boardsService: BoardsService,

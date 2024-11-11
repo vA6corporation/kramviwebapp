@@ -1,16 +1,15 @@
 <h2 mat-dialog-title>Guias de remision</h2>
 <div mat-dialog-content>
-    <ng-container *ngIf="remissionGuides.length; else elseBlock">
-        <mat-action-list *ngFor="let element of remissionGuides">
-            <button mat-list-item (click)="onPrintRemissionGuide(element._id)">
-                T{{ office.serialPrefix }}-{{ element.remissionGuideNumber }}
-                <span class="spacer"></span>
-            </button>
-        </mat-action-list>
-    </ng-container>
-    <ng-template #elseBlock>
-        <h2 class="text-center text-muted mat-title-medium">Sin guias de remision</h2>
-    </ng-template>
+    @for (remissionGuide of remissionGuides; track remissionGuide._id) {
+    <mat-action-list>
+        <button mat-list-item (click)="onPrintRemissionGuide(remissionGuide._id)">
+            T{{ office.serialPrefix }}-{{ remissionGuide.remissionGuideNumber }}
+            <span class="spacer"></span>
+        </button>
+    </mat-action-list>
+    } @empty {
+    <h2 class="text-center text-muted mat-title-medium">Sin guias de remision</h2>
+    }
 </div>
 <mat-dialog-actions>
     <span class="spacer"></span>

@@ -55,6 +55,7 @@ export class AppComponent {
         '/customers',
         '/products',
         '/promotions',
+        '/coupons',
         '/inventories',
         '/lots',
         '/incidents',

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject } from '@angular/core';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription, lastValueFrom } from 'rxjs';
@@ -18,7 +18,7 @@ import { InvoicesService } from '../invoices.service';
     templateUrl: './sheet-invoices.component.html',
     styleUrls: ['./sheet-invoices.component.sass']
 })
-export class SheetInvoicesComponent implements OnInit {
+export class SheetInvoicesComponent {
 
     constructor(
         @Inject(MAT_BOTTOM_SHEET_DATA)

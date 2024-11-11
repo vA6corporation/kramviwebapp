@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -32,7 +32,7 @@ interface FormData {
     templateUrl: './charge-credit.component.html',
     styleUrls: ['./charge-credit.component.sass']
 })
-export class ChargeCreditComponent implements OnInit {
+export class ChargeCreditComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

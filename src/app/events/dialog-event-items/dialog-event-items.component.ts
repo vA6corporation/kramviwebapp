@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateEventItemModel } from '../create-event-item.model';
@@ -9,7 +9,7 @@ import { EventsService } from '../events.service';
     templateUrl: './dialog-event-items.component.html',
     styleUrls: ['./dialog-event-items.component.sass']
 })
-export class DialogEventItemsComponent implements OnInit {
+export class DialogEventItemsComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

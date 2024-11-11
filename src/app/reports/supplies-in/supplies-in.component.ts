@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Params } from '@angular/router';
 import { Chart, ChartOptions, ChartType, registerables } from 'chart.js';
@@ -21,7 +21,7 @@ Chart.register(...registerables);
     templateUrl: './supplies-in.component.html',
     styleUrls: ['./supplies-in.component.sass']
 })
-export class SuppliesInComponent implements OnInit {
+export class SuppliesInComponent {
 
     constructor(
         private readonly authService: AuthService,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MaterialModule } from '../../material.module';
@@ -10,7 +10,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './dialog-annotations.component.html',
     styleUrls: ['./dialog-annotations.component.sass']
 })
-export class DialogAnnotationsComponent implements OnInit {
+export class DialogAnnotationsComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -21,9 +21,6 @@ export class DialogAnnotationsComponent implements OnInit {
         annotation: [null, Validators.required],
     })
 
-
-    ngOnInit(): void {
-    }
 
     onSubmit() {
         if (this.formGroup.valid) {

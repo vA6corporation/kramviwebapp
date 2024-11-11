@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { OfficeModel } from '../../auth/office.model';
@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './edit-users.component.html',
     styleUrls: ['./edit-users.component.sass']
 })
-export class EditUsersComponent implements OnInit {
+export class EditUsersComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -27,9 +27,9 @@ export class EditUsersComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        name: [null, Validators.required],
-        email: [null, [Validators.required, Validators.email]],
-        password: [null, Validators.required],
+        name: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', Validators.required],
         assignedOfficeId: null,
         isAdmin: false,
     })

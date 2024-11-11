@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { DialogProformaItemsComponent } from '../dialog-proforma-items/dialog-proforma-items.component';
@@ -13,7 +13,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './proforma-items.component.html',
     styleUrls: ['./proforma-items.component.sass']
 })
-export class ProformaItemsComponent implements OnInit {
+export class ProformaItemsComponent {
 
     constructor(
         private readonly proformasService: ProformasService,

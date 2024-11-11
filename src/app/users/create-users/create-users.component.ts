@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './create-users.component.html',
     styleUrls: ['./create-users.component.sass']
 })
-export class CreateUsersComponent implements OnInit {
+export class CreateUsersComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -30,35 +30,35 @@ export class CreateUsersComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        name: [null, Validators.required],
-        email: [null, [Validators.required, Validators.email]],
-        password: [null, [Validators.required, Validators.minLength(3)]],
+        name: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(3)]],
         assignedOfficeId: null,
-    });
-    isLoading: boolean = false;
-    offices: OfficeModel[] = [];
-    hide: boolean = true;
+    })
+    isLoading: boolean = false
+    offices: OfficeModel[] = []
+    hide: boolean = true
 
-    private handleAuth$: Subscription = new Subscription();
+    private handleAuth$: Subscription = new Subscription()
 
     ngOnDestroy() {
-        this.handleAuth$.unsubscribe();
+        this.handleAuth$.unsubscribe()
     }
 
     ngOnInit(): void {
-        this.navigationService.setTitle('Nuevo usuario');
+        this.navigationService.setTitle('Nuevo usuario')
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.officesService.getOfficesByGroup().subscribe(offices => {
-                this.offices = offices;
-            });
-        });
+                this.offices = offices
+            })
+        })
     }
 
     onSubmit(): void {
         if (this.formGroup.valid) {
-            this.isLoading = true;
-            this.navigationService.loadBarStart();
+            this.isLoading = true
+            this.navigationService.loadBarStart()
             this.usersService.create(this.formGroup.value).subscribe({
                 next: () => {
                     this.isLoading = false

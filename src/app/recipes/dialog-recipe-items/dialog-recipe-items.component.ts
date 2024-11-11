@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RecipeModel } from '../recipe.model';
@@ -9,7 +9,7 @@ import { RecipesService } from '../recipes.service';
     templateUrl: './dialog-recipe-items.component.html',
     styleUrls: ['./dialog-recipe-items.component.sass']
 })
-export class DialogRecipeItemsComponent implements OnInit {
+export class DialogRecipeItemsComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

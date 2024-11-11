@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NavigationService } from '../../navigation/navigation.service';
 import { UserModel } from '../user.model';
@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './disabled-users.component.html',
     styleUrls: ['./disabled-users.component.sass']
 })
-export class DisabledUsersComponent implements OnInit {
+export class DisabledUsersComponent {
 
     constructor(
         private readonly usersService: UsersService,

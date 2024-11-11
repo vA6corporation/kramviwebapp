@@ -1,22 +1,24 @@
 <mat-action-list>
-    <button type="button" mat-list-item *ngFor="let item of eventItems; let i = index" (click)="onClickEventItem(i)">
-        <div class="d-flex flex-column w-100">
-            <div>
-                {{ item.fullName.slice(0, 60) }}
+    @for (eventItem of eventItems; track $index; let i = $index) {
+        <button type="button" mat-list-item (click)="onClickEventItem(i)">
+            <div class="d-flex flex-column w-100">
+                <div>
+                    {{ eventItem.fullName.slice(0, 60) }}
+                </div>
+                <div class="d-flex">
+                    <span class="text-muted mr-2">x{{ eventItem.quantity }}</span>
+                    <span class="mr-2" [style.color]="'green'" [hidden]="eventItem.igvCode !== '11'">bonificacion</span>
+                    <span class="text-primary mr-2" *ngIf="eventItem.igvCode === '20'">Exonerado</span>
+                    <span class="text-primary mr-2" *ngIf="eventItem.igvCode === '30'">Inafecto</span>
+                    <span class="text-muted ">{{ eventItem.observations }}</span>
+                    <span class="spacer"></span>
+                    <span class="text-muted">
+                        {{ (eventItem.price * eventItem.quantity).toFixed(2) }}
+                    </span>
+                </div>
             </div>
-            <div class="d-flex">
-                <span class="text-muted mr-2">x{{ item.quantity }}</span>
-                <span class="mr-2" [style.color]="'green'" [hidden]="item.igvCode !== '11'">bonificacion</span>
-                <span class="text-primary mr-2" *ngIf="item.igvCode === '20'">Exonerado</span>
-                <span class="text-primary mr-2" *ngIf="item.igvCode === '30'">Inafecto</span>
-                <span class="text-muted ">{{ item.observations }}</span>
-                <span class="spacer"></span>
-                <span class="text-muted">
-                    {{ (item.price * item.quantity).toFixed(2) }}
-                </span>
-            </div>
-        </div>
-    </button>
+        </button>
+    }
     <mat-list-item role="listitem">
         <div class="d-flex font-weight-bold">
             Total

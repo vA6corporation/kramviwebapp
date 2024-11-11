@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -23,7 +23,7 @@ import { DialogLastCommandComponent } from '../dialog-last-command/dialog-last-c
     templateUrl: './pos-fast-food.component.html',
     styleUrls: ['./pos-fast-food.component.sass']
 })
-export class PosFastFoodComponent implements OnInit {
+export class PosFastFoodComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

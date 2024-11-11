@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -15,7 +15,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './create-customers.component.html',
     styleUrls: ['./create-customers.component.sass']
 })
-export class CreateCustomersComponent implements OnInit {
+export class CreateCustomersComponent {
 
     constructor(
         private readonly customersService: CustomersService,

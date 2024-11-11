@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { AuthService } from '../../auth/auth.service';
@@ -13,7 +13,7 @@ import { PrintService } from '../../print/print.service';
     templateUrl: './dialog-last-command.component.html',
     styleUrls: ['./dialog-last-command.component.sass']
 })
-export class DialogLastCommandComponent implements OnInit {
+export class DialogLastCommandComponent {
 
     constructor(
         private readonly boardsService: BoardsService,

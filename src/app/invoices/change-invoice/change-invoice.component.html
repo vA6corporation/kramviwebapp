@@ -13,9 +13,11 @@
             <mat-form-field appearance="fill">
                 <mat-label>Comprobante</mat-label>
                 <mat-select formControlName="invoiceType">
-                    <mat-option *ngFor="let invoiceType of invoiceTypes" [value]="invoiceType.code">
+                    @for (invoiceType of invoiceTypes; track $index) {
+                    <mat-option [value]="invoiceType.code">
                         {{ invoiceType.name }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
@@ -32,27 +34,27 @@
     <div class="flex-30 bg-white list-items">
         <mat-action-list>
             @for (saleItem of saleItems; track saleItem.productId; let i = $index) {
-                <button mat-list-item>
-                    <span matListItemTitle>{{ saleItem.fullName }}</span>
-                    <div matListItemLine class="d-flex my-1">
-                        <span class="mr-2">x{{ saleItem.quantity }}</span>
-                        @if (saleItem.igvCode === igvType.BONIFICACION) {
-                            <span class="mr-2" [style.color]="'green'">Bonificacion</span>
-                        }
-                        @if (saleItem.igvCode === igvType.EXONERADO) {
-                            <span class="text-primary mr-2">Exonerado</span>
-                        }
-                        @if (saleItem.igvCode === igvType.INAFECTO) {
-                            <span class="text-primary mr-2">Inafecto</span>
-                        }
-                        @if (saleItem.lot) {
-                            <span class="text-primary mr-2">N° {{ saleItem.lot.lotNumber }}</span>
-                        }
-                        <span class="text-muted">{{ saleItem.observations }}</span>
-                        <span class="spacer"></span>
-                        <span>{{ (saleItem.price * saleItem.quantity).toFixed(2) }}</span>
-                    </div>
-                </button>
+            <button mat-list-item>
+                <span matListItemTitle>{{ saleItem.fullName }}</span>
+                <div matListItemLine class="d-flex my-1">
+                    <span class="mr-2">x{{ saleItem.quantity }}</span>
+                    @if (saleItem.igvCode === igvType.BONIFICACION) {
+                    <span class="mr-2" [style.color]="'green'">Bonificacion</span>
+                    }
+                    @if (saleItem.igvCode === igvType.EXONERADO) {
+                    <span class="text-primary mr-2">Exonerado</span>
+                    }
+                    @if (saleItem.igvCode === igvType.INAFECTO) {
+                    <span class="text-primary mr-2">Inafecto</span>
+                    }
+                    @if (saleItem.lot) {
+                    <span class="text-primary mr-2">N° {{ saleItem.lot.lotNumber }}</span>
+                    }
+                    <span class="text-muted">{{ saleItem.observations }}</span>
+                    <span class="spacer"></span>
+                    <span>{{ (saleItem.price * saleItem.quantity).toFixed(2) }}</span>
+                </div>
+            </button>
             }
             <button mat-list-item>
                 <div matListItemTitle class="d-flex font-weight-bold">

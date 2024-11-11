@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
@@ -16,7 +16,7 @@ import { RemissionGuidesService } from '../remission-guides.service';
     templateUrl: './dialog-detail-remission-guides.component.html',
     styleUrls: ['./dialog-detail-remission-guides.component.sass']
 })
-export class DialogDetailRemissionGuidesComponent implements OnInit {
+export class DialogDetailRemissionGuidesComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -26,35 +26,35 @@ export class DialogDetailRemissionGuidesComponent implements OnInit {
         private readonly sanitizer: DomSanitizer,
     ) { }
 
-    remissionGuide: RemissionGuideModel | null = null;
-    remissionGuideItems: RemissionGuideItemModel[] = [];
-    user: UserModel = new UserModel();
-    office: OfficeModel = new OfficeModel();
-    business: BusinessModel = new BusinessModel();
-    cdr: CdrRgModel | null = null;
+    remissionGuide: RemissionGuideModel | null = null
+    remissionGuideItems: RemissionGuideItemModel[] = []
+    user: UserModel = new UserModel()
+    office: OfficeModel = new OfficeModel()
+    business: BusinessModel = new BusinessModel()
+    cdr: CdrRgModel | null = null
 
-    private handleAuth$: Subscription = new Subscription();
+    private handleAuth$: Subscription = new Subscription()
 
     ngOnDestroy() {
-        this.handleAuth$.unsubscribe();
+        this.handleAuth$.unsubscribe()
     }
 
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.business = auth.business;
-            this.office = auth.office;
-        });
+            this.business = auth.business
+            this.office = auth.office
+        })
 
         this.remissionGuidesService.getRemissionGuideById(this.remissionGuideId).subscribe(remissionGuide => {
-            this.remissionGuide = remissionGuide;
-            const { remissionGuideItems, user, cdr } = remissionGuide;
-            this.remissionGuideItems = remissionGuideItems;
+            this.remissionGuide = remissionGuide
+            const { remissionGuideItems, user, cdr } = remissionGuide
+            this.remissionGuideItems = remissionGuideItems
             this.user = user
             this.cdr = cdr
-        });
+        })
     }
 
     sanitize(url: string) {
-        return this.sanitizer.bypassSecurityTrustUrl(url);
+        return this.sanitizer.bypassSecurityTrustUrl(url)
     }
 }

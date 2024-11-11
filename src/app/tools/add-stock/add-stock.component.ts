@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTable } from '@angular/material/table';
 import { Subscription, lastValueFrom } from 'rxjs';
@@ -21,7 +21,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './add-stock.component.html',
     styleUrls: ['./add-stock.component.sass']
 })
-export class AddStockComponent implements OnInit {
+export class AddStockComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

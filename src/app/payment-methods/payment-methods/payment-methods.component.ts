@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -13,7 +13,7 @@ import { PaymentMethodsService } from '../payment-methods.service';
     templateUrl: './payment-methods.component.html',
     styleUrls: ['./payment-methods.component.sass']
 })
-export class PaymentMethodsComponent implements OnInit {
+export class PaymentMethodsComponent {
 
     constructor(
         private readonly paymentMethodsService: PaymentMethodsService,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { GeneralsService } from '../generals.service';
 import { GeneralModel } from '../general.model';
@@ -16,7 +16,7 @@ import { RouterModule } from '@angular/router';
     templateUrl: './generals.component.html',
     styleUrls: ['./generals.component.sass']
 })
-export class GeneralsComponent implements OnInit {
+export class GeneralsComponent {
 
     constructor(
         private readonly generalsService: GeneralsService,

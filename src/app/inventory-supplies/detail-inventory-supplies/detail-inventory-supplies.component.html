@@ -21,12 +21,14 @@
                 <h2 class="mat-title-large">{{ purchaseSupplyItemsQuantity }}</h2>
             </div>
             <mat-action-list>
-                <button type="button" class="m-1" mat-list-item *ngFor="let purchaseSupplyItem of purchaseSupplyItems"
+                @for (purchaseSupplyItem of purchaseSupplyItems; track purchaseSupplyItem._id) {
+                <button type="button" class="m-1" mat-list-item
                     (click)="onPurchaseSupplyDetail(purchaseSupplyItem.purchaseSupplyId)">
                     {{ purchaseSupplyItem.createdAt | date }}
                     <span class="spacer"></span>
                     {{ purchaseSupplyItem.quantity.toFixed(2) }}
                 </button>
+                }
             </mat-action-list>
         </mat-card>
         <span class="p-2"></span>
@@ -38,12 +40,13 @@
                 <h2 class="mat-title-large">{{ saleSupplyItemsQuantity }}</h2>
             </div>
             <mat-action-list>
-                <button type="button" class="m-1" mat-list-item *ngFor="let saleSupplyItem of saleSupplyItems"
-                    (click)="onSaleSupplyDetail(saleSupplyItem.saleId)">
+                @for (saleSupplyItem of saleSupplyItems; track saleSupplyItem._id) {
+                <button type="button" class="m-1" mat-list-item (click)="onSaleSupplyDetail(saleSupplyItem.saleId)">
                     {{ saleSupplyItem.createdAt | date }}
                     <span class="spacer"></span>
                     {{ saleSupplyItem.quantity.toFixed(2) }}
                 </button>
+                }
             </mat-action-list>
         </mat-card>
         <span class="p-2"></span>
@@ -55,12 +58,14 @@
                 <h2 class="mat-title-large">{{ incidentSupplyItemsQuantity }}</h2>
             </div>
             <mat-action-list>
-                <button type="button" class="m-1" mat-list-item *ngFor="let incidentSupplyItem of incidentSupplyItems"
+                @for (incidentSupplyItem of incidentSupplyItems; track incidentSupplyItem._id) {
+                <button type="button" class="m-1" mat-list-item
                     (click)="onIncidentSupplyDetail(incidentSupplyItem.incidentSupplyId)">
                     {{ incidentSupplyItem.createdAt | date }}
                     <span class="spacer"></span>
                     {{ incidentSupplyItem.quantity.toFixed(2) }}
                 </button>
+                }
             </mat-action-list>
         </mat-card>
     </div>

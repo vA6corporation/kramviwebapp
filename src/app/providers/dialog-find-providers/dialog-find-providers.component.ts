@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './dialog-find-providers.component.html',
     styleUrls: ['./dialog-find-providers.component.sass']
 })
-export class DialogFindProvidersComponent implements OnInit {
+export class DialogFindProvidersComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -30,9 +30,6 @@ export class DialogFindProvidersComponent implements OnInit {
     })
     maxlength: number = 11
     isLoading: boolean = false
-
-    ngOnInit(): void {
-    }
 
     onSetProvider(provider: ProviderModel) {
         this.dialogRef.close(provider)

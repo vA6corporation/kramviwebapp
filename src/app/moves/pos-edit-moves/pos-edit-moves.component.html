@@ -7,12 +7,14 @@
                     Favoritos
                 </ng-template>
                 <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
-                    <mat-grid-tile (click)="onSelectProduct(product)" *ngFor="let product of favorites">
+                    @for (product of favorites; track product._id) {
+                    <mat-grid-tile (click)="onSelectProduct(product)">
                         {{ product.fullName }}
                         <small class="text-muted text-price">
                             {{ product.cost.toFixed(2) }}
                         </small>
                     </mat-grid-tile>
+                    }
                 </mat-grid-list>
             </mat-tab>
             <mat-tab>
@@ -20,12 +22,13 @@
                     Categorias
                 </ng-template>
                 <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
-                    <mat-grid-tile (click)="onSelectCategory(category)" [style.background]="'lightgreen'"
-                        *ngFor="let category of categories">
+                    @for (category of categories; track category._id) {
+                    <mat-grid-tile (click)="onSelectCategory(category)" [style.background]="'lightgreen'">
                         <span class="px-1">
                             {{ category.name.slice(0, 60) }}
                         </span>
                     </mat-grid-tile>
+                    }
                 </mat-grid-list>
             </mat-tab>
             <mat-tab>
@@ -33,12 +36,14 @@
                     Busqueda
                 </ng-template>
                 <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
-                    <mat-grid-tile (click)="onSelectProduct(product)" *ngFor="let product of products">
+                    @for (product of products; track product._id) {
+                    <mat-grid-tile (click)="onSelectProduct(product)">
                         {{ product.fullName }}
                         <small class="text-muted text-price">
                             {{ product.cost.toFixed(2) }}
                         </small>
                     </mat-grid-tile>
+                    }
                 </mat-grid-list>
             </mat-tab>
         </mat-tab-group>

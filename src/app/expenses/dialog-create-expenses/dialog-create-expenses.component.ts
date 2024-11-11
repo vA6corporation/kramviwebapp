@@ -20,12 +20,9 @@ export class DialogCreateExpensesComponent {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        concept: [null, Validators.required],
-        charge: [null, Validators.required],
+        concept: ['', Validators.required],
+        charge: ['', Validators.required],
     })
-
-    ngOnInit(): void {
-    }
 
     onSubmit() {
         if (this.formGroup.valid) {

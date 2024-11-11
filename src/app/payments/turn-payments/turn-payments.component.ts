@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -16,7 +16,7 @@ import { PaymentsService } from '../payments.service';
     templateUrl: './turn-payments.component.html',
     styleUrls: ['./turn-payments.component.sass']
 })
-export class TurnPaymentsComponent implements OnInit {
+export class TurnPaymentsComponent {
 
     constructor(
         private readonly paymentsService: PaymentsService,

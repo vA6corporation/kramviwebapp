@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -10,7 +10,7 @@ import { CdrModel } from '../cdr.model';
     templateUrl: './dialog-bad-cdrs.component.html',
     styleUrls: ['./dialog-bad-cdrs.component.sass']
 })
-export class DialogBadCdrsComponent implements OnInit {
+export class DialogBadCdrsComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

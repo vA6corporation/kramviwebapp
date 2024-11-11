@@ -71,6 +71,10 @@ export const routes: Routes = [
         loadChildren: () => import('./promotions/promotions.module').then(m => m.PromotionsModule)
     },
     {
+        path: 'coupons',
+        loadChildren: () => import('./coupons/coupons.routes').then(m => m.routes)
+    },
+    {
         path: 'inventories',
         loadChildren: () => import('./inventories/inventories.module').then(m => m.InventoriesModule)
     },
@@ -140,7 +144,7 @@ export const routes: Routes = [
     },
     {
         path: 'supplies',
-        loadChildren: () => import('./supplies/supplies.module').then(m => m.SuppliesModule)
+        loadChildren: () => import('./supplies/supplies.routes').then(m => m.routes)
     },
     {
         path: 'purchases',

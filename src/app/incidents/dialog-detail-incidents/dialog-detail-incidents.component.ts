@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UserModel } from '../../users/user.model';
 import { IncidentModel } from '../incident.model';
@@ -10,7 +10,7 @@ import { IncidentItemModel } from '../incident-item.model';
     templateUrl: './dialog-detail-incidents.component.html',
     styleUrls: ['./dialog-detail-incidents.component.sass']
 })
-export class DialogDetailIncidentsComponent implements OnInit {
+export class DialogDetailIncidentsComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

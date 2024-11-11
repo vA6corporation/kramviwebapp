@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
 import { Chart, ChartOptions, ChartType, registerables } from 'chart.js';
@@ -12,7 +12,7 @@ Chart.register(...registerables);
     templateUrl: './expenses.component.html',
     styleUrls: ['./expenses.component.sass']
 })
-export class ExpensesComponent implements OnInit {
+export class ExpensesComponent {
 
     constructor(
         private readonly purchaseSuppliesService: PurchaseSuppliesService,

@@ -1,39 +1,41 @@
 import { CommonModule, Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../../auth/auth.service';
+import { SettingModel } from '../../auth/setting.model';
+import { CouponItemModel } from '../../coupons/coupon-item.model';
+import { CouponsService } from '../../coupons/coupons.service';
+import { CustomerModel } from '../../customers/customer.model';
+import { DialogCreateCustomersComponent } from '../../customers/dialog-create-customers/dialog-create-customers.component';
+import { DialogEditCustomersComponent } from '../../customers/dialog-edit-customers/dialog-edit-customers.component';
+import { DialogSearchCustomersComponent } from '../../customers/dialog-search-customers/dialog-search-customers.component';
+import { DirectivesModule } from '../../directives/directives.module';
+import { SpecialtyModel } from '../../events/specialty.model';
+import { MaterialModule } from '../../material.module';
+import { NavigationService } from '../../navigation/navigation.service';
+import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
+import { PaymentMethodsService } from '../../payment-methods/payment-methods.service';
+import { CreatePaymentModel } from '../../payments/create-payment.model';
+import { DialogSplitPaymentsComponent, DialogSplitPaymentsData } from '../../payments/dialog-split-payments/dialog-split-payments.component';
+import { PrintService } from '../../print/print.service';
+import { ProformasService } from '../../proformas/proformas.service';
+import { SpecialtiesService } from '../../specialties/specialties.service';
+import { DialogTurnsComponent } from '../../turns/dialog-turns/dialog-turns.component';
+import { TurnModel } from '../../turns/turn.model';
+import { TurnsService } from '../../turns/turns.service';
+import { UserModel } from '../../users/user.model';
+import { WorkerModel } from '../../workers/worker.model';
+import { WorkersService } from '../../workers/workers.service';
 import { CreateSaleItemModel } from '../create-sale-item.model';
 import { CreateSaleModel } from '../create-sale.model';
 import { DialogOutStockComponent } from '../dialog-out-stock/dialog-out-stock.component';
+import { SaleItemsComponent } from '../sale-items/sale-items.component';
 import { SaleForm } from '../sale.form';
 import { SalesService } from '../sales.service';
-import { NavigationService } from '../../navigation/navigation.service';
-import { PaymentMethodsService } from '../../payment-methods/payment-methods.service';
-import { TurnsService } from '../../turns/turns.service';
-import { WorkersService } from '../../workers/workers.service';
-import { SpecialtiesService } from '../../specialties/specialties.service';
-import { PrintService } from '../../print/print.service';
-import { AuthService } from '../../auth/auth.service';
-import { ProformasService } from '../../proformas/proformas.service';
-import { CreatePaymentModel } from '../../payments/create-payment.model';
-import { CustomerModel } from '../../customers/customer.model';
-import { WorkerModel } from '../../workers/worker.model';
-import { SpecialtyModel } from '../../events/specialty.model';
-import { SettingModel } from '../../auth/setting.model';
-import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
-import { TurnModel } from '../../turns/turn.model';
-import { UserModel } from '../../users/user.model';
-import { DialogTurnsComponent } from '../../turns/dialog-turns/dialog-turns.component';
-import { DialogSearchCustomersComponent } from '../../customers/dialog-search-customers/dialog-search-customers.component';
-import { DialogCreateCustomersComponent } from '../../customers/dialog-create-customers/dialog-create-customers.component';
-import { DialogSplitPaymentsComponent, DialogSplitPaymentsData } from '../../payments/dialog-split-payments/dialog-split-payments.component';
-import { DialogEditCustomersComponent } from '../../customers/dialog-edit-customers/dialog-edit-customers.component';
-import { MaterialModule } from '../../material.module';
-import { SaleItemsComponent } from '../sale-items/sale-items.component';
-import { DirectivesModule } from '../../directives/directives.module';
 
 @Component({
     selector: 'app-charge',
@@ -42,7 +44,7 @@ import { DirectivesModule } from '../../directives/directives.module';
     templateUrl: './charge.component.html',
     styleUrls: ['./charge.component.sass']
 })
-export class ChargeComponent implements OnInit {
+export class ChargeComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -53,6 +55,7 @@ export class ChargeComponent implements OnInit {
         private readonly turnsService: TurnsService,
         private readonly workersService: WorkersService,
         private readonly specialtiesService: SpecialtiesService,
+        private readonly couponsService: CouponsService,
         private readonly matDialog: MatDialog,
         private readonly printService: PrintService,
         private readonly authService: AuthService,
@@ -95,6 +98,7 @@ export class ChargeComponent implements OnInit {
     setting = new SettingModel()
     addresses: string[] = []
     paymentMethods: PaymentMethodModel[] = []
+    private couponItems: CouponItemModel[] = []
     private turn: TurnModel | null = null
     private user: UserModel = new UserModel()
     private params: Params = {}
@@ -103,6 +107,7 @@ export class ChargeComponent implements OnInit {
     private handleOpenTurn$: Subscription = new Subscription()
     private handleSaleItems$: Subscription = new Subscription()
     private handlePaymentMethods$: Subscription = new Subscription()
+    private handleCouponItems$: Subscription = new Subscription()
     private handleWorkers$: Subscription = new Subscription()
     private handleSpecialties$: Subscription = new Subscription()
     private handleAuth$: Subscription = new Subscription()
@@ -112,6 +117,7 @@ export class ChargeComponent implements OnInit {
         this.handleOpenTurn$.unsubscribe()
         this.handleSaleItems$.unsubscribe()
         this.handlePaymentMethods$.unsubscribe()
+        this.handleCouponItems$.unsubscribe()
         this.handleWorkers$.unsubscribe()
         this.handleSpecialties$.unsubscribe()
         this.handleAuth$.unsubscribe()
@@ -136,6 +142,10 @@ export class ChargeComponent implements OnInit {
 
         this.handleSpecialties$ = this.specialtiesService.handleSpecialties().subscribe(specialties => {
             this.specialties = specialties
+        })
+
+        this.handleCouponItems$ = this.couponsService.handleCouponItems().subscribe(couponItems => {
+            this.couponItems = couponItems
         })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
@@ -389,7 +399,7 @@ export class ChargeComponent implements OnInit {
             this.navigationService.loadBarStart()
 
             if (this.setting.allowFreeStock) {
-                this.salesService.saveSale(createdSale, this.saleItems, this.payments, this.params).subscribe({
+                this.salesService.createSale(createdSale, this.saleItems, this.payments, this.couponItems, this.params).subscribe({
                     next: sale => {
 
                         let payments: CreatePaymentModel[] = []
@@ -441,7 +451,7 @@ export class ChargeComponent implements OnInit {
                     }
                 })
             } else {
-                this.salesService.saveSaleStock(createdSale, this.saleItems, this.payments, this.params).subscribe({
+                this.salesService.createSaleStock(createdSale, this.saleItems, this.payments, this.couponItems, this.params).subscribe({
                     next: res => {
 
                         const { sale, outStocks } = res

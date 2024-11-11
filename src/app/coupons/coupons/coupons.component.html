@@ -1,0 +1,49 @@
+<div class="container">
+    <div class="mat-elevation-z2">
+        <table mat-table [dataSource]="dataSource" class="w-100">
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                <td mat-cell *matCellDef="let element">{{ element.name | uppercase }}</td>
+            </ng-container>
+            <ng-container matColumnDef="charge">
+                <th mat-header-cell *matHeaderCellDef>Monto minimo</th>
+                <td mat-cell *matCellDef="let element">{{ element.charge.toFixed(2) }}</td>
+            </ng-container>
+            <ng-container matColumnDef="countItems">
+                <th mat-header-cell *matHeaderCellDef>Cantidad repartida</th>
+                <td mat-cell *matCellDef="let element">{{ element.countItems }}</td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" class="text-right">
+                    <button mat-icon-button [matMenuTriggerFor]="menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu" xPosition="before">
+                        <button type="button" (click)="onDialogCouponItems(element._id)" mat-menu-item>
+                            <mat-icon>info</mat-icon>
+                            <span>Cupones</span>
+                        </button>
+                        <button [routerLink]="['/coupons', element._id, 'edit']" mat-menu-item>
+                            <mat-icon>edit</mat-icon>
+                            <span>Editar</span>
+                        </button>
+                        <button type="button" (click)="onDeleteCoupon(element)" mat-menu-item>
+                            <mat-icon>delete</mat-icon>
+                            <span>Eliminar</span>
+                        </button>
+                    </mat-menu>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex"
+            [length]="length" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
+    </div>
+    <div class="fixed-bottom p-3" style="right: 0; left: unset; width: auto;">
+        <button mat-fab color="primary" class="float-right" routerLink="/coupons/create">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+</div>

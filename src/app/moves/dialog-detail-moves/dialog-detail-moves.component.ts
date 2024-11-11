@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { UserModel } from '../../users/user.model';
@@ -11,7 +11,7 @@ import { MovesService } from '../moves.service';
     templateUrl: './dialog-detail-moves.component.html',
     styleUrls: ['./dialog-detail-moves.component.sass']
 })
-export class DialogDetailMovesComponent implements OnInit {
+export class DialogDetailMovesComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

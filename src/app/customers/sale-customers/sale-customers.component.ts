@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -24,7 +24,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './sale-customers.component.html',
     styleUrls: ['./sale-customers.component.sass']
 })
-export class SaleCustomersComponent implements OnInit {
+export class SaleCustomersComponent {
 
     constructor(
         private readonly salesService: SalesService,
@@ -38,8 +38,8 @@ export class SaleCustomersComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        startDate: [null, Validators.required],
-        endDate: [null, Validators.required],
+        startDate: ['', Validators.required],
+        endDate: ['', Validators.required],
     })
     displayedColumns: string[] = ['createdAt', 'product', 'quantity', 'price', 'total', 'invoice', 'actions']
     dataSource: SaleItemModel[] = []

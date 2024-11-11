@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -10,7 +10,7 @@ import { SpecialtiesService } from '../specialties.service';
     templateUrl: './edit-specialties.component.html',
     styleUrls: ['./edit-specialties.component.sass']
 })
-export class EditSpecialtiesComponent implements OnInit {
+export class EditSpecialtiesComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

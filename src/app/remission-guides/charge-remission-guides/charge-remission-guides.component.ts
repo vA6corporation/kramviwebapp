@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -25,7 +25,7 @@ import { DialogSearchCustomersComponent } from '../../customers/dialog-search-cu
     templateUrl: './charge-remission-guides.component.html',
     styleUrls: ['./charge-remission-guides.component.sass']
 })
-export class ChargeRemissionGuidesComponent implements OnInit {
+export class ChargeRemissionGuidesComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -284,32 +284,24 @@ export class ChargeRemissionGuidesComponent implements OnInit {
     onChangeOriginDepartment(departmentCode: string) {
         this.remissionGuidesService.getProvincesByDepartmentCode(departmentCode).subscribe(provinces => {
             this.originProvinces = provinces
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.showMessage(error.error.message)
         })
     }
 
     async onChangeOriginProvince(provinceCode: string) {
         this.remissionGuidesService.getDistrictsByProvinceCode(provinceCode).subscribe(districts => {
             this.originDistricts = districts
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.showMessage(error.error.message)
         })
     }
 
     async onChangeDestinyDepartment(departmentCode: string) {
         this.remissionGuidesService.getProvincesByDepartmentCode(departmentCode).subscribe(provinces => {
             this.destinyProvinces = provinces
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.showMessage(error.error.message)
         })
     }
 
     async onChangeDestinyProvince(provinceCode: string) {
         this.remissionGuidesService.getDistrictsByProvinceCode(provinceCode).subscribe(districts => {
             this.destinyDistricts = districts
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.showMessage(error.error.message)
         })
     }
 
@@ -351,7 +343,7 @@ export class ChargeRemissionGuidesComponent implements OnInit {
                 saleId: this.saleId,
             }
 
-            this.remissionGuidesService.createRemissionGuide(
+            this.remissionGuidesService.create(
                 remissionGuide,
                 this.remissionGuideItems,
                 this.carrier,

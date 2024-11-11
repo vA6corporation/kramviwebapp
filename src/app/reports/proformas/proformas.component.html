@@ -14,9 +14,11 @@
                 <mat-label>Usuario</mat-label>
                 <mat-select (selectionChange)="onChangeUser()" formControlName="userId">
                     <mat-option value="">TODOS LOS USUARIOS</mat-option>
-                    <mat-option *ngFor="let element of users" [value]="element._id" class="text-uppercase">
-                        {{ element.name | uppercase }}
+                    @for (user of users; track $index) {
+                    <mat-option [value]="user._id" class="text-uppercase">
+                        {{ user.name | uppercase }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
@@ -44,11 +46,13 @@
                 {{ totalCharge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
             </b>
         </mat-list-item>
-        <mat-list-item *ngFor="let summaryProforma of summaryProformas" class="text-uppercase">
+        @for (summaryProforma of summaryProformas; track summaryProforma._id) {
+        <mat-list-item class="text-uppercase">
             {{ summaryProforma.user.name }} ({{ summaryProforma.count }})
             <span class="spacer"></span>
             {{ summaryProforma.totalCharge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2
             }) }}
         </mat-list-item>
+        }
     </mat-list>
 </div>

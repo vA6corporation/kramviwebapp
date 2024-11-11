@@ -28,7 +28,7 @@ export class CreateLotsComponent {
     formGroup: FormGroup = this.formBuilder.group({
         lotNumber: ['', Validators.required],
         stock: null,
-        expirationAt: [null, Validators.required],
+        expirationAt: ['', Validators.required],
         product: this.formBuilder.group({
             _id: ['', Validators.required],
             fullName: ['', Validators.required]

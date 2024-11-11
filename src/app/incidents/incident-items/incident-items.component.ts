@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { CreateIncidentItemModel } from '../create-incident-item.model';
@@ -11,7 +11,7 @@ import { IgvType } from '../../products/igv-type.enum';
     templateUrl: './incident-items.component.html',
     styleUrls: ['./incident-items.component.sass']
 })
-export class IncidentItemsComponent implements OnInit {
+export class IncidentItemsComponent {
 
     constructor(
         private readonly incidentsService: IncidentsService,

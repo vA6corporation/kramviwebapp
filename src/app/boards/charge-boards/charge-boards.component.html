@@ -13,45 +13,55 @@
             <mat-form-field appearance="fill" *ngIf="customer">
                 <mat-label>Direccion</mat-label>
                 <mat-select formControlName="addressIndex">
-                    <mat-option *ngFor="let address of addresses; let i = index" [value]="i">
-                        {{ address | uppercase }}
-                    </mat-option>
+                    @for (address of addresses; track $index; let i = $index) {
+                    <mat-option [value]="i">{{ address | uppercase }}</mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Comprobante</mat-label>
                 <mat-select formControlName="invoiceType">
-                    <mat-option *ngFor="let invoiceType of invoiceTypes" [value]="invoiceType.code">
-                        {{ invoiceType.name }}
-                    </mat-option>
+                    @for (invoiceType of invoiceTypes; track $index) {
+                        <mat-option [value]="invoiceType.code">
+                            {{ invoiceType.name }}
+                        </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Medio de pago</mat-label>
                 <mat-select formControlName="paymentMethodId">
-                    <mat-option *ngFor="let paymentMethod of paymentMethods" [value]="paymentMethod._id">
-                        {{ paymentMethod.name }}
-                    </mat-option>
+                    @for (paymentMethod of paymentMethods; track paymentMethod._id) {
+                        <mat-option [value]="paymentMethod._id">
+                            {{ paymentMethod.name }}
+                        </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill" *ngIf="setting.showWorker">
                 <mat-label>Personal a cargo</mat-label>
                 <mat-select formControlName="workerId">
-                    <mat-option *ngFor="let worker of workers" [value]="worker._id">
-                        {{ worker.name }}
-                    </mat-option>
+                    @for (worker of workers; track $index) {
+                        <mat-option [value]="worker._id">
+                            {{ worker.name }}
+                        </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showEmitionAt">
-                <mat-label>Fecha de emision</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="emitionAt">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showTotalDiscount">
-                <mat-label>Descuento global</mat-label>
-                <input type="number" matInput formControlName="discount" (input)="onChangeDiscount()">
-            </mat-form-field>
+            @if (setting.showEmitionAt) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Fecha de emision</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="emitionAt">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            }
+            @if (setting.showTotalDiscount) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Descuento global</mat-label>
+                    <input type="number" matInput formControlName="discount" (input)="onChangeDiscount()">
+                </mat-form-field>
+            }
             <mat-form-field appearance="fill">
                 <mat-label>Observaciones</mat-label>
                 <input type="text" matInput formControlName="observations">

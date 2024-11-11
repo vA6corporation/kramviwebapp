@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
@@ -20,7 +20,7 @@ import { SheetPurchaseOrdersComponent } from '../sheet-purchase-orders/sheet-pur
     templateUrl: './purchase-orders.component.html',
     styleUrls: ['./purchase-orders.component.sass']
 })
-export class PurchaseOrdersComponent implements OnInit {
+export class PurchaseOrdersComponent {
 
     constructor(
         private readonly purchaseOrdersService: PurchaseOrdersService,

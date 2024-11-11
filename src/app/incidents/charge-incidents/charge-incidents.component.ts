@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -22,7 +22,7 @@ interface FormData {
     templateUrl: './charge-incidents.component.html',
     styleUrls: ['./charge-incidents.component.sass']
 })
-export class ChargeIncidentsComponent implements OnInit {
+export class ChargeIncidentsComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -108,16 +108,18 @@ export class ChargeIncidentsComponent implements OnInit {
                 throw new Error('Agrega un producto')
             }
 
-            this.incidentsService.create(incident, this.incidentItems).subscribe(incident => {
-                this.incidentsService.setIncidentItems([])
-                this.router.navigate(['/incidents'])
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
-                this.navigationService.showMessage('Registrado correctamente')
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message)
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
+            this.incidentsService.create(incident, this.incidentItems).subscribe({
+                next: () => {
+                    this.incidentsService.setIncidentItems([])
+                    this.router.navigate(['/incidents'])
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage('Registrado correctamente')
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                }
             })
         } catch (error) {
             if (error instanceof Error) {

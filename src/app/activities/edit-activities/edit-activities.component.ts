@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -10,7 +10,7 @@ import { ActivitiesService } from '../activities.service';
     templateUrl: './edit-activities.component.html',
     styleUrls: ['./edit-activities.component.sass']
 })
-export class EditActivitiesComponent implements OnInit {
+export class EditActivitiesComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

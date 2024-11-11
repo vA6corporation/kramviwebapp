@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -11,7 +11,7 @@ import { IncidentsService } from '../../incidents/incidents.service';
     templateUrl: './dialog-remove-stock.component.html',
     styleUrls: ['./dialog-remove-stock.component.sass']
 })
-export class DialogRemoveStockComponent implements OnInit {
+export class DialogRemoveStockComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -23,8 +23,8 @@ export class DialogRemoveStockComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        quantity: [null, Validators.required],
-        incidentType: [null, Validators.required],
+        quantity: ['', Validators.required],
+        incidentType: ['', Validators.required],
         observations: '',
     })
     isLoading: boolean = false
@@ -38,9 +38,6 @@ export class DialogRemoveStockComponent implements OnInit {
         'TRASPASO',
         'OTROS',
     ]
-
-    ngOnInit(): void {
-    }
 
     onSubmit() {
         if (this.formGroup.valid) {

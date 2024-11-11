@@ -1,6 +1,6 @@
 import { CommonModule, Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params } from '@angular/router';
@@ -39,6 +39,8 @@ import { MaterialModule } from '../../material.module';
 import { SaleItemsComponent } from '../sale-items/sale-items.component';
 import { DirectivesModule } from '../../directives/directives.module';
 import { PreSalesService } from '../../pre-sales/pre-sales.service';
+import { CouponsService } from '../../coupons/coupons.service';
+import { CouponItemModel } from '../../coupons/coupon-item.model';
 
 @Component({
     selector: 'app-charge-credit',
@@ -47,13 +49,14 @@ import { PreSalesService } from '../../pre-sales/pre-sales.service';
     templateUrl: './charge-credit.component.html',
     styleUrls: ['./charge-credit.component.sass']
 })
-export class ChargeCreditComponent implements OnInit {
+export class ChargeCreditComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
         private readonly navigationService: NavigationService,
         private readonly proformasService: ProformasService,
         private readonly paymentMethodsService: PaymentMethodsService,
+        private readonly couponsService: CouponsService,
         private readonly preSalesService: PreSalesService,
         private readonly workersService: WorkersService,
         private readonly specialtiesService: SpecialtiesService,
@@ -95,6 +98,7 @@ export class ChargeCreditComponent implements OnInit {
     workers: WorkerModel[] = []
     specialties: SpecialtyModel[] = []
     paymentMethods: PaymentMethodModel[] = []
+    private couponItems: CouponItemModel[] = []
     private user: UserModel = new UserModel()
     private turn: TurnModel | null = null
     private params: Params = {}
@@ -103,6 +107,7 @@ export class ChargeCreditComponent implements OnInit {
     private handleOpenTurn$: Subscription = new Subscription()
     private handleSaleItems$: Subscription = new Subscription()
     private handlePaymentMethods$: Subscription = new Subscription()
+    private handleCouponItems$: Subscription = new Subscription()
     private handleAuth$: Subscription = new Subscription()
     private handleDues$: Subscription = new Subscription()
     private handleWorkers$: Subscription = new Subscription()
@@ -113,6 +118,7 @@ export class ChargeCreditComponent implements OnInit {
         this.handleOpenTurn$.unsubscribe()
         this.handleSaleItems$.unsubscribe()
         this.handlePaymentMethods$.unsubscribe()
+        this.handleCouponItems$.unsubscribe()
         this.handleAuth$.unsubscribe()
         this.handleDues$.unsubscribe()
         this.handleWorkers$.unsubscribe()
@@ -142,6 +148,10 @@ export class ChargeCreditComponent implements OnInit {
 
             this.handleSpecialties$ = this.specialtiesService.handleSpecialties().subscribe(specialties => {
                 this.specialties = specialties
+            })
+
+            this.handleCouponItems$ = this.couponsService.handleCouponItems().subscribe(couponItems => {
+                this.couponItems = couponItems
             })
 
             if (this.setting.showDeliveryAt) {
@@ -218,18 +228,21 @@ export class ChargeCreditComponent implements OnInit {
                 }
 
                 case 'add_init_payment': {
-                    const dialogRef = this.matDialog.open(DialogInitPaymentsComponent, {
-                        width: '600px',
-                        position: { top: '20px' },
-                        data: this.turn?._id,
-                    })
-
-                    dialogRef.afterClosed().subscribe(payment => {
-                        if (payment) {
-                            this.payments = [payment]
-                            this.dues[0].charge = this.dues[0].preCharge - payment.charge
-                        }
-                    })
+                    if (this.turn) {
+                        const dialogRef = this.matDialog.open(DialogInitPaymentsComponent, {
+                            width: '600px',
+                            position: { top: '20px' },
+                            data: this.turn._id,
+                        })
+    
+                        dialogRef.afterClosed().subscribe(payments => {
+                            if (payments) {
+                                this.payments = payments
+                                const charge = this.payments.map(e => e.charge).reduce((a, b) => a + b, 0)
+                                this.dues[0].charge = this.dues[0].preCharge - charge
+                            }
+                        })
+                    }
                     break
                 }
                 default:
@@ -361,7 +374,7 @@ export class ChargeCreditComponent implements OnInit {
             }
 
             if (this.setting.allowFreeStock) {
-                this.salesService.saveCredit(createdCredit, this.saleItems, this.payments, this.dues, this.params).subscribe({
+                this.salesService.createCredit(createdCredit, this.saleItems, this.payments, this.dues, this.couponItems, this.params).subscribe({
                     next: sale => {
 
                         Object.assign(sale, {
@@ -397,7 +410,7 @@ export class ChargeCreditComponent implements OnInit {
                     }
                 })
             } else {
-                this.salesService.saveCreditStock(createdCredit, this.saleItems, this.payments, this.dues, this.params).subscribe({
+                this.salesService.createCreditStock(createdCredit, this.saleItems, this.payments, this.dues, this.couponItems, this.params).subscribe({
                     next: res => {
 
                         const { sale, outStocks } = res

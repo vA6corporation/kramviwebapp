@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth.service';
@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './set-office.component.html',
     styleUrls: ['./set-office.component.sass']
 })
-export class SetOfficeComponent implements OnInit {
+export class SetOfficeComponent {
 
     constructor(
         private readonly router: Router,

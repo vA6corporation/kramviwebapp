@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { PromotionItemModel } from '../promotion-item.model';
@@ -9,7 +9,7 @@ import { PromotionsService } from '../promotions.service';
     templateUrl: './promotion-items.component.html',
     styleUrls: ['./promotion-items.component.sass']
 })
-export class PromotionItemsComponent implements OnInit {
+export class PromotionItemsComponent {
 
     constructor(
         private readonly promotionsService: PromotionsService,
@@ -23,9 +23,6 @@ export class PromotionItemsComponent implements OnInit {
 
     ngOnDestroy() {
         this.handlePromotionItems$.unsubscribe();
-    }
-
-    ngOnInit(): void {
     }
 
     onClickSaleItem(index: number) {

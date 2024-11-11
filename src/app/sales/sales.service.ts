@@ -74,10 +74,6 @@ export class SalesService {
         return this.httpService.get(`sales/countSaleItemsByCustomer/${customerId}`, params)
     }
 
-    // getSalesOfTheDay(): Observable<SaleModel[]> {
-    //     return this.httpService.get('sales/salesOfTheDay')
-    // }
-
     getSalesByKey(key: string): Observable<SaleModel[]> {
         return this.httpService.get(`sales/byKey/${key}`)
     }
@@ -301,55 +297,68 @@ export class SalesService {
         this.saleItems$.next(this.saleItems)
     }
 
-    saveSale(
+    createSale(
         sale: CreateSaleModel,
         saleItems: CreateSaleItemModel[] | CreateBoardItemModel[],
         payments: CreatePaymentModel[],
+        couponItems: any[],
         params: Params,
     ): Observable<SaleModel> {
         return this.httpService.post('sales', {
             sale,
             saleItems,
             payments,
+            couponItems,
         }, params)
     }
 
-    saveSaleStock(
+    createSaleStock(
         sale: CreateSaleModel,
         saleItems: CreateSaleItemModel[],
         payments: CreatePaymentModel[],
+        couponItems: any[],
         params: Params,
     ): Observable<{ sale: SaleModel | null, outStocks: OutStockModel[] }> {
         return this.httpService.post('sales/withStock', {
             sale,
             saleItems,
             payments,
+            couponItems,
         }, params)
     }
 
-    saveCredit(
+    createCredit(
         credit: CreateCreditModel,
         saleItems: CreateSaleItemModel[],
         payments: CreatePaymentModel[],
         dues: CreateDueModel[],
+        couponItems: any[],
         params: Params,
     ): Observable<SaleModel> {
         return this.httpService.post('credits', {
             credit,
             saleItems,
             payments,
+            couponItems,
             dues
         }, params)
     }
 
-    saveCreditStock(
+    createCreditStock(
         credit: CreateCreditModel,
         saleItems: CreateSaleItemModel[],
         payments: CreatePaymentModel[],
         dues: CreateDueModel[],
+        couponItems: any[],
         params: Params,
     ): Observable<{ sale: SaleModel | null, outStocks: OutStockModel[] }> {
-        return this.httpService.post('credits/withStock', { credit, saleItems, payments, dues }, params)
+        return this.httpService.post('credits/withStock', { 
+            credit, 
+            saleItems, 
+            payments,
+            couponItems, 
+            dues 
+        }, params)
     }
 
     updateSaleWithItems(sale: UpdateSaleModel, saleItems: CreateSaleItemModel[], payments: CreatePaymentModel[], saleId: string,): Observable<void> {

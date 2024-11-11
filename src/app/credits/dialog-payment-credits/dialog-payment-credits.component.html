@@ -5,7 +5,9 @@
         <mat-form-field appearance="fill">
             <mat-label>Medio de pago</mat-label>
             <mat-select formControlName="paymentMethodId">
-                <mat-option *ngFor="let element of paymentMethods" [value]="element._id">{{ element.name }}</mat-option>
+                @for (paymentMethod of paymentMethods; track $index) {
+                <mat-option [value]="paymentMethod._id">{{ paymentMethod.name }}</mat-option>
+                }
             </mat-select>
         </mat-form-field>
     </div>

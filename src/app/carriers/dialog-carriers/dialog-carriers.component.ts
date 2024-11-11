@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -14,7 +14,7 @@ import { NavigationService } from '../../navigation/navigation.service';
     templateUrl: './dialog-carriers.component.html',
     styleUrls: ['./dialog-carriers.component.sass']
 })
-export class DialogCarriersComponent implements OnInit {
+export class DialogCarriersComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductModel } from '../product.model';
 import { ProductsService } from '../products.service';
@@ -15,7 +15,7 @@ import { AuthService } from '../../auth/auth.service';
     templateUrl: './dialog-search-products.component.html',
     styleUrls: ['./dialog-search-products.component.sass']
 })
-export class DialogSearchProductsComponent implements OnInit {
+export class DialogSearchProductsComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -29,9 +29,6 @@ export class DialogSearchProductsComponent implements OnInit {
         key: [null, Validators.required]
     })
     products: ProductModel[] = []
-
-    ngOnInit(): void {
-    }
 
     onSelectProduct(product: ProductModel) {
         this.dialgoRef.close(product)

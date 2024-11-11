@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-dialog-image',
   templateUrl: './dialog-image.component.html',
   styleUrls: ['./dialog-image.component.sass']
 })
-export class DialogImageComponent implements OnInit {
+export class DialogImageComponent {
 
   constructor() { }
 

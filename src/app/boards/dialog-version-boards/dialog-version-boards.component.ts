@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BoardVersionModel } from '../board-version.model';
 import { BoardModel } from '../board.model';
@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './dialog-version-boards.component.html',
     styleUrls: ['./dialog-version-boards.component.sass']
 })
-export class DialogVersionBoardsComponent implements OnInit {
+export class DialogVersionBoardsComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

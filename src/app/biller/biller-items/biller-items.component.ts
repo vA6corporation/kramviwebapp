@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { BillItemModel } from '../bill-item.model';
@@ -14,7 +14,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './biller-items.component.html',
     styleUrls: ['./biller-items.component.sass']
 })
-export class BillerItemsComponent implements OnInit {
+export class BillerItemsComponent {
 
     constructor(
         private readonly billsService: BillsService,

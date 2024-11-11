@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Params } from '@angular/router';
 import { Chart, ChartOptions, ChartType } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './inout.component.html',
     styleUrls: ['./inout.component.sass']
 })
-export class InoutComponent implements OnInit {
+export class InoutComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

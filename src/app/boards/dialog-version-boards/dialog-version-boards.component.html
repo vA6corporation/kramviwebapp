@@ -3,15 +3,16 @@
     <mat-list>
         @for (version of versions; track version._id; let i = $index) {
             <div mat-subheader>{{ i + 1 }} - {{ version.createdAt | date:'medium' }}</div>
-            <mat-list-item *ngFor="let boardItem of version.boardItems"
-                [ngClass]="{ 'bg-danger': boardItem.deletedAt }">
-                <span matListItemTitle>{{ boardItem.fullName }} ({{ boardItem.quantity }})</span>
-                @if (boardItem.deletedAt) {
-                    <span matListItemLine>Anulados: x{{ boardItem.deletedQuantity }}</span>
-                }
-                <span matListItemLine>{{ boardItem.price.toFixed(2) }}</span>
-            </mat-list-item>
-            <mat-divider></mat-divider>
+            @for (boardItem of version.boardItems; track boardItem._id) {
+                <mat-list-item [ngClass]="{ 'bg-danger': boardItem.deletedAt }">
+                    <span matListItemTitle>{{ boardItem.fullName }} ({{ boardItem.quantity }})</span>
+                    @if (boardItem.deletedAt) {
+                        <span matListItemLine>Anulados: x{{ boardItem.deletedQuantity }}</span>
+                    }
+                    <span matListItemLine>{{ boardItem.price.toFixed(2) }}</span>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+            }
         }
     </mat-list>
 </mat-dialog-content>

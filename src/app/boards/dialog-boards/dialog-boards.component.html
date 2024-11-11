@@ -2,10 +2,9 @@
 <div mat-dialog-content>
     <mat-list role="list">
         @for (board of boards; track board._id; let i = $index) {
-            <mat-list-item role="listitem">
-                N° {{ board.table.name }}
-                <span class="spacer"></span>
-                {{ chargeBoards[i].toFixed(2) }}
+            <mat-list-item>
+                <span matListItemTitle>N° {{ board.table.name }}</span>
+                <span>{{ chargeBoards[i].toFixed(2) }}</span>
             </mat-list-item>
         }
         <mat-list-item role="listitem">

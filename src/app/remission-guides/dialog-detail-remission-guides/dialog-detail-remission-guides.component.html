@@ -4,11 +4,13 @@
 </h2>
 <div mat-dialog-content>
     <mat-list class="m-0">
-        <mat-list-item *ngFor="let item of remissionGuideItems">
-            <span class="mr-2 text-muted">x{{ item.quantity }}</span>
-            {{ item.fullName }}
+        @for (remissionGuideItem of remissionGuideItems; track remissionGuideItem.productId) {
+        <mat-list-item>
+            <span class="mr-2 text-muted">x{{ remissionGuideItem.quantity }}</span>
+            {{ remissionGuideItem.fullName }}
             <span class="spacer"></span>
         </mat-list-item>
+        }
     </mat-list>
     <mat-divider class="mb-0"></mat-divider>
     <table class="w-100">

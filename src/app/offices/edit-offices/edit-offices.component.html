@@ -47,8 +47,9 @@
         <mat-form-field appearance="fill">
             <mat-label>Actividad</mat-label>
             <mat-select formControlName="activityId" class="text-uppercase">
-                <mat-option *ngFor="let activity of activities" [value]="activity._id">{{ activity.name | uppercase
-                    }}</mat-option>
+                @for (activity of activities; track $index) {
+                <mat-option [value]="activity._id">{{ activity.name | uppercase }}</mat-option>
+                }
             </mat-select>
         </mat-form-field>
         <div class="d-flex">

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavigationService } from '../../navigation/navigation.service';
 import { MovesService } from '../moves.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -20,7 +20,7 @@ import { buildExcel } from '../../buildExcel';
     templateUrl: './moves.component.html',
     styleUrls: ['./moves.component.sass']
 })
-export class MovesComponent implements OnInit {
+export class MovesComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

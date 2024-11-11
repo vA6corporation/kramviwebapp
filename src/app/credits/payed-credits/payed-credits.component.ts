@@ -1,5 +1,5 @@
 import { formatDate } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -18,7 +18,7 @@ import { CreditsService } from '../credits.service';
     templateUrl: './payed-credits.component.html',
     styleUrls: ['./payed-credits.component.sass']
 })
-export class PayedCreditsComponent implements OnInit {
+export class PayedCreditsComponent {
 
     constructor(
         private readonly creditsService: CreditsService,

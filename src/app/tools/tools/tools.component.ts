@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavigationService } from '../../navigation/navigation.service';
 import { MaterialModule } from '../../material.module';
 import { ImportProductsComponent } from '../import-products/import-products.component';
@@ -23,7 +23,7 @@ import { CheckStockComponent } from '../check-stock/check-stock.component';
     templateUrl: './tools.component.html',
     styleUrls: ['./tools.component.sass']
 })
-export class ToolsComponent implements OnInit {
+export class ToolsComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

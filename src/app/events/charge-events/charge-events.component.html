@@ -12,83 +12,95 @@
             <mat-form-field appearance="fill">
                 <mat-label>Comprobante</mat-label>
                 <mat-select formControlName="invoiceType">
-                    <mat-option *ngFor="let invoiceType of invoiceTypes" [value]="invoiceType.code">
+                    @for (invoiceType of invoiceTypes; track $index) {
+                    <mat-option [value]="invoiceType.code">
                         {{ invoiceType.name }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Medio de pago</mat-label>
                 <mat-select formControlName="paymentMethodId">
-                    <mat-option *ngFor="let paymentMethod of paymentMethods" [value]="paymentMethod._id">
+                    @for (paymentMethod of paymentMethods; track paymentMethod._id) {
+                    <mat-option [value]="paymentMethod._id">
                         {{ paymentMethod.name }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Especialidad</mat-label>
                 <mat-select formControlName="specialtyId">
-                    <mat-option *ngFor="let specialty of specialties" [value]="specialty._id" class="text-uppercase">
+                    @for (specialty of specialties; track specialty._id) {
+                    <mat-option [value]="specialty._id" class="text-uppercase">
                         {{ specialty.name }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Personal a cargo</mat-label>
                 <mat-select formControlName="workerId">
-                    <mat-option *ngFor="let worker of workers" [value]="worker._id" class="text-uppercase">
+                    @for (worker of workers; track worker._id) {
+                    <mat-option [value]="worker._id" class="text-uppercase">
                         {{ worker.name }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Referido por</mat-label>
                 <mat-select formControlName="referredId">
-                    <mat-option *ngFor="let worker of workers" [value]="worker._id" class="text-uppercase">
+                    @for (worker of workers; track worker._id) {
+                    <mat-option [value]="worker._id" class="text-uppercase">
                         {{ worker.name }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Observaciones</mat-label>
                 <input type="text" matInput formControlName="observations">
             </mat-form-field>
-            <div class="d-flex" *ngIf="setting.showChange">
-                <mat-form-field appearance="fill">
-                    <input type="number" class="text-center" #inputCash matInput formControlName="cash"
-                        (input)="setCash(inputCash.value)">
-                </mat-form-field>
-                <mat-form-field appearance="fill">
-                    <mat-label>Vuelto</mat-label>
-                    <input type="number" class="text-center" matInput *ngIf="cash === 0">
-                    <input type="number" class="text-center" matInput *ngIf="cash !== 0" [value]="cash - efectivo()">
-                </mat-form-field>
-            </div>
-            <div class="my-2 d-flex" *ngIf="setting.showChange">
-                <span class="spacer"></span>
-                <button type="button" mat-fab color="warn" class="mx-1" (click)="resetCash()">
-                    <mat-icon>delete</mat-icon>
-                </button>
-                <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(1)">
-                    <span>1</span>
-                </button>
-                <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(5)">
-                    <span>5</span>
-                </button>
-                <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(10)">
-                    <span>10</span>
-                </button>
-                <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(20)">
-                    <span>20</span>
-                </button>
-                <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(50)">
-                    <span>50</span>
-                </button>
-                <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(100)">
-                    <span>100</span>
-                </button>
-                <span class="spacer"></span>
-            </div>
+            @if (setting.showChange) {
+                <div class="d-flex">
+                    <mat-form-field appearance="fill">
+                        <input type="number" class="text-center" #inputCash matInput formControlName="cash"
+                            (input)="setCash(inputCash.value)">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Vuelto</mat-label>
+                        <input type="number" class="text-center" matInput *ngIf="cash === 0">
+                        <input type="number" class="text-center" matInput *ngIf="cash !== 0" [value]="cash - efectivo()">
+                    </mat-form-field>
+                </div>
+                <div class="my-2 d-flex">
+                    <span class="spacer"></span>
+                    <button type="button" mat-fab color="warn" class="mx-1" (click)="resetCash()">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(1)">
+                        <span>1</span>
+                    </button>
+                    <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(5)">
+                        <span>5</span>
+                    </button>
+                    <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(10)">
+                        <span>10</span>
+                    </button>
+                    <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(20)">
+                        <span>20</span>
+                    </button>
+                    <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(50)">
+                        <span>50</span>
+                    </button>
+                    <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(100)">
+                        <span>100</span>
+                    </button>
+                    <span class="spacer"></span>
+                </div>
+            }
             <div class="p-1"></div>
             <button type="button" class="w-100" mat-flat-button [disabled]="isLoading" color="primary"
                 (click)="onSubmit()">

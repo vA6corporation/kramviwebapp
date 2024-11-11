@@ -1,6 +1,3 @@
-.board-items
-    min-height: calc(100vh - 124px)
-
 mat-grid-tile 
     cursor: pointer
 
@@ -8,3 +5,17 @@ mat-grid-tile
     position: absolute
     bottom: 0px
     left: 5px
+
+.footer-button
+    background: #e3e8ef
+    z-index: 100
+
+.board-items
+    min-height: calc(100vh - 124px)
+
+::ng-deep .footer-button .mat-form-field-wrapper
+    margin-bottom: -.5em
+    margin-top: -.5em
+
+mat-form-field
+    margin-bottom: -1.25em

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TurnsService } from '../turns.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -14,7 +14,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './dialog-admin-turns.component.html',
     styleUrls: ['./dialog-admin-turns.component.sass']
 })
-export class DialogAdminTurnsComponent implements OnInit {
+export class DialogAdminTurnsComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -28,7 +28,7 @@ export class DialogAdminTurnsComponent implements OnInit {
     private onUpdate$: EventEmitter<void> = new EventEmitter()
 
     formDate: FormGroup = this.formBuilder.group({
-        createdAt: [null, Validators.required],
+        createdAt: ['', Validators.required],
     })
 
     ngOnInit(): void {

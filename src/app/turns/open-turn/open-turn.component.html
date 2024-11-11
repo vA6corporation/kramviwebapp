@@ -1,157 +1,167 @@
 <div class="container">
     @if (turn === null) {
-        <h2 class="text-muted text-center mb-3 mat-title-large">La caja esta cerrada</h2>
-        <div class="d-flex">
-            <span class="spacer"></span>
-            <button type="button" mat-flat-button color="primary" (click)="onOpenTurn()">APERTURAR CAJA</button>
-            <span class="spacer"></span>
-        </div>
+    <h2 class="text-muted text-center mb-3 mat-title-large">La caja esta cerrada</h2>
+    <div class="d-flex">
+        <span class="spacer"></span>
+        <button type="button" mat-flat-button color="primary" (click)="onOpenTurn()">APERTURAR CAJA</button>
+        <span class="spacer"></span>
+    </div>
     } @else {
-        <mat-card class="mb-3">
-            <mat-card-header>
-                <mat-card-title>Resumen de caja</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <table class="w-100 mb-3">
-                    <tbody>
-                        <tr>
-                            <td>F/H de apertura</td>
-                            <td align="right">{{ turn.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Monto de apertura</td>
-                            <td align="right">{{ turn.openCash.toFixed(2) }}</td>
-                        </tr>
-                        <tr *ngIf="totalExpenses">
-                            <td>Total gastos</td>
-                            <td align="right">{{ totalExpenses.toFixed(2) }}</td>
-                        </tr>
-                        <tr>
-                            <td>Total recaudado</td>
-                            <td align="right">{{ (totalCollected).toFixed(2) }}</td>
-                        </tr>
-                        <tr class="text-success">
-                            <td>Efectivo final</td>
-                            <td align="right">{{ (totalCash - totalExpenses + turn.openCash).toFixed(2) }}</td>
-                        </tr>
-                        <tr class="text-danger" *ngIf="totalCredit">
-                            <td>Total credito</td>
-                            <td align="right">{{ (totalCredit).toFixed(2) }}</td>
-                        </tr>
-                        <tr class="text-danger" *ngIf="totalDebt">
-                            <td>Total pendiente de pago</td>
-                            <td align="right">{{ (totalDebt).toFixed(2) }}</td>
-                        </tr>
-                        <tr>
-                            <td>Observaciones</td>
-                            <td align="right" [ngClass]="{ 'text-muted': !turn.observations }">{{ turn.observations ||
-                                'NINGUNO' }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="pb-3">
-                    <mat-divider></mat-divider>
-                </div>
-                <table class="w-100">
-                    <tbody>
-                        <tr *ngFor="let summaryPayment of summaryPayments">
-                            <td>{{ summaryPayment.paymentMethod.name }} ({{ summaryPayment.totalQuantity }})</td>
-                            <td align="right">{{ summaryPayment.totalCharge.toFixed(2) }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </mat-card-content>
-        </mat-card>
-        <button type="button" (click)="onCloseTurn()" mat-flat-button color="primary" class="w-100 mb-3">
-            CERRAR CAJA
-        </button>
-        <mat-card class="mb-3">
-            <mat-card-header>
-                <mat-card-title>Gastos</mat-card-title>
-            </mat-card-header>
-            <mat-action-list>
-                <button type="button" (click)="onEditExpense(expense)" mat-list-item *ngFor="let expense of expenses">
-                    <span matListItemTitle>{{ expense.concept }}</span>
-                    <span matListItemLine>{{ expense.charge.toFixed(2) }}</span>
+    <mat-card class="mb-3">
+        <mat-card-header>
+            <mat-card-title>Resumen de caja</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <table class="w-100 mb-3">
+                <tbody>
+                    <tr>
+                        <td>F/H de apertura</td>
+                        <td align="right">{{ turn.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Monto de apertura</td>
+                        <td align="right">{{ turn.openCash.toFixed(2) }}</td>
+                    </tr>
+                    <tr *ngIf="totalExpenses">
+                        <td>Total gastos</td>
+                        <td align="right">{{ totalExpenses.toFixed(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Total recaudado</td>
+                        <td align="right">{{ (totalCollected).toFixed(2) }}</td>
+                    </tr>
+                    <tr class="text-success">
+                        <td>Efectivo final</td>
+                        <td align="right">{{ (totalCash - totalExpenses + turn.openCash).toFixed(2) }}</td>
+                    </tr>
+                    <tr class="text-danger" *ngIf="totalCredit">
+                        <td>Total credito</td>
+                        <td align="right">{{ (totalCredit).toFixed(2) }}</td>
+                    </tr>
+                    <tr class="text-danger" *ngIf="totalDebt">
+                        <td>Total pendiente de pago</td>
+                        <td align="right">{{ (totalDebt).toFixed(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>Observaciones</td>
+                        <td align="right" [ngClass]="{ 'text-muted': !turn.observations }">{{ turn.observations ||
+                            'NINGUNO' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pb-3">
+                <mat-divider></mat-divider>
+            </div>
+            <table class="w-100">
+                <tbody>
+                    @for (summaryPayment of summaryPayments; track $index) {
+                    <tr>
+                        <td>{{ summaryPayment.paymentMethod.name }} ({{ summaryPayment.totalQuantity }})</td>
+                        <td align="right">{{ summaryPayment.totalCharge.toFixed(2) }}</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </mat-card-content>
+    </mat-card>
+    <button type="button" (click)="onCloseTurn()" mat-flat-button color="primary" class="w-100 mb-3">
+        CERRAR CAJA
+    </button>
+    <mat-card class="mb-3">
+        <mat-card-header>
+            <mat-card-title>Gastos</mat-card-title>
+        </mat-card-header>
+        <mat-action-list>
+            @for (expense of expenses; track expense._id) {
+            <button type="button" (click)="onEditExpense(expense)" mat-list-item>
+                <span matListItemTitle>{{ expense.concept }}</span>
+                <span matListItemLine>{{ expense.charge.toFixed(2) }}</span>
+            </button>
+            }
+        </mat-action-list>
+    </mat-card>
+    <button type="button" (click)="onAddExpense()" mat-flat-button color="primary" class="w-100 mb-3">
+        AGREGAR GASTO
+    </button>
+    <mat-card class="mb-3">
+        <mat-card-header>
+            <mat-card-title>Productos vendidos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <table class="w-100 mb-3">
+                <tbody>
+                    @for (summarySaleItem of summarySaleItems; track $index) {
+                    <tr>
+                        <td>
+                            {{ summarySaleItem.fullName | uppercase }} ({{ summarySaleItem.totalQuantity }})
+                            <span *ngIf="summarySaleItem.totalQuantityBonus" class="ml-3 text-success">Bonificacion
+                                ({{ summarySaleItem.totalQuantityBonus }})</span>
+                        </td>
+                        <td align="right">{{ summarySaleItem.totalSale.toFixed(2) }}</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </mat-card-content>
+    </mat-card>
+    <button type="button" (click)="onGetSummarySales()" mat-flat-button color="primary" class="w-100 mb-3">MOSTRAR
+        PRODUCTOS VENDIDOS</button>
+    <mat-card class="mb-3" *ngIf="credits.length">
+        <mat-card-header>
+            <mat-card-title>Creditos o pendientes de pago</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-action-list role="list">
+                @for (credit of credits; track credit._id) {
+                <button mat-list-item (click)="onShowSale(credit._id)">
+                    <span matListItemTitle>{{ credit.invoicePrefix }}{{ office.serialPrefix }}-{{ credit.invoiceNumber
+                        }}</span>
+                    @if (credit.payments.length) {
+                    <span matListItemLine>
+                        @for (payment of credit.payments; track payment._id) {
+                        @for (paymentMethod of paymentMethods; track paymentMethod._id) {
+                        @if (paymentMethod._id === payment.paymentMethodId) {
+                        <span>{{ paymentMethod.name }}: {{ payment.charge.toFixed(2) }}</span>
+                        }
+                        }
+                        }
+                    </span>
+                    }
+                    <span matListItemLine>{{ credit.user.name | uppercase }} - {{ credit.createdAt | date: 'dd/MM/yyyy'
+                        }} - PENDIENTE: {{ (credit.debt).toFixed(2) }}</span>
                 </button>
+                }
             </mat-action-list>
-        </mat-card>
-        <button type="button" (click)="onAddExpense()" mat-flat-button color="primary" class="w-100 mb-3">
-            AGREGAR GASTO
-        </button>
-        <mat-card class="mb-3">
-            <mat-card-header>
-                <mat-card-title>Productos vendidos</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <table class="w-100 mb-3">
-                    <tbody>
-                        <tr *ngFor="let summarySaleItem of summarySaleItems">
-                            <td>
-                                {{ summarySaleItem.fullName | uppercase }} ({{ summarySaleItem.totalQuantity }})
-                                <span *ngIf="summarySaleItem.totalQuantityBonus" class="ml-3 text-success">Bonificacion
-                                    ({{ summarySaleItem.totalQuantityBonus }})</span>
-                            </td>
-                            <td align="right">{{ summarySaleItem.totalSale.toFixed(2) }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </mat-card-content>
-        </mat-card>
-        <button type="button" (click)="onGetSummarySales()" mat-flat-button color="primary" class="w-100 mb-3">MOSTRAR
-            PRODUCTOS VENDIDOS</button>
-        <mat-card class="mb-3" *ngIf="credits.length">
-            <mat-card-header>
-                <mat-card-title>Creditos o pendientes de pago</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <mat-action-list role="list">
-                    @for (credit of credits; track credit._id) {
-                        <button mat-list-item (click)="onShowSale(credit._id)">
-                            <span matListItemTitle>{{ credit.invoicePrefix }}{{ office.serialPrefix }}-{{ credit.invoiceNumber }}</span>
-                            @if (credit.payments.length) {
-                                <span matListItemLine>
-                                    @for (payment of credit.payments; track payment._id) {
-                                        @for (paymentMethod of paymentMethods; track paymentMethod._id) {
-                                            @if (paymentMethod._id === payment.paymentMethodId) {
-                                                <span>{{ paymentMethod.name }}: {{ payment.charge.toFixed(2) }}</span>
-                                            }
-                                        }
-                                    }
-                                </span>
-                            }
-                            <span matListItemLine>{{ credit.user.name | uppercase }} - {{ credit.createdAt | date: 'dd/MM/yyyy' }} - PENDIENTE: {{ (credit.debt).toFixed(2) }}</span>
-                        </button>
-                    }
-                </mat-action-list>
-            </mat-card-content>
-        </mat-card>
-        <mat-card class="mb-3">
-            <mat-card-header>
-                <mat-card-title>Ventas</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <mat-action-list role="list">
-                    @for (sale of sales; track sale._id) {
-                        <button mat-list-item (click)="onShowSale(sale._id)">
-                            <span matListItemTitle>{{ sale.invoicePrefix }}{{ office.serialPrefix }}-{{ sale.invoiceNumber }}</span>
-                            <span matListItemLine>
-                                @for (payment of sale.payments; track payment._id) {
-                                    @for (paymentMethod of paymentMethods; track paymentMethod._id) {
-                                        @if (paymentMethod._id === payment.paymentMethodId) {
-                                            <span>{{ paymentMethod.name }}: {{ payment.charge.toFixed(2) }}</span>
-                                        }
-                                    }
-                                }
-                            </span>
-                            <span matListItemLine>{{ sale.user.name | uppercase }} - {{ sale.createdAt | date: 'dd/MM/yyyy' }}</span>
-                        </button>
-                    }
-                </mat-action-list>
-            </mat-card-content>
-        </mat-card>
-        <button type="button" (click)="onGetAllSales()" mat-flat-button color="primary" class="w-100">
-            MOSTRAR TODAS LAS VENTAS
-        </button>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="mb-3">
+        <mat-card-header>
+            <mat-card-title>Ventas</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-action-list role="list">
+                @for (sale of sales; track sale._id) {
+                <button mat-list-item (click)="onShowSale(sale._id)">
+                    <span matListItemTitle>{{ sale.invoicePrefix }}{{ office.serialPrefix }}-{{ sale.invoiceNumber
+                        }}</span>
+                    <span matListItemLine>
+                        @for (payment of sale.payments; track payment._id) {
+                        @for (paymentMethod of paymentMethods; track paymentMethod._id) {
+                        @if (paymentMethod._id === payment.paymentMethodId) {
+                        <span>{{ paymentMethod.name }}: {{ payment.charge.toFixed(2) }}</span>
+                        }
+                        }
+                        }
+                    </span>
+                    <span matListItemLine>{{ sale.user.name | uppercase }} - {{ sale.createdAt | date: 'dd/MM/yyyy'
+                        }}</span>
+                </button>
+                }
+            </mat-action-list>
+        </mat-card-content>
+    </mat-card>
+    <button type="button" (click)="onGetAllSales()" mat-flat-button color="primary" class="w-100">
+        MOSTRAR TODAS LAS VENTAS
+    </button>
     }
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component } from '@angular/core'
 import { Subscription } from 'rxjs';
 import { IgvType } from '../../products/igv-type.enum';
 import { CreatePurchaseItemModel } from '../create-purchase-item.model';
@@ -11,7 +11,7 @@ import { DialogPurchaseItemsComponent } from '../dialog-purchase-items/dialog-pu
     templateUrl: './purchase-items.component.html',
     styleUrls: ['./purchase-items.component.sass']
 })
-export class PurchaseItemsComponent implements OnInit {
+export class PurchaseItemsComponent {
 
     constructor(
         private readonly purchasesService: PurchasesService,

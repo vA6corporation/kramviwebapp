@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -14,7 +14,7 @@ import { OfficesService } from '../offices.service';
     templateUrl: './edit-offices.component.html',
     styleUrls: ['./edit-offices.component.sass']
 })
-export class EditOfficesComponent implements OnInit {
+export class EditOfficesComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

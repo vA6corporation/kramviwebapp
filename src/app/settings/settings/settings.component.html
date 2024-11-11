@@ -123,7 +123,8 @@
                                 (click)="onDeleteCertificate(certificate._id, $event)">
                                 <mat-icon>delete</mat-icon>
                             </button>
-                            <button type="button" mat-icon-button aria-label="download" (click)="onDownloadCertificate(certificate._id, $event)">
+                            <button type="button" mat-icon-button aria-label="download"
+                                (click)="onDownloadCertificate(certificate._id, $event)">
                                 <mat-icon>download</mat-icon>
                             </button>
                         </div>
@@ -260,9 +261,11 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Bucar cliente por defecto</mat-label>
                     <mat-select formControlName="defaultSearchCustomer">
-                        <mat-option *ngFor="let element of searchTypes" [value]="element.code">
-                            {{ element.label }}
+                        @for (searchType of searchTypes; track $index) {
+                        <mat-option [value]="searchType.code">
+                            {{ searchType.label }}
                         </mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
@@ -477,12 +480,14 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Lista por defecto</mat-label>
                     <mat-select formControlName="defaultPriceListId">
-                        <mat-option *ngFor="let element of priceLists" [value]="element._id">{{ element.name
-                            }}</mat-option>
+                        @for (priceList of priceLists; track $index) {
+                        <mat-option [value]="priceList._id">{{ priceList.name }}</mat-option>
+                        }
                     </mat-select>
                 </mat-form-field>
                 <mat-list>
-                    <mat-list-item *ngFor="let priceList of priceLists">
+                    @for (priceList of priceLists; track priceList._id) {
+                    <mat-list-item>
                         {{ priceList.name }}
                         <span class="spacer"></span>
                         <button type="button" (click)="onUpdatePriceList(priceList)" mat-icon-button>
@@ -492,6 +497,7 @@
                             <mat-icon>delete</mat-icon>
                         </button>
                     </mat-list-item>
+                    }
                 </mat-list>
                 <button type="button" class="w-100" mat-flat-button color="primary" (click)="onAddPriceList()">
                     NUEVA LISTA
@@ -553,12 +559,14 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <mat-list role="list">
-                    <mat-list-item role="listitem" *ngFor="let module of modules">
+                    @for (module of modules; track $index) {
+                    <mat-list-item role="listitem">
                         <mat-slide-toggle [formControlName]="module.name">
                             {{ module.label }}
                             <span *ngIf="module.info" class="text-muted ml-2">{{ module.info }}</span>
                         </mat-slide-toggle>
                     </mat-list-item>
+                    }
                 </mat-list>
             </mat-expansion-panel>
 

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CdrModel } from '../cdr.model';
@@ -10,7 +10,7 @@ import { InvoicesService } from '../invoices.service';
     templateUrl: './dialog-check-cdrs.component.html',
     styleUrls: ['./dialog-check-cdrs.component.sass']
 })
-export class DialogCheckCdrsComponent implements OnInit {
+export class DialogCheckCdrsComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

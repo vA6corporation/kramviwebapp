@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -28,7 +28,7 @@ import { ProformaItemsComponent } from '../proforma-items/proforma-items.compone
     templateUrl: './edit-proformas.component.html',
     styleUrls: ['./edit-proformas.component.sass']
 })
-export class EditProformasComponent implements OnInit {
+export class EditProformasComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

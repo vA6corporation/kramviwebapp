@@ -13,17 +13,21 @@
             <mat-form-field appearance="fill">
                 <mat-label>Comprobante</mat-label>
                 <mat-select formControlName="invoiceType">
-                    <mat-option *ngFor="let element of invoiceTypes" [value]="element.code">
-                        {{ element.name }}
+                    @for (invoiceType of invoiceTypes; track $index) {
+                    <mat-option [value]="invoiceType.code">
+                        {{ invoiceType.name }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Medio de pago</mat-label>
                 <mat-select formControlName="paymentMethodId">
-                    <mat-option *ngFor="let element of paymentMethods" [value]="element._id">
-                        {{ element.name }}
+                    @for (paymentMethod of paymentMethods; track paymentMethod._id) {
+                    <mat-option [value]="paymentMethod._id">
+                        {{ paymentMethod.name }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
@@ -36,9 +40,9 @@
                 <mat-label>Seleccione una sucursal</mat-label>
                 <mat-select (selectionChange)="onOfficeChange()" formControlName="officeId">
                     @for (office of offices; track office._id) {
-                        <mat-option class="text-uppercase" [value]="office._id">
-                            {{ office.name | uppercase }}
-                        </mat-option>
+                    <mat-option class="text-uppercase" [value]="office._id">
+                        {{ office.name | uppercase }}
+                    </mat-option>
                     }
                 </mat-select>
             </mat-form-field>

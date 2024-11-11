@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { CreateEventItemModel } from '../create-event-item.model';
@@ -10,7 +10,7 @@ import { EventsService } from '../events.service';
     templateUrl: './event-items.component.html',
     styleUrls: ['./event-items.component.sass']
 })
-export class EventItemsComponent implements OnInit {
+export class EventItemsComponent {
 
     constructor(
         private readonly eventsService: EventsService,

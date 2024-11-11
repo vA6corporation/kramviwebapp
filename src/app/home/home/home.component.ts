@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NavigationService } from '../../navigation/navigation.service';
 import { AuthService } from '../../auth/auth.service';
@@ -13,7 +13,7 @@ import { RouterModule } from '@angular/router';
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.sass']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

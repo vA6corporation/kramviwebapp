@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ExpenseModel } from '../expense.model';
@@ -11,7 +11,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './dialog-edit-expenses.component.html',
     styleUrls: ['./dialog-edit-expenses.component.sass']
 })
-export class DialogEditExpensesComponent implements OnInit {
+export class DialogEditExpensesComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -27,9 +27,6 @@ export class DialogEditExpensesComponent implements OnInit {
     })
 
     private onDeleteExpense$: EventEmitter<void> = new EventEmitter()
-
-    ngOnInit(): void {
-    }
 
     onDeleteExpense() {
         this.onDeleteExpense$.emit()

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { CreateCreditNoteItemModel } from '../create-credit-note-item.model';
@@ -11,7 +11,7 @@ import { IgvType } from '../../products/igv-type.enum';
     templateUrl: './credit-note-items.component.html',
     styleUrls: ['./credit-note-items.component.sass']
 })
-export class CreditNoteItemsComponent implements OnInit {
+export class CreditNoteItemsComponent {
 
     constructor(
         private readonly creditNotesService: CreditNotesService,

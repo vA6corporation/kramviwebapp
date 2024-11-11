@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MaterialModule } from '../../material.module';
@@ -10,7 +10,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './dialog-pdf.component.html',
     styleUrls: ['./dialog-pdf.component.sass']
 })
-export class DialogPdfComponent implements OnInit {
+export class DialogPdfComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

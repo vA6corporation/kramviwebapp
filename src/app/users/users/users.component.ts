@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
 import { buildExcel } from '../../buildExcel';
@@ -17,7 +17,7 @@ import { RouterModule } from '@angular/router';
     templateUrl: './users.component.html',
     styleUrls: ['./users.component.sass']
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent {
 
     constructor(
         private readonly usersService: UsersService,

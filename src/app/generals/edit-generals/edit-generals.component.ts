@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { GeneralsService } from '../generals.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -22,7 +22,7 @@ import { DialogSearchPatientsComponent } from '../../patients/dialog-search-pati
     templateUrl: './edit-generals.component.html',
     styleUrls: ['./edit-generals.component.sass']
 })
-export class EditGeneralsComponent implements OnInit {
+export class EditGeneralsComponent {
 
     constructor(
         private readonly generalsService: GeneralsService,
@@ -35,15 +35,15 @@ export class EditGeneralsComponent implements OnInit {
 
     formGroup: FormGroup = this.formBuilder.group({
         workerId: [null, Validators.required],
-        vitalFunction: [null, Validators.required],
-        diseace: [null, Validators.required],
-        symptoms: [null, Validators.required],
-        story: [null, Validators.required],
+        vitalFunction: ['', Validators.required],
+        diseace: ['', Validators.required],
+        symptoms: ['', Validators.required],
+        story: ['', Validators.required],
         laboratoryExams: null,
-        diagnosis: [null, Validators.required],
-        treatment: [null, Validators.required],
-        workPlan: [null, Validators.required],
-        appointmentAt: null,
+        diagnosis: ['', Validators.required],
+        treatment: ['', Validators.required],
+        workPlan: ['', Validators.required],
+        appointmentAt: '',
     })
     isLoading: boolean = false
     maxLength: number = 11

@@ -1,5 +1,5 @@
 import { CommonModule, formatDate } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -25,7 +25,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './utilities.component.html',
     styleUrls: ['./utilities.component.sass']
 })
-export class UtilitiesComponent implements OnInit {
+export class UtilitiesComponent {
 
     constructor(
         private readonly salesService: SalesService,

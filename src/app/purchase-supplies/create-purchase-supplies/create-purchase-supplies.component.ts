@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
@@ -15,7 +15,7 @@ import { PurchaseSuppliesService } from '../purchase-supplies.service';
   templateUrl: './create-purchase-supplies.component.html',
   styleUrls: ['./create-purchase-supplies.component.sass']
 })
-export class CreatePurchaseSuppliesComponent implements OnInit {
+export class CreatePurchaseSuppliesComponent {
 
   constructor(
     private readonly categorySuppliesService: CategorySuppliesService,

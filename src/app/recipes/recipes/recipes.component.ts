@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
@@ -18,7 +18,7 @@ import { ProductsService } from '../../products/products.service';
     templateUrl: './recipes.component.html',
     styleUrls: ['./recipes.component.sass']
 })
-export class RecipesComponent implements OnInit {
+export class RecipesComponent {
 
     constructor(
         private readonly productsService: ProductsService,

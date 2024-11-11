@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MaterialModule } from '../../material.module';
 
@@ -9,7 +9,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './dialog-attach-file.component.html',
     styleUrls: ['./dialog-attach-file.component.sass']
 })
-export class DialogAttachFileComponent implements OnInit {
+export class DialogAttachFileComponent {
 
     constructor(
         private readonly dialogRef: MatDialogRef<DialogAttachFileComponent>,
@@ -17,9 +17,6 @@ export class DialogAttachFileComponent implements OnInit {
 
     accept: string = 'application/pdf'
     isLoading: boolean = false
-
-    ngOnInit(): void {
-    }
 
     onFileSelected(files: FileList | null, input: HTMLInputElement) {
         if (files !== null && files[0] !== null) {

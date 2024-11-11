@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
@@ -7,7 +7,7 @@ import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
     templateUrl: './dialog-progress.component.html',
     styleUrls: ['./dialog-progress.component.sass']
 })
-export class DialogProgressComponent implements OnInit {
+export class DialogProgressComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

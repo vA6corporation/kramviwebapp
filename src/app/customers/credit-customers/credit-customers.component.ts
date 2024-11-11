@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -27,7 +27,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './credit-customers.component.html',
     styleUrls: ['./credit-customers.component.sass']
 })
-export class CreditCustomersComponent implements OnInit {
+export class CreditCustomersComponent {
 
     constructor(
         private readonly creditsService: CreditsService,

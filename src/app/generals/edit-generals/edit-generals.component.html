@@ -1,19 +1,21 @@
 <div class="container py-4">
     @if (patient) {
-        <button type="button" mat-button color="primary" (click)="onEditPatient()" class="w-100">
-            <span class="mat-h1">{{ patient.name | uppercase }}</span>
-        </button>
-        <div class="mb-5">
-            <p class="text-center mb-0">{{ patient.documentType }}: {{ patient.document }}</p>
-        </div>
+    <button type="button" mat-button color="primary" (click)="onEditPatient()" class="w-100">
+        <span class="mat-h1">{{ patient.name | uppercase }}</span>
+    </button>
+    <div class="mb-5">
+        <p class="text-center mb-0">{{ patient.documentType }}: {{ patient.document }}</p>
+    </div>
     }
     <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
         <mat-form-field appearance="fill">
             <mat-label>Medico</mat-label>
             <mat-select formControlName="workerId">
-                <mat-option *ngFor="let element of workers" [value]="element._id">
-                    {{ element.name | uppercase }}
+                @for (worker of workers; track $index) {
+                <mat-option [value]="worker._id">
+                    {{ worker.name | uppercase }}
                 </mat-option>
+                }
             </mat-select>
         </mat-form-field>
         <mat-form-field appearance="fill">

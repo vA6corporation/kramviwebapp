@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component } from '@angular/core'
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
 @Component({
@@ -6,7 +6,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
     templateUrl: './index-purchases.component.html',
     styleUrls: ['./index-purchases.component.sass']
 })
-export class IndexPurchasesComponent implements OnInit {
+export class IndexPurchasesComponent {
 
     constructor(
         private readonly router: Router,

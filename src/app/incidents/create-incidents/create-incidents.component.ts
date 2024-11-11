@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
@@ -16,7 +16,7 @@ import { IncidentsService } from '../incidents.service';
     templateUrl: './create-incidents.component.html',
     styleUrls: ['./create-incidents.component.sass']
 })
-export class CreateIncidentsComponent implements OnInit {
+export class CreateIncidentsComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

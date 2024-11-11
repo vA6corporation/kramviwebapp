@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
@@ -37,7 +37,7 @@ import { SheetPrintComponent } from '../sheet-print/sheet-print.component';
     templateUrl: './invoices-check.component.html',
     styleUrls: ['./invoices-check.component.sass']
 })
-export class InvoicesCheckComponent implements OnInit {
+export class InvoicesCheckComponent {
 
     constructor(
         private readonly salesService: SalesService,

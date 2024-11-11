@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -12,7 +12,7 @@ import { PurchasesService } from '../purchases.service';
     templateUrl: './debs.component.html',
     styleUrls: ['./debs.component.sass']
 })
-export class DebsComponent implements OnInit {
+export class DebsComponent {
 
     constructor(
         private readonly purchasesService: PurchasesService,

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
@@ -34,7 +34,7 @@ import { DialogMoveStockComponent } from '../dialog-move-stock/dialog-move-stock
     templateUrl: './detail-inventories.component.html',
     styleUrls: ['./detail-inventories.component.sass']
 })
-export class DetailInventoriesComponent implements OnInit {
+export class DetailInventoriesComponent {
 
     constructor(
         private readonly activatedRoute: ActivatedRoute,

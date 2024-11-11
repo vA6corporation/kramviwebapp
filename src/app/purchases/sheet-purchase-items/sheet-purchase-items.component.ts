@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogPurchaseItemsComponent } from '../dialog-purchase-items/dialog-purchase-items.component';
@@ -9,7 +9,7 @@ import { PurchasesService } from '../purchases.service';
     templateUrl: './sheet-purchase-items.component.html',
     styleUrls: ['./sheet-purchase-items.component.sass']
 })
-export class SheetPurchaseItemsComponent implements OnInit {
+export class SheetPurchaseItemsComponent {
 
     constructor(
         @Inject(MAT_BOTTOM_SHEET_DATA)
@@ -18,9 +18,6 @@ export class SheetPurchaseItemsComponent implements OnInit {
         private readonly purchasesService: PurchasesService,
         private readonly matDialog: MatDialog
     ) { }
-
-    ngOnInit(): void {
-    }
 
     onDeletePurchaseItem(): void {
         this.matBottomSheetRef.dismiss()

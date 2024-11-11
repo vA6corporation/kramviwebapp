@@ -60,13 +60,15 @@
                 </mat-card-header>
                 <mat-card-content>
                     <mat-list>
-                        <mat-list-item *ngFor="let item of saleItems">
-                            <span matListItemTitle>{{ item.fullName }} ({{ item.quantity }})</span>
-                            <span class="text-success ml-2" *ngIf="item.igvCode === '11'">Bon</span>
-                            <span class="text-primary ml-2" *ngIf="item.igvCode === '20'">Exo</span>
-                            <span class="text-primary ml-2" *ngIf="item.igvCode === '30'">Ina</span>
-                            <span>{{ (item.price * item.quantity).toFixed(2) }}</span>
-                        </mat-list-item>
+                        @for (saleItem of saleItems; track $index) {
+                            <mat-list-item>
+                                <span matListItemTitle>{{ saleItem.fullName }} ({{ saleItem.quantity }})</span>
+                                <span class="text-success ml-2" *ngIf="saleItem.igvCode === '11'">Bon</span>
+                                <span class="text-primary ml-2" *ngIf="saleItem.igvCode === '20'">Exo</span>
+                                <span class="text-primary ml-2" *ngIf="saleItem.igvCode === '30'">Ina</span>
+                                <span>{{ (saleItem.price * saleItem.quantity).toFixed(2) }}</span>
+                            </mat-list-item>
+                        }
                     </mat-list>
                 </mat-card-content>
             </mat-card>

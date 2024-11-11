@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SalesService } from '../../sales/sales.service';
@@ -9,7 +9,7 @@ import { SalesService } from '../../sales/sales.service';
     templateUrl: './dialog-credit-expiration.component.html',
     styleUrls: ['./dialog-credit-expiration.component.sass']
 })
-export class DialogCreditExpirationComponent implements OnInit {
+export class DialogCreditExpirationComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

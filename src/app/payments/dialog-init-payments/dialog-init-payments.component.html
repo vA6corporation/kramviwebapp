@@ -1,7 +1,8 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
     <h2 mat-dialog-title>Cuota inicial</h2>
-    <div mat-dialog-content>
-        <div class="d-flex">
+    <div mat-dialog-content formArrayName="payments">
+        @for (item of formArray.controls; track $index; let i = $index) {
+        <div class="d-flex" [formGroupName]="i">
             <mat-form-field appearance="fill">
                 <mat-label>Monto</mat-label>
                 <input type="number" matInput formControlName="charge">
@@ -10,15 +11,17 @@
                 <mat-label>Medio de pago</mat-label>
                 <mat-select formControlName="paymentMethodId">
                     @for (paymentMethod of paymentMethods; track paymentMethod._id) {
-                        <mat-option [value]="paymentMethod._id">
-                            {{ paymentMethod.name }}
-                        </mat-option>
+                    <mat-option [value]="paymentMethod._id">
+                        {{ paymentMethod.name }}
+                    </mat-option>
                     }
                 </mat-select>
             </mat-form-field>
         </div>
+        }
     </div>
     <mat-dialog-actions>
+        <button type="button" mat-flat-button color="primary" (click)="onAddPayment()">AGREGAR</button>
         <span class="spacer"></span>
         <button type="button" mat-raised-button color="primary" (click)="onCancel()">CANCELAR</button>
         <button type="submit" mat-flat-button color="primary">GUARDAR</button>

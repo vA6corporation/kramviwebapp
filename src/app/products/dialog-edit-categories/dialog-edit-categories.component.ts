@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CategoriesService } from '../categories.service';
@@ -14,7 +14,7 @@ import { NavigationService } from '../../navigation/navigation.service';
     templateUrl: './dialog-edit-categories.component.html',
     styleUrls: ['./dialog-edit-categories.component.sass']
 })
-export class DialogEditCategoriesComponent implements OnInit {
+export class DialogEditCategoriesComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

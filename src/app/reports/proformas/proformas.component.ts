@@ -1,5 +1,5 @@
 import { CommonModule, formatDate } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Params } from '@angular/router';
 import { Chart, ChartOptions, ChartType, registerables } from 'chart.js';
@@ -28,7 +28,7 @@ Chart.register(...registerables);
     templateUrl: './proformas.component.html',
     styleUrls: ['./proformas.component.sass']
 })
-export class ProformasComponent implements OnInit {
+export class ProformasComponent {
 
     constructor(
         private readonly proformasService: ProformasService,
@@ -40,7 +40,7 @@ export class ProformasComponent implements OnInit {
     ) { }
 
     @ViewChild('chargeChart')
-    private chargeChart!: ElementRef<HTMLCanvasElement>;
+    private chargeChart!: ElementRef<HTMLCanvasElement>
 
     formGroup: FormGroup = this.formBuilder.group({
         startDate: [new Date(), Validators.required],

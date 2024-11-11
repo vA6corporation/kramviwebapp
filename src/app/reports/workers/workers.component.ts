@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './workers.component.html',
     styleUrls: ['./workers.component.sass']
 })
-export class WorkersComponent implements OnInit {
+export class WorkersComponent {
 
     constructor(
         private readonly authService: AuthService,

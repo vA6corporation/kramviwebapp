@@ -1,6 +1,6 @@
 import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -26,7 +26,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './customers.component.html',
     styleUrls: ['./customers.component.sass']
 })
-export class CustomersComponent implements OnInit {
+export class CustomersComponent {
 
     constructor(
         private readonly customersService: CustomersService,

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -16,7 +16,7 @@ import { SalesService } from '../../sales/sales.service';
     templateUrl: './deliveries.component.html',
     styleUrls: ['./deliveries.component.sass']
 })
-export class DeliveriesComponent implements OnInit {
+export class DeliveriesComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

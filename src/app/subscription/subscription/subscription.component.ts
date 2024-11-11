@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -8,7 +8,7 @@ import { NavigationService } from '../../navigation/navigation.service';
     templateUrl: './subscription.component.html',
     styleUrls: ['./subscription.component.sass']
 })
-export class SubscriptionComponent implements OnInit {
+export class SubscriptionComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

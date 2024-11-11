@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,7 @@ import { AuthService } from '../../auth/auth.service';
     templateUrl: './dialog-move-stock.component.html',
     styleUrls: ['./dialog-move-stock.component.sass']
 })
-export class DialogMoveStockComponent implements OnInit {
+export class DialogMoveStockComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -29,7 +29,7 @@ export class DialogMoveStockComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        quantity: [null, Validators.required],
+        quantity: ['', Validators.required],
         toOfficeId: [null, Validators.required],
         observations: '',
     })

@@ -29,7 +29,7 @@ export class DialogSearchCustomersComponent {
 
     formGroup: FormGroup = this.formBuilder.group({
         searchType: 'NAME',
-        key: [null, Validators.required],
+        key: ['', Validators.required],
     })
     setting: SettingModel = new SettingModel()
     customers: CustomerModel[] = []

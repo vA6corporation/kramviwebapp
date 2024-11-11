@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { DialogCreateCustomersComponent } from '../../customers/dialog-create-customers/dialog-create-customers.component';
@@ -14,7 +14,7 @@ import { ProvidersService } from '../../providers/providers.service';
     templateUrl: './dialog-create-providers.component.html',
     styleUrls: ['./dialog-create-providers.component.sass']
 })
-export class DialogCreateProvidersComponent implements OnInit {
+export class DialogCreateProvidersComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

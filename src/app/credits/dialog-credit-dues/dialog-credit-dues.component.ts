@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SalesService } from '../../sales/sales.service';
@@ -9,7 +9,7 @@ import { SalesService } from '../../sales/sales.service';
     templateUrl: './dialog-credit-dues.component.html',
     styleUrls: ['./dialog-credit-dues.component.sass']
 })
-export class DialogCreditDuesComponent implements OnInit {
+export class DialogCreditDuesComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -20,21 +20,23 @@ export class DialogCreditDuesComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        dues: [null, Validators.required],
-    });
-    isLoading: boolean = false;
+        dues: ['', Validators.required],
+    })
+    isLoading: boolean = false
 
     ngOnInit(): void { }
 
     onSubmit(): void {
         if (this.formGroup.valid) {
-            this.isLoading = true;
-            const { dues } = this.formGroup.value;
-            this.salesService.updateDues(this.saleId, dues).subscribe(() => {
-                this.dialogRef.close(true);
-            }, (error: HttpErrorResponse) => {
-                console.log(error.error.message);
-            });
+            this.isLoading = true
+            const { dues } = this.formGroup.value
+            this.salesService.updateDues(this.saleId, dues).subscribe({
+                next: () => {
+                    this.dialogRef.close(true)
+                }, error: (error: HttpErrorResponse) => {
+                    console.log(error.error.message)
+                }
+            })
         }
     }
 

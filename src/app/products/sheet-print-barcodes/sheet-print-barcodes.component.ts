@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { ProductModel } from '../product.model';
 import { PrintService } from '../../print/print.service';
@@ -11,7 +11,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './sheet-print-barcodes.component.html',
     styleUrls: ['./sheet-print-barcodes.component.sass']
 })
-export class SheetPrintBarcodesComponent implements OnInit {
+export class SheetPrintBarcodesComponent {
 
     constructor(
         @Inject(MAT_BOTTOM_SHEET_DATA)
@@ -19,9 +19,6 @@ export class SheetPrintBarcodesComponent implements OnInit {
         private readonly printService: PrintService,
         private readonly bottomSheetRef: MatBottomSheetRef<SheetPrintBarcodesComponent>,
     ) { }
-
-    ngOnInit(): void {
-    }
 
     onPrintBarcodes110x30mm() {
         this.printService.printBarcodes110x30mm(this.products)

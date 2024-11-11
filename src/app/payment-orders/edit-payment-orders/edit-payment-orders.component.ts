@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -25,7 +25,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './edit-payment-orders.component.html',
     styleUrls: ['./edit-payment-orders.component.sass']
 })
-export class EditPaymentOrdersComponent implements OnInit {
+export class EditPaymentOrdersComponent {
 
     constructor(
         private readonly paymentOrdersService: PaymentOrdersService,

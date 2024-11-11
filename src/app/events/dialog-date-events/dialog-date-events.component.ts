@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -10,7 +10,7 @@ import { EventsService } from '../events.service';
     templateUrl: './dialog-date-events.component.html',
     styleUrls: ['./dialog-date-events.component.sass']
 })
-export class DialogDateEventsComponent implements OnInit {
+export class DialogDateEventsComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -60,9 +60,6 @@ export class DialogDateEventsComponent implements OnInit {
         { value: 11, label: '11' },
         { value: 12, label: '12' },
     ]
-
-    ngOnInit(): void {
-    }
 
     onSubmit() {
         if (this.formGroup.valid) {

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -13,7 +13,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './create-banks.component.html',
     styleUrls: ['./create-banks.component.sass']
 })
-export class CreateBanksComponent implements OnInit {
+export class CreateBanksComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

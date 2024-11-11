@@ -12,42 +12,42 @@ export class CategorySuppliesService {
         private readonly httpService: HttpService
     ) { }
 
-    private categorySupplies$: BehaviorSubject<CategorySupplyModel[]> | null = null;
+    private categorySupplies$: BehaviorSubject<CategorySupplyModel[]> | null = null
 
     getCategorySuppliesByPage(pageIndex: number, pageSize: number) {
-        return this.httpService.get(`categorySupplies/byPage/${pageIndex}/${pageSize}`);
+        return this.httpService.get(`categorySupplies/byPage/${pageIndex}/${pageSize}`)
     }
 
     handleCategorySupplies(): Observable<CategorySupplyModel[]> {
         if (this.categorySupplies$ === null) {
-            this.categorySupplies$ = new BehaviorSubject<CategorySupplyModel[]>([]);
-            this.loadCategorySupplies();
+            this.categorySupplies$ = new BehaviorSubject<CategorySupplyModel[]>([])
+            this.loadCategorySupplies()
         }
-        return this.categorySupplies$.asObservable();
+        return this.categorySupplies$.asObservable()
     }
 
     loadCategorySupplies(): void {
         this.httpService.get('categorySupplies').subscribe(categorySupplies => {
             if (this.categorySupplies$) {
-                this.categorySupplies$.next(categorySupplies);
+                this.categorySupplies$.next(categorySupplies)
             }
-        });
+        })
     }
 
     getCategorySupplyById(categorySupplyId: string): Observable<CategorySupplyModel> {
-        return this.httpService.get(`categorySupplies/byId/${categorySupplyId}`);
+        return this.httpService.get(`categorySupplies/byId/${categorySupplyId}`)
     }
 
     create(name: string): Observable<CategorySupplyModel> {
-        return this.httpService.post('categorySupplies', { name });
+        return this.httpService.post('categorySupplies', { name })
     }
 
     update(categorySupplyId: string, name: string): Observable<void> {
-        return this.httpService.put(`categorySupplies/${categorySupplyId}`, { name });
+        return this.httpService.put(`categorySupplies/${categorySupplyId}`, { name })
     }
 
     delete(categoryId: string): Observable<void> {
-        return this.httpService.delete(`categorySupplies/${categoryId}`);
+        return this.httpService.delete(`categorySupplies/${categoryId}`)
     }
 
 }

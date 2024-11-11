@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -7,7 +7,7 @@ import { MatDialogRef } from '@angular/material/dialog';
     templateUrl: './dialog-delete-sale.component.html',
     styleUrls: ['./dialog-delete-sale.component.sass']
 })
-export class DialogDeleteSaleComponent implements OnInit {
+export class DialogDeleteSaleComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -17,9 +17,6 @@ export class DialogDeleteSaleComponent implements OnInit {
     formGroup: FormGroup = this.formBuilder.group({
         deletedReason: [null, Validators.required]
     });
-
-    ngOnInit(): void {
-    }
 
     onSubmit() {
         if (this.formGroup.valid) {

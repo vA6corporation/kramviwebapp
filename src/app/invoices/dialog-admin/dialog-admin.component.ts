@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -28,7 +28,7 @@ export interface DialogAdminData {
     templateUrl: './dialog-admin.component.html',
     styleUrls: ['./dialog-admin.component.sass']
 })
-export class DialogAdminComponent implements OnInit {
+export class DialogAdminComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -45,204 +45,214 @@ export class DialogAdminComponent implements OnInit {
 
     formGroup: FormGroup = this.formBuilder.group({
         turnId: null,
-        invoiceNumber: [null, Validators.required],
-        invoiceType: null,
-        currencyCode: null,
-    });
+        invoiceNumber: ['', Validators.required],
+        invoiceType: '',
+        currencyCode: '',
+    })
 
     formDate: FormGroup = this.formBuilder.group({
         createdAt: new Date(),
-    });
+    })
 
     formTicket: FormGroup = this.formBuilder.group({
         sunatCode: null,
-    });
+    })
 
     formCdr: FormGroup = this.formBuilder.group({
         sunatCode: null,
-    });
+    })
 
-    sale: SaleModel | null = null;
-    customer: CustomerModel | null = null;
-    saleItems: SaleItemModel[] = [];
-    payments: PaymentModel[] = [];
-    office: OfficeModel | null = null;
-    user: UserModel | null = null;
-    cdr: CdrModel | null = null;
-    cdrTicket: CdrModel | null = null;
-    ticket: TicketModel | null = null;
-    private onUpdate$: EventEmitter<void> = new EventEmitter();
+    sale: SaleModel | null = null
+    customer: CustomerModel | null = null
+    saleItems: SaleItemModel[] = []
+    payments: PaymentModel[] = []
+    office: OfficeModel | null = null
+    user: UserModel | null = null
+    cdr: CdrModel | null = null
+    cdrTicket: CdrModel | null = null
+    ticket: TicketModel | null = null
+    private onUpdate$: EventEmitter<void> = new EventEmitter()
 
-    private handleAuth$: Subscription = new Subscription();
+    private handleAuth$: Subscription = new Subscription()
 
     ngOnDestroy() {
-        this.handleAuth$.unsubscribe();
+        this.handleAuth$.unsubscribe()
     }
 
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.office = auth.office;
-        });
-        this.fetchData();
+            this.office = auth.office
+        })
+        this.fetchData()
     }
 
     handleUpdate() {
-        return this.onUpdate$.asObservable();
+        return this.onUpdate$.asObservable()
     }
 
     fetchData() {
         this.salesService.getSaleById(this.data.saleId).subscribe(sale => {
-            this.sale = sale;
-            const { saleItems, customer, payments, user, cdr } = sale;
-            this.customer = customer;
-            this.payments = payments;
-            this.saleItems = saleItems;
-            this.user = user;
+            this.sale = sale
+            const { saleItems, customer, payments, user, cdr } = sale
+            this.customer = customer
+            this.payments = payments
+            this.saleItems = saleItems
+            this.user = user
             this.cdr = cdr
 
-            this.formGroup.patchValue(sale);
-            this.formDate.patchValue(sale);
+            this.formGroup.patchValue(sale)
+            this.formDate.patchValue(sale)
             this.formCdr.patchValue(cdr || {})
         })
         this.invoicesService.getDeleteTicketBySale(this.data.saleId).subscribe(ticket => {
-            this.ticket = ticket;
-            this.formTicket.patchValue(ticket);
+            this.ticket = ticket
+            this.formTicket.patchValue(ticket)
         })
     }
 
     onSubmitDate() {
         if (this.sale) {
-            Object.assign(this.sale, this.formDate.value);
-            this.salesService.updateDateSale(this.sale, this.data.saleId).subscribe(() => {
-                this.navigationService.showMessage('Se han guardado los cambios');
-                this.onUpdate$.emit();
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message);
-            });
+            Object.assign(this.sale, this.formDate.value)
+            this.salesService.updateDateSale(this.sale, this.data.saleId).subscribe({
+                next: () => {
+                    this.navigationService.showMessage('Se han guardado los cambios')
+                    this.onUpdate$.emit()
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                }
+            })
         }
     }
 
     onSubmit() {
         if (this.sale) {
-            Object.assign(this.sale, this.formGroup.value);
-            this.salesService.updateSale(this.sale, this.data.saleId).subscribe(() => {
-                this.navigationService.showMessage('Se han guardado los cambios');
-                this.onUpdate$.emit();
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message);
-            });
+            Object.assign(this.sale, this.formGroup.value)
+            this.salesService.updateSale(this.sale, this.data.saleId).subscribe({
+                next: () => {
+                    this.navigationService.showMessage('Se han guardado los cambios')
+                    this.onUpdate$.emit()
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                }
+            })
         }
     }
 
     onUndelete() {
         if (this.sale) {
-            Object.assign(this.sale, { deletedAt: null });
-            this.salesService.updateDeleteSale(this.sale, this.data.saleId).subscribe(() => {
-                this.navigationService.showMessage('Se han guardado los cambios');
-                this.onUpdate$.emit();
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message);
-            });
+            Object.assign(this.sale, { deletedAt: null })
+            this.salesService.updateDeleteSale(this.sale, this.data.saleId).subscribe({
+                next: () => {
+                    this.navigationService.showMessage('Se han guardado los cambios')
+                    this.onUpdate$.emit()
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                }
+            })
         }
     }
 
     onDeleteCdrTicket() {
         if (this.cdrTicket) {
-            this.navigationService.loadBarStart();
+            this.navigationService.loadBarStart()
             this.invoicesService.deleteCdrTicket(this.data.saleId).subscribe(() => {
-                this.navigationService.loadBarFinish();
-                this.onUpdate$.emit();
-                this.fetchData();
-            });
+                this.navigationService.loadBarFinish()
+                this.onUpdate$.emit()
+                this.fetchData()
+            })
         }
     }
 
     onSubmitTicket() {
         if (this.ticket) {
-            this.navigationService.loadBarStart();
-            Object.assign(this.ticket, this.formTicket.value);
-            this.salesService.updateTicket(this.ticket, this.ticket._id).subscribe(() => {
-                this.navigationService.loadBarFinish();
-                this.onUpdate$.emit();
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message);
-            });
+            this.navigationService.loadBarStart()
+            Object.assign(this.ticket, this.formTicket.value)
+            this.salesService.updateTicket(this.ticket, this.ticket._id).subscribe({
+                next: () => {
+                    this.navigationService.loadBarFinish()
+                    this.onUpdate$.emit()
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                }
+            })
         }
     }
 
     onSubmitCdr() {
         if (this.cdr) {
-            this.navigationService.loadBarStart();
-            Object.assign(this.cdr, this.formCdr.value);
-            this.salesService.updateCdr(this.cdr, this.cdr._id).subscribe(() => {
-                this.onUpdate$.emit();
-                this.navigationService.loadBarFinish();
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message);
-            });
+            this.navigationService.loadBarStart()
+            Object.assign(this.cdr, this.formCdr.value)
+            this.salesService.updateCdr(this.cdr, this.cdr._id).subscribe({
+                next: () => {
+                    this.onUpdate$.emit()
+                    this.navigationService.loadBarFinish()
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                }
+            })
         }
     }
 
     onDeleteCdr() {
-        const ok = confirm('Esta seguro de eliminar el CDR?...');
+        const ok = confirm('Esta seguro de eliminar el CDR?...')
         if (ok && this.cdr !== null) {
             this.invoicesService.deleteCdr(this.cdr._id).subscribe(() => {
-                this.fetchData();
-                this.onUpdate$.emit();
-            });
+                this.fetchData()
+                this.onUpdate$.emit()
+            })
         }
     }
 
     onDeleteSale() {
-        const ok = confirm('Esta seguro de eliminar la venta?...');
+        const ok = confirm('Esta seguro de eliminar la venta?...')
         if (ok && this.sale !== null) {
             this.salesService.delete(this.sale._id).subscribe(() => {
-                this.navigationService.showMessage('Eliminado correctamente');
-                this.dialogRef.close();
-                this.onUpdate$.emit();
-            });
+                this.navigationService.showMessage('Eliminado correctamente')
+                this.dialogRef.close()
+                this.onUpdate$.emit()
+            })
 
             this.creditNotesService.deleteBySale(this.data.saleId).subscribe(() => {
 
-            });
+            })
 
             this.remissionGuidesService.deleteBySale(this.data.saleId).subscribe(() => {
 
-            });
+            })
         }
     }
 
     onDeleteSales() {
         if (this.data.saleIds) {
-            const ok = confirm('Esta seguro de eliminar las ventas?...');
+            const ok = confirm('Esta seguro de eliminar las ventas?...')
             if (ok) {
-                this.navigationService.loadBarStart();
+                this.navigationService.loadBarStart()
                 this.salesService.deleteMassive(this.data.saleIds).subscribe(() => {
-                    this.navigationService.loadBarFinish();
-                    this.navigationService.showMessage('Eliminado correctamente');
-                    this.dialogRef.close();
-                    this.onUpdate$.emit();
-                });
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage('Eliminado correctamente')
+                    this.dialogRef.close()
+                    this.onUpdate$.emit()
+                })
             }
         }
     }
 
     onDeleteTicket() {
-        const ok = confirm('Esta seguro de eliminar el ticket');
+        const ok = confirm('Esta seguro de eliminar el ticket')
         if (ok && this.ticket !== null) {
             this.invoicesService.deleteTicket(this.ticket._id).subscribe(() => {
-                this.fetchData();
-                this.onUpdate$.emit();
-            });
+                this.fetchData()
+                this.onUpdate$.emit()
+            })
         }
     }
 
     onDeleteInvoice() {
-        const ok = confirm('Esta seguro de comunicar de baja');
+        const ok = confirm('Esta seguro de comunicar de baja')
         if (ok) {
             this.invoicesService.cancelInvoice(this.data.saleId, 'Error').subscribe(() => {
-                this.onUpdate$.emit();
-            });
+                this.onUpdate$.emit()
+            })
         }
     }
 

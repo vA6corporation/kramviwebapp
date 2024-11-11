@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Params, Router } from '@angular/router';
@@ -33,7 +33,7 @@ interface FormData {
     templateUrl: './charge-edit-purchases.component.html',
     styleUrls: ['./charge-edit-purchases.component.sass']
 })
-export class ChargeEditPurchasesComponent implements OnInit {
+export class ChargeEditPurchasesComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

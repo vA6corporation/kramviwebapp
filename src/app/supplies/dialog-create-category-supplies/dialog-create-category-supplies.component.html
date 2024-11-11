@@ -1,17 +1,17 @@
 <div>
-  <h2 mat-dialog-title>Nueva categoria</h2>
-  <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
-    <div mat-dialog-content>
-      <mat-form-field appearance="fill">
-        <mat-label>Nombre de categoria</mat-label>
-        <input type="text" matInput formControlName="name">
-      </mat-form-field>
-      <div class="py-3"></div>
-    </div>
-    <mat-dialog-actions>
-      <span class="spacer"></span>
-      <button mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
-      <button mat-flat-button color="primary" [disabled]="isLoading" type="submit">GUARDAR</button>
-    </mat-dialog-actions>
-  </form>
+    <h2 mat-dialog-title>Nueva categoria</h2>
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+        <div mat-dialog-content>
+            <mat-form-field appearance="fill">
+                <mat-label>Nombre de categoria</mat-label>
+                <input type="text" matInput formControlName="name">
+            </mat-form-field>
+            <div class="py-3"></div>
+        </div>
+        <mat-dialog-actions>
+            <span class="spacer"></span>
+            <button mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+            <button mat-flat-button color="primary" [disabled]="isLoading" type="submit">GUARDAR</button>
+        </mat-dialog-actions>
+    </form>
 </div>

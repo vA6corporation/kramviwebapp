@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -17,7 +17,7 @@ import { CreditNotesService } from '../credit-notes.service';
     templateUrl: './edit-credit-note-items.component.html',
     styleUrls: ['./edit-credit-note-items.component.sass']
 })
-export class EditCreditNoteItemsComponent implements OnInit {
+export class EditCreditNoteItemsComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

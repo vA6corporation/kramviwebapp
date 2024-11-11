@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -14,7 +14,7 @@ import { PurchaseOrdersService } from '../purchase-orders.service';
     templateUrl: './dialog-detail-purchase-orders.component.html',
     styleUrls: ['./dialog-detail-purchase-orders.component.sass']
 })
-export class DialogDetailPurchaseOrdersComponent implements OnInit {
+export class DialogDetailPurchaseOrdersComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

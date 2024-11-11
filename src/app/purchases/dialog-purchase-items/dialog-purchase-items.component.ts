@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -20,7 +20,7 @@ import { NavigationService } from '../../navigation/navigation.service';
     templateUrl: './dialog-purchase-items.component.html',
     styleUrls: ['./dialog-purchase-items.component.sass']
 })
-export class DialogPurchaseItemsComponent implements OnInit {
+export class DialogPurchaseItemsComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

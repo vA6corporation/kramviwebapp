@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './rooms.component.html',
     styleUrls: ['./rooms.component.sass']
 })
-export class RoomsComponent implements OnInit {
+export class RoomsComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
@@ -29,7 +29,7 @@ import { DialogProgressComponent } from '../../navigation/dialog-progress/dialog
     templateUrl: './inventories.component.html',
     styleUrls: ['./inventories.component.sass']
 })
-export class InventoriesComponent implements OnInit {
+export class InventoriesComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -390,6 +390,34 @@ export class InventoriesComponent implements OnInit {
                 }
             }
         })
+    }
+
+    onChangePriceList() {
+        switch (this.setting.defaultPrice) {
+            case PriceType.LISTA: {
+                for (const product of this.dataSource) {
+                    const price = product.prices.find(e => e.priceListId === this.priceListId)
+                    product.price = price ? price.price : product.price
+                }
+            }
+                break
+            case PriceType.LISTAOFICINA: {
+                for (const product of this.dataSource) {
+                    const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
+
+                    if (price) {
+                        product.price = price.price
+                    } else {
+                        const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
+                        product.price = price ? price.price : product.price
+                    }
+                }
+            }
+                break
+            default:
+                break
+        }
+
     }
 
     onTrackStock(product: ProductModel) {

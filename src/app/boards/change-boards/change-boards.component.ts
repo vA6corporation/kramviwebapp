@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -15,7 +15,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './change-boards.component.html',
     styleUrls: ['./change-boards.component.sass']
 })
-export class ChangeBoardsComponent implements OnInit {
+export class ChangeBoardsComponent {
 
     constructor(
         private readonly boardsService: BoardsService,

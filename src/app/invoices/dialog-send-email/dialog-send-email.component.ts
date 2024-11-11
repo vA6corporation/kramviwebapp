@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -10,7 +10,7 @@ import { SalesService } from '../../sales/sales.service';
     templateUrl: './dialog-send-email.component.html',
     styleUrls: ['./dialog-send-email.component.sass']
 })
-export class DialogSendEmailComponent implements OnInit {
+export class DialogSendEmailComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { NavigationService } from '../../navigation/navigation.service';
 import { TableModel } from '../table.model';
@@ -9,7 +9,7 @@ import { TablesService } from '../tables.service';
     templateUrl: './tables.component.html',
     styleUrls: ['./tables.component.sass']
 })
-export class TablesComponent implements OnInit {
+export class TablesComponent {
 
     constructor(
         private readonly tablesService: TablesService,

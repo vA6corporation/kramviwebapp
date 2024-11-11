@@ -12,18 +12,19 @@
     </div>
     <div class="flex-30 bg-white list-items">
         <mat-action-list>
-            <button type="button" mat-list-item *ngFor="let element of recipes; let i = index"
-                (click)="onClickRecipe(i)">
+            @for (recipe of recipes; track recipe.supplyId; let i = $index) {
+            <button type="button" mat-list-item (click)="onClickRecipe(i)">
                 <div class="d-flex flex-column">
-                    {{ element.name }}
+                    {{ recipe.name }}
                 </div>
                 <span class="divider"></span>
-                <span class="text-muted">x{{ element.quantity }}</span>
+                <span class="text-muted">x{{ recipe.quantity }}</span>
                 <span class="spacer"></span>
                 <div class="d-flex flex-column">
-                    {{ (element.cost * element.quantity).toFixed(2) }}
+                    {{ (recipe.cost * recipe.quantity).toFixed(2) }}
                 </div>
             </button>
+            }
             <mat-list-item role="listitem">
                 <div class="d-flex font-weight-bold">
                     Total

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TurnModel } from '../turn.model';
 import { TurnsService } from '../turns.service';
@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './dialog-change-turn.component.html',
     styleUrls: ['./dialog-change-turn.component.sass']
 })
-export class DialogChangeTurnComponent implements OnInit {
+export class DialogChangeTurnComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

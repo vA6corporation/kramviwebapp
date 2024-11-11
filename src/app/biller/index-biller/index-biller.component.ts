@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavigationService } from '../../navigation/navigation.service';
 import { MaterialModule } from '../../material.module';
 import { RouterModule } from '@angular/router';
@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
     templateUrl: './index-biller.component.html',
     styleUrls: ['./index-biller.component.sass']
 })
-export class IndexBillerComponent implements OnInit {
+export class IndexBillerComponent {
 
     constructor(
         private readonly navigationSerivce: NavigationService,

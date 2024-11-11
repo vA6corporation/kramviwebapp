@@ -1,17 +1,20 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategorySuppliesService } from '../category-supplies.service';
 import { CategorySupplyModel } from '../category-supply.model';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-edit-category-supplies',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-edit-category-supplies.component.html',
     styleUrls: ['./dialog-edit-category-supplies.component.sass']
 })
-export class DialogEditCategorySuppliesComponent implements OnInit {
+export class DialogEditCategorySuppliesComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -24,7 +27,7 @@ export class DialogEditCategorySuppliesComponent implements OnInit {
 
     formGroup: FormGroup = this.formBuilder.group({
         _id: null,
-        name: [null, Validators.required]
+        name: ['', Validators.required]
     })
     isLoading: boolean = false
 

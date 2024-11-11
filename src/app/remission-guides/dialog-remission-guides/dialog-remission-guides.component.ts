@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -15,7 +15,7 @@ import { RemissionGuidesService } from '../remission-guides.service';
     templateUrl: './dialog-remission-guides.component.html',
     styleUrls: ['./dialog-remission-guides.component.sass']
 })
-export class DialogRemissionGuidesComponent implements OnInit {
+export class DialogRemissionGuidesComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -43,10 +43,12 @@ export class DialogRemissionGuidesComponent implements OnInit {
             this.setting = auth.setting
         })
 
-        this.remissionGuidesService.getRemissionGuidesBySale(this.saleId).subscribe(remissionGuides => {
-            this.remissionGuides = remissionGuides
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.showMessage(error.error.message)
+        this.remissionGuidesService.getRemissionGuidesBySale(this.saleId).subscribe({
+            next: remissionGuides => {
+                this.remissionGuides = remissionGuides
+            }, error: (error: HttpErrorResponse) => {
+                this.navigationService.showMessage(error.error.message)
+            }
         })
     }
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
@@ -14,7 +14,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './dialog-board-items.component.html',
     styleUrls: ['./dialog-board-items.component.sass']
 })
-export class DialogBoardItemsComponent implements OnInit {
+export class DialogBoardItemsComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

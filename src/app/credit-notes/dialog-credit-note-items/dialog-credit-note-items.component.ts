@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { CreditNotesService } from '../credit-notes.service';
     templateUrl: './dialog-credit-note-items.component.html',
     styleUrls: ['./dialog-credit-note-items.component.sass']
 })
-export class DialogCreditNoteItemsComponent implements OnInit {
+export class DialogCreditNoteItemsComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

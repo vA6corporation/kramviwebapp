@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CategoryModel } from '../category.model';
 import { ProductModel } from '../product.model';
@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './dialog-products.component.html',
     styleUrls: ['./dialog-products.component.sass']
 })
-export class DialogProductsComponent implements OnInit {
+export class DialogProductsComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

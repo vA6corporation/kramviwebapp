@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -28,7 +28,7 @@ interface FormData {
     templateUrl: './charge-edit-purchase-supplies.component.html',
     styleUrls: ['./charge-edit-purchase-supplies.component.sass']
 })
-export class ChargeEditPurchaseSuppliesComponent implements OnInit {
+export class ChargeEditPurchaseSuppliesComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -38,13 +38,13 @@ export class ChargeEditPurchaseSuppliesComponent implements OnInit {
         private readonly router: Router,
     ) { }
 
-    private handleClickMenu$: Subscription = new Subscription();
-    private purchaseSupplyItems$: Subscription = new Subscription();
+    private handleClickMenu$: Subscription = new Subscription()
+    private purchaseSupplyItems$: Subscription = new Subscription()
 
-    purchaseSupplyItems: CreatePurchaseSupplyItemModel[] = [];
-    charge: number = 0;
-    provider: ProviderModel | null = null;
-    isLoading: boolean = false;
+    purchaseSupplyItems: CreatePurchaseSupplyItemModel[] = []
+    charge: number = 0
+    provider: ProviderModel | null = null
+    isLoading: boolean = false
     formGroup: FormGroup = this.formBuilder.group({
         invoiceCode: '03',
         paymentType: 'EFECTIVO',
@@ -52,53 +52,53 @@ export class ChargeEditPurchaseSuppliesComponent implements OnInit {
         createdAt: new Date(),
         serie: '',
         observations: '',
-    } as FormData);
+    } as FormData)
     invoiceTypes = [
         { code: '01', name: 'FACTURA' },
         { code: '02', name: 'BOLETA' },
         { code: '03', name: 'NOTA DE VENTA' },
-    ];
+    ]
 
-    private purchaseSupplyId: string = '';
-    paymentMethods: PaymentMethodModel[] = [];
+    private purchaseSupplyId: string = ''
+    paymentMethods: PaymentMethodModel[] = []
 
     ngOnDestroy() {
-        this.handleClickMenu$.unsubscribe();
-        this.purchaseSupplyItems$.unsubscribe();
+        this.handleClickMenu$.unsubscribe()
+        this.purchaseSupplyItems$.unsubscribe()
     }
 
     ngOnInit(): void {
-        const purchaseSupply = this.purchaseSuppliesService.getPurchaseSupply();
-        this.navigationService.setTitle('Comprar');
+        const purchaseSupply = this.purchaseSuppliesService.getPurchaseSupply()
+        this.navigationService.setTitle('Comprar')
 
         if (purchaseSupply === null) {
-            this.router.navigate(['purchaseSupplies']);
+            this.router.navigate(['purchaseSupplies'])
         } else {
 
-            this.purchaseSupplyId = purchaseSupply._id;
-            this.purchaseSuppliesService.setProvider(purchaseSupply.provider);
+            this.purchaseSupplyId = purchaseSupply._id
+            this.purchaseSuppliesService.setProvider(purchaseSupply.provider)
 
-            this.formGroup.patchValue(purchaseSupply);
+            this.formGroup.patchValue(purchaseSupply)
 
             this.purchaseSupplyItems$ = this.purchaseSuppliesService.getPurchaseSupplyItems().subscribe(purchaseSupplyItems => {
-                this.purchaseSupplyItems = purchaseSupplyItems;
-                this.charge = 0;
+                this.purchaseSupplyItems = purchaseSupplyItems
+                this.charge = 0
                 for (const purchaseSupplyItem of this.purchaseSupplyItems) {
                     if (purchaseSupplyItem.igvCode !== '11') {
-                        this.charge += purchaseSupplyItem.cost * purchaseSupplyItem.quantity;
+                        this.charge += purchaseSupplyItem.cost * purchaseSupplyItem.quantity
                     }
                 }
-            });
+            })
 
             this.purchaseSuppliesService.getProvider().subscribe(provider => {
-                this.provider = provider;
-            });
+                this.provider = provider
+            })
 
-            this.purchaseSuppliesService.setProvider(purchaseSupply.provider);
+            this.purchaseSuppliesService.setProvider(purchaseSupply.provider)
 
             this.navigationService.setMenu([
                 { id: 'add_provider', label: 'Agregar proveedor', icon: 'person_add', show: true },
-            ]);
+            ])
 
             this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
                 switch (id) {
@@ -106,40 +106,40 @@ export class ChargeEditPurchaseSuppliesComponent implements OnInit {
                         const dialogRef = this.matDialog.open(DialogSearchProvidersComponent, {
                             width: '600px',
                             position: { top: '20px' },
-                        });
+                        })
 
                         dialogRef.afterClosed().subscribe(provider => {
                             if (provider) {
-                                this.provider = provider;
+                                this.provider = provider
                             }
-                        });
+                        })
 
                         dialogRef.componentInstance.handleAddProvider().subscribe(() => {
                             const dialogRef = this.matDialog.open(DialogCreateProvidersComponent, {
                                 width: '600px',
                                 position: { top: '20px' },
-                            });
+                            })
 
                             dialogRef.afterClosed().subscribe(provider => {
                                 if (provider) {
-                                    this.provider = provider;
+                                    this.provider = provider
                                 }
-                            });
-                        });
-                        break;
+                            })
+                        })
+                        break
                     default:
-                        break;
+                        break
                 }
-            });
+            })
         }
     }
 
     onSubmit() {
         try {
 
-            this.isLoading = true;
-            this.navigationService.loadBarStart();
-            const formData: FormData = this.formGroup.value;
+            this.isLoading = true
+            this.navigationService.loadBarStart()
+            const formData: FormData = this.formGroup.value
             const purchaseSupply: CreatePurchaseSupplyModel = {
                 invoiceCode: formData.invoiceCode,
                 paymentType: formData.paymentType,
@@ -150,30 +150,32 @@ export class ChargeEditPurchaseSuppliesComponent implements OnInit {
             }
 
             if (this.purchaseSupplyItems.length === 0) {
-                throw new Error('Agrega un producto');
+                throw new Error('Agrega un producto')
             }
 
             if (purchaseSupply.invoiceCode === '01' && this.provider === null) {
-                throw new Error('Agrega un provedor');
+                throw new Error('Agrega un provedor')
             }
 
-            this.purchaseSuppliesService.updatePurchaseSupply(purchaseSupply, this.purchaseSupplyItems, this.purchaseSupplyId).subscribe(purchase => {
-                this.purchaseSuppliesService.setPurchaseSupplyItems([]);
-                this.router.navigate(['/purchaseSupplies']);
-                this.isLoading = false;
-                this.navigationService.loadBarFinish();
-                this.navigationService.showMessage('Se han guardado los cambios');
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message);
-                this.isLoading = false;
-                this.navigationService.loadBarFinish();
-            });
+            this.purchaseSuppliesService.update(purchaseSupply, this.purchaseSupplyItems, this.purchaseSupplyId).subscribe({
+                next: () => {
+                    this.purchaseSuppliesService.setPurchaseSupplyItems([])
+                    this.router.navigate(['/purchaseSupplies'])
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage('Se han guardado los cambios')
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                }
+            })
         } catch (error) {
             if (error instanceof Error) {
-                this.navigationService.showMessage(error.message);
+                this.navigationService.showMessage(error.message)
             }
-            this.isLoading = false;
-            this.navigationService.loadBarFinish();
+            this.isLoading = false
+            this.navigationService.loadBarFinish()
         }
     }
 
@@ -182,7 +184,7 @@ export class ChargeEditPurchaseSuppliesComponent implements OnInit {
             width: '600px',
             position: { top: '20px' },
             data: this.provider,
-        });
+        })
     }
 
 }

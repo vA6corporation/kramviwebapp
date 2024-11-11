@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavigationService } from '../../navigation/navigation.service';
 
 @Component({
@@ -6,7 +6,7 @@ import { NavigationService } from '../../navigation/navigation.service';
   templateUrl: './index-minimarket.component.html',
   styleUrls: ['./index-minimarket.component.sass']
 })
-export class IndexMinimarketComponent implements OnInit {
+export class IndexMinimarketComponent {
 
   constructor(
     private readonly navigationService: NavigationService,

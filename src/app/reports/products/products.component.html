@@ -14,27 +14,33 @@
                 <mat-label>Sucursal</mat-label>
                 <mat-select formControlName="officeId" (selectionChange)="onOfficeChange()">
                     <mat-option value="">TODAS LAS SUCURSALES</mat-option>
-                    <mat-option [value]="element._id" *ngFor="let element of offices">
-                        {{ element.name | uppercase }}
+                    @for (office of offices; track $index) {
+                    <mat-option [value]="office._id">
+                        {{ office.name | uppercase }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Categoria</mat-label>
                 <mat-select (selectionChange)="onCategoryChange()" formControlName="categoryId">
                     <mat-option value="">TODAS LAS CATEGORIAS</mat-option>
-                    <mat-option class="text-uppercase" *ngFor="let category of categories" [value]="category._id">
+                    @for (category of categories; track category._id) {
+                    <mat-option class="text-uppercase" [value]="category._id">
                         {{ category.name | uppercase }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Usuario</mat-label>
                 <mat-select (selectionChange)="onUserChange()" formControlName="userId">
                     <mat-option value="">TODOS LOS USUARIOS</mat-option>
-                    <mat-option *ngFor="let element of users" [value]="element._id" class="text-uppercase">
-                        {{ element.name | uppercase }}
+                    @for (user of users; track user._id) {
+                    <mat-option [value]="user._id" class="text-uppercase">
+                        {{ user.name | uppercase }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
         </div>

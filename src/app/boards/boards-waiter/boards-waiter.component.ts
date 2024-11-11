@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -16,7 +16,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './boards-waiter.component.html',
     styleUrls: ['./boards-waiter.component.sass']
 })
-export class BoardsWaiterComponent implements OnInit {
+export class BoardsWaiterComponent {
 
     constructor(
         private readonly tablesService: TablesService,

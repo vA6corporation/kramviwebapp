@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { SaleModel } from '../sale.model';
@@ -18,7 +18,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './dialog-last-sales.component.html',
     styleUrls: ['./dialog-last-sales.component.sass']
 })
-export class DialogLastSalesComponent implements OnInit {
+export class DialogLastSalesComponent {
 
     constructor(
         private readonly salesService: SalesService,

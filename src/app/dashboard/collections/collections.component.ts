@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { PaymentsService } from '../../payments/payments.service';
 import { OfficeModel } from '../../auth/office.model';
 import { AuthService } from '../../auth/auth.service';
@@ -13,7 +13,7 @@ Chart.register(...registerables);
     templateUrl: './collections.component.html',
     styleUrls: ['./collections.component.sass']
 })
-export class CollectionsComponent implements OnInit {
+export class CollectionsComponent {
 
     constructor(
         private readonly paymentsService: PaymentsService,

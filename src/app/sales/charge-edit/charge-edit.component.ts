@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -35,7 +35,7 @@ import { SaleItemsComponent } from '../sale-items/sale-items.component';
     templateUrl: './charge-edit.component.html',
     styleUrls: ['./charge-edit.component.sass']
 })
-export class ChargeEditComponent implements OnInit {
+export class ChargeEditComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

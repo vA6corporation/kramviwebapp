@@ -130,10 +130,12 @@
                 <td align="right">{{ cdr.sunatMessage }}</td>
             </tr>
             <ng-container *ngIf="cdr && cdr.sunatNotes.length">
-                <tr *ngFor="let sunatNote of cdr.sunatNotes; let i = index" class="text-primary">
+                @for (sunatNote of cdr.sunatNotes; track $index; let i = $index) {
+                <tr class="text-primary">
                     <td>Nota: {{ i + 1 }}</td>
                     <td align="right">{{ sunatNote }}</td>
                 </tr>
+                }
             </ng-container>
             <tr *ngIf="ticket" class="text-danger">
                 <td>Comunicacion de baja</td>
@@ -146,28 +148,28 @@
         </tbody>
     </table>
     @if (customer) {
-        <table class="my-3 w-100">
-            <tr>
-                <td>Cliente:</td>
-                <td align="right">{{ customer.name }}</td>
-            </tr>
-            <tr>
-                <td>RUC/DNI:</td>
-                <td align="right">{{ customer.documentType }}: {{ customer.document }}</td>
-            </tr>
-            <tr>
-                <td>Celular:</td>
-                <td align="right" [ngClass]="{ 'text-muted': !customer.mobileNumber }">
-                    {{ customer.mobileNumber || 'NINGUNO' }}
-                </td>
-            </tr>
-            @for (address of customer.addresses; track i; let i = $index) {
-            <tr>
-                <td>Direccion {{ i + 1 }}:</td>
-                <td align="right">{{ address }}</td>
-            </tr>
-            }
-        </table>
+    <table class="my-3 w-100">
+        <tr>
+            <td>Cliente:</td>
+            <td align="right">{{ customer.name }}</td>
+        </tr>
+        <tr>
+            <td>RUC/DNI:</td>
+            <td align="right">{{ customer.documentType }}: {{ customer.document }}</td>
+        </tr>
+        <tr>
+            <td>Celular:</td>
+            <td align="right" [ngClass]="{ 'text-muted': !customer.mobileNumber }">
+                {{ customer.mobileNumber || 'NINGUNO' }}
+            </td>
+        </tr>
+        @for (address of customer.addresses; track i; let i = $index) {
+        <tr>
+            <td>Direccion {{ i + 1 }}:</td>
+            <td align="right">{{ address }}</td>
+        </tr>
+        }
+    </table>
     }
     <mat-list>
         @for (payment of payments; track payment._id) {
@@ -182,7 +184,8 @@
                     [routerLink]="['/turns', payment.turnId, 'details']">
                     <mat-icon>open_in_new</mat-icon>
                 </button>
-                <button mat-icon-button class="ml-2 text-muted" [cdkCopyToClipboard]="payment._id" (click)="onClickCopy()">
+                <button mat-icon-button class="ml-2 text-muted" [cdkCopyToClipboard]="payment._id"
+                    (click)="onClickCopy()">
                     <mat-icon>content_copy</mat-icon>
                 </button>
             </div>

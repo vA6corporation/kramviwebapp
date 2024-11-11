@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -18,7 +18,7 @@ import { FavoritesService } from '../favorites.service';
     templateUrl: './favorites.component.html',
     styleUrls: ['./favorites.component.sass']
 })
-export class FavoritesComponent implements OnInit {
+export class FavoritesComponent {
 
     constructor(
         private readonly productsService: ProductsService,

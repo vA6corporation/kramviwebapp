@@ -3,9 +3,11 @@
         <mat-form-field appearance="fill">
             <mat-label>Todos los creditos</mat-label>
             <mat-select formControlName="isPayed" (selectionChange)="onCreditChange($event.value)">
-                <mat-option *ngFor="let element of creditTypes" [value]="element.code" class="text-uppercase">
-                    {{ element.label }}
-                </mat-option>
+                @for (creditType of creditTypes; track $index) {
+                    <mat-option [value]="creditType.code" class="text-uppercase">
+                        {{ creditType.label }}
+                    </mat-option>
+                }
             </mat-select>
         </mat-form-field>
     </form>

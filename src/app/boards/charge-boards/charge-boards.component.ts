@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Params, Router } from '@angular/router';
@@ -41,7 +41,7 @@ import { BoardItemsComponent } from '../board-items/board-items.component';
     templateUrl: './charge-boards.component.html',
     styleUrls: ['./charge-boards.component.sass']
 })
-export class ChargeBoardsComponent implements OnInit {
+export class ChargeBoardsComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -317,10 +317,11 @@ export class ChargeBoardsComponent implements OnInit {
                 throw new Error("No hemos encontrado la mesa")
             }
 
-            this.salesService.saveSale(
+            this.salesService.createSale(
                 createdSale,
                 this.boardItems,
                 this.payments,
+                [],                
                 this.params
             ).subscribe({
                 next: sale => {

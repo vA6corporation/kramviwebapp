@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTable } from '@angular/material/table';
 import { Subscription, lastValueFrom } from 'rxjs';
@@ -23,7 +23,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './import-products.component.html',
     styleUrls: ['./import-products.component.sass']
 })
-export class ImportProductsComponent implements OnInit {
+export class ImportProductsComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -31,7 +31,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './pos-standard-edit.component.html',
     styleUrls: ['./pos-standard-edit.component.sass']
 })
-export class PosStandardEditComponent implements OnInit {
+export class PosStandardEditComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { PrintService } from '../print.service';
 import { Subscription } from 'rxjs';
 import { buildA4Invoice } from './buildA4Invoice';
@@ -55,7 +55,7 @@ if ((window as any).versions) {
     templateUrl: './print-iframe.component.html',
     styleUrls: ['./print-iframe.component.sass']
 })
-export class PrintIframeComponent implements OnInit {
+export class PrintIframeComponent {
 
     constructor(
         private readonly printService: PrintService,

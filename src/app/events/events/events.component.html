@@ -11,9 +11,9 @@
             <mat-select formControlName="specialtyId" (selectionChange)="onChangeSpecialty()">
                 <mat-option value="">TODAS LAS ESPECIALIDADES</mat-option>
                 @for (specialty of filterSpecialties; track specialty._id) {
-                    <mat-option [value]="specialty._id">
-                        {{ specialty.name | uppercase }}
-                    </mat-option>
+                <mat-option [value]="specialty._id">
+                    {{ specialty.name | uppercase }}
+                </mat-option>
                 }
             </mat-select>
         </mat-form-field>
@@ -21,7 +21,8 @@
     <div class="d-flex">
         <div class="flex-70 pr-2">
             <mat-accordion>
-                <mat-expansion-panel *ngFor="let element of filterEvents">
+                @for (element of filterEvents; track element._id) {
+                <mat-expansion-panel>
                     <mat-expansion-panel-header [ngClass]="{ 'bg-success': element.saleId }">
                         <mat-panel-title>
                             <span class="text-uppercase">
@@ -45,11 +46,13 @@
                             </tr>
                             <tr>
                                 <td>Celular</td>
-                                <td align="right" [ngClass]="{ 'text-muted': !element.customer.mobileNumber}">{{ element.customer.mobileNumber || 'NINGUNO' }}</td>
+                                <td align="right" [ngClass]="{ 'text-muted': !element.customer.mobileNumber}">{{
+                                    element.customer.mobileNumber || 'NINGUNO' }}</td>
                             </tr>
                             <tr>
                                 <td>Email</td>
-                                <td align="right" [ngClass]="{ 'text-muted': !element.customer.email}">{{ element.customer.email || 'NINGUNO' }}</td>
+                                <td align="right" [ngClass]="{ 'text-muted': !element.customer.email}">{{
+                                    element.customer.email || 'NINGUNO' }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -70,62 +73,64 @@
                             </tr>
                             <tr>
                                 <td>Observaciones</td>
-                                <td align="right" [ngClass]="{ 'text-muted': !element.observations}">{{ element.observations || 'NINGUNO' }}</td>
+                                <td align="right" [ngClass]="{ 'text-muted': !element.observations}">{{
+                                    element.observations || 'NINGUNO' }}</td>
                             </tr>
                         </tbody>
                     </table>
                     <mat-divider></mat-divider>
                     <mat-list role="list">
                         @for (eventItem of element.eventItems; track eventItem._id) {
-                            <mat-list-item role="listitem">
-                                <span matListItemTitle>{{ eventItem.fullName }} ({{ eventItem.quantity }})</span>
-                                @if (eventItem.igvCode === igvType.BONIFICACION) {
-                                    <span class="mr-2" [style.color]="'green'">Bonificacion</span>
-                                }
-                                @if (eventItem.igvCode === igvType.EXONERADO) {
-                                    <span class="text-primary mr-2">Exonerado</span>
-                                }
-                                @if (eventItem.igvCode === igvType.INAFECTO) {
-                                    <span class="text-primary mr-2">Inafecto</span>
-                                }
-                                <span matListItemLine>{{ eventItem.price.toFixed(2) }}</span>
-                            </mat-list-item>
+                        <mat-list-item role="listitem">
+                            <span matListItemTitle>{{ eventItem.fullName }} ({{ eventItem.quantity }})</span>
+                            @if (eventItem.igvCode === igvType.BONIFICACION) {
+                            <span class="mr-2" [style.color]="'green'">Bonificacion</span>
+                            }
+                            @if (eventItem.igvCode === igvType.EXONERADO) {
+                            <span class="text-primary mr-2">Exonerado</span>
+                            }
+                            @if (eventItem.igvCode === igvType.INAFECTO) {
+                            <span class="text-primary mr-2">Inafecto</span>
+                            }
+                            <span matListItemLine>{{ eventItem.price.toFixed(2) }}</span>
+                        </mat-list-item>
                         }
                     </mat-list>
                     @if (element.saleId) {
-                        <div class="d-flex">
-                            <span class="spacer"></span>
-                            <button type="button" mat-raised-button color="primary" (click)="onExportEvent(element)">
-                                EXP. CITA
-                            </button>
-                            <span class="divider"></span>
-                            <button type="button" mat-raised-button color="primary" (click)="onChangeEventDate(element)">
-                                M. FECHA
-                            </button>
-                            <span class="divider"></span>
-                            <button type="button" mat-flat-button color="primary"
-                                (click)="onOpenDetails(element.saleId)">DTA. VENTA</button>
-                        </div>
+                    <div class="d-flex">
+                        <span class="spacer"></span>
+                        <button type="button" mat-raised-button color="primary" (click)="onExportEvent(element)">
+                            EXP. CITA
+                        </button>
+                        <span class="divider"></span>
+                        <button type="button" mat-raised-button color="primary" (click)="onChangeEventDate(element)">
+                            M. FECHA
+                        </button>
+                        <span class="divider"></span>
+                        <button type="button" mat-flat-button color="primary"
+                            (click)="onOpenDetails(element.saleId)">DTA. VENTA</button>
+                    </div>
                     } @else {
-                        <div class="d-flex">
-                            <span class="spacer"></span>
-                            <button type="button" mat-raised-button color="primary"
-                                (click)="onExportEvent(element)">EXP. CITA</button>
-                            <span class="divider"></span>
-                            <button type="button" mat-raised-button color="primary"
-                                (click)="onDeleteEvent(element._id)">ELIMINAR</button>
-                            <span class="divider"></span>
-                            <button type="button" mat-raised-button color="primary"
-                                [routerLink]="[ '/events', element._id, 'editItems' ]">EDITAR</button>
-                            <span class="divider"></span>
-                            <button type="button" mat-raised-button color="primary"
-                                (click)="onChangeEventDate(element)">M. FECHA</button>
-                            <span class="divider"></span>
-                            <button type="button" mat-flat-button color="primary"
-                                [routerLink]="[ '/events', element._id, 'charge' ]">COBRAR</button>
-                        </div>
+                    <div class="d-flex">
+                        <span class="spacer"></span>
+                        <button type="button" mat-raised-button color="primary" (click)="onExportEvent(element)">EXP.
+                            CITA</button>
+                        <span class="divider"></span>
+                        <button type="button" mat-raised-button color="primary"
+                            (click)="onDeleteEvent(element._id)">ELIMINAR</button>
+                        <span class="divider"></span>
+                        <button type="button" mat-raised-button color="primary"
+                            [routerLink]="[ '/events', element._id, 'editItems' ]">EDITAR</button>
+                        <span class="divider"></span>
+                        <button type="button" mat-raised-button color="primary" (click)="onChangeEventDate(element)">M.
+                            FECHA</button>
+                        <span class="divider"></span>
+                        <button type="button" mat-flat-button color="primary"
+                            [routerLink]="[ '/events', element._id, 'charge' ]">COBRAR</button>
+                    </div>
                     }
                 </mat-expansion-panel>
+                }
             </mat-accordion>
         </div>
         <div class="flex-30 pl-2">
@@ -136,12 +141,14 @@
                 <mat-card-content>
                     <table class="w-100">
                         <tbody>
-                            <ng-container *ngFor="let element of specialties">
-                                <tr *ngIf="countEvents(element._id)">
-                                    <td class="text-lowercase">{{ element.name }}</td>
-                                    <td align="right">{{ countEvents(element._id) }}</td>
-                                </tr>
-                            </ng-container>
+                            @for (specialty of specialties; track $index) {
+                            @if (countEvents(specialty._id)) {
+                            <tr>
+                                <td class="text-lowercase">{{ specialty.name }}</td>
+                                <td align="right">{{ countEvents(specialty._id) }}</td>
+                            </tr>
+                            }
+                            }
                         </tbody>
                     </table>
                 </mat-card-content>

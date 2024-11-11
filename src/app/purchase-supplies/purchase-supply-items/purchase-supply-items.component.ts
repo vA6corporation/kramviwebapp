@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { CreatePurchaseSupplyItemModel } from '../create-purchase-supply-item.model';
@@ -10,7 +10,7 @@ import { PurchaseSuppliesService } from '../purchase-supplies.service';
     templateUrl: './purchase-supply-items.component.html',
     styleUrls: ['./purchase-supply-items.component.sass']
 })
-export class PurchaseSupplyItemsComponent implements OnInit {
+export class PurchaseSupplyItemsComponent {
 
     constructor(
         private readonly purchaseSuppliesService: PurchaseSuppliesService,

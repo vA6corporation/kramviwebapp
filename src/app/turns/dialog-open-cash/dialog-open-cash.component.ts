@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -16,7 +16,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './dialog-open-cash.component.html',
     styleUrls: ['./dialog-open-cash.component.sass']
 })
-export class DialogOpenCashComponent implements OnInit {
+export class DialogOpenCashComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -29,7 +29,7 @@ export class DialogOpenCashComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        openCash: [null, Validators.required]
+        openCash: ['', Validators.required]
     })
     isLoading: boolean = false
     private setting: SettingModel = new SettingModel()

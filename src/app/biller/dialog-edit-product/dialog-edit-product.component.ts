@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './dialog-edit-product.component.html',
     styleUrls: ['./dialog-edit-product.component.sass']
 })
-export class DialogEditProductComponent implements OnInit {
+export class DialogEditProductComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

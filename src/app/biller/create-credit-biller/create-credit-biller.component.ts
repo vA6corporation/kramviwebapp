@@ -1,8 +1,9 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { SettingModel } from '../../auth/setting.model';
@@ -10,8 +11,10 @@ import { CustomerModel } from '../../customers/customer.model';
 import { DialogCreateCustomersComponent } from '../../customers/dialog-create-customers/dialog-create-customers.component';
 import { DialogEditCustomersComponent } from '../../customers/dialog-edit-customers/dialog-edit-customers.component';
 import { DialogSearchCustomersComponent } from '../../customers/dialog-search-customers/dialog-search-customers.component';
+import { DirectivesModule } from '../../directives/directives.module';
 import { CreateDueModel } from '../../dues/create-due.model';
 import { SpecialtyModel } from '../../events/specialty.model';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { DialogInitPaymentsComponent } from '../../payments/dialog-init-payments/dialog-init-payments.component';
 import { PaymentModel } from '../../payments/payment.model';
@@ -27,12 +30,9 @@ import { UserModel } from '../../users/user.model';
 import { WorkerModel } from '../../workers/worker.model';
 import { WorkersService } from '../../workers/workers.service';
 import { BillItemModel } from '../bill-item.model';
+import { BillerItemsComponent } from '../biller-items/biller-items.component';
 import { BillsService } from '../bills.service';
 import { DialogAddProductComponent } from '../dialog-add-product/dialog-add-product.component';
-import { MaterialModule } from '../../material.module';
-import { CommonModule } from '@angular/common';
-import { BillerItemsComponent } from '../biller-items/biller-items.component';
-import { DirectivesModule } from '../../directives/directives.module';
 
 @Component({
     selector: 'app-create-credit-biller',
@@ -41,7 +41,7 @@ import { DirectivesModule } from '../../directives/directives.module';
     templateUrl: './create-credit-biller.component.html',
     styleUrls: ['./create-credit-biller.component.sass']
 })
-export class CreateCreditBillerComponent implements OnInit {
+export class CreateCreditBillerComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { MaterialModule } from '../../material.module';
@@ -15,7 +15,7 @@ import { BanksService } from '../banks.service';
     templateUrl: './banks.component.html',
     styleUrls: ['./banks.component.sass']
 })
-export class BanksComponent implements OnInit {
+export class BanksComponent {
 
     constructor(
         private readonly banksService: BanksService,

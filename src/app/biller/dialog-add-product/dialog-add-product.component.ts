@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './dialog-add-product.component.html',
     styleUrls: ['./dialog-add-product.component.sass']
 })
-export class DialogAddProductComponent implements OnInit {
+export class DialogAddProductComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -26,7 +26,7 @@ export class DialogAddProductComponent implements OnInit {
 
     formGroup: FormGroup = this.formBuilder.group({
         fullName: ['', Validators.required],
-        price: [null, Validators.required],
+        price: ['', Validators.required],
         quantity: [1, Validators.required],
         observations: '',
         igvCode: '10'

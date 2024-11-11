@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
 import { BusinessModel } from '../../auth/business.model';
@@ -12,7 +12,7 @@ import { PromotionsService } from '../promotions.service';
     templateUrl: './promotions.component.html',
     styleUrls: ['./promotions.component.sass']
 })
-export class PromotionsComponent implements OnInit {
+export class PromotionsComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

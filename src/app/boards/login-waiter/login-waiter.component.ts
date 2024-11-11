@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
@@ -15,7 +15,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './login-waiter.component.html',
     styleUrls: ['./login-waiter.component.sass']
 })
-export class LoginWaiterComponent implements OnInit {
+export class LoginWaiterComponent {
 
     constructor(
         private readonly router: Router,

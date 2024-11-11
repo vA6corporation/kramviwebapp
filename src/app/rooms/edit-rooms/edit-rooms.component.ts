@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -13,7 +13,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './edit-rooms.component.html',
     styleUrls: ['./edit-rooms.component.sass']
 })
-export class EditRoomsComponent implements OnInit {
+export class EditRoomsComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

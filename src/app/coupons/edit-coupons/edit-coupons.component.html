@@ -1,0 +1,18 @@
+<div class="container">
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+        <mat-form-field appearance="fill">
+            <mat-label>Nombre</mat-label>
+            <input type="text" matInput formControlName="name">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Monto minimo</mat-label>
+            <input type="number" matInput formControlName="charge">
+        </mat-form-field>
+        <div class="d-flex">
+            <span class="spacer"></span>
+            <button type="button" mat-raised-button routerLink="/coupons" color="primary">CANCELAR</button>
+            <div class="divider"></div>
+            <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
+        </div>
+    </form>
+</div>

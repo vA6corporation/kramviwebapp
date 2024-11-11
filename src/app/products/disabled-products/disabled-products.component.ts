@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -22,7 +22,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './disabled-products.component.html',
     styleUrls: ['./disabled-products.component.sass']
 })
-export class DisabledProductsComponent implements OnInit {
+export class DisabledProductsComponent {
 
     constructor(
         private readonly productsService: ProductsService,

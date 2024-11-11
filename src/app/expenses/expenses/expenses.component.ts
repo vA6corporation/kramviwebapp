@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
@@ -22,7 +22,7 @@ import { DialogCreateExpensesComponent } from '../dialog-create-expenses/dialog-
     templateUrl: './expenses.component.html',
     styleUrls: ['./expenses.component.sass']
 })
-export class ExpensesComponent implements OnInit {
+export class ExpensesComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

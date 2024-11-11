@@ -8,7 +8,6 @@ import { BusinessModel } from './business.model';
 import { OfficeModel } from './office.model';
 import { SettingModel } from './setting.model';
 import { HttpService } from '../http.service';
-import { HttpBoardsService } from '../http-boards.service';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +16,6 @@ export class AuthService {
 
     constructor(
         private readonly httpService: HttpService,
-        private readonly httpBoardsService: HttpBoardsService,
     ) { }
 
     private modules: ModuleModel[] = [
@@ -37,7 +35,8 @@ export class AuthService {
         { label: 'Creditos', name: 'credits', path: '/credits', isActive: false, isAuthorized: false, icon: 'local_atm', info: 'Tiendas minimarkets' },
         { label: 'Clientes', name: 'customers', path: '/customers', isActive: false, isAuthorized: false, icon: 'face', info: 'General' },
         { label: 'Productos', name: 'products', path: '/products', isActive: false, isAuthorized: false, icon: 'shopping_basket', info: 'General' },
-        { label: 'Promociones', name: 'promotions', path: '/promotions', isActive: false, isAuthorized: false, icon: 'local_offer', info: 'General' },
+        { label: 'Promociones', name: 'promotions', path: '/promotions', isActive: false, isAuthorized: false, icon: 'local_offer', info: 'Tiendas minimarkets' },
+        { label: 'Cupones', name: 'coupons', path: '/coupons', isActive: false, isAuthorized: false, icon: 'sell', info: 'Tiendas minimarkets' },
         { label: 'Inventario', name: 'inventories', path: '/inventories', isActive: false, isAuthorized: false, icon: 'check_circle', info: 'General' },
         { label: 'Lotes', name: 'lots', path: '/lots', isActive: false, isAuthorized: false, icon: 'check_circle', info: 'General' },
         { label: 'Incidencias', name: 'incidents', path: '/incidents', isActive: false, isAuthorized: false, icon: 'check_circle', info: 'General' },
@@ -57,8 +56,8 @@ export class AuthService {
         { label: 'Transportistas', name: 'carriers', path: '/carriers', isActive: false, isAuthorized: false, icon: 'local_shipping', info: 'Casos especiales' },
         { label: 'Recetas', name: 'recipes', path: '/recipes', isActive: false, isAuthorized: false, icon: 'soup_kitchen', info: 'Restaurantes' },
         { label: 'Insumos', name: 'supplies', path: '/supplies', isActive: false, isAuthorized: false, icon: 'kitchen', info: 'Restaurantes' },
-        { label: 'Inventario de Insumos', name: 'inventorySupplies', path: '/inventorySupplies', isActive: false, isAuthorized: false, icon: 'check_circle', info: 'Restaurantes' },
-        { label: 'Compras de Insumos', name: 'purchaseSupplies', path: '/purchaseSupplies', isActive: false, isAuthorized: false, icon: 'shopping_cart', info: 'Restaurantes' },
+        { label: 'Inventario de Insumos', name: 'inventorySupplies', path: '/inventorySupplies', isActive: false, isAuthorized: false, icon: 'kitchen', info: 'Restaurantes' },
+        { label: 'Compras de Insumos', name: 'purchaseSupplies', path: '/purchaseSupplies', isActive: false, isAuthorized: false, icon: 'kitchen', info: 'Restaurantes' },
         { label: 'Compras', name: 'purchases', path: '/purchases', isActive: false, isAuthorized: false, icon: 'shopping_cart', info: 'General' },
         { label: 'Proveedores', name: 'providers', path: '/providers', isActive: false, isAuthorized: false, icon: 'face', info: 'General' },
         { label: 'Ordenes de Compra', name: 'purchaseOrders', path: '/purchaseOrders', isActive: false, isAuthorized: false, icon: 'shopping_cart', info: 'General' },
@@ -87,6 +86,7 @@ export class AuthService {
         customers: false,
         products: false,
         promotions: false,
+        coupons: false,
         inventories: false,
         lots: false,
         inventorySupplies: false,
@@ -210,7 +210,6 @@ export class AuthService {
 
     setAccessToken(accessToken: string | null): void {
         this.httpService.accessToken = accessToken
-        this.httpBoardsService.accessToken = accessToken
         if (accessToken) {
             localStorage.setItem('accessToken', accessToken)
         } else {

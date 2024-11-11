@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -35,7 +35,7 @@ import { BoardItemsComponent } from '../board-items/board-items.component';
     templateUrl: './pos-board-waiter.component.html',
     styleUrls: ['./pos-board-waiter.component.sass']
 })
-export class PosBoardWaiterComponent implements OnInit {
+export class PosBoardWaiterComponent {
 
     constructor(
         private readonly navigationService: NavigationService,
@@ -217,6 +217,7 @@ export class PosBoardWaiterComponent implements OnInit {
                         this.navigationService.loadBarFinish()
                         this.board = board
                         this.boardsService.setBoard(board)
+                        this.preBoardItems = JSON.parse(JSON.stringify(board.boardItems))
                         this.boardsService.setBoardItems(board.boardItems)
                     }, error: (error: HttpErrorResponse) => {
                         this.isLoading = false
@@ -225,7 +226,7 @@ export class PosBoardWaiterComponent implements OnInit {
                     }
                 })
             } else {
-                this.router.navigate(['/boards'])
+                this.router.navigate(['/boards/waiter'])
             }
         })
 
@@ -557,7 +558,7 @@ export class PosBoardWaiterComponent implements OnInit {
                     }
 
                     this.navigationService.loadBarFinish()
-                    this.router.navigate(['/boards'])
+                    this.router.navigate(['/boards/waiter'])
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.showMessage(error.error.message)
                     this.navigationService.loadBarFinish()

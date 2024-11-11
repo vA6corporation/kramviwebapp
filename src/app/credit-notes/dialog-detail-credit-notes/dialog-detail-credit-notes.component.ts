@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
@@ -19,7 +19,7 @@ import { CreditNotesService } from '../credit-notes.service';
     templateUrl: './dialog-detail-credit-notes.component.html',
     styleUrls: ['./dialog-detail-credit-notes.component.sass']
 })
-export class DialogDetailCreditNotesComponent implements OnInit {
+export class DialogDetailCreditNotesComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

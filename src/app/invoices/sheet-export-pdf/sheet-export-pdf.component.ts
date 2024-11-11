@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { PrintService } from '../../print/print.service';
 import { SalesService } from '../../sales/sales.service';
@@ -8,7 +8,7 @@ import { SalesService } from '../../sales/sales.service';
     templateUrl: './sheet-export-pdf.component.html',
     styleUrls: ['./sheet-export-pdf.component.sass']
 })
-export class SheetExportPdfComponent implements OnInit {
+export class SheetExportPdfComponent {
 
     constructor(
         @Inject(MAT_BOTTOM_SHEET_DATA)
@@ -17,9 +17,6 @@ export class SheetExportPdfComponent implements OnInit {
         private readonly salesService: SalesService,
         private readonly printService: PrintService,
     ) { }
-
-    ngOnInit(): void {
-    }
 
     onExportPdf(pageFormat: string): void {
         this.bottomSheetRef.dismiss();

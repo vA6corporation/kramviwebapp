@@ -1,4 +1,10 @@
 <mat-action-list>
+    @for (couponItem of couponItems; track $index) {
+        <mat-list-item class="bg-info" role="listitem">
+            <span matListItemTitle>{{ couponItem.name }}</span>
+            <span>Monto minimo: {{ couponItem.charge.toFixed(2) }}</span>
+        </mat-list-item>
+    }
     @for (saleItem of saleItems; track saleItem.productId; let i = $index) {
         <button mat-list-item (click)="onSelectSaleItem(i)">
             <span matListItemTitle>{{ saleItem.fullName }}</span>

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './deleted-customers.component.html',
     styleUrls: ['./deleted-customers.component.sass']
 })
-export class DeletedCustomersComponent implements OnInit {
+export class DeletedCustomersComponent {
 
     constructor(
         private readonly customersService: CustomersService,

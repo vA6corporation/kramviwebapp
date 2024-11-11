@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
@@ -22,7 +22,7 @@ import { PurchasesService } from '../purchases.service';
     templateUrl: './purchases.component.html',
     styleUrls: ['./purchases.component.sass']
 })
-export class PurchasesComponent implements OnInit {
+export class PurchasesComponent {
 
     constructor(
         private readonly purchasesService: PurchasesService,

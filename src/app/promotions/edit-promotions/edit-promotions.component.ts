@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-edit-promotions',
   templateUrl: './edit-promotions.component.html',
   styleUrls: ['./edit-promotions.component.sass']
 })
-export class EditPromotionsComponent implements OnInit {
+export class EditPromotionsComponent {
 
   constructor() { }
 

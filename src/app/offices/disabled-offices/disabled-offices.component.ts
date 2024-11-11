@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavigationService } from '../../navigation/navigation.service';
 import { OfficesService } from '../offices.service';
 import { OfficeModel } from '../../auth/office.model';
@@ -9,7 +9,7 @@ import { HttpErrorResponse } from '@angular/common/http';
     templateUrl: './disabled-offices.component.html',
     styleUrls: ['./disabled-offices.component.sass']
 })
-export class DisabledOfficesComponent implements OnInit {
+export class DisabledOfficesComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

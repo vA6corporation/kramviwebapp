@@ -4,36 +4,41 @@
             animationDuration="0ms">
             <mat-tab label="Categorias">
                 <mat-grid-list cols="4" rowHeight="4:2" class="text-uppercase text-center">
-                    <mat-grid-tile (click)="onSelectCategorySupply(categorySupply._id)" [style.background]="'lightgreen'"
-                        *ngFor="let categorySupply of categorySupplies">
+                    @for (categorySupply of categorySupplies; track categorySupply._id) {
+                    <mat-grid-tile (click)="onSelectCategorySupply(categorySupply._id)"
+                        [style.background]="'lightgreen'">
                         {{ categorySupply.name }}
                     </mat-grid-tile>
+                    }
                 </mat-grid-list>
             </mat-tab>
             <mat-tab label="Insumos">
                 <mat-grid-list cols="4" rowHeight="4:2" class="text-uppercase text-center">
-                    <mat-grid-tile (click)="onClickSupply(supply)" *ngFor="let supply of filterSupplies">
+                    @for (supply of filterSupplies; track supply._id) {
+                    <mat-grid-tile (click)="onClickSupply(supply)">
                         {{ supply.name }}
                         <small class="text-muted text-price">
                             {{ supply.cost.toFixed(2) }}
                         </small>
                     </mat-grid-tile>
+                    }
                 </mat-grid-list>
             </mat-tab>
         </mat-tab-group>
     </div>
     <div class="flex-30 bg-white list-items">
         <mat-action-list>
-            <button type="button" mat-list-item *ngFor="let element of recipes; let i = index"
-                (click)="onClickRecipe(i)">
-                <span matListItemTitle>{{ element.name }}</span>
+            @for (recipe of recipes; track recipe.supplyId; let i = $index) {
+            <button type="button" mat-list-item (click)="onClickRecipe(i)">
+                <span matListItemTitle>{{ recipe.name }}</span>
                 <div matListItemLine class="d-flex my-1">
-                    <span class="mr-2">x{{ element.quantity }}</span>
+                    <span class="mr-2">x{{ recipe.quantity }}</span>
                     <span class="spacer"></span>
-                    <span class="d-flex flex-column">{{ (element.cost * element.quantity).toFixed(2) }}
+                    <span class="d-flex flex-column">{{ (recipe.cost * recipe.quantity).toFixed(2) }}
                     </span>
                 </div>
             </button>
+            }
             <mat-list-item role="listitem">
                 <div class="d-flex font-weight-bold">
                     Total

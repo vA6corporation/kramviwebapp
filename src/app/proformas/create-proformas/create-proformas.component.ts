@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -29,7 +29,7 @@ import { RouterModule } from '@angular/router';
     templateUrl: './create-proformas.component.html',
     styleUrls: ['./create-proformas.component.sass']
 })
-export class CreateProformasComponent implements OnInit {
+export class CreateProformasComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

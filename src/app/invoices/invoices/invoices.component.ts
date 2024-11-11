@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
@@ -43,7 +43,7 @@ import { SheetPrintComponent } from '../sheet-print/sheet-print.component';
     templateUrl: './invoices.component.html',
     styleUrls: ['./invoices.component.sass']
 })
-export class InvoicesComponent implements OnInit {
+export class InvoicesComponent {
 
     constructor(
         private readonly salesService: SalesService,
@@ -82,8 +82,6 @@ export class InvoicesComponent implements OnInit {
     private setting: SettingModel = new SettingModel()
 
     private categories: CategoryModel[] = []
-    // private startDate: Date = new Date()
-    // private endDate: Date = new Date()
     private params: Params = {}
     private key: string = ''
     private paymentMethods: PaymentMethodModel[] = []

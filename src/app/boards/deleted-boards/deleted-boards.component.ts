@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
@@ -25,7 +25,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './deleted-boards.component.html',
     styleUrls: ['./deleted-boards.component.sass']
 })
-export class DeletedBoardsComponent implements OnInit {
+export class DeletedBoardsComponent {
 
     constructor(
         private readonly boardsService: BoardsService,

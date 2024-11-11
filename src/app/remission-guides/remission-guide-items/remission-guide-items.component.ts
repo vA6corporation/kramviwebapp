@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { DialogRemissionGuideItemsComponent } from '../dialog-remission-guide-items/dialog-remission-guide-items.component';
@@ -10,7 +10,7 @@ import { RemissionGuidesService } from '../remission-guides.service';
     templateUrl: './remission-guide-items.component.html',
     styleUrls: ['./remission-guide-items.component.sass']
 })
-export class RemissionGuideItemsComponent implements OnInit {
+export class RemissionGuideItemsComponent {
 
     constructor(
         private readonly remissionGuidesService: RemissionGuidesService,

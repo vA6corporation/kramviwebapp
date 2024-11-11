@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Chart, ChartOptions, ChartType } from 'chart.js';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -14,7 +14,7 @@ import { randomColor } from '../../randomColor';
     templateUrl: './invoices.component.html',
     styleUrls: ['./invoices.component.sass']
 })
-export class InvoicesComponent implements OnInit {
+export class InvoicesComponent {
 
     constructor(
         private readonly reportsService: ReportsService,
@@ -25,7 +25,7 @@ export class InvoicesComponent implements OnInit {
     @ViewChild('deliveryChart')
     private invoicesChart!: ElementRef<HTMLCanvasElement>
     chart: Chart | null = null
-    items: any[] = []
+    summaryInvoices: any[] = []
     users: UserModel[] = []
     offices: OfficeModel[] = []
     officeId: string = ''
@@ -82,15 +82,15 @@ export class InvoicesComponent implements OnInit {
             startDate,
             endDate,
             officeId: this.officeId,
-        }).subscribe(items => {
-            const colors = items.map(() => randomColor())
-            this.items = items
+        }).subscribe(summaryInvoices => {
+            const colors = summaryInvoices.map(() => randomColor())
+            this.summaryInvoices = summaryInvoices
             const data = {
                 // labels: ['Ene', 'Feb', 'Mar'],
                 datasets: [
                     {
                         label: 'Dataset 1',
-                        data: items.map((e: any) => e.charge),
+                        data: summaryInvoices.map((e: any) => e.charge),
                         // borderColor: '#3f51b5',
                         backgroundColor: colors,
                         fill: true
@@ -125,7 +125,7 @@ export class InvoicesComponent implements OnInit {
                                         sum += data
                                     })
                                     let percentage = (value * 100 / sum).toFixed(2) + "%"
-                                    return `${this.items[ctx.dataIndex]._id}: ${percentage}`
+                                    return `${this.summaryInvoices[ctx.dataIndex]._id}: ${percentage}`
                                 }
                             },
                             padding: 6

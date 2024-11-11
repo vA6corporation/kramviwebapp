@@ -13,41 +13,51 @@
             <mat-form-field appearance="fill" *ngIf="customer">
                 <mat-label>Direccion</mat-label>
                 <mat-select formControlName="addressIndex">
-                    <mat-option *ngFor="let address of addresses; let i = index" [value]="i">
+                    @for (address of addresses; track $index; let i = $index) {
+                    <mat-option [value]="i">
                         {{ address | uppercase }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Comprobante</mat-label>
                 <mat-select formControlName="invoiceType">
-                    <mat-option *ngFor="let invoiceType of invoiceTypes" [value]="invoiceType.code">
+                    @for (invoiceType of invoiceTypes; track $index) {
+                    <mat-option [value]="invoiceType.code">
                         {{ invoiceType.name }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill" *ngIf="setting.showSpecialty">
                 <mat-label>Especialidad</mat-label>
                 <mat-select formControlName="specialtyId">
-                    <mat-option *ngFor="let specialty of specialties" [value]="specialty._id">
+                    @for (specialty of specialties; track specialty._id) {
+                    <mat-option [value]="specialty._id">
                         {{ specialty.name | uppercase }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill" *ngIf="setting.showWorker">
                 <mat-label>Personal a cargo</mat-label>
                 <mat-select formControlName="workerId">
-                    <mat-option *ngFor="let worker of workers" [value]="worker._id">
+                    @for (worker of workers; track worker._id) {
+                    <mat-option [value]="worker._id">
                         {{ worker.name | uppercase }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill" *ngIf="setting.showReferred">
                 <mat-label>Referido por</mat-label>
                 <mat-select formControlName="referredId">
-                    <mat-option *ngFor="let worker of workers" [value]="worker._id">
+                    @for (worker of workers; track worker._id) {
+                    <mat-option [value]="worker._id">
                         {{ worker.name | uppercase }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill" *ngIf="setting.showEmitionAt">

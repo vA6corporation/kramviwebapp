@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
 import { CustomerModel } from '../../customers/customer.model';
@@ -10,7 +10,7 @@ import { SpecialtiesService } from '../specialties.service';
     templateUrl: './specialties.component.html',
     styleUrls: ['./specialties.component.sass']
 })
-export class SpecialtiesComponent implements OnInit {
+export class SpecialtiesComponent {
 
     constructor(
         private readonly specialtiesService: SpecialtiesService,

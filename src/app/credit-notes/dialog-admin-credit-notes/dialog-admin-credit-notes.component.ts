@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -14,7 +14,7 @@ import { CreditNotesService } from '../credit-notes.service';
     templateUrl: './dialog-admin-credit-notes.component.html',
     styleUrls: ['./dialog-admin-credit-notes.component.sass']
 })
-export class DialogAdminCreditNotesComponent implements OnInit {
+export class DialogAdminCreditNotesComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -33,7 +33,7 @@ export class DialogAdminCreditNotesComponent implements OnInit {
     private handleAuth$: Subscription = new Subscription()
 
     formGroup: FormGroup = this.formBuilder.group({
-        invoiceNumber: [null, Validators.required],
+        invoiceNumber: ['', Validators.required],
     })
 
     formDate: FormGroup = this.formBuilder.group({

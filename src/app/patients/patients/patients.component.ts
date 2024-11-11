@@ -1,6 +1,6 @@
 import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
 import { buildExcel } from '../../buildExcel';
@@ -17,7 +17,7 @@ import { RouterModule } from '@angular/router';
     templateUrl: './patients.component.html',
     styleUrls: ['./patients.component.sass']
 })
-export class PatientsComponent implements OnInit {
+export class PatientsComponent {
 
     constructor(
         private readonly patientsService: PatientsService,

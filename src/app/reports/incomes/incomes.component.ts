@@ -1,6 +1,6 @@
 import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -28,7 +28,7 @@ Chart.register(...registerables);
     templateUrl: './incomes.component.html',
     styleUrls: ['./incomes.component.sass']
 })
-export class IncomesComponent implements OnInit {
+export class IncomesComponent {
 
     constructor(
         private readonly paymentMethodsService: PaymentMethodsService,

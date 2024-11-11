@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -20,7 +20,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './dialog-proforma-items.component.html',
     styleUrls: ['./dialog-proforma-items.component.sass']
 })
-export class DialogProformaItemsComponent implements OnInit {
+export class DialogProformaItemsComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import Compressor from 'compressorjs';
@@ -29,7 +29,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.sass']
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent {
 
     constructor(
         private readonly authService: AuthService,
@@ -96,24 +96,24 @@ export class SettingsComponent implements OnInit {
             clientId: '',
             clientSecret: '',
             sunattk: '',
-            businessName: [null, Validators.required],
-            ruc: [null, Validators.required],
-            email: [null, Validators.email],
+            businessName: ['', Validators.required],
+            ruc: ['', Validators.required],
+            email: ['', Validators.email],
             businessType: ['', Validators.required]
         }),
         office: this.formBuilder.group({
-            name: [null, Validators.required],
-            tradeName: [null, Validators.required],
-            address: [null, Validators.required],
-            mobileNumber: null,
-            serialPrefix: [null, Validators.required],
-            codigoAnexo: null,
-            codigoUbigeo: null,
-            departamento: null,
-            provincia: null,
-            distrito: null,
-            urbanizacion: null,
-            codigoPais: null,
+            name: ['', Validators.required],
+            tradeName: ['', Validators.required],
+            address: ['', Validators.required],
+            mobileNumber: '',
+            serialPrefix: ['', Validators.required],
+            codigoAnexo: '',
+            codigoUbigeo: '',
+            departamento: '',
+            provincia: '',
+            distrito: '',
+            urbanizacion: '',
+            codigoPais: '',
             isActive: false,
             activityId: null,
         }),

@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { PaymentMethodsService } from '../../payment-methods/payment-methods.service';
@@ -13,7 +13,7 @@ import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
     templateUrl: './dialog-init-payments.component.html',
     styleUrls: ['./dialog-init-payments.component.sass']
 })
-export class DialogInitPaymentsComponent implements OnInit {
+export class DialogInitPaymentsComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
@@ -23,10 +23,9 @@ export class DialogInitPaymentsComponent implements OnInit {
         private readonly dialogRef: MatDialogRef<DialogInitPaymentsComponent>,
     ) { }
 
+    formArray: FormArray = this.formBuilder.array([])
     formGroup: FormGroup = this.formBuilder.group({
-        charge: [null, Validators.required],
-        paymentMethodId: '',
-        turnId: this.turnId,
+        payments: this.formArray,
     })
     paymentMethods: PaymentMethodModel[] = []
 
@@ -40,12 +39,28 @@ export class DialogInitPaymentsComponent implements OnInit {
         this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
             this.paymentMethods = paymentMethods
             this.formGroup.patchValue({ paymentMethodId: (this.paymentMethods[0] || { _id: '' })._id })
+
+            const formGroup = this.formBuilder.group({
+                turnId: this.turnId,
+                paymentMethodId: (this.paymentMethods[0] || { _id: '' })._id,
+                charge: [null, Validators.required],
+            })
+            this.formArray.push(formGroup)
         })
+    }
+
+    onAddPayment() {
+        const formGroup = this.formBuilder.group({
+            turnId: this.turnId,
+            paymentMethodId: (this.paymentMethods[0] || { _id: '' })._id,
+            charge: [null, Validators.required],
+        })
+        this.formArray.push(formGroup)
     }
 
     onSubmit() {
         if (this.formGroup.valid) {
-            this.dialogRef.close(this.formGroup.value)
+            this.dialogRef.close(this.formArray.value)
         }
     }
 

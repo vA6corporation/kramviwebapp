@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -35,7 +35,7 @@ interface FormData {
     templateUrl: './create-events.component.html',
     styleUrls: ['./create-events.component.sass']
 })
-export class CreateEventsComponent implements OnInit {
+export class CreateEventsComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -52,28 +52,28 @@ export class CreateEventsComponent implements OnInit {
         hours: [8, [Validators.required, Validators.min(0), Validators.max(12)]],
         minutes: [0, [Validators.required, Validators.min(0), Validators.max(60)]],
         ampm: 'AM',
-        scheduledAt: [null, Validators.required],
+        scheduledAt: ['', Validators.required],
         workerId: [null, Validators.required],
         referredId: [null, Validators.required],
         specialtyId: [null, Validators.required],
         observations: '',
-    } as FormData);
-    eventItems: CreateEventItemModel[] = [];
-    charge: number = 0;
-    customer: CustomerModel | null = null;
-    isLoading: boolean = false;
-    cash: number = 0;
-    workers: WorkerModel[] = [];
-    specialties: SpecialtyModel[] = [];
-    addresses: string[] = [];
-    private setting: SettingModel = new SettingModel();
+    } as FormData)
+    eventItems: CreateEventItemModel[] = []
+    charge: number = 0
+    customer: CustomerModel | null = null
+    isLoading: boolean = false
+    cash: number = 0
+    workers: WorkerModel[] = []
+    specialties: SpecialtyModel[] = []
+    addresses: string[] = []
+    private setting: SettingModel = new SettingModel()
 
     minutes: any[] = [
         { value: 0, label: '00' },
         { value: 15, label: '15' },
         { value: 30, label: '30' },
         { value: 45, label: '45' },
-    ];
+    ]
 
     hours: any[] = [
         { value: 1, label: '1' },
@@ -88,40 +88,40 @@ export class CreateEventsComponent implements OnInit {
         { value: 10, label: '10' },
         { value: 11, label: '11' },
         { value: 12, label: '12' },
-    ];
+    ]
 
-    private handleEventItems$: Subscription = new Subscription();
-    private handleWorkers$: Subscription = new Subscription();
-    private handleSpecialties$: Subscription = new Subscription();
-    private handleClickMenu$: Subscription = new Subscription();
-    private handleAuth$: Subscription = new Subscription();
+    private handleEventItems$: Subscription = new Subscription()
+    private handleWorkers$: Subscription = new Subscription()
+    private handleSpecialties$: Subscription = new Subscription()
+    private handleClickMenu$: Subscription = new Subscription()
+    private handleAuth$: Subscription = new Subscription()
 
     ngOnDestroy() {
-        this.handleClickMenu$.unsubscribe();
-        this.handleEventItems$.unsubscribe();
-        this.handleSpecialties$.unsubscribe();
-        this.handleWorkers$.unsubscribe();
-        this.handleAuth$.unsubscribe();
+        this.handleClickMenu$.unsubscribe()
+        this.handleEventItems$.unsubscribe()
+        this.handleSpecialties$.unsubscribe()
+        this.handleWorkers$.unsubscribe()
+        this.handleAuth$.unsubscribe()
     }
 
     ngOnInit(): void {
-        this.navigationService.setTitle('Agendar');
+        this.navigationService.setTitle('Agendar')
 
         this.handleWorkers$ = this.workersService.handleWorkers().subscribe(workers => {
-            this.workers = workers;
-        });
+            this.workers = workers
+        })
 
         this.handleSpecialties$ = this.specialtiesService.handleSpecialties().subscribe(specialties => {
-            this.specialties = specialties;
-        });
+            this.specialties = specialties
+        })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting;
-        });
+            this.setting = auth.setting
+        })
 
         this.navigationService.setMenu([
             { id: 'add_customer', label: 'Agregar cliente', icon: 'person_add', show: true },
-        ]);
+        ])
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
             switch (id) {
@@ -130,65 +130,65 @@ export class CreateEventsComponent implements OnInit {
                         width: '600px',
                         position: { top: '20px' },
                         data: this.setting.defaultSearchCustomer
-                    });
+                    })
 
                     dialogRef.afterClosed().subscribe(customer => {
                         if (customer) {
-                            this.customer = customer;
-                            this.addresses = customer.addresses;
+                            this.customer = customer
+                            this.addresses = customer.addresses
                         }
-                    });
+                    })
 
                     dialogRef.componentInstance.handleCreateCustomer().subscribe(() => {
                         const dialogRef = this.matDialog.open(DialogCreateCustomersComponent, {
                             width: '600px',
                             position: { top: '20px' },
-                        });
+                        })
 
                         dialogRef.afterClosed().subscribe(customer => {
                             if (customer) {
-                                this.customer = customer;
-                                this.addresses = customer.addresses;
+                                this.customer = customer
+                                this.addresses = customer.addresses
                             }
-                        });
-                    });
-                    break;
+                        })
+                    })
+                    break
                 default:
-                    break;
+                    break
             }
-        });
+        })
 
         this.handleEventItems$ = this.eventsService.handleEventItems().subscribe(eventItems => {
-            this.eventItems = eventItems;
-            this.charge = 0;
+            this.eventItems = eventItems
+            this.charge = 0
             for (const eventItem of this.eventItems) {
                 if (eventItem.igvCode !== '11') {
-                    this.charge += eventItem.price * eventItem.quantity;
+                    this.charge += eventItem.price * eventItem.quantity
                 }
             }
-        });
+        })
     }
 
     onSubmit() {
 
         try {
             if (this.customer === null) {
-                throw new Error("Agrega un cliente");
+                throw new Error("Agrega un cliente")
             }
 
             if (this.eventItems.length === 0) {
-                throw new Error("Agrega un producto");
+                throw new Error("Agrega un producto")
             }
 
             if (this.eventItems.find(e => e.price === 0 || e.price === null)) {
-                throw new Error("El producto no puede tener precio 0");
+                throw new Error("El producto no puede tener precio 0")
             }
 
             if (this.formGroup.valid) {
-                this.isLoading = true;
-                this.navigationService.loadBarStart();
+                this.isLoading = true
+                this.navigationService.loadBarStart()
 
-                const formData: FormData = this.formGroup.value;
+                const formData: FormData = this.formGroup.value
 
                 const event: CreateEventModel = {
                     scheduledAt: formData.scheduledAt,
@@ -202,34 +202,34 @@ export class CreateEventsComponent implements OnInit {
                 const { hours, minutes, ampm } = this.formGroup.value
 
                 if (ampm === 'AM') {
-                    event.scheduledAt.setHours(hours);
+                    event.scheduledAt.setHours(hours)
                 } else {
                     if ((hours + 12) >= 24) {
-                        throw new Error('Formato de hora ilegal');
+                        throw new Error('Formato de hora ilegal')
                     }
                     event.scheduledAt.setHours(hours + 12)
                 }
-                event.scheduledAt.setMinutes(minutes);
+                event.scheduledAt.setMinutes(minutes)
 
                 this.eventsService.saveEvent(event, this.eventItems).subscribe(() => {
-                    this.eventsService.setEventItems([]);
-                    this.router.navigate(['/events']);
-                    this.isLoading = false;
-                    this.navigationService.loadBarFinish();
-                    this.navigationService.showMessage('Registrado correctamente');
+                    this.eventsService.setEventItems([])
+                    this.router.navigate(['/events'])
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage('Registrado correctamente')
                 }, (error: HttpErrorResponse) => {
-                    this.navigationService.showMessage(error.error.message);
-                    this.isLoading = false;
-                    this.navigationService.loadBarFinish();
-                });
+                    this.navigationService.showMessage(error.error.message)
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                })
             }
 
         } catch (error) {
             if (error instanceof Error) {
-                this.navigationService.showMessage(error.message);
+                this.navigationService.showMessage(error.message)
             }
-            this.isLoading = false;
-            this.navigationService.loadBarFinish();
+            this.isLoading = false
+            this.navigationService.loadBarFinish()
         }
     }
 
@@ -238,14 +238,14 @@ export class CreateEventsComponent implements OnInit {
             width: '600px',
             position: { top: '20px' },
             data: this.customer,
-        });
+        })
 
         dialogRef.afterClosed().subscribe(customer => {
             if (customer) {
-                this.customer = customer;
-                this.addresses = customer.addresses;
+                this.customer = customer
+                this.addresses = customer.addresses
             }
-        });
+        })
     }
 
 }

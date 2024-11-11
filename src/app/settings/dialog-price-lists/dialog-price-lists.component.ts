@@ -1,11 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { ProductsService } from '../../products/products.service';
 import { SettingsService } from '../settings.service';
-import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-price-lists',
@@ -25,7 +25,7 @@ export class DialogPriceListsComponent {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        name: [null, Validators.required]
+        name: ['', Validators.required]
     })
 
     onSubmit(): void {

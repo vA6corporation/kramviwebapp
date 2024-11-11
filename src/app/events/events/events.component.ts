@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -19,7 +19,7 @@ import { IgvType } from '../../products/igv-type.enum';
     templateUrl: './events.component.html',
     styleUrls: ['./events.component.sass']
 })
-export class EventsComponent implements OnInit {
+export class EventsComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { NavigationService } from '../../navigation/navigation.service';
 import { PrintService } from '../../print/print.service';
@@ -9,7 +9,7 @@ import { CreditNotesService } from '../credit-notes.service';
   templateUrl: './sheet-export-pdf-credit-notes.component.html',
   styleUrls: ['./sheet-export-pdf-credit-notes.component.sass']
 })
-export class SheetExportPdfCreditNotesComponent implements OnInit {
+export class SheetExportPdfCreditNotesComponent {
 
   constructor(
     @Inject(MAT_BOTTOM_SHEET_DATA)

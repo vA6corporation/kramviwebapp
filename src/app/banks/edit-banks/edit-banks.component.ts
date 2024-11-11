@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -13,7 +13,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './edit-banks.component.html',
     styleUrls: ['./edit-banks.component.sass']
 })
-export class EditBanksComponent implements OnInit {
+export class EditBanksComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

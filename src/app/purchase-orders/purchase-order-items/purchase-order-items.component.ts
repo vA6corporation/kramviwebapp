@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { DialogPurchaseOrderItemsComponent } from '../dialog-purchase-order-items/dialog-purchase-order-items.component';
@@ -11,7 +11,7 @@ import { IgvType } from '../../products/igv-type.enum';
     templateUrl: './purchase-order-items.component.html',
     styleUrls: ['./purchase-order-items.component.sass']
 })
-export class PurchaseOrderItemsComponent implements OnInit {
+export class PurchaseOrderItemsComponent {
 
     constructor(
         private readonly purchaseOrdersService: PurchaseOrdersService,

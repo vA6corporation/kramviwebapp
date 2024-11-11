@@ -1,63 +1,69 @@
 <div class="container">
-  <form [formGroup]="formGroup" autocomplete="off">
-    <mat-form-field appearance="fill">
-      <mat-label>Seleccione una categoria</mat-label>
-      <mat-select formControlName="categorySupplyId" (selectionChange)="onCategoryChange()">
-        <mat-option value="">TODAS LAS CATEGORIAS</mat-option>
-        <mat-option class="text-uppercase" *ngFor="let categorySupply of categorySupplies" [value]="categorySupply._id">
-          {{ categorySupply.name | uppercase }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </form>
-  <div class="mat-elevation-z2">
-    <table mat-table [dataSource]="dataSource" class="w-100">
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Nombre</th>
-        <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">{{ element.name }}</td>
-      </ng-container>
-      <ng-container matColumnDef="feature">
-        <th mat-header-cell *matHeaderCellDef>Variante</th>
-        <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.brand }">{{ element.feature || 'NINGUNO' }}</td>
-      </ng-container>
-      <ng-container matColumnDef="brand">
-        <th mat-header-cell *matHeaderCellDef>Marca</th>
-        <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.brand }">{{ element.brand || 'NINGUNO' }}</td>
-      </ng-container>
-      <ng-container matColumnDef="cost">
-        <th mat-header-cell *matHeaderCellDef>Costo</th>
-        <td mat-cell *matCellDef="let element">{{ element.cost }}</td>
-      </ng-container>
-      <ng-container matColumnDef="stock">
-        <th mat-header-cell *matHeaderCellDef>Stock</th>
-        <td mat-cell *matCellDef="let element">{{ (element.stock || 0).toFixed(2) }}</td>
-      </ng-container>
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element" class="text-right">
-          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu #menu="matMenu" xPosition="before">
-            <button type="button" (click)="onAddStock(element)" mat-menu-item>
-              <mat-icon>add</mat-icon>
-              <span>Agregar stock</span>
-            </button>
-            <button type="button" (click)="onRemoveStock(element)" mat-menu-item>
-              <mat-icon>remove</mat-icon>
-              <span>Remover stock</span>
-            </button>
-            <button type="button" [routerLink]="['/inventorySupplies', element._id, 'details']" mat-menu-item>
-              <mat-icon>info</mat-icon>
-              <span>Detalles</span>
-            </button>
-          </mat-menu>
-        </td>
-      </ng-container>
-  
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-    <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex" [length]="length" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
-  </div>
+    <form [formGroup]="formGroup" autocomplete="off">
+        <mat-form-field appearance="fill">
+            <mat-label>Seleccione una categoria</mat-label>
+            <mat-select formControlName="categorySupplyId" (selectionChange)="onCategoryChange()">
+                <mat-option value="">TODAS LAS CATEGORIAS</mat-option>
+                @for (categorySupply of categorySupplies; track categorySupply._id) {
+                <mat-option class="text-uppercase" [value]="categorySupply._id">
+                    {{ categorySupply.name | uppercase }}
+                </mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+    </form>
+    <div class="mat-elevation-z2">
+        <table mat-table [dataSource]="dataSource" class="w-100">
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">{{ element.name }}</td>
+            </ng-container>
+            <ng-container matColumnDef="feature">
+                <th mat-header-cell *matHeaderCellDef>Variante</th>
+                <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.brand }">{{ element.feature
+                    || 'NINGUNO' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="brand">
+                <th mat-header-cell *matHeaderCellDef>Marca</th>
+                <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.brand }">{{ element.brand ||
+                    'NINGUNO' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="cost">
+                <th mat-header-cell *matHeaderCellDef>Costo</th>
+                <td mat-cell *matCellDef="let element">{{ element.cost }}</td>
+            </ng-container>
+            <ng-container matColumnDef="stock">
+                <th mat-header-cell *matHeaderCellDef>Stock</th>
+                <td mat-cell *matCellDef="let element">{{ (element.stock || 0).toFixed(2) }}</td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" class="text-right">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu" xPosition="before">
+                        <button type="button" (click)="onAddStock(element)" mat-menu-item>
+                            <mat-icon>add</mat-icon>
+                            <span>Agregar stock</span>
+                        </button>
+                        <button type="button" (click)="onRemoveStock(element)" mat-menu-item>
+                            <mat-icon>remove</mat-icon>
+                            <span>Remover stock</span>
+                        </button>
+                        <button type="button" [routerLink]="['/inventorySupplies', element._id, 'details']"
+                            mat-menu-item>
+                            <mat-icon>info</mat-icon>
+                            <span>Detalles</span>
+                        </button>
+                    </mat-menu>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex"
+            [length]="length" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
+    </div>
 </div>

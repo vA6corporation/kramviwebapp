@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Params } from '@angular/router';
 import { Chart, ChartOptions, ChartType } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './collections.component.html',
     styleUrls: ['./collections.component.sass']
 })
-export class CollectionsComponent implements OnInit {
+export class CollectionsComponent {
 
     constructor(
         private readonly reportsService: ReportsService,

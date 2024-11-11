@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavigationService } from '../../navigation/navigation.service';
 import { ActivitiesService } from '../activities.service';
 import { ActivityModel } from '../activity.model';
@@ -9,7 +9,7 @@ import { ActivityModel } from '../activity.model';
     templateUrl: './activities.component.html',
     styleUrls: ['./activities.component.sass']
 })
-export class ActivitiesComponent implements OnInit {
+export class ActivitiesComponent {
 
     constructor(
         private readonly activitiesService: ActivitiesService,
@@ -33,7 +33,7 @@ export class ActivitiesComponent implements OnInit {
             }, error: (error: HttpErrorResponse) => {
                 this.navigationService.showMessage(error.error.message)
             }
-        });
+        })
     }
 
 }

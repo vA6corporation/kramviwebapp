@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -13,7 +13,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './edit-providers.component.html',
     styleUrls: ['./edit-providers.component.sass']
 })
-export class EditProvidersComponent implements OnInit {
+export class EditProvidersComponent {
 
     constructor(
         private readonly providersService: ProvidersService,

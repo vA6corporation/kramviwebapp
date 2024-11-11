@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterModule } from '@angular/router';
@@ -22,7 +22,7 @@ import { DialogSearchPatientsComponent } from '../../patients/dialog-search-pati
     templateUrl: './create-generals.component.html',
     styleUrls: ['./create-generals.component.sass']
 })
-export class CreateGeneralsComponent implements OnInit {
+export class CreateGeneralsComponent {
 
     constructor(
         private readonly generalsService: GeneralsService,
@@ -35,15 +35,15 @@ export class CreateGeneralsComponent implements OnInit {
 
     formGroup: FormGroup = this.formBuilder.group({
         workerId: [null, Validators.required],
-        vitalFunction: [null, Validators.required],
-        diseace: [null, Validators.required],
-        symptoms: [null, Validators.required],
-        story: [null, Validators.required],
-        laboratoryExams: null,
-        diagnosis: [null, Validators.required],
-        treatment: [null, Validators.required],
-        workPlan: [null, Validators.required],
-        appointmentAt: null,
+        vitalFunction: ['', Validators.required],
+        diseace: ['', Validators.required],
+        symptoms: ['', Validators.required],
+        story: ['', Validators.required],
+        laboratoryExams: '',
+        diagnosis: ['', Validators.required],
+        treatment: ['', Validators.required],
+        workPlan: ['', Validators.required],
+        appointmentAt: '',
     })
     isLoading: boolean = false
     maxLength: number = 11

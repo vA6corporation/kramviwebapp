@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -10,7 +10,7 @@ import { PaymentMethodsService } from '../payment-methods.service';
     templateUrl: './edit-payment-methods.component.html',
     styleUrls: ['./edit-payment-methods.component.sass']
 })
-export class EditPaymentMethodsComponent implements OnInit {
+export class EditPaymentMethodsComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

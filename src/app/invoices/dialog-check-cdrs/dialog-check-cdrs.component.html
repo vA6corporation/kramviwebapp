@@ -1,14 +1,16 @@
 <h2 mat-dialog-title>Consultar CDRS</h2>
-<div  mat-dialog-content>
-  <mat-list role="list">
-    <mat-list-item role="listitem" *ngFor="let element of cdrs">
-      {{ element.sunatMessage }}
-      <span class="spacer"></span>
-      {{ element.sunatCode }}
-    </mat-list-item>
-  </mat-list>
+<div mat-dialog-content>
+    <mat-list role="list">
+        @for (cdr of cdrs; track $index) {
+        <mat-list-item role="listitem">
+            {{ cdr.sunatMessage }}
+            <span class="spacer"></span>
+            {{ cdr.sunatCode }}
+        </mat-list-item>
+        }
+    </mat-list>
 </div>
 <mat-dialog-actions>
-  <span class="spacer"></span>
-  <button type="button" mat-flat-button mat-dialog-close color="primary" [disabled]="isLoading">ACEPTAR</button>
+    <span class="spacer"></span>
+    <button type="button" mat-flat-button mat-dialog-close color="primary" [disabled]="isLoading">ACEPTAR</button>
 </mat-dialog-actions>

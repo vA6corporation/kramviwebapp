@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { DialogOpenCashComponent } from '../dialog-open-cash/dialog-open-cash.component';
@@ -37,7 +37,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './open-turn.component.html',
     styleUrls: ['./open-turn.component.sass']
 })
-export class OpenTurnComponent implements OnInit {
+export class OpenTurnComponent {
 
     constructor(
         private readonly turnsService: TurnsService,

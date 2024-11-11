@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-index-offices',
   templateUrl: './index-offices.component.html',
   styleUrls: ['./index-offices.component.sass']
 })
-export class IndexOfficesComponent implements OnInit {
+export class IndexOfficesComponent {
 
   constructor() { }
 

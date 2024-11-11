@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -23,7 +23,7 @@ interface FormData {
     templateUrl: './charge-moves.component.html',
     styleUrls: ['./charge-moves.component.sass']
 })
-export class ChargeMovesComponent implements OnInit {
+export class ChargeMovesComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -34,33 +34,33 @@ export class ChargeMovesComponent implements OnInit {
         private readonly router: Router,
     ) { }
 
-    moveItems: CreateMoveItemModel[] = [];
-    provider: ProviderModel | null = null;
-    isLoading: boolean = false;
+    moveItems: CreateMoveItemModel[] = []
+    provider: ProviderModel | null = null
+    isLoading: boolean = false
     formGroup: FormGroup = this.formBuilder.group({
         toOfficeId: ['', Validators.required],
         officeId: ['', Validators.required],
         observations: '',
-    } as FormData);
-    private office: OfficeModel = new OfficeModel();
-    offices: OfficeModel[] = [];
-    private handleOfficesByActivity$: Subscription = new Subscription();
+    } as FormData)
+    private office: OfficeModel = new OfficeModel()
+    offices: OfficeModel[] = []
+    private handleOfficesByActivity$: Subscription = new Subscription()
 
     invoiceTypes = [
         { code: 'NOTA DE VENTA', name: 'NOTA DE VENTA' },
         { code: 'BOLETA', name: 'BOLETA' },
         { code: 'FACTURA', name: 'FACTURA' },
-    ];
+    ]
 
-    paymentMethods: PaymentMethodModel[] = [];
+    paymentMethods: PaymentMethodModel[] = []
 
-    private handleAuth$: Subscription = new Subscription();
-    private handleMoveItems$: Subscription = new Subscription();
+    private handleAuth$: Subscription = new Subscription()
+    private handleMoveItems$: Subscription = new Subscription()
 
     ngOnDestroy() {
-        this.handleAuth$.unsubscribe();
-        this.handleMoveItems$.unsubscribe();
-        this.handleOfficesByActivity$.unsubscribe();
+        this.handleAuth$.unsubscribe()
+        this.handleMoveItems$.unsubscribe()
+        this.handleOfficesByActivity$.unsubscribe()
     }
 
     ngOnInit(): void {

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -23,7 +23,7 @@ import { RemissionGuidesService } from '../remission-guides.service';
     templateUrl: './create-remission-guides.component.html',
     styleUrls: ['./create-remission-guides.component.sass']
 })
-export class CreateRemissionGuidesComponent implements OnInit {
+export class CreateRemissionGuidesComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

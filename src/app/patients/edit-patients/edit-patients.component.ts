@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -13,7 +13,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './edit-patients.component.html',
     styleUrls: ['./edit-patients.component.sass']
 })
-export class EditPatientsComponent implements OnInit {
+export class EditPatientsComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -23,18 +23,18 @@ export class EditPatientsComponent implements OnInit {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        documentType: [null, Validators.required],
-        document: [null, Validators.required],
-        name: [null, Validators.required],
-        birthdate: [null, Validators.required],
-        sex: [null, Validators.required],
-        email: null,
-        mobileNumber: null,
-        address: null,
-        district: null,
-        occupation: null,
-        instruction: null,
-        criminalRecord: null
+        documentType: ['', Validators.required],
+        document: ['', Validators.required],
+        name: ['', Validators.required],
+        birthdate: ['', Validators.required],
+        sex: ['', Validators.required],
+        email: '',
+        mobileNumber: '',
+        address: '',
+        district: '',
+        occupation: '',
+        instruction: '',
+        criminalRecord: ''
     })
     isLoading: boolean = false
     maxLength: number = 11

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -22,7 +22,7 @@ import { CategoriesService } from '../../products/categories.service';
     templateUrl: './create-item-events.component.html',
     styleUrls: ['./create-item-events.component.sass']
 })
-export class CreateItemEventsComponent implements OnInit {
+export class CreateItemEventsComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

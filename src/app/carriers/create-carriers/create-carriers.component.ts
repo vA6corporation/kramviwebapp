@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -10,7 +10,7 @@ import { CarriersService } from '../carriers.service';
     templateUrl: './create-carriers.component.html',
     styleUrls: ['./create-carriers.component.sass']
 })
-export class CreateCarriersComponent implements OnInit {
+export class CreateCarriersComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,

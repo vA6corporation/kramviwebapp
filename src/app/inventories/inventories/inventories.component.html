@@ -132,4 +132,23 @@
         <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex"
             [length]="length" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
     </div>
+    <div class="fixed-bottom">
+        <div class="d-flex">
+            <div class="px-3">
+                @if (setting.defaultPrice === 'LISTA' || setting.defaultPrice === 'LISTAOFICINA') {
+                    <mat-form-field appearance="fill">
+                        <mat-select [(value)]="priceListId" (selectionChange)="onChangePriceList()">
+                            @for (priceList of priceLists; track $index) {
+                                <mat-option [value]="priceList._id">{{ priceList.name }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                }
+            </div>
+            <!-- <span class="spacer"></span>
+            <button mat-fab color="primary" class="float-right" routerLink="/products/create">
+                <mat-icon>add</mat-icon>
+            </button> -->
+        </div>
+    </div>
 </div>

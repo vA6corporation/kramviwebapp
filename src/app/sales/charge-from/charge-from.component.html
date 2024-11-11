@@ -12,73 +12,85 @@
             <mat-form-field appearance="fill">
                 <mat-label>Direccion</mat-label>
                 <mat-select formControlName="addressIndex">
-                    <mat-option *ngFor="let address of addresses; let i = index" [value]="i">
+                    @for (address of addresses; track $index; let i = $index) {
+                    <mat-option [value]="i">
                         {{ address | uppercase }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             }
             <mat-form-field appearance="fill">
                 <mat-label>Comprobante</mat-label>
                 <mat-select formControlName="invoiceType">
-                    <mat-option *ngFor="let invoiceType of invoiceTypes" [value]="invoiceType.code">
+                    @for (invoiceType of invoiceTypes; track $index) {
+                    <mat-option [value]="invoiceType.code">
                         {{ invoiceType.name }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Medio de pago</mat-label>
                 <mat-select formControlName="paymentMethodId">
-                    <mat-option *ngFor="let paymentMethod of paymentMethods" [value]="paymentMethod._id">
+                    @for (paymentMethod of paymentMethods; track paymentMethod._id) {
+                    <mat-option [value]="paymentMethod._id">
                         {{ paymentMethod.name }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             @if (setting.showSpecialty) {
-                <mat-form-field appearance="fill">
-                    <mat-label>Especialidad</mat-label>
-                    <mat-select formControlName="specialtyId">
-                        <mat-option *ngFor="let specialty of specialties" [value]="specialty._id">
-                            {{ specialty.name | uppercase }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Especialidad</mat-label>
+                <mat-select formControlName="specialtyId">
+                    @for (specialty of specialties; track specialty._id) {
+                    <mat-option [value]="specialty._id">
+                        {{ specialty.name | uppercase }}
+                    </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
             }
             @if (setting.showWorker) {
-                <mat-form-field appearance="fill">
-                    <mat-label>Personal a cargo</mat-label>
-                    <mat-select formControlName="workerId">
-                        <mat-option *ngFor="let worker of workers" [value]="worker._id">
-                            {{ worker.name | uppercase }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Personal a cargo</mat-label>
+                <mat-select formControlName="workerId">
+                    @for (worker of workers; track worker._id) {
+                    <mat-option [value]="worker._id">
+                        {{ worker.name | uppercase }}
+                    </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
             }
             @if (setting.showReferred) {
-                <mat-form-field appearance="fill">
-                    <mat-label>Referido por</mat-label>
-                    <mat-select formControlName="referredId">
-                        <mat-option *ngFor="let worker of workers" [value]="worker._id">
-                            {{ worker.name | uppercase }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Referido por</mat-label>
+                <mat-select formControlName="referredId">
+                    @for (worker of workers; track worker._id) {
+                    <mat-option [value]="worker._id">
+                        {{ worker.name | uppercase }}
+                    </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
             }
             @if (setting.showEmitionAt) {
-                <mat-form-field appearance="fill">
-                    <mat-label>Fecha de emision</mat-label>
-                    <input matInput [matDatepicker]="picker" formControlName="emitionAt">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Fecha de emision</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="emitionAt">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
             }
             @if (setting.showDeliveryAt) {
-                <mat-form-field appearance="fill">
-                    <mat-label>Fecha de entrega</mat-label>
-                    <input matInput [matDatepicker]="picker" formControlName="deliveryAt">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Fecha de entrega</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="deliveryAt">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
             }
             <mat-form-field appearance="fill" *ngIf="setting.showTotalDiscount">
                 <mat-label>Descuento global</mat-label>
@@ -96,52 +108,52 @@
                 <input type="text" matInput formControlName="observations" [autofocus]>
             </mat-form-field>
             @if (setting.showChange) {
-                <div class="d-flex">
-                    <mat-form-field appearance="fill">
-                        <mat-label>Billete</mat-label>
-                        <input type="number" class="text-center" #inputCash matInput formControlName="cash"
-                            (input)="setCash(inputCash.value)">
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Vuelto</mat-label>
-                        <input type="number" class="text-center" matInput *ngIf="cash; else elseBlock" [value]="cashChange">
-                        <ng-template #elseBlock>
-                            <input type="number" class="text-center" matInput>
-                        </ng-template>
-                    </mat-form-field>
-                </div>
+            <div class="d-flex">
+                <mat-form-field appearance="fill">
+                    <mat-label>Billete</mat-label>
+                    <input type="number" class="text-center" #inputCash matInput formControlName="cash"
+                        (input)="setCash(inputCash.value)">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Vuelto</mat-label>
+                    <input type="number" class="text-center" matInput *ngIf="cash; else elseBlock" [value]="cashChange">
+                    <ng-template #elseBlock>
+                        <input type="number" class="text-center" matInput>
+                    </ng-template>
+                </mat-form-field>
+            </div>
             }
             @if (setting.showIsRetainer) {
-                <div class="py-3">
-                    <mat-slide-toggle formControlName="isRetainer">Es agente retenedor</mat-slide-toggle>
-                </div>
+            <div class="py-3">
+                <mat-slide-toggle formControlName="isRetainer">Es agente retenedor</mat-slide-toggle>
+            </div>
             }
             @if (setting.showChange) {
-                <div class="my-2 d-flex">
-                    <span class="spacer"></span>
-                    <button type="button" mat-fab color="warn" class="mx-1" (click)="resetCash()">
-                        <mat-icon>delete</mat-icon>
-                    </button>
-                    <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(1)">
-                        <span>1</span>
-                    </button>
-                    <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(5)">
-                        <span>5</span>
-                    </button>
-                    <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(10)">
-                        <span>10</span>
-                    </button>
-                    <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(20)">
-                        <span>20</span>
-                    </button>
-                    <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(50)">
-                        <span>50</span>
-                    </button>
-                    <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(100)">
-                        <span>100</span>
-                    </button>
-                    <span class="spacer"></span>
-                </div>
+            <div class="my-2 d-flex">
+                <span class="spacer"></span>
+                <button type="button" mat-fab color="warn" class="mx-1" (click)="resetCash()">
+                    <mat-icon>delete</mat-icon>
+                </button>
+                <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(1)">
+                    <span>1</span>
+                </button>
+                <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(5)">
+                    <span>5</span>
+                </button>
+                <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(10)">
+                    <span>10</span>
+                </button>
+                <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(20)">
+                    <span>20</span>
+                </button>
+                <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(50)">
+                    <span>50</span>
+                </button>
+                <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(100)">
+                    <span>100</span>
+                </button>
+                <span class="spacer"></span>
+            </div>
             }
             <div class="p-1"></div>
             <button type="submit" class="w-100" mat-flat-button [disabled]="isLoading" color="primary">

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -20,7 +20,7 @@ import { DialogPurchaseOrderItemsComponent } from '../dialog-purchase-order-item
     templateUrl: './edit-purchase-orders.component.html',
     styleUrls: ['./edit-purchase-orders.component.sass']
 })
-export class EditPurchaseOrdersComponent implements OnInit {
+export class EditPurchaseOrdersComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

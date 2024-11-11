@@ -1,19 +1,20 @@
 <mat-action-list>
-    <button type="button" mat-list-item *ngFor="let item of purchaseSupplyItems; let i = index"
-        (click)="onClickPurchaseItem(i)">
+    @for (purchaseSupplyItem of purchaseSupplyItems; track purchaseSupplyItem.supplyId; let i = $index) {
+    <button type="button" mat-list-item (click)="onClickPurchaseItem(i)">
         <div class="d-flex flex-column">
-            {{ item.fullName }}
+            {{ purchaseSupplyItem.fullName }}
             <div class="d-flex mat-caption">
-                <span class="mr-2" [style.color]="'green'" [hidden]="item.igvCode !== '11'">bonificacion</span>
+                <span class="mr-2" [style.color]="'green'" [hidden]="purchaseSupplyItem.igvCode !== '11'">bonificacion</span>
             </div>
         </div>
         <span class="divider"></span>
-        <span class="text-muted">x{{ item.quantity }}</span>
+        <span class="text-muted">x{{ purchaseSupplyItem.quantity }}</span>
         <span class="spacer"></span>
         <div class="ml-2">
-            {{ (item.cost * item.quantity).toFixed(2) }}
+            {{ (purchaseSupplyItem.cost * purchaseSupplyItem.quantity).toFixed(2) }}
         </div>
     </button>
+    }
     <mat-list-item role="listitem">
         <div class="d-flex font-weight-bold">
             Total

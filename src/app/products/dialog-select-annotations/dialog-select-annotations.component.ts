@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { ProductModel } from '../product.model';
@@ -23,7 +23,7 @@ export interface DialogSelectAnnotationData {
     templateUrl: './dialog-select-annotations.component.html',
     styleUrls: ['./dialog-select-annotations.component.sass']
 })
-export class DialogSelectAnnotationsComponent implements OnInit {
+export class DialogSelectAnnotationsComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)

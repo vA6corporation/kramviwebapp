@@ -14,9 +14,11 @@
                 <mat-label>Seleccione un usuario</mat-label>
                 <mat-select formControlName="userId" (selectionChange)="onUserChange()">
                     <mat-option value="">TODOS LOS USUARIOS</mat-option>
-                    <mat-option *ngFor="let element of users" [value]="element._id" class="text-uppercase">
-                        {{ element.name | uppercase }}
+                    @for (user of users; track user._id) {
+                    <mat-option [value]="user._id" class="text-uppercase">
+                        {{ user.name | uppercase }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">

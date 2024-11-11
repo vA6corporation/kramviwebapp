@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
@@ -13,7 +13,7 @@ import { MaterialModule } from '../../material.module';
     templateUrl: './signup.component.html',
     styleUrls: ['./signup.component.sass']
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent {
 
     constructor(
         private readonly authService: AuthService,

@@ -14,17 +14,20 @@
                 <mat-label>Categoria</mat-label>
                 <mat-select (selectionChange)="onChangeCategory()" formControlName="categoryId">
                     <mat-option value="">TODAS LAS CATEGORIAS</mat-option>
-                    <mat-option class="text-uppercase" *ngFor="let category of categories" [value]="category._id">
+                    @for (category of categories; track category._id) {
+                    <mat-option class="text-uppercase" [value]="category._id">
                         {{ category.name | uppercase }}
                     </mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Usuario</mat-label>
                 <mat-select (selectionChange)="onChangeUser()" formControlName="userId">
                     <mat-option value="">TODOS LOS USUARIOS</mat-option>
-                    <mat-option *ngFor="let element of users" [value]="element._id" class="text-uppercase">{{
-                        element.name | uppercase }}</mat-option>
+                    @for (user of users; track user._id) {
+                    <mat-option [value]="user._id" class="text-uppercase">{{ user.name | uppercase }}</mat-option>
+                    }
                 </mat-select>
             </mat-form-field>
         </div>
@@ -40,7 +43,8 @@
         <span class="spacer"></span>
     </div>
     <mat-list>
-        <mat-list-item *ngFor="let category of filterCategories" class="text-uppercase">
+        @for (category of filterCategories; track category._id) {
+        <mat-list-item class="text-uppercase">
             <span matListItemTitle>
                 {{ category.name }}
             </span>
@@ -48,5 +52,6 @@
                 {{ (category.totalCharge || 0).toFixed(2) }}
             </span>
         </mat-list-item>
+        }
     </mat-list>
 </div>

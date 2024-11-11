@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CreateSaleItemModel } from '../../sales/create-sale-item.model';
@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
     templateUrl: './pre-sales.component.html',
     styleUrls: ['./pre-sales.component.sass']
 })
-export class PreSalesComponent implements OnInit {
+export class PreSalesComponent {
 
     constructor(
         private readonly navigationService: NavigationService,
