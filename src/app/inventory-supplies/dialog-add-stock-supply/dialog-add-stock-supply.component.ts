@@ -1,12 +1,15 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NavigationService } from '../../navigation/navigation.service';
 import { InventorySuppliesService } from '../inventory-supplies.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-add-stock-supply',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-add-stock-supply.component.html',
     styleUrls: ['./dialog-add-stock-supply.component.sass']
 })

@@ -18,5 +18,6 @@ export interface PurchaseItemModel {
     createdAt: string
     purchaseId: string
     productId: string
+    isTrackStock: boolean
     lot: LotModel | null
 }

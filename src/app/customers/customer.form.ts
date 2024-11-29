@@ -10,4 +10,5 @@ export interface CustomerForm {
     email: FormControl<string>
     birthDate: FormControl<string>
     observations: FormControl<string>
+    creditLimit: FormControl<number | null>
 }

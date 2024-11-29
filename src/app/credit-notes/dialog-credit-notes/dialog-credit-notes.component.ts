@@ -10,9 +10,13 @@ import { SaleModel } from '../../sales/sale.model';
 import { SalesService } from '../../sales/sales.service';
 import { CreditNoteModel } from '../credit-note.model';
 import { CreditNotesService } from '../credit-notes.service';
+import { MaterialModule } from '../../material.module';
+import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-dialog-credit-notes',
+    standalone: true,
+    imports: [MaterialModule, RouterModule],
     templateUrl: './dialog-credit-notes.component.html',
     styleUrls: ['./dialog-credit-notes.component.sass']
 })

@@ -5,9 +5,13 @@ import { CreatePurchaseItemModel } from '../create-purchase-item.model';
 import { PurchasesService } from '../purchases.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogPurchaseItemsComponent } from '../dialog-purchase-items/dialog-purchase-items.component';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-purchase-items',
+    standalone: true,
+    imports: [MaterialModule, CommonModule],
     templateUrl: './purchase-items.component.html',
     styleUrls: ['./purchase-items.component.sass']
 })

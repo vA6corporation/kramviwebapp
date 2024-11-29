@@ -14,9 +14,13 @@ import { SalesService } from '../../sales/sales.service';
 import { SuppliesService } from '../../supplies/supplies.service';
 import { SupplyModel } from '../../supplies/supply.model';
 import { SaleSupplyItemModel } from '../sale-supply-item.model';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-detail-inventory-supplies',
+    standalone: true,
+    imports: [MaterialModule, CommonModule],
     templateUrl: './detail-inventory-supplies.component.html',
     styleUrls: ['./detail-inventory-supplies.component.sass']
 })

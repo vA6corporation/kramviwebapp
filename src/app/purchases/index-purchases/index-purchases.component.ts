@@ -1,8 +1,14 @@
 import { Component } from '@angular/core'
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { MaterialModule } from '../../material.module';
+import { PurchasesComponent } from '../purchases/purchases.component';
+import { PaymentPurchasesComponent } from '../../payment-purchases/payment-purchases/payment-purchases.component';
+import { CreditPurchasesComponent } from '../credit-purchases/credit-purchases.component';
 
 @Component({
     selector: 'app-index-purchases',
+    standalone: true,
+    imports: [MaterialModule, PurchasesComponent, CreditPurchasesComponent, PaymentPurchasesComponent],
     templateUrl: './index-purchases.component.html',
     styleUrls: ['./index-purchases.component.sass']
 })

@@ -8,7 +8,10 @@
             <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
                 <span class="mat-h1">{{ customer.name | uppercase }}</span>
             </button>
-            <p class="text-center mb-3">{{ customer.mobileNumber }}</p>
+            <p class="text-center mb-3">Limite de credito: {{ customer.creditLimit ? customer.creditLimit.toFixed(2) : 'SIN LIMITE' }}</p>
+            @if (customer.mobileNumber) {
+            <p class="text-center mb-3">Celular: {{ customer.formatMobileNumber }}</p>
+            }
             }
             <mat-form-field appearance="fill" *ngIf="customer">
                 <mat-label>Direccion</mat-label>

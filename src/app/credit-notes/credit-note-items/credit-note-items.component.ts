@@ -5,9 +5,12 @@ import { CreateCreditNoteItemModel } from '../create-credit-note-item.model';
 import { CreditNotesService } from '../credit-notes.service';
 import { DialogCreditNoteItemsComponent } from '../dialog-credit-note-items/dialog-credit-note-items.component';
 import { IgvType } from '../../products/igv-type.enum';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-credit-note-items',
+    standalone: true,
+    imports: [MaterialModule],
     templateUrl: './credit-note-items.component.html',
     styleUrls: ['./credit-note-items.component.sass']
 })

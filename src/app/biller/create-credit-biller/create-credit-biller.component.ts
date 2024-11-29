@@ -33,6 +33,8 @@ import { BillItemModel } from '../bill-item.model';
 import { BillerItemsComponent } from '../biller-items/biller-items.component';
 import { BillsService } from '../bills.service';
 import { DialogAddProductComponent } from '../dialog-add-product/dialog-add-product.component';
+import { DialogDetractionComponent } from '../dialog-detraction/dialog-detraction.component';
+import { DetractionModel } from '../detraction.model';
 
 @Component({
     selector: 'app-create-credit-biller',
@@ -81,6 +83,7 @@ export class CreateCreditBillerComponent {
     setting: SettingModel = new SettingModel()
     dues: CreateDueModel[] = []
     addresses: string[] = []
+    private detraction: DetractionModel | null = null
     private user: UserModel = new UserModel()
     private turn: TurnModel | null = null
 
@@ -249,6 +252,20 @@ export class CreateCreditBillerComponent {
         })
     }
 
+    onDialogDetraction() {
+        const dialogRef = this.matDialog.open(DialogDetractionComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: this.detraction,
+        })
+
+        dialogRef.afterClosed().subscribe(detraction => {
+            if (detraction) {
+                this.detraction = detraction
+            }
+        })
+    }
+
     onCancel() {
         const ok = confirm('Esta seguro de anular?...')
         if (ok) {
@@ -352,45 +369,53 @@ export class CreateCreditBillerComponent {
             this.isLoading = true
             this.navigationService.loadBarStart()
 
-            this.billsService.saveBillCredit(createdCredit, this.billItems, this.payments, this.dues).subscribe(sale => {
+            this.billsService.saveBillCredit(
+                createdCredit, 
+                this.billItems, 
+                this.payments, 
+                this.dues,
+                this.detraction
+            ).subscribe({
+                next: sale => {
 
-                Object.assign(sale, {
-                    user: this.user,
-                    customer: this.customer,
-                    saleItems: this.billItems,
-                    worker: this.workers.find(e => e._id === sale.workerId),
-                    referred: this.workers.find(e => e._id === sale.referredId),
-                    payments: this.payments,
-                })
+                    Object.assign(sale, {
+                        user: this.user,
+                        customer: this.customer,
+                        saleItems: this.billItems,
+                        worker: this.workers.find(e => e._id === sale.workerId),
+                        referred: this.workers.find(e => e._id === sale.referredId),
+                        payments: this.payments,
+                    })
 
-                switch (this.setting.papelImpresion) {
-                    case 'a4':
-                        this.printService.printA4Invoice(sale)
-                        break
-                    case 'a5':
-                        this.printService.printA5Invoice(sale)
-                        break
-                    case 'ticket80mm':
-                        this.printService.printTicket80mm(sale)
-                        break
-                    default:
-                        this.printService.printTicket58mm(sale)
-                        break
+                    switch (this.setting.papelImpresion) {
+                        case 'a4':
+                            this.printService.printA4Invoice(sale)
+                            break
+                        case 'a5':
+                            this.printService.printA5Invoice(sale)
+                            break
+                        case 'ticket80mm':
+                            this.printService.printTicket80mm(sale)
+                            break
+                        default:
+                            this.printService.printTicket58mm(sale)
+                            break
+                    }
+
+                    this.billsService.setBillItems([])
+                    this.dues = []
+                    this.payments = []
+                    this.customer = null
+                    this.formGroup.patchValue({ workerId: null, referredId: null })
+
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage('Registrado correctamente')
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
                 }
-
-                this.billsService.setBillItems([])
-                this.dues = []
-                this.payments = []
-                this.customer = null
-                this.formGroup.patchValue({ workerId: null, referredId: null })
-
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
-                this.navigationService.showMessage('Registrado correctamente')
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message)
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
             })
         } catch (error) {
             if (error instanceof Error) {

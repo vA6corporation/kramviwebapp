@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -17,6 +17,8 @@ import { UserModel } from '../../users/user.model';
 import { CdrModel } from '../cdr.model';
 import { InvoicesService } from '../invoices.service';
 import { TicketModel } from '../ticket.model';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 export interface DialogAdminData {
     saleId: string
@@ -25,6 +27,8 @@ export interface DialogAdminData {
 
 @Component({
     selector: 'app-dialog-admin',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './dialog-admin.component.html',
     styleUrls: ['./dialog-admin.component.sass']
 })

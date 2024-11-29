@@ -9,19 +9,19 @@
                     <table class="w-100">
                         <tbody>
                             <tr>
-                                <td>F. de emision</td>
+                                <td>Fecha de emision</td>
                                 <td align="right">{{ credit?.createdAt | date }}</td>
                             </tr>
                             <tr>
-                                <td>M. total</td>
+                                <td>Monto total</td>
                                 <td align="right">{{ (credit?.charge || 0).toFixed(2) }}</td>
                             </tr>
                             <tr class="text-primary">
-                                <td>M. pendiente</td>
+                                <td>Monto pendiente</td>
                                 <td align="right">{{ ((credit?.charge || 0) - (credit?.payed || 0)).toFixed(2) }}</td>
                             </tr>
                             <tr class="text-primary">
-                                <td>F. de pago</td>
+                                <td>Forma de pago</td>
                                 <td align="right">{{ credit?.isCredit ? 'CREDITO' : 'CONTADO' }}</td>
                             </tr>
                         </tbody>
@@ -34,23 +34,28 @@
                     <mat-card-title>Cliente</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
+                    @if (customer) {
                     <table class="w-100">
                         <tbody>
                             <tr>
                                 <td>Nombres</td>
-                                <td align="right">{{ customer?.name }}</td>
+                                <td align="right">{{ customer.name }}</td>
                             </tr>
                             <tr>
                                 <td>Documento</td>
-                                <td align="right">{{ customer?.documentType }}: {{ customer?.document }}</td>
+                                <td align="right">{{ customer.documentType }}: {{ customer.document }}</td>
                             </tr>
                             <tr>
                                 <td>Celular</td>
-                                <td align="right" [ngClass]="{ 'text-muted': !customer?.mobileNumber }">{{
-                                    customer?.mobileNumber || 'NINGUNO' }}</td>
+                                <td align="right" [ngClass]="{ 'text-muted': !customer.mobileNumber }">
+                                    {{ customer.mobileNumber || 'NINGUNO' }}
+                                </td>
                             </tr>
                         </tbody>
                     </table>
+                    } @else {
+                        <p class="text-muted text-center">SIN CLIENTE</p>
+                    }
                 </mat-card-content>
             </mat-card>
             <div class="py-2"></div>
@@ -61,13 +66,13 @@
                 <mat-card-content>
                     <mat-list>
                         @for (saleItem of saleItems; track $index) {
-                            <mat-list-item>
-                                <span matListItemTitle>{{ saleItem.fullName }} ({{ saleItem.quantity }})</span>
-                                <span class="text-success ml-2" *ngIf="saleItem.igvCode === '11'">Bon</span>
-                                <span class="text-primary ml-2" *ngIf="saleItem.igvCode === '20'">Exo</span>
-                                <span class="text-primary ml-2" *ngIf="saleItem.igvCode === '30'">Ina</span>
-                                <span>{{ (saleItem.price * saleItem.quantity).toFixed(2) }}</span>
-                            </mat-list-item>
+                        <mat-list-item>
+                            <span matListItemTitle>{{ saleItem.fullName }} ({{ saleItem.quantity }})</span>
+                            <span class="text-success ml-2" *ngIf="saleItem.igvCode === '11'">Bon</span>
+                            <span class="text-primary ml-2" *ngIf="saleItem.igvCode === '20'">Exo</span>
+                            <span class="text-primary ml-2" *ngIf="saleItem.igvCode === '30'">Ina</span>
+                            <span>{{ (saleItem.price * saleItem.quantity).toFixed(2) }}</span>
+                        </mat-list-item>
                         }
                     </mat-list>
                 </mat-card-content>
@@ -82,7 +87,8 @@
                     @for (payment of payments; track payment._id) {
                     <mat-list-item role="listitem" [ngClass]="{ 'bg-danger': payment.deletedAt }">
                         <span matListItemTitle>{{ payment.paymentMethod.name }}</span>
-                        <span matListItemLine>{{ payment.createdAt | date }}<span class="divider"></span>{{ payment.observations }}</span>
+                        <span matListItemLine>{{ payment.createdAt | date }}<span class="divider"></span>{{
+                            payment.observations }}</span>
                         <span matListItemLine>{{ payment.charge.toFixed(2) }}</span>
                         <div matListItemMeta class="h-100 d-flex align-items-center">
                             <button mat-icon-button aria-label="edit" (click)="onEditPayment(payment)">
@@ -97,7 +103,7 @@
                     }
                 </mat-list>
                 <mat-card-actions>
-                    <button mat-flat-button color="primary" (click)="onAddPayment()"
+                    <button mat-flat-button color="primary" (click)="onCreatePayment()"
                         [disabled]="turn === null">PAGAR</button>
                 </mat-card-actions>
             </mat-card>
@@ -107,10 +113,10 @@
                 </mat-card-header>
                 <mat-list>
                     @for (due of dues; track $index) {
-                        <mat-list-item>
-                            <span matListItemTitle>{{ due.dueDate | date }}</span>
-                            <span>{{ due.charge.toFixed(2) }}</span>
-                        </mat-list-item>
+                    <mat-list-item>
+                        <span matListItemTitle>{{ due.dueDate | date }}</span>
+                        <span>{{ due.charge.toFixed(2) }}</span>
+                    </mat-list-item>
                     }
                 </mat-list>
                 <mat-card-actions>

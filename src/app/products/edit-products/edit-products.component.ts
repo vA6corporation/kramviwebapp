@@ -19,7 +19,6 @@ import { CategoriesService } from '../categories.service';
 import { CategoryModel } from '../category.model';
 import { DialogAnnotationsComponent } from '../dialog-annotations/dialog-annotations.component';
 import { DialogCreateCategoriesComponent } from '../dialog-create-categories/dialog-create-categories.component';
-import { DialogImageComponent } from '../dialog-image/dialog-image.component';
 import { DialogSearchProductsComponent } from '../dialog-search-products/dialog-search-products.component';
 import { PriceListModel } from '../price-list.model';
 import { PriceType } from '../price-type.enum';
@@ -220,13 +219,6 @@ export class EditProductsComponent {
                 }
             })
         }
-    }
-
-    onAddImage() {
-        const dialogRef = this.matDialog.open(DialogImageComponent, {
-            width: '600px',
-            position: { top: '20px' },
-        })
     }
 
     onExcludedChange() {

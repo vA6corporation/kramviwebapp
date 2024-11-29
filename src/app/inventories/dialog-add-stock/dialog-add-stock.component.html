@@ -1,40 +1,38 @@
-<div>
-    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
-        <h2 mat-dialog-title>Agregar stock</h2>
-        <mat-dialog-content>
-            <mat-form-field appearance="fill">
-                <mat-label>Cantidad</mat-label>
-                <input type="number" matInput formControlName="quantity">
-            </mat-form-field>
-            <mat-form-field appearance="fill">
-                <mat-label>Precio costo</mat-label>
-                <input type="number" matInput formControlName="cost">
-            </mat-form-field>
-            <mat-form-field appearance="fill">
-                <mat-label>Medio de pago</mat-label>
-                <mat-select formControlName="paymentMethodId">
-                    @for (paymentMethod of paymentMethods; track paymentMethod._id) {
-                        <mat-option [value]="paymentMethod._id">
-                            {{ paymentMethod.name }}
-                        </mat-option>
-                    }
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="fill">
-                <mat-label>Observaciones</mat-label>
-                <input type="text" matInput formControlName="observations">
-            </mat-form-field>
-            <mat-form-field appearance="fill">
-                <mat-label>Fecha de compra</mat-label>
-                <input matInput [matDatepicker]="pickerPurchasedAt" formControlName="purchasedAt">
-                <mat-datepicker-toggle matSuffix [for]="pickerPurchasedAt"></mat-datepicker-toggle>
-                <mat-datepicker #pickerPurchasedAt></mat-datepicker>
-            </mat-form-field>
-        </mat-dialog-content>
-        <mat-dialog-actions>
-            <span class="spacer"></span>
-            <button mat-raised-button mat-dialog-close color="primary" [disabled]="isLoading">CANCELAR</button>
-            <button type="submit" mat-flat-button color="primary" [disabled]="isLoading">GUARDAR</button>
-        </mat-dialog-actions>
-    </form>
-</div>
+<form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+    <h2 mat-dialog-title>Agregar stock</h2>
+    <mat-dialog-content>
+        <mat-form-field appearance="fill">
+            <mat-label>Cantidad</mat-label>
+            <input type="number" matInput formControlName="quantity">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Costo</mat-label>
+            <input type="number" matInput formControlName="cost">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Medio de pago</mat-label>
+            <mat-select formControlName="paymentMethodId">
+                @for (paymentMethod of paymentMethods; track paymentMethod._id) {
+                <mat-option [value]="paymentMethod._id">
+                    {{ paymentMethod.name }}
+                </mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Observaciones</mat-label>
+            <input type="text" matInput formControlName="observations">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Fecha de compra</mat-label>
+            <input matInput [matDatepicker]="pickerPurchasedAt" formControlName="purchasedAt">
+            <mat-datepicker-toggle matSuffix [for]="pickerPurchasedAt"></mat-datepicker-toggle>
+            <mat-datepicker #pickerPurchasedAt></mat-datepicker>
+        </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <span class="spacer"></span>
+        <button mat-raised-button mat-dialog-close color="primary" [disabled]="isLoading">CANCELAR</button>
+        <button type="submit" mat-flat-button color="primary" [disabled]="isLoading">GUARDAR</button>
+    </mat-dialog-actions>
+</form>

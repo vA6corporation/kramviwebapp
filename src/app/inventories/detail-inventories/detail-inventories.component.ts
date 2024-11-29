@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -28,9 +28,13 @@ import { SalesService } from '../../sales/sales.service';
 import { DialogAddStockComponent } from '../dialog-add-stock/dialog-add-stock.component';
 import { DialogRemoveStockComponent } from '../dialog-remove-stock/dialog-remove-stock.component';
 import { DialogMoveStockComponent } from '../dialog-move-stock/dialog-move-stock.component';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-detail-inventories',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './detail-inventories.component.html',
     styleUrls: ['./detail-inventories.component.sass']
 })

@@ -8,6 +8,7 @@ export interface CustomerModel {
     name: string
     email: string
     mobileNumber: string
+    formatMobileNumber: string
     birthDate: string
     addresses: string[]
     locationCode: string | null
@@ -15,6 +16,7 @@ export interface CustomerModel {
     latitude: number
     longitude: number
     observations: string
+    creditLimit: number | null
 
     lastSale?: SaleModel
     countSale?: number

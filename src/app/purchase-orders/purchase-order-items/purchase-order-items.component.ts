@@ -5,9 +5,12 @@ import { DialogPurchaseOrderItemsComponent } from '../dialog-purchase-order-item
 import { PurchaseOrderItemModel } from '../purchase-order-item.model';
 import { PurchaseOrdersService } from '../purchase-orders.service';
 import { IgvType } from '../../products/igv-type.enum';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-purchase-order-items',
+    standalone: true,
+    imports: [MaterialModule],
     templateUrl: './purchase-order-items.component.html',
     styleUrls: ['./purchase-order-items.component.sass']
 })
@@ -19,20 +22,20 @@ export class PurchaseOrderItemsComponent {
     ) { }
 
     igvType = IgvType
-    purchaseOrderItems$: Subscription = new Subscription();
-    purchaseOrderItems: PurchaseOrderItemModel[] = [];
-    charge: number = 0;
+    purchaseOrderItems$: Subscription = new Subscription()
+    purchaseOrderItems: PurchaseOrderItemModel[] = []
+    charge: number = 0
 
     ngOnInit(): void {
         this.purchaseOrderItems$ = this.purchaseOrdersService.getPurchaseOrderItems().subscribe(purchaseOrderItems => {
-            this.purchaseOrderItems = purchaseOrderItems;
-            this.charge = 0;
+            this.purchaseOrderItems = purchaseOrderItems
+            this.charge = 0
             for (const purchaseOrderItem of this.purchaseOrderItems) {
                 if (purchaseOrderItem.igvCode !== '11') {
-                    this.charge += purchaseOrderItem.cost * purchaseOrderItem.quantity;
+                    this.charge += purchaseOrderItem.cost * purchaseOrderItem.quantity
                 }
             }
-        });
+        })
     }
 
     onSelectPurchaseOrderItem(index: number) {
@@ -40,11 +43,11 @@ export class PurchaseOrderItemsComponent {
             width: '600px',
             position: { top: '20px' },
             data: index,
-        });
+        })
     }
 
     ngOnDestroy() {
-        this.purchaseOrderItems$.unsubscribe();
+        this.purchaseOrderItems$.unsubscribe()
     }
 
 }

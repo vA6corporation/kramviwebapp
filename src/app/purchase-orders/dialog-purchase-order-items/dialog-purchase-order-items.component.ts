@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -12,9 +12,12 @@ import { OfficesService } from '../../offices/offices.service';
 import { OfficeModel } from '../../auth/office.model';
 import { PriceType } from '../../products/price-type.enum';
 import { PriceListModel } from '../../products/price-list.model';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-purchase-order-items',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-purchase-order-items.component.html',
     styleUrls: ['./dialog-purchase-order-items.component.sass']
 })

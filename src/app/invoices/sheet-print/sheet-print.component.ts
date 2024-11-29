@@ -3,9 +3,12 @@ import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { SalesService } from '../../sales/sales.service';
 import { MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { PrintService } from '../../print/print.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-sheet-print',
+    standalone: true,
+    imports: [MaterialModule],
     templateUrl: './sheet-print.component.html',
     styleUrls: ['./sheet-print.component.sass']
 })

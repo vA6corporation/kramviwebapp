@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -27,9 +27,13 @@ import { DialogTurnsComponent } from '../../turns/dialog-turns/dialog-turns.comp
 import { TurnModel } from '../../turns/turn.model';
 import { TurnsService } from '../../turns/turns.service';
 import { UserModel } from '../../users/user.model';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-change-invoice',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './change-invoice.component.html',
     styleUrls: ['./change-invoice.component.sass']
 })

@@ -4,9 +4,14 @@ import { PageEvent } from '@angular/material/paginator';
 import { CustomerModel } from '../../customers/customer.model';
 import { NavigationService } from '../../navigation/navigation.service';
 import { WorkersService } from '../workers.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-workers',
+    standalone: true,
+    imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './workers.component.html',
     styleUrls: ['./workers.component.sass']
 })
@@ -34,9 +39,6 @@ export class WorkersComponent {
         this.workersService.getWorkersByPage(this.pageIndex + 1, this.pageSize).subscribe(workers => {
             this.navigationService.loadBarFinish()
             this.dataSource = workers
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.loadBarFinish()
-            this.navigationService.showMessage(error.error.message)
         })
     }
 

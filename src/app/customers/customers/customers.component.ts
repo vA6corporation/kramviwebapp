@@ -40,7 +40,7 @@ export class CustomersComponent {
     formGroup: FormGroup = this.formBuilder.group({
         documentType: '',
     })
-    displayedColumns: string[] = ['checked', 'document', 'name', 'address', 'mobileNumber', 'observations', 'actions']
+    displayedColumns: string[] = ['checked', 'document', 'name', 'creditLimit', 'mobileNumber', 'observations', 'actions']
     dataSource: CustomerModel[] = []
     length: number = 0
     pageSize: number = 10

@@ -304,6 +304,7 @@ export class SalesService {
         couponItems: any[],
         params: Params,
     ): Observable<SaleModel> {
+        console.log(couponItems)
         return this.httpService.post('sales', {
             sale,
             saleItems,

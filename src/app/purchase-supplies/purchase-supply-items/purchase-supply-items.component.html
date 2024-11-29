@@ -1,25 +1,28 @@
 <mat-action-list>
     @for (purchaseSupplyItem of purchaseSupplyItems; track purchaseSupplyItem.supplyId; let i = $index) {
-    <button type="button" mat-list-item (click)="onClickPurchaseItem(i)">
-        <div class="d-flex flex-column">
-            {{ purchaseSupplyItem.fullName }}
-            <div class="d-flex mat-caption">
-                <span class="mr-2" [style.color]="'green'" [hidden]="purchaseSupplyItem.igvCode !== '11'">bonificacion</span>
+        <button mat-list-item (click)="onSelectPurchaseSupplyItem(i)">
+            <span matListItemTitle>{{ purchaseSupplyItem.fullName }}</span>
+            <div matListItemLine class="d-flex">
+                <span class="mr-3">x{{ purchaseSupplyItem.quantity }}</span>
+                <!-- @if (purchaseSupplyItem.igvCode === igvType.BONIFICACION) {
+                    <span class="mr-3" [style.color]="'green'">Bonificacion</span>
+                }
+                @if (purchaseSupplyItem.igvCode === igvType.EXONERADO) {
+                    <span class="text-primary mr-3">Exonerado</span>
+                }
+                @if (purchaseSupplyItem.igvCode === igvType.INAFECTO) {
+                    <span class="text-primary mr-3">Inafecto</span>
+                } -->
+                <span class="spacer"></span>
+                <span>{{ (purchaseSupplyItem.cost * purchaseSupplyItem.quantity).toFixed(2) }}</span>
             </div>
-        </div>
-        <span class="divider"></span>
-        <span class="text-muted">x{{ purchaseSupplyItem.quantity }}</span>
-        <span class="spacer"></span>
-        <div class="ml-2">
-            {{ (purchaseSupplyItem.cost * purchaseSupplyItem.quantity).toFixed(2) }}
+        </button>
+    }
+    <button mat-list-item>
+        <div matListItemTitle class="d-flex font-weight-bold">
+            <span>Total</span>
+            <span class="spacer"></span>
+            <span>{{ charge.toFixed(2) }}</span>
         </div>
     </button>
-    }
-    <mat-list-item role="listitem">
-        <div class="d-flex font-weight-bold">
-            Total
-            <span class="spacer"></span>
-            {{ charge.toFixed(2) }}
-        </div>
-    </mat-list-item>
 </mat-action-list>

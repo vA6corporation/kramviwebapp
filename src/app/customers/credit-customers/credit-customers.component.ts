@@ -50,8 +50,8 @@ export class CreditCustomersComponent {
     charge: number = 0
     selectedCredits: CreditModel[] = []
     forPaid: number = 0
+    customer: CustomerModel | null = null
     private customerId: string = ''
-    private customer: CustomerModel | null = null
     private turn: TurnModel | null = null
     private setting: SettingModel = new SettingModel()
 

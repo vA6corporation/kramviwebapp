@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
@@ -16,9 +16,14 @@ import { PurchasesService } from '../purchases.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogPurchaseItemsComponent } from '../dialog-purchase-items/dialog-purchase-items.component';
 import { DialogDetailProductsComponent } from '../../products/dialog-detail-products/dialog-detail-products.component';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
+import { PurchaseItemsComponent } from '../purchase-items/purchase-items.component';
 
 @Component({
     selector: 'app-edit-purchases',
+    standalone: true,
+    imports: [MaterialModule, RouterModule, CommonModule, PurchaseItemsComponent],
     templateUrl: './edit-purchases.component.html',
     styleUrls: ['./edit-purchases.component.sass']
 })

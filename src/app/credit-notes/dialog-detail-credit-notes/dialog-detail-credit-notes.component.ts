@@ -13,9 +13,13 @@ import { CdrNcModel } from '../cdr-nc.model';
 import { CreditNoteItemModel } from '../credit-note-item.model';
 import { CreditNoteModel } from '../credit-note.model';
 import { CreditNotesService } from '../credit-notes.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-dialog-detail-credit-notes',
+    standalone: true,
+    imports: [MaterialModule, CommonModule],
     templateUrl: './dialog-detail-credit-notes.component.html',
     styleUrls: ['./dialog-detail-credit-notes.component.sass']
 })
@@ -30,48 +34,50 @@ export class DialogDetailCreditNotesComponent {
         private readonly sanitizer: DomSanitizer,
     ) { }
 
-    creditNote: CreditNoteModel | null = null;
-    creditNoteItems: CreditNoteItemModel[] = [];
-    cdr: CdrNcModel | null = null;
-    ticket: TicketModel | null = null;
-    user: UserModel = new UserModel();
-    office: OfficeModel = new OfficeModel();
-    business: BusinessModel = new BusinessModel();
+    creditNote: CreditNoteModel | null = null
+    creditNoteItems: CreditNoteItemModel[] = []
+    cdr: CdrNcModel | null = null
+    ticket: TicketModel | null = null
+    user: UserModel = new UserModel()
+    office: OfficeModel = new OfficeModel()
+    business: BusinessModel = new BusinessModel()
 
-    private handleAuth$: Subscription = new Subscription();
+    private handleAuth$: Subscription = new Subscription()
 
     ngOnDestroy() {
-        this.handleAuth$.unsubscribe();
+        this.handleAuth$.unsubscribe()
     }
 
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.business = auth.business;
-            this.office = auth.office;
-        });
+            this.business = auth.business
+            this.office = auth.office
+        })
 
         this.creditNotesService.getCreditNoteById(this.creditNoteId).subscribe(creditNote => {
-            this.creditNote = creditNote;
-            const { creditNoteItems, user, cdr } = creditNote;
-            this.creditNoteItems = creditNoteItems;
-            this.cdr = cdr;
-            this.user = user;
-        });
+            this.creditNote = creditNote
+            const { creditNoteItems, user, cdr } = creditNote
+            this.creditNoteItems = creditNoteItems
+            this.cdr = cdr
+            this.user = user
+        })
     }
 
     onGetCdr() {
-        this.navigationService.loadBarStart();
-        this.creditNotesService.getCdrByCreditNote(this.creditNoteId).subscribe(cdr => {
-            this.navigationService.loadBarFinish();
-            this.cdr = cdr;
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.loadBarFinish();
-            this.navigationService.showMessage(error.error.message);
-        });
+        this.navigationService.loadBarStart()
+        this.creditNotesService.getCdrByCreditNote(this.creditNoteId).subscribe({
+            next: cdr => {
+                this.navigationService.loadBarFinish()
+                this.cdr = cdr
+            }, error: (error: HttpErrorResponse) => {
+                this.navigationService.loadBarFinish()
+                this.navigationService.showMessage(error.error.message)
+            }
+        })
     }
 
     sanitize(url: string) {
-        return this.sanitizer.bypassSecurityTrustUrl(url);
+        return this.sanitizer.bypassSecurityTrustUrl(url)
     }
 
 }

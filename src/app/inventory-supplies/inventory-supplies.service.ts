@@ -2,26 +2,24 @@ import { Injectable } from '@angular/core';
 import { HttpService } from '../http.service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class InventorySuppliesService {
 
-  constructor(
-    private readonly httpService: HttpService,
-  ) { }
+    constructor(
+        private readonly httpService: HttpService,
+    ) { }
 
-  addStock(purchaseSupply: any, purchaseSupplyItems: any[]) {
-    console.log(purchaseSupplyItems);
-    
-    return this.httpService.post('purchaseSupplies', { purchaseSupply, purchaseSupplyItems });
-  }
+    addStock(purchaseSupply: any, purchaseSupplyItems: any[]) {
+        return this.httpService.post('purchaseSupplies', { purchaseSupply, purchaseSupplyItems })
+    }
 
-  removeStock(incidentSupply: any, incidentSupplyItems: any[]) {
-    return this.httpService.post('incidentSupplies', { incidentSupply, incidentSupplyItems });
-  }
+    removeStock(incidentSupply: any, incidentSupplyItems: any[]) {
+        return this.httpService.post('incidentSupplies', { incidentSupply, incidentSupplyItems })
+    }
 
-  moveStock(moveSupply: any, moveOutSupplyItems: any[]) {
-    return this.httpService.post('moveSupplies', { moveSupply, moveOutSupplyItems });
-  }
+    moveStock(moveSupply: any, moveOutSupplyItems: any[]) {
+        return this.httpService.post('moveSupplies', { moveSupply, moveOutSupplyItems })
+    }
 
 }

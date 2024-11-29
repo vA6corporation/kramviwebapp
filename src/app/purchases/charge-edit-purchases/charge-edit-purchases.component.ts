@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -13,11 +13,13 @@ import { DialogEditProvidersComponent } from '../../providers/dialog-edit-provid
 import { ProviderModel } from '../../providers/provider.model';
 import { CreatePurchaseItemModel } from '../create-purchase-item.model';
 import { PurchasesService } from '../purchases.service';
-import { UpdatePurchaseModel } from '../update-purchase.model';
 import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component';
 import { OfficesService } from '../../offices/offices.service';
 import { OfficeModel } from '../../auth/office.model';
 import { AuthService } from '../../auth/auth.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
+import { PurchaseItemsComponent } from '../purchase-items/purchase-items.component';
 
 interface FormData {
     invoiceType: string
@@ -30,6 +32,8 @@ interface FormData {
 
 @Component({
     selector: 'app-charge-edit-purchases',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule, PurchaseItemsComponent],
     templateUrl: './charge-edit-purchases.component.html',
     styleUrls: ['./charge-edit-purchases.component.sass']
 })
@@ -164,7 +168,7 @@ export class ChargeEditPurchasesComponent {
         if (this.formGroup.valid) {
             try {
                 const formData: FormData = this.formGroup.value
-                const purchase: UpdatePurchaseModel = {
+                const purchase = {
                     invoiceType: formData.invoiceType,
                     serie: formData.serie,
                     purchasedAt: formData.purchasedAt,

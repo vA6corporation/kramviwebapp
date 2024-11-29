@@ -4,9 +4,12 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
 import { CdrModel } from '../cdr.model';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-bad-cdrs',
+    standalone: true,
+    imports: [MaterialModule],
     templateUrl: './dialog-bad-cdrs.component.html',
     styleUrls: ['./dialog-bad-cdrs.component.sass']
 })

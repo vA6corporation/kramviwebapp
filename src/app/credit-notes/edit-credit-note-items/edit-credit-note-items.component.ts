@@ -11,9 +11,13 @@ import { FavoritesService } from '../../favorites/favorites.service';
 import { ProductModel } from '../../products/product.model';
 import { ProductsService } from '../../products/products.service';
 import { CreditNotesService } from '../credit-notes.service';
+import { MaterialModule } from '../../material.module';
+import { CreditNoteItemsComponent } from '../credit-note-items/credit-note-items.component';
 
 @Component({
     selector: 'app-edit-credit-note-items',
+    standalone: true,
+    imports: [MaterialModule, CreditNoteItemsComponent],
     templateUrl: './edit-credit-note-items.component.html',
     styleUrls: ['./edit-credit-note-items.component.sass']
 })

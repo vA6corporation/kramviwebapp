@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -20,6 +20,9 @@ import { WorkersService } from '../../workers/workers.service';
 import { CreateCreditNoteModel } from '../create-credit-note.model';
 import { CreditNotesService } from '../credit-notes.service';
 import { DialogSearchCustomersComponent } from '../../customers/dialog-search-customers/dialog-search-customers.component';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
+import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component';
 
 interface FormData {
     discount: any,
@@ -32,6 +35,8 @@ interface FormData {
 
 @Component({
     selector: 'app-create-credit-notes',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent],
     templateUrl: './create-credit-notes.component.html',
     styleUrls: ['./create-credit-notes.component.sass']
 })
@@ -213,7 +218,7 @@ export class CreateCreditNotesComponent {
                 workerId: formData.workerId,
             }
 
-            this.creditNotesService.saveCreditNote(this.sale, createdCreditNote, this.saleItems, this.saleId).subscribe({
+            this.creditNotesService.create(this.sale, createdCreditNote, this.saleItems, this.saleId).subscribe({
                 next: () => {
                     this.salesService.setSaleItems([])
                     const queryParams: Params = { tabIndex: 1 }

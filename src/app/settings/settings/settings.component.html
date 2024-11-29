@@ -94,7 +94,7 @@
                     <input matInput formControlName="clientSecret">
                 </mat-form-field>
                 <mat-form-field appearance="fill">
-                    <mat-label>Sunat token</mat-label>
+                    <mat-label>Token SUNAT</mat-label>
                     <textarea matInput formControlName="sunattk" readonly></textarea>
                 </mat-form-field>
                 <button type="button" mat-flat-button color="primary" (click)="onGetTokenSunat()">
@@ -339,6 +339,11 @@
                     <mat-list-item>
                         <mat-slide-toggle formControlName="allowCredit">
                             Permitir ventas al credito
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="allowCreditLimit">
+                            Limitar el credito solo a clientes con limite de credito
                         </mat-slide-toggle>
                     </mat-list-item>
                     <mat-list-item>

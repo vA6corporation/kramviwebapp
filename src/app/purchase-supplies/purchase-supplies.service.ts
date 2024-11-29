@@ -8,6 +8,7 @@ import { CreatePurchaseSupplyItemModel } from './create-purchase-supply-item.mod
 import { CreatePurchaseSupplyModel } from './create-purchase-supply.model';
 import { PurchaseSupplyItemModel } from './purchase-supply-item.model';
 import { PurchaseSupplyModel } from './purchase-supply.model';
+import { Params } from '@angular/router';
 
 @Injectable({
     providedIn: 'root'
@@ -29,11 +30,8 @@ export class PurchaseSuppliesService {
         return this.httpService.get(`purchaseSupplies/byId/${purchaseSupplyId}`)
     }
 
-    getCountPurchaseSuppliesByRangeDate(
-        startDate: number,
-        endDate: number,
-    ): Observable<number> {
-        return this.httpService.get(`purchaseSupplies/countByRangeDatePage/${startDate}/${endDate}`)
+    getCountPurchaseSupplies(params: Params): Observable<number> {
+        return this.httpService.get(`purchaseSupplies/countPurchaseSupplies`, params)
     }
 
     getPurchaseSupplyItemsByRangeDate(
@@ -43,13 +41,12 @@ export class PurchaseSuppliesService {
         return this.httpService.get(`purchaseSupplies/itemsByRangeDatePage/${startDate}/${endDate}`)
     }
 
-    getPurchaseSuppliesByRangeDatePage(
-        startDate: number,
-        endDate: number,
+    getPurchaseSuppliesByPage(
         pageIndex: number,
-        pageSize: number
+        pageSize: number,
+        params: Params,
     ): Observable<PurchaseModel[]> {
-        return this.httpService.get(`purchaseSupplies/byRangeDatePage/${startDate}/${endDate}/${pageIndex}/${pageSize}`)
+        return this.httpService.get(`purchaseSupplies/byPage/${pageIndex}/${pageSize}`, params)
     }
 
     getPurchaseSuppliesByRangeDate(

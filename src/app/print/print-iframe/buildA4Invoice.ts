@@ -380,6 +380,12 @@ export async function buildA4Invoice(
         pdf.text(text, 205, positionYitems, { align: 'right' })
     }
 
+    if (sale.detraction) {
+        positionYitems += 5
+        text = `Operacion sujeta a detraccion \t N° de cuenta Banco de la nacion: ${sale.detraction.bankAccountNumber} \t Porcentaje detraccion: ${sale.detraction.percent} \t Monto detraccion: ${sale.detraction.amount}`
+        pdf.text(text, 5, positionYitems)
+    }
+
     if (banks.length) {
         positionYitems += 3
         pdf.setDrawColor(0)

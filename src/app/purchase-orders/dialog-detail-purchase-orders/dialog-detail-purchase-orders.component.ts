@@ -1,8 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
+import { MaterialModule } from '../../material.module';
 import { ProviderModel } from '../../providers/provider.model';
 import { UserModel } from '../../users/user.model';
 import { PurchaseOrderItemModel } from '../purchase-order-item.model';
@@ -11,6 +14,8 @@ import { PurchaseOrdersService } from '../purchase-orders.service';
 
 @Component({
     selector: 'app-dialog-detail-purchase-orders',
+    standalone: true,
+    imports: [MaterialModule, CommonModule, RouterModule],
     templateUrl: './dialog-detail-purchase-orders.component.html',
     styleUrls: ['./dialog-detail-purchase-orders.component.sass']
 })

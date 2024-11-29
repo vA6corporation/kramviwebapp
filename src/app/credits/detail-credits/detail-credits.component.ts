@@ -21,10 +21,14 @@ import { TurnModel } from '../../turns/turn.model';
 import { TurnsService } from '../../turns/turns.service';
 import { CreditModel } from '../credit.model';
 import { CreditsService } from '../credits.service';
-import { DialogPaymentComponent, DialogPaymentData } from '../dialog-payment/dialog-payment.component';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
+import { DialogCreatePaymentData, DialogCreatePaymentsComponent } from '../../payments/dialog-create-payments/dialog-create-payments.component';
 
 @Component({
     selector: 'app-detail-credits',
+    standalone: true,
+    imports: [MaterialModule, CommonModule],
     templateUrl: './detail-credits.component.html',
     styleUrls: ['./detail-credits.component.sass']
 })
@@ -87,10 +91,15 @@ export class DetailCreditsComponent {
         const ok = confirm('Esta seguro de eliminar?...')
         if (ok) {
             this.navigationService.loadBarStart()
-            this.paymentsService.delete(paymentId, saleId).subscribe(() => {
-                this.navigationService.loadBarFinish()
-                this.navigationService.showMessage('Eliminado correctamente')
-                this.fetchData()
+            this.paymentsService.delete(paymentId, saleId).subscribe({
+                next: () => {
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage('Eliminado correctamente')
+                    this.fetchData()
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                    this.navigationService.loadBarFinish()
+                }
             })
         }
     }
@@ -141,6 +150,7 @@ export class DetailCreditsComponent {
                         Object.assign(payment, updatePayment)
                         this.navigationService.showMessage('Se han guardado los cambios')
                         this.navigationService.loadBarFinish()
+                        this.fetchData()
                     }, error: (error: HttpErrorResponse) => {
                         this.navigationService.showMessage(error.error.message)
                         this.navigationService.loadBarFinish()
@@ -164,14 +174,14 @@ export class DetailCreditsComponent {
         })
     }
 
-    onAddPayment() {
+    onCreatePayment() {
         if (this.credit && this.turn) {
-            const data: DialogPaymentData = {
+            const data: DialogCreatePaymentData = {
                 turnId: this.turn._id,
                 saleId: this.credit._id
             }
 
-            const dialogRef = this.matDialog.open(DialogPaymentComponent, {
+            const dialogRef = this.matDialog.open(DialogCreatePaymentsComponent, {
                 width: '600px',
                 position: { top: '20px' },
                 data,

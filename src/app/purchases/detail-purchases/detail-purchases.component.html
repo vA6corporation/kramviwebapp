@@ -1,0 +1,109 @@
+<div class="container">
+    <div class="d-flex">
+        <div class="w-100 pr-3">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>Detalles</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <table class="w-100">
+                        <tbody>
+                            <tr>
+                                <td>F. de emision</td>
+                                <td align="right">{{ purchase?.createdAt | date }}</td>
+                            </tr>
+                            <tr>
+                                <td>M. total</td>
+                                <td align="right">{{ (purchase?.charge || 0).toFixed(2) }}</td>
+                            </tr>
+                            <tr class="text-primary">
+                                <td>M. pendiente</td>
+                                <td align="right">{{ ((purchase?.charge || 0) - (purchase?.payed || 0)).toFixed(2) }}</td>
+                            </tr>
+                            <tr class="text-primary">
+                                <td>F. de pago</td>
+                                <td align="right">{{ purchase?.isCredit ? 'CREDITO' : 'CONTADO' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </mat-card-content>
+            </mat-card>
+            <div class="py-2"></div>
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>Proveedor</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    @if (provider) {
+                        <table class="w-100">
+                            <tbody>
+                                <tr>
+                                    <td>Nombres</td>
+                                    <td align="right">{{ provider.name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Documento</td>
+                                    <td align="right">{{ provider.documentType }}: {{ provider.document }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Celular</td>
+                                    <td align="right" [ngClass]="{ 'text-muted': !provider.mobileNumber }">{{
+                                        provider.mobileNumber || 'NINGUNO' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    } @else {
+                        <p class="text-muted text-center">SIN PROVEEDOR</p>
+                    }
+                </mat-card-content>
+            </mat-card>
+            <div class="py-2"></div>
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>Productos</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <mat-list>
+                        @for (purchaseItem of purchaseItems; track $index) {
+                            <mat-list-item>
+                                <span matListItemTitle>{{ purchaseItem.fullName }} ({{ purchaseItem.quantity }})</span>
+                                <span class="text-success ml-2" *ngIf="purchaseItem.igvCode === '11'">Bon</span>
+                                <span class="text-primary ml-2" *ngIf="purchaseItem.igvCode === '20'">Exo</span>
+                                <span class="text-primary ml-2" *ngIf="purchaseItem.igvCode === '30'">Ina</span>
+                                <span>{{ (purchaseItem.price * purchaseItem.quantity).toFixed(2) }}</span>
+                            </mat-list-item>
+                        }
+                    </mat-list>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="w-100 pr-2">
+            <mat-card class="mb-4">
+                <mat-card-header>
+                    <mat-card-title>Pagos</mat-card-title>
+                </mat-card-header>
+                <mat-list role="list">
+                    @for (paymentPurchase of paymentPurchases; track paymentPurchase._id) {
+                    <mat-list-item role="listitem" [ngClass]="{ 'bg-danger': paymentPurchase.deletedAt }">
+                        <span matListItemTitle>{{ paymentPurchase.paymentMethod.name }}</span>
+                        <span matListItemLine>{{ paymentPurchase.createdAt | date }}<span class="divider"></span>{{ paymentPurchase.observations }}</span>
+                        <span matListItemLine>{{ paymentPurchase.charge.toFixed(2) }}</span>
+                        <div matListItemMeta class="h-100 d-flex align-items-center">
+                            <button mat-icon-button aria-label="edit" (click)="onEditPaymentPurchase(paymentPurchase)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button aria-label="trash"
+                                (click)="onDeletePaymentPurchase(paymentPurchase._id, paymentPurchase.purchaseId)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </div>
+                    </mat-list-item>
+                    }
+                </mat-list>
+                <mat-card-actions>
+                    <button mat-flat-button color="primary" (click)="onCreatePaymentPurchase()">PAGAR</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
+</div>

@@ -29,6 +29,7 @@ export class SettingModel {
     isOfficeTurn: boolean = false
     printOrder: boolean = true
     allowCredit: boolean = false
+    allowCreditLimit: boolean = false
     allowFreePrice: boolean = false
     allowFreeStock: boolean = false
     defaultIgvPercent: number = 18

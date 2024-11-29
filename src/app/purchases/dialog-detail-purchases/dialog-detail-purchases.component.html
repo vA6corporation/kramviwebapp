@@ -51,11 +51,11 @@
         </tbody>
     </table>
     <mat-list>
-        @for (payment of payments; track payment._id) {
+        @for (paymentPurchase of paymentPurchases; track paymentPurchase._id) {
         <mat-list-item>
-            <span matListItemTitle>{{ payment.paymentMethod.name }}</span>
-            <span matListItemLine>{{ payment.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</span>
-            <span>{{ payment.charge.toFixed(2) }}</span>
+            <span matListItemTitle>{{ paymentPurchase.paymentMethod.name }}</span>
+            <span matListItemLine>{{ paymentPurchase.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</span>
+            <span>{{ paymentPurchase.charge.toFixed(2) }}</span>
         </mat-list-item>
         } @empty {
         <mat-list-item>

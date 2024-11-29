@@ -273,6 +273,7 @@ export class ChargeCreditComponent {
         })
 
         const { proformaId } = this.activatedRoute.snapshot.queryParams
+
         if (proformaId) {
             Object.assign(this.params, { proformaId })
             this.proformasService.getProformaById(proformaId).subscribe(proforma => {
@@ -285,6 +286,7 @@ export class ChargeCreditComponent {
         }
 
         let preSale = this.preSalesService.getPreSale()
+
         if (preSale) {
             this.customer = preSale.customer
             Object.assign(this.params, { preSaleId: preSale._id })
@@ -322,7 +324,6 @@ export class ChargeCreditComponent {
 
             this.dues = [due]
         }
-
     }
 
     onSubmit() {
@@ -344,6 +345,10 @@ export class ChargeCreditComponent {
 
             if (this.customer === null) {
                 throw new Error("Agrega un cliente")
+            }
+
+            if (this.setting.allowCreditLimit && !this.customer.creditLimit) {
+                throw new Error("Este cliente no tiene credito disponible")
             }
 
             const creditForm: CreditForm = this.formGroup.value

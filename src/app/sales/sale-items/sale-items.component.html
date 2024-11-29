@@ -2,7 +2,8 @@
     @for (couponItem of couponItems; track $index) {
         <mat-list-item class="bg-info" role="listitem">
             <span matListItemTitle>{{ couponItem.name }}</span>
-            <span>Monto minimo: {{ couponItem.charge.toFixed(2) }}</span>
+            <span matListItemLine>Monto minimo: {{ couponItem.charge.toFixed(2) }}</span>
+            <span>Cantidad: {{ couponItem.quantity }}</span>
         </mat-list-item>
     }
     @for (saleItem of saleItems; track saleItem.productId; let i = $index) {

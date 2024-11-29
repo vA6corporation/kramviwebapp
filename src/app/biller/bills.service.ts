@@ -10,69 +10,71 @@ import { CreateCreditModel } from '../sales/create-credit.model';
 import { UpdateSaleModel } from '../sales/update-sale.model';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class BillsService {
 
-  constructor(
-    private readonly httpService: HttpService,
-  ) { }
+    constructor(
+        private readonly httpService: HttpService,
+    ) { }
 
-  private billItems: BillItemModel[] = [];
-  private billItems$: Subject<BillItemModel[]> = new Subject(); 
+    private billItems: BillItemModel[] = []
+    private billItems$: Subject<BillItemModel[]> = new Subject()
 
-  setBillItems(billItems: BillItemModel[]) {
-    this.billItems = billItems;
-    this.billItems$.next(this.billItems);
-  }
+    setBillItems(billItems: BillItemModel[]) {
+        this.billItems = billItems
+        this.billItems$.next(this.billItems)
+    }
 
-  getBillItem(index: number): BillItemModel {
-    return this.billItems[index];
-  }
+    getBillItem(index: number): BillItemModel {
+        return this.billItems[index]
+    }
 
-  updateBillItem(billItem: BillItemModel, index: number,) {
-    this.billItems.splice(index, 1, billItem);
-    this.billItems$.next(this.billItems);
-  }
+    updateBillItem(billItem: BillItemModel, index: number,) {
+        this.billItems.splice(index, 1, billItem)
+        this.billItems$.next(this.billItems)
+    }
 
-  removeBillItem(index: number) {
-    this.billItems.splice(index, 1);
-    this.billItems$.next(this.billItems);
-  }
+    removeBillItem(index: number) {
+        this.billItems.splice(index, 1)
+        this.billItems$.next(this.billItems)
+    }
 
-  handleBillItems(): Observable<BillItemModel[]> {
-    return this.billItems$.asObservable();
-  }
-  
-  addBillItem(billItem: BillItemModel) {
-    this.billItems.push(billItem);
-    this.billItems$.next(this.billItems);
-  }
+    handleBillItems(): Observable<BillItemModel[]> {
+        return this.billItems$.asObservable()
+    }
 
-  saveBill(
-    sale: CreateSaleModel|CreateCreditModel, 
-    saleItems: BillItemModel[], 
-    payments: PaymentModel[], 
-    dues: CreateDueModel[]
-  ): Observable<SaleModel> {
-    return this.httpService.post('sales/bill', { sale, saleItems, payments, dues });
-  }
+    addBillItem(billItem: BillItemModel) {
+        this.billItems.push(billItem)
+        this.billItems$.next(this.billItems)
+    }
 
-  saveBillCredit(
-    credit: CreateCreditModel, 
-    saleItems: BillItemModel[], 
-    payments: PaymentModel[], 
-    dues: CreateDueModel[]
-  ): Observable<SaleModel> {
-    return this.httpService.post('credits/bill', { credit, saleItems, payments, dues });
-  }
+    saveBill(
+        sale: CreateSaleModel | CreateCreditModel,
+        saleItems: BillItemModel[],
+        payments: PaymentModel[],
+        dues: CreateDueModel[],
+        detraction: any
+    ): Observable<SaleModel> {
+        return this.httpService.post('sales/bill', { sale, saleItems, payments, dues, detraction })
+    }
 
-  updateBill(
-    sale: UpdateSaleModel, 
-    saleItems: BillItemModel[], 
-    payments: PaymentModel[], 
-    saleId: string
-  ): Observable<void> {
-    return this.httpService.put(`sales/bill/${saleId}`, { sale, saleItems, payments });
-  }
+    saveBillCredit(
+        credit: CreateCreditModel,
+        saleItems: BillItemModel[],
+        payments: PaymentModel[],
+        dues: CreateDueModel[],
+        detraction: any
+    ): Observable<SaleModel> {
+        return this.httpService.post('credits/bill', { credit, saleItems, payments, dues, detraction })
+    }
+
+    updateBill(
+        sale: UpdateSaleModel,
+        saleItems: BillItemModel[],
+        payments: PaymentModel[],
+        saleId: string
+    ): Observable<void> {
+        return this.httpService.put(`sales/bill/${saleId}`, { sale, saleItems, payments })
+    }
 }

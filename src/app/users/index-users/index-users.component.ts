@@ -14,7 +14,4 @@ export class IndexUsersComponent {
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
-
 }

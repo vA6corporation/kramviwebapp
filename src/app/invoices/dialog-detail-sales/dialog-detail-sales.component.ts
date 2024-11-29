@@ -60,6 +60,7 @@ export class DialogDetailSalesComponent {
         })
 
         this.salesService.getSaleById(this.saleId).subscribe(sale => {
+            console.log(sale)
             this.sale = sale
             const { saleItems, customer, payments, user, cdr, ticket } = sale
             this.customer = customer

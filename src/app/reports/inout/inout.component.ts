@@ -51,7 +51,7 @@ export class InoutComponent {
         'Nov',
         'Dic'
     ]
-    displayedColumns: string[] = ['month', 'sales', 'purchases', 'purchaseSupplies', 'paymentOrders', 'final']
+    displayedColumns: string[] = ['month', 'sales', 'purchases', 'final']
     dataSource: any[] = []
     private params: Params = {}
 
@@ -129,8 +129,12 @@ export class InoutComponent {
             
             console.log(purchaseSupplies)
 
-            if (!purchaseSupplies.map((e: any) => e.total).reduce((a: any, b: any) => a + b, 0)) {
-                this.displayedColumns.splice(3, 1)
+            if (purchaseSupplies.map((e: any) => e.total).reduce((a: any, b: any) => a + b, 0)) {
+                this.displayedColumns.splice(3, 0, 'purchaseSupplies')
+            }
+
+            if (paymentOrders.map((e: any) => e.total).reduce((a: any, b: any) => a + b, 0)) {
+                this.displayedColumns.splice(3, 0, 'paymentOrders')
             }
 
             this.dataSource = dataSource

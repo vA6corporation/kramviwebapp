@@ -36,14 +36,18 @@
             <input type="text" matInput formControlName="email">
         </mat-form-field>
         <mat-form-field appearance="fill">
+            <mat-label>Observaciones</mat-label>
+            <input type="text" matInput formControlName="observations">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Limite de credito (dejar en blanco si no hay limite)</mat-label>
+            <input type="number" matInput formControlName="creditLimit">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
             <mat-label>Fecha de nacimiento</mat-label>
             <input matInput [matDatepicker]="birthDatePicker" formControlName="birthDate">
             <mat-datepicker-toggle matSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
             <mat-datepicker #birthDatePicker></mat-datepicker>
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-            <mat-label>Observaciones</mat-label>
-            <input type="text" matInput formControlName="observations">
         </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>

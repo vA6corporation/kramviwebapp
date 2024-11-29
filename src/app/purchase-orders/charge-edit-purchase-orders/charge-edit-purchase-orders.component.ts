@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -12,9 +12,13 @@ import { PurchaseOrderItemModel } from '../purchase-order-item.model';
 import { PurchaseOrderModel } from '../purchase-order.model';
 import { PurchaseOrdersService } from '../purchase-orders.service';
 import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component';
+import { MaterialModule } from '../../material.module';
+import { PurchaseOrderItemsComponent } from '../purchase-order-items/purchase-order-items.component';
 
 @Component({
     selector: 'app-charge-edit-purchase-orders',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, PurchaseOrderItemsComponent],
     templateUrl: './charge-edit-purchase-orders.component.html',
     styleUrls: ['./charge-edit-purchase-orders.component.sass']
 })
@@ -119,16 +123,18 @@ export class ChargeEditPurchaseOrdersComponent {
                 throw new Error('Agrega un producto')
             }
 
-            this.purchaseOrdersService.updatePurchaseOrder(purchaseOrder, this.purchaseOrderItems, this.purchaseOrder?._id || '').subscribe(() => {
-                this.purchaseOrdersService.setPurchaseOrderItems([])
-                this.router.navigate(['/purchaseOrders'])
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
-                this.navigationService.showMessage('Se han guardado los cambios')
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message)
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
+            this.purchaseOrdersService.updatePurchaseOrder(purchaseOrder, this.purchaseOrderItems, this.purchaseOrder?._id || '').subscribe({
+                next: () => {
+                    this.purchaseOrdersService.setPurchaseOrderItems([])
+                    this.router.navigate(['/purchaseOrders'])
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage('Se han guardado los cambios')
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                }
             })
         } catch (error) {
             if (error instanceof Error) {

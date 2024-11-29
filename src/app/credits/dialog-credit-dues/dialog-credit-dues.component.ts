@@ -1,11 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SalesService } from '../../sales/sales.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-credit-dues',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-credit-dues.component.html',
     styleUrls: ['./dialog-credit-dues.component.sass']
 })

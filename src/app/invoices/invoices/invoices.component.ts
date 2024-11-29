@@ -1,11 +1,11 @@
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Subscription, lastValueFrom } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { BusinessModel } from '../../auth/business.model';
@@ -37,9 +37,12 @@ import { InvoicesService } from '../invoices.service';
 import { SheetExportPdfComponent } from '../sheet-export-pdf/sheet-export-pdf.component';
 import { SheetInvoicesComponent } from '../sheet-invoices/sheet-invoices.component';
 import { SheetPrintComponent } from '../sheet-print/sheet-print.component';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-invoices',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './invoices.component.html',
     styleUrls: ['./invoices.component.sass']
 })
@@ -105,7 +108,7 @@ export class InvoicesComponent {
     }
 
     ngOnInit(): void {
-        this.navigationService.setTitle('Comprobantes');
+        this.navigationService.setTitle('Comprobantes')
 
         this.invoicesService.getBadCdrs().subscribe(badCdrs => {
             if (badCdrs.length) {
@@ -138,6 +141,7 @@ export class InvoicesComponent {
         const queryParams = this.activatedRoute.snapshot.queryParams
         const { startDate, endDate, pageIndex, pageSize, invoiceType, stateType, userId, key } = queryParams
         Object.assign(this.params, queryParams)
+        
         this.saleIds = []
         this.pageIndex = Number(pageIndex || 0)
         this.pageSize = Number(pageSize || 10)

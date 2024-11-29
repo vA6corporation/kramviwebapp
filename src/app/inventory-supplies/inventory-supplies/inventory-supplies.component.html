@@ -51,6 +51,10 @@
                             <mat-icon>remove</mat-icon>
                             <span>Remover stock</span>
                         </button>
+                        <button type="button" (click)="onMoveStock(element)" mat-menu-item>
+                            <mat-icon>north_east</mat-icon>
+                            <span>Traspasar stock</span>
+                        </button>
                         <button type="button" [routerLink]="['/inventorySupplies', element._id, 'details']"
                             mat-menu-item>
                             <mat-icon>info</mat-icon>

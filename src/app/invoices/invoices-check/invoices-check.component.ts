@@ -1,7 +1,7 @@
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
@@ -31,9 +31,12 @@ import { DialogDetailSalesComponent } from '../dialog-detail-sales/dialog-detail
 import { InvoicesService } from '../invoices.service';
 import { SheetExportPdfComponent } from '../sheet-export-pdf/sheet-export-pdf.component';
 import { SheetPrintComponent } from '../sheet-print/sheet-print.component';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-invoices-check',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './invoices-check.component.html',
     styleUrls: ['./invoices-check.component.sass']
 })

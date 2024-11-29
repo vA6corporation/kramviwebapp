@@ -1,13 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { CouponsService } from '../coupons.service';
+import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
+import { RouterModule } from '@angular/router';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CouponModel } from '../coupon.model';
-import { PageEvent } from '@angular/material/paginator';
-import { MaterialModule } from '../../material.module';
-import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CouponsService } from '../coupons.service';
 import { DialogCouponItemsComponent } from '../dialog-coupon-items/dialog-coupon-items.component';
-import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-coupons',
@@ -33,11 +33,6 @@ export class CouponsComponent {
 
     ngOnInit(): void {
         this.navigationService.setTitle('Cupones')
-        this.navigationService.setMenu([
-            { id: 'excel_simple', label: 'Exportar excel', icon: 'file_download', show: false },
-            { id: 'search', icon: 'search', show: true, label: '' },
-        ])
-
         this.fetchData()
         this.fetchCount()
     }

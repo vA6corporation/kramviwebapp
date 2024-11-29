@@ -1,10 +1,10 @@
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Subscription, lastValueFrom } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { BusinessModel } from '../../auth/business.model';
@@ -23,9 +23,12 @@ import { DialogAddStockComponent } from '../dialog-add-stock/dialog-add-stock.co
 import { DialogMoveStockComponent } from '../dialog-move-stock/dialog-move-stock.component';
 import { DialogRemoveStockComponent } from '../dialog-remove-stock/dialog-remove-stock.component';
 import { DialogProgressComponent } from '../../navigation/dialog-progress/dialog-progress.component';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-inventories',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './inventories.component.html',
     styleUrls: ['./inventories.component.sass']
 })

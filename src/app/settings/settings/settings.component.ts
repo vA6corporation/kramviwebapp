@@ -78,6 +78,7 @@ export class SettingsComponent {
             defaultIgvPercent: 18,
             defaultRcPercent: 0,
             allowCredit: false,
+            allowCreditLimit: false,
             showSubPrice: false,
             allowBonus: false,
             defaultSearchCustomer: 'RUC',

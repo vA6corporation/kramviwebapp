@@ -7,7 +7,6 @@ import { CreatePurchaseItemModel } from './create-purchase-item.model';
 import { CreatePurchaseModel } from './create-purchase.model';
 import { PurchaseItemModel } from './purchase-item.model';
 import { PurchaseModel } from './purchase.model';
-import { UpdatePurchaseModel } from './update-purchase.model';
 
 @Injectable({
     providedIn: 'root'
@@ -27,9 +26,9 @@ export class PurchasesService {
         return this.httpService.get(`purchases/summaryByYearOfficeUser/${year}`, params)
     }
 
-    getCreditPurchasesByProvider(providerId: string): Observable<PurchaseModel[]> {
-        return this.httpService.get(`purchases/creditPurchasesByProvider/${providerId}`)
-    }
+    // getCreditPurchasesByProvider(providerId: string): Observable<PurchaseModel[]> {
+    //     return this.httpService.get(`purchases/creditPurchasesByProvider/${providerId}`)
+    // }
 
     getPurchaseById(purchaseId: string): Observable<PurchaseModel> {
         return this.httpService.get(`purchases/byId/${purchaseId}`)
@@ -45,20 +44,8 @@ export class PurchasesService {
         return this.httpService.get(`purchases/byRangeDate`, params)
     }
 
-    countCreditPurchases(): Observable<number> {
-        return this.httpService.get(`purchases/countCreditPurchases`)
-    }
-
     getCountPurchases(params: Params): Observable<number> {
         return this.httpService.get(`purchases/countPurchases`, params)
-    }
-
-    countPurchases(): Observable<number> {
-        return this.httpService.get(`purchases/countPurchases`)
-    }
-
-    getPurchasesCreditByPage(pageIndex: number, pageSize: number): Observable<PurchaseModel[]> {
-        return this.httpService.get(`purchases/creditByPage/${pageIndex}/${pageSize}`)
     }
 
     getCountQuantityPurchaseItemsByProduct(
@@ -170,7 +157,7 @@ export class PurchasesService {
     }
 
     updatePurchase(
-        purchase: UpdatePurchaseModel,
+        purchase: any,
         purchaseItems: CreatePurchaseItemModel[],
         purchaseId: string,
         params: Params

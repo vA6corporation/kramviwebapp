@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -17,6 +17,9 @@ import { CreatePurchaseModel } from '../create-purchase.model';
 import { PurchasesService } from '../purchases.service';
 import { PurchaseOrdersService } from '../../purchase-orders/purchase-orders.service';
 import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component';
+import { MaterialModule } from '../../material.module';
+import { PurchaseItemsComponent } from '../purchase-items/purchase-items.component';
+import { CommonModule } from '@angular/common';
 
 interface FormData {
     invoiceType: string,
@@ -29,6 +32,8 @@ interface FormData {
 
 @Component({
     selector: 'app-charge-credit',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule, PurchaseItemsComponent],
     templateUrl: './charge-credit.component.html',
     styleUrls: ['./charge-credit.component.sass']
 })
@@ -45,11 +50,11 @@ export class ChargeCreditComponent {
         private readonly activatedRoute: ActivatedRoute,
     ) { }
 
-    payments: PaymentModel[] = [];
-    purchaseItems: CreatePurchaseItemModel[] = [];
-    charge: number = 0;
-    provider: ProviderModel | null = null;
-    isLoading: boolean = false;
+    payments: PaymentModel[] = []
+    purchaseItems: CreatePurchaseItemModel[] = []
+    charge: number = 0
+    provider: ProviderModel | null = null
+    isLoading: boolean = false
     formGroup: FormGroup = this.formBuilder.group({
         invoiceType: 'NOTA DE VENTA',
         paymentMethodId: '',
@@ -57,16 +62,16 @@ export class ChargeCreditComponent {
         purchasedAt: new Date(),
         serie: null,
         observations: '',
-    } as FormData);
+    } as FormData)
     invoiceTypes = [
         { code: 'NOTA DE VENTA', name: 'NOTA DE VENTA' },
         { code: 'BOLETA', name: 'BOLETA' },
         { code: 'FACTURA', name: 'FACTURA' },
-    ];
+    ]
 
-    paymentMethods: PaymentMethodModel[] = [];
+    paymentMethods: PaymentMethodModel[] = []
     purchaseOrderId: string | null = null
-    private setting = new SettingModel();
+    private setting = new SettingModel()
 
     private handleClickMenu$: Subscription = new Subscription()
     private handlePurchaseItems$: Subscription = new Subscription()
@@ -169,6 +174,7 @@ export class ChargeCreditComponent {
             const formData: FormData = this.formGroup.value
             const purchase: CreatePurchaseModel = {
                 invoiceType: formData.invoiceType,
+                isCredit: true,
                 paymentMethodId: formData.paymentMethodId,
                 serie: formData.serie,
                 purchasedAt: formData.purchasedAt,
@@ -189,16 +195,18 @@ export class ChargeCreditComponent {
                 throw new Error('El proveedor debe tener un RUC')
             }
 
-            this.purchasesService.createCredit(purchase, this.purchaseItems, this.purchaseOrderId).subscribe(purchase => {
-                this.purchasesService.setPurchaseItems([])
-                this.router.navigate(['/purchases'])
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
-                this.navigationService.showMessage('Registrado correctamente')
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message)
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
+            this.purchasesService.createCredit(purchase, this.purchaseItems, this.purchaseOrderId).subscribe({
+                next: () => {
+                    this.purchasesService.setPurchaseItems([])
+                    this.router.navigate(['/purchases'])
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage('Registrado correctamente')
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                }
             })
         } catch (error) {
             if (error instanceof Error) {

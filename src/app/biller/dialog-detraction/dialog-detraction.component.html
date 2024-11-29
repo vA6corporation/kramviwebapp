@@ -1,0 +1,38 @@
+<form [formGroup]="formGroup" autocomplete="off">
+    <h2 mat-dialog-title>Informacion de la detraccion</h2>
+    <div mat-dialog-content>
+        <mat-form-field appearance="fill">
+            <mat-label>Bien/Servicio sujeto a detraccion</mat-label>
+            <mat-select formControlName="serviceCode">
+                @for (service of services; track $index) {
+                <mat-option [value]="service.code">{{ service.name | uppercase }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>N° de cuenta Banco de la Nacion</mat-label>
+            <input type="text" matInput formControlName="bankAccountNumber">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Medio de pago</mat-label>
+            <mat-select formControlName="paymentCode">
+                @for (paymentMethod of paymentMethods; track $index) {
+                <mat-option [value]="paymentMethod.code">{{ paymentMethod.name | uppercase }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Porcentaje de la detraccion (%)</mat-label>
+            <input type="number" matInput formControlName="percent">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Monto de la detraccion</mat-label>
+            <input type="number" matInput formControlName="amount">
+        </mat-form-field>
+    </div>
+    <mat-dialog-actions>
+        <span class="spacer"></span>
+        <button mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+        <button mat-flat-button color="primary" (click)="onSubmit()">GUARDAR</button>
+    </mat-dialog-actions>
+</form>

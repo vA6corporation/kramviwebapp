@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
@@ -13,9 +13,13 @@ import { ProductsService } from '../../products/products.service';
 import { SaleModel } from '../../sales/sale.model';
 import { SalesService } from '../../sales/sales.service';
 import { CreditNotesService } from '../credit-notes.service';
+import { MaterialModule } from '../../material.module';
+import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component';
 
 @Component({
     selector: 'app-create-credit-note-items',
+    standalone: true,
+    imports: [MaterialModule, RouterModule, SaleItemsComponent],
     templateUrl: './create-credit-note-items.component.html',
     styleUrls: ['./create-credit-note-items.component.sass']
 })

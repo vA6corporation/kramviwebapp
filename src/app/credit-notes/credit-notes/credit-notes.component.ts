@@ -1,11 +1,11 @@
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Subscription, lastValueFrom } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { BusinessModel } from '../../auth/business.model';
@@ -23,9 +23,12 @@ import { DialogAdminCreditNotesComponent } from '../dialog-admin-credit-notes/di
 import { DialogDetailCreditNotesComponent } from '../dialog-detail-credit-notes/dialog-detail-credit-notes.component';
 import { SheetExportPdfCreditNotesComponent } from '../sheet-export-pdf-credit-notes/sheet-export-pdf-credit-notes.component';
 import { SheetPrintCreditNotesComponent } from '../sheet-print-credit-notes/sheet-print-credit-notes.component';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-credit-notes',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './credit-notes.component.html',
     styleUrls: ['./credit-notes.component.sass']
 })
@@ -46,8 +49,8 @@ export class CreditNotesComponent {
     formGroup: FormGroup = this.formBuilder.group({
         invoiceType: '',
         userId: '',
-        startDate: [new Date(), Validators.required],
-        endDate: [new Date(), Validators.required],
+        startDate: ['', Validators.required],
+        endDate: ['', Validators.required],
     })
     users: UserModel[] = []
     displayedColumns: string[] = ['created', 'serial', 'sale', 'customer', 'user', 'charge', 'observations', 'actions']
@@ -59,8 +62,6 @@ export class CreditNotesComponent {
     office: OfficeModel = new OfficeModel()
     private business: BusinessModel = new BusinessModel()
     private categories: CategoryModel[] = []
-    private startDate: Date = new Date()
-    private endDate: Date = new Date()
     private params: Params = {}
 
     private handleClickMenu$: Subscription = new Subscription()
@@ -85,25 +86,24 @@ export class CreditNotesComponent {
             this.categories = categories
         })
 
-        const { startDate, endDate, pageIndex, pageSize, invoiceType } = this.activatedRoute.snapshot.queryParams
-        Object.assign(this.params, { startDate, endDate, pageIndex, pageSize, invoiceType })
+        const queryParams = this.activatedRoute.snapshot.queryParams
+        const { startDate, endDate, pageIndex, pageSize, invoiceType } = queryParams
+        Object.assign(this.params, queryParams)
+
         this.pageIndex = Number(pageIndex || 0)
         this.pageSize = Number(pageSize || 10)
         this.formGroup.get('invoiceType')?.patchValue(invoiceType || '')
-        
+
         if (startDate && endDate) {
-            this.startDate = new Date(Number(startDate))
-            this.endDate = new Date(Number(endDate))
-            this.formGroup.get('startDate')?.patchValue(this.startDate)
-            this.formGroup.get('endDate')?.patchValue(this.endDate)
+            this.formGroup.patchValue({ startDate: new Date(startDate), endDate: new Date(endDate) })
         }
-        
-        this.creditNotesService.getCountCreditNotesByRangeDate(this.startDate, this.endDate).subscribe(count => {
+
+        this.creditNotesService.getCountCreditNotes(this.params).subscribe(count => {
             this.length = count
         })
 
         this.fetchData()
-        
+
         this.navigationService.setMenu([
             { id: 'search', label: 'Buscar', icon: 'search', show: true },
             { id: 'excel_simple', label: 'Exportar excel', icon: 'file_download', show: false },
@@ -124,60 +124,64 @@ export class CreditNotesComponent {
 
                     const { startDate, endDate } = this.formGroup.value
 
-                    for (let index = 0; index < this.length / chunk; index++) {
-                        const values = await lastValueFrom(this.creditNotesService.getCreditNotesByRangeDatePage(startDate, endDate, index + 1, chunk, {}))
-                        dialogRef.componentInstance.onComplete()
-                        creditNotes.push(...values)
-                    }
+                    if (startDate && endDate) {
+                        for (let index = 0; index < this.length / chunk; index++) {
+                            const values = await lastValueFrom(this.creditNotesService.getCreditNotesByPage(index + 1, chunk, this.params))
+                            dialogRef.componentInstance.onComplete()
+                            creditNotes.push(...values)
+                        }
 
-                    const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
-                    let body = []
-                    body.push([
-                        'F. EMISION',
-                        'RUC/DNI/CE',
-                        'CLIENTE',
-                        'COMPROBANTE ANULADO',
-                        'COMPROBANTE EMITIDO',
-                        'Nº COMPROBANTE',
-                        'MONEDA',
-                        'BASE',
-                        'IMPORTE T.',
-                        'IGV',
-                        'GRAVADO',
-                        'EXONERADO',
-                        'INAFECTO',
-                        'GRATUITO',
-                        'ANULADO',
-                        'USUARIO',
-                        'PERSONAL',
-                        'OBSERVACIONES',
-                    ])
-                    for (const creditNote of creditNotes) {
-                        const { customer, sale } = creditNote
-                        const declare = this.getStatusDeclare(creditNote)
+                        const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+                        let body = []
                         body.push([
-                            formatDate(creditNote.createdAt, 'dd/MM/yyyy', 'en-US'),
-                            customer?.document,
-                            customer?.name,
-                            `${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}`,
-                            formatDate(sale.createdAt, 'dd/MM/yyyy', 'en-US'),
-                            `${creditNote.invoicePrefix}${this.office.serialPrefix}-${creditNote.invoiceNumber}`,
-                            creditNote.currencyCode,
-                            declare ? -Number((creditNote.charge - creditNote.igv).toFixed(2)) : null,
-                            declare ? -Number((creditNote.charge || 0).toFixed(2)) : null,
-                            declare ? -Number((creditNote.igv || 0).toFixed(2)) : null,
-                            declare ? -Number((creditNote.gravado || 0).toFixed(2)) : null,
-                            declare ? -Number((creditNote.exonerado || 0).toFixed(2)) : null,
-                            declare ? -Number((creditNote.inafecto || 0).toFixed(2)) : null,
-                            declare ? -Number((creditNote.gratuito || 0).toFixed(2)) : null,
-                            creditNote.deletedAt ? 'SI' : 'NO',
-                            creditNote.user.name.toUpperCase(),
-                            creditNote.worker?.name.toUpperCase(),
-                            creditNote.observations,
+                            'F. EMISION',
+                            'RUC/DNI/CE',
+                            'CLIENTE',
+                            'COMPROBANTE ANULADO',
+                            'COMPROBANTE EMITIDO',
+                            'Nº COMPROBANTE',
+                            'MONEDA',
+                            'BASE',
+                            'IMPORTE T.',
+                            'IGV',
+                            'GRAVADO',
+                            'EXONERADO',
+                            'INAFECTO',
+                            'GRATUITO',
+                            'ANULADO',
+                            'USUARIO',
+                            'PERSONAL',
+                            'OBSERVACIONES',
                         ])
+                        for (const creditNote of creditNotes) {
+                            const { customer, sale } = creditNote
+                            const declare = this.getStatusDeclare(creditNote)
+                            body.push([
+                                formatDate(creditNote.createdAt, 'dd/MM/yyyy', 'en-US'),
+                                customer?.document,
+                                customer?.name,
+                                `${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}`,
+                                formatDate(sale.createdAt, 'dd/MM/yyyy', 'en-US'),
+                                `${creditNote.invoicePrefix}${this.office.serialPrefix}-${creditNote.invoiceNumber}`,
+                                creditNote.currencyCode,
+                                declare ? -Number((creditNote.charge - creditNote.igv).toFixed(2)) : null,
+                                declare ? -Number((creditNote.charge || 0).toFixed(2)) : null,
+                                declare ? -Number((creditNote.igv || 0).toFixed(2)) : null,
+                                declare ? -Number((creditNote.gravado || 0).toFixed(2)) : null,
+                                declare ? -Number((creditNote.exonerado || 0).toFixed(2)) : null,
+                                declare ? -Number((creditNote.inafecto || 0).toFixed(2)) : null,
+                                declare ? -Number((creditNote.gratuito || 0).toFixed(2)) : null,
+                                creditNote.deletedAt ? 'SI' : 'NO',
+                                creditNote.user.name.toUpperCase(),
+                                creditNote.worker?.name.toUpperCase(),
+                                creditNote.observations,
+                            ])
+                        }
+                        const name = `NOTAS_DE_CREDITO_DESDE_${formatDate(startDate, 'dd/MM/yyyy', 'en-US')}_HASTA_${formatDate(endDate, 'dd/MM/yyyy', 'en-US')}`
+                        buildExcel(body, name, wscols, [], [])
+                    } else {
+                        this.navigationService.showMessage('Seleccione un rango de fechas')
                     }
-                    const name = `NOTAS_DE_CREDITO_DESDE_${formatDate(this.startDate, 'dd/MM/yyyy', 'en-US')}_HASTA_${formatDate(this.endDate, 'dd/MM/yyyy', 'en-US')}`
-                    buildExcel(body, name, wscols, [], [])
                     break
                 }
                 case 'excel_detail': {
@@ -191,71 +195,75 @@ export class CreditNotesComponent {
     }
 
     excelDetails() {
-        this.navigationService.loadBarStart()
         const { startDate, endDate } = this.formGroup.value
-        const chunk = 500
-        const promises: Promise<any>[] = []
+        if (startDate && endDate) {
+            this.navigationService.loadBarStart()
+            const chunk = 500
+            const promises: Promise<any>[] = []
 
-        for (let index = 0; index < this.length / chunk; index++) {
-            const promise = lastValueFrom(this.creditNotesService.getCreditNotesByRangeDatePageWithItems(startDate, endDate, index + 1, chunk))
-            promises.push(promise)
-        }
-
-        Promise.all(promises).then(values => {
-            const creditNotes: CreditNoteModel[] = values.flat()
-            this.navigationService.loadBarFinish()
-            const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
-            let body = []
-            body.push([
-                'F. EMISION',
-                'RUC/DNI/CE',
-                'CLIENTE',
-                'DIRECCION',
-                'DISTRITO',
-                'TELEFONO',
-                'Nº COMPROBANTE',
-                'PRODUCTO',
-                'CATEGORIA',
-                'CANTIDAD',
-                'PRECIO U.',
-                'TOTAL',
-                'MONEDA',
-                'BONIFICACION',
-                'USUARIO',
-                'ANULADO',
-                'OBSERVACIONES'
-            ])
-
-            for (const creditNote of creditNotes) {
-                const { customer, creditNoteItems } = creditNote
-                for (const creditNoteItem of creditNoteItems) {
-                    body.push([
-                        formatDate(creditNote.createdAt, 'dd/MM/yyyy', 'en-US'),
-                        customer?.document,
-                        (customer?.name || 'VARIOS').toUpperCase(),
-                        customer?.addresses[0],
-                        customer?.locationName,
-                        customer?.mobileNumber,
-                        `${creditNote.invoicePrefix}${this.office.serialPrefix}-${creditNote.invoiceNumber}`,
-                        creditNoteItem.fullName.toUpperCase(),
-                        this.categories.find(e => e._id === creditNoteItem.categoryId)?.name.toUpperCase(),
-                        Number(creditNoteItem.quantity.toFixed(2)),
-                        creditNoteItem.price,
-                        Number((creditNoteItem.price * creditNoteItem.quantity).toFixed(2)),
-                        creditNote.currencyCode,
-                        creditNoteItem.igvCode === '11' ? 'SI' : 'NO',
-                        creditNote.user.name.toUpperCase(),
-                        creditNote.deletedAt ? 'SI' : 'NO',
-                        creditNote.observations,
-                    ])
-                }
+            for (let index = 0; index < this.length / chunk; index++) {
+                const promise = lastValueFrom(this.creditNotesService.getCreditNotesByRangeDatePageWithItems(startDate, endDate, index + 1, chunk))
+                promises.push(promise)
             }
-            const name = `NOTAS_DE_CREDITO_DESDE_${formatDate(this.startDate, 'dd/MM/yyyy', 'en-US')}_HASTA_${formatDate(this.endDate, 'dd/MM/yyyy', 'en-US')}_${this.office.name.replace(/ /g, '_')}_RUC_${this.business.ruc}`
-            buildExcel(body, name, wscols, [])
-        }, (error: HttpErrorResponse) => {
-            console.log(error)
-            this.navigationService.loadBarFinish()
-        })
+
+            Promise.all(promises).then(values => {
+                const creditNotes: CreditNoteModel[] = values.flat()
+                this.navigationService.loadBarFinish()
+                const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+                let body = []
+                body.push([
+                    'F. EMISION',
+                    'RUC/DNI/CE',
+                    'CLIENTE',
+                    'DIRECCION',
+                    'DISTRITO',
+                    'TELEFONO',
+                    'Nº COMPROBANTE',
+                    'PRODUCTO',
+                    'CATEGORIA',
+                    'CANTIDAD',
+                    'PRECIO U.',
+                    'TOTAL',
+                    'MONEDA',
+                    'BONIFICACION',
+                    'USUARIO',
+                    'ANULADO',
+                    'OBSERVACIONES'
+                ])
+
+                for (const creditNote of creditNotes) {
+                    const { customer, creditNoteItems } = creditNote
+                    for (const creditNoteItem of creditNoteItems) {
+                        body.push([
+                            formatDate(creditNote.createdAt, 'dd/MM/yyyy', 'en-US'),
+                            customer?.document,
+                            (customer?.name || 'VARIOS').toUpperCase(),
+                            customer?.addresses[0],
+                            customer?.locationName,
+                            customer?.mobileNumber,
+                            `${creditNote.invoicePrefix}${this.office.serialPrefix}-${creditNote.invoiceNumber}`,
+                            creditNoteItem.fullName.toUpperCase(),
+                            this.categories.find(e => e._id === creditNoteItem.categoryId)?.name.toUpperCase(),
+                            Number(creditNoteItem.quantity.toFixed(2)),
+                            creditNoteItem.price,
+                            Number((creditNoteItem.price * creditNoteItem.quantity).toFixed(2)),
+                            creditNote.currencyCode,
+                            creditNoteItem.igvCode === '11' ? 'SI' : 'NO',
+                            creditNote.user.name.toUpperCase(),
+                            creditNote.deletedAt ? 'SI' : 'NO',
+                            creditNote.observations,
+                        ])
+                    }
+                }
+                const name = `NOTAS_DE_CREDITO_DESDE_${formatDate(startDate, 'dd/MM/yyyy', 'en-US')}_HASTA_${formatDate(endDate, 'dd/MM/yyyy', 'en-US')}_${this.office.name.replace(/ /g, '_')}_RUC_${this.business.ruc}`
+                buildExcel(body, name, wscols, [])
+            }, (error: HttpErrorResponse) => {
+                console.log(error)
+                this.navigationService.loadBarFinish()
+            })
+        } else {
+            this.navigationService.showMessage('Seleccione un rango de fechas')
+        }
     }
 
     getStatusDeclare(creditNote: CreditNoteModel): boolean {
@@ -314,7 +322,8 @@ export class CreditNotesComponent {
             this.pageIndex = 0
             const { startDate, endDate } = this.formGroup.value
 
-            const queryParams: Params = { startDate: startDate.getTime(), endDate: endDate.getTime(), pageIndex: 0 }
+            const queryParams: Params = { startDate, endDate, pageIndex: 0 }
+            Object.assign(this.params, queryParams)
 
             this.router.navigate([], {
                 relativeTo: this.activatedRoute,
@@ -328,29 +337,26 @@ export class CreditNotesComponent {
     }
 
     fetchCount() {
-        this.creditNotesService.getCountCreditNotesByRangeDate(this.startDate, this.endDate).subscribe(count => {
+        this.creditNotesService.getCountCreditNotes(this.params).subscribe(count => {
             this.length = count
         })
     }
 
     fetchData() {
-        if (this.formGroup.valid) {
-            const { startDate, endDate } = this.formGroup.value
-            this.navigationService.loadBarStart()
-            this.creditNotesService.getCreditNotesByRangeDatePage(
-                startDate,
-                endDate,
-                this.pageIndex + 1,
-                this.pageSize,
-                this.params
-            ).subscribe(creditNotes => {
+        this.navigationService.loadBarStart()
+        this.creditNotesService.getCreditNotesByPage(
+            this.pageIndex + 1,
+            this.pageSize,
+            this.params
+        ).subscribe({
+            next: creditNotes => {
                 this.navigationService.loadBarFinish()
                 this.dataSource = creditNotes
-            }, (error: HttpErrorResponse) => {
+            }, error: (error: HttpErrorResponse) => {
                 this.navigationService.loadBarFinish()
                 this.navigationService.showMessage(error.error.message)
-            })
-        }
+            }
+        })
     }
 
     onClickOptions(event: MouseEvent, creditNoteId: string) {

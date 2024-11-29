@@ -1,8 +1,8 @@
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
@@ -12,9 +12,12 @@ import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
 import { CreditModel } from '../credit.model';
 import { CreditsService } from '../credits.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-payed-credits',
+    standalone: true,
+    imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './payed-credits.component.html',
     styleUrls: ['./payed-credits.component.sass']
 })

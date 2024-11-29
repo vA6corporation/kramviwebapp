@@ -1,19 +1,23 @@
 <div class="container">
     <form [formGroup]="formGroup" autocomplete="off">
-        <mat-form-field appearance="fill">
-            <mat-label>Seleccione un rango de fechas</mat-label>
-            <mat-date-range-input [rangePicker]="picker">
-                <input matStartDate placeholder="Desde" formControlName="startDate">
-                <input matEndDate placeholder="Hasta" formControlName="endDate" (dateChange)="onRangeChange()">
-            </mat-date-range-input>
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-date-range-picker #picker></mat-date-range-picker>
-        </mat-form-field>
-        <div formGroupName="provider">
-            <mat-form-field appearance="fill">
-                <mat-label>Proveedor</mat-label>
-                <input type="text" matInput (click)="onDialogProviders()" formControlName="name">
-            </mat-form-field>
+        <div class="d-flex">
+            <div class="w-100">
+                <mat-form-field appearance="fill">
+                    <mat-label>Seleccione un rango de fechas</mat-label>
+                    <mat-date-range-input [rangePicker]="picker">
+                        <input matStartDate placeholder="Desde" formControlName="startDate">
+                        <input matEndDate placeholder="Hasta" formControlName="endDate" (dateChange)="onRangeChange()">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+            </div>
+            <div formGroupName="provider" class="w-100">
+                <mat-form-field appearance="fill">
+                    <mat-label>Proveedor</mat-label>
+                    <input type="text" matInput (click)="onDialogSearchProviders()" formControlName="name">
+                </mat-form-field>
+            </div>
         </div>
     </form>
     <div class="mat-elevation-z2">
@@ -48,10 +52,6 @@
                         <button mat-menu-item (click)="onOpenDetails(element.purchaseId)">
                             <mat-icon>info</mat-icon>
                             <span>Detalles</span>
-                        </button>
-                        <button type="button" mat-menu-item (click)="onDeletePurchase(element._id)">
-                            <mat-icon>delete</mat-icon>
-                            <span>Eliminar</span>
                         </button>
                     </mat-menu>
                 </td>

@@ -9,7 +9,4 @@ export class IndexOfficesComponent {
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
-
 }

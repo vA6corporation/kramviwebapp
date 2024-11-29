@@ -2,10 +2,11 @@
 <mat-dialog-content>
     <mat-list role="list">
         @for (badCdr of badCdrs; track badCdr._id) {
-            <mat-list-item>
-                <span matListItemTitle>{{ badCdr.sale.invoicePrefix }}{{ office.serialPrefix }}-{{ badCdr.sale.invoiceNumber }}</span> 
-                <span>{{ badCdr.sunatMessage }}</span>
-            </mat-list-item>
+        <mat-list-item>
+            <span matListItemTitle>{{ badCdr.sale.invoicePrefix }}{{ office.serialPrefix }}-{{ badCdr.sale.invoiceNumber
+                }}</span>
+            <span>{{ badCdr.sunatMessage }}</span>
+        </mat-list-item>
         }
     </mat-list>
 </mat-dialog-content>

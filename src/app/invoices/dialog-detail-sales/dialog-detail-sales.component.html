@@ -29,6 +29,24 @@
         </mat-list-item>
         }
     </mat-list>
+    @if (sale?.detraction) {
+        <table class="w-100 mb-3">
+            <tbody>
+                <tr>
+                    <td>N° de cuenta Banco de la Nacion</td>
+                    <td align="right">{{ sale?.detraction?.bankAccountNumber }}</td>
+                </tr>
+                <tr>
+                    <td>Porcentaje</td>
+                    <td align="right">{{ sale?.detraction?.percent }}%</td>
+                </tr>
+                <tr>
+                    <td>Monto</td>
+                    <td align="right">{{ (sale?.detraction?.amount || 0).toFixed(2) }}</td>
+                </tr>
+            </tbody>
+        </table>
+    }
     <table class="w-100 mb-3">
         <tbody>
             <tr>

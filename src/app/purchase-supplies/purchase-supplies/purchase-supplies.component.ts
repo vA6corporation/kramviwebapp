@@ -32,10 +32,9 @@ export class PurchaseSuppliesComponent {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        startDate: [new Date(), Validators.required],
-        endDate: [new Date(), Validators.required],
+        startDate: ['', Validators.required],
+        endDate: ['', Validators.required],
     })
-
     displayedColumns: string[] = ['created', 'serial', 'customer', 'charge', 'actions']
     dataSource: PurchaseModel[] = []
     length: number = 0
@@ -43,6 +42,7 @@ export class PurchaseSuppliesComponent {
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     office: OfficeModel = new OfficeModel()
+    params: Params = {}
 
     private handleCategorySupplies$: Subscription = new Subscription()
     private handleAuth$: Subscription = new Subscription()
@@ -50,8 +50,8 @@ export class PurchaseSuppliesComponent {
 
     ngOnDestroy() {
         this.handleCategorySupplies$.unsubscribe()
-        this.handleAuth$.unsubscribe()
         this.handleClickMenu$.unsubscribe()
+        this.handleAuth$.unsubscribe()
     }
 
     ngOnInit(): void {
@@ -67,8 +67,14 @@ export class PurchaseSuppliesComponent {
         this.pageSize = Number(pageSize || 10)
 
         if (startDate && endDate) {
-            this.formGroup.get('startDate')?.patchValue(new Date(Number(startDate)))
-            this.formGroup.get('endDate')?.patchValue(new Date(Number(endDate)))
+            this.formGroup.patchValue({
+                startDate: new Date(startDate),
+                endDate: new Date(endDate)
+            })
+            Object.assign(this.params, {
+                startDate: new Date(startDate),
+                endDate: new Date(endDate)
+            })
         }
 
         this.navigationService.setMenu([
@@ -83,46 +89,46 @@ export class PurchaseSuppliesComponent {
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
             switch (id) {
                 case 'excel_detail':
-                    this.navigationService.loadBarStart()
-                    const { startDate, endDate } = this.formGroup.value
-                    this.purchaseSuppliesService.getPurchaseSupplyItemsByRangeDate(startDate, endDate).subscribe(purchaseSupplies => {
-                        this.navigationService.loadBarFinish()
-                        const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
-                        let body = []
-                        body.push([
-                            'F. REGISTRO',
-                            'SERIE',
-                            'INSUMO',
-                            'CATEGORIA',
-                            'CANTIDAD',
-                            'COSTO',
-                            'TOTAL',
-                            'PROVEEDOR',
-                            'USUARIO',
-                            'OBSERVACIONES'
-                        ])
-                        // for (const purchaseSupply of purchaseSupplies) {
-                        //   for (const purchaseSupplyItem of purchaseSupply.purchaseSupplyItems) {
-                        //     body.push([
-                        //       formatDate(purchaseSupply.createdAt, 'dd/MM/yyyy', 'en-US'),
-                        //       purchaseSupply.serie,
-                        //       purchaseSupplyItem.fullName.toUpperCase(),
-                        //       this.categorySupplies.find(e => e._id === purchaseSupplyItem.categoryId)?.name.toUpperCase(),
-                        //       purchaseSupplyItem.quantity,
-                        //       purchaseSupplyItem.cost,
-                        //       Number((purchaseSupplyItem.cost * purchaseSupplyItem.quantity).toFixed(2)),
-                        //       (purchaseSupply.provider?.name || '')?.toUpperCase(),
-                        //       purchaseSupply.user.name.toUpperCase(),
-                        //       (purchaseSupply.observations || '').toUpperCase()
-                        //     ])
-                        //   }
-                        // }
-                        const name = `COMPRAS_DETALLADO_${this.office.name.replace(/ /g, '_')}`
-                        buildExcel(body, name, wscols, [])
-                    }, (error: HttpErrorResponse) => {
-                        console.log(error)
-                        this.navigationService.loadBarFinish()
-                    })
+                    // this.navigationService.loadBarStart()
+                    // const { startDate, endDate } = this.formGroup.value
+                    // this.purchaseSuppliesService.getPurchaseSupplyItemsByRangeDate(startDate, endDate).subscribe(purchaseSupplies => {
+                    //     this.navigationService.loadBarFinish()
+                    //     const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+                    //     let body = []
+                    //     body.push([
+                    //         'F. REGISTRO',
+                    //         'SERIE',
+                    //         'INSUMO',
+                    //         'CATEGORIA',
+                    //         'CANTIDAD',
+                    //         'COSTO',
+                    //         'TOTAL',
+                    //         'PROVEEDOR',
+                    //         'USUARIO',
+                    //         'OBSERVACIONES'
+                    //     ])
+                    //     // for (const purchaseSupply of purchaseSupplies) {
+                    //     //   for (const purchaseSupplyItem of purchaseSupply.purchaseSupplyItems) {
+                    //     //     body.push([
+                    //     //       formatDate(purchaseSupply.createdAt, 'dd/MM/yyyy', 'en-US'),
+                    //     //       purchaseSupply.serie,
+                    //     //       purchaseSupplyItem.fullName.toUpperCase(),
+                    //     //       this.categorySupplies.find(e => e._id === purchaseSupplyItem.categoryId)?.name.toUpperCase(),
+                    //     //       purchaseSupplyItem.quantity,
+                    //     //       purchaseSupplyItem.cost,
+                    //     //       Number((purchaseSupplyItem.cost * purchaseSupplyItem.quantity).toFixed(2)),
+                    //     //       (purchaseSupply.provider?.name || '')?.toUpperCase(),
+                    //     //       purchaseSupply.user.name.toUpperCase(),
+                    //     //       (purchaseSupply.observations || '').toUpperCase()
+                    //     //     ])
+                    //     //   }
+                    //     // }
+                    //     const name = `COMPRAS_DETALLADO_${this.office.name.replace(/ /g, '_')}`
+                    //     buildExcel(body, name, wscols, [])
+                    // }, (error: HttpErrorResponse) => {
+                    //     console.log(error)
+                    //     this.navigationService.loadBarFinish()
+                    // })
                     break
 
                 case 'excel_simple': {
@@ -159,27 +165,21 @@ export class PurchaseSuppliesComponent {
                         this.navigationService.loadBarFinish()
                     })
                 }
-                    break
+                break
             }
         })
     }
 
     fetchData() {
         this.navigationService.loadBarStart()
-        const { startDate, endDate } = this.formGroup.value
-        this.purchaseSuppliesService.getPurchaseSuppliesByRangeDatePage(startDate, endDate, this.pageIndex + 1, this.pageSize).subscribe(purchaseSupplies => {
+        this.purchaseSuppliesService.getPurchaseSuppliesByPage(this.pageIndex + 1, this.pageSize, this.params).subscribe(purchaseSupplies => {
             this.navigationService.loadBarFinish()
-            console.log(purchaseSupplies)
             this.dataSource = purchaseSupplies
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.loadBarFinish()
-            this.navigationService.showMessage(error.error.message)
         })
     }
 
     fetchCount() {
-        const { startDate, endDate } = this.formGroup.value
-        this.purchaseSuppliesService.getCountPurchaseSuppliesByRangeDate(startDate, endDate).subscribe(count => {
+        this.purchaseSuppliesService.getCountPurchaseSupplies(this.params).subscribe(count => {
             this.length = count
         })
     }
@@ -188,7 +188,8 @@ export class PurchaseSuppliesComponent {
         if (this.formGroup.valid) {
             this.pageIndex = 0
             const { startDate, endDate } = this.formGroup.value
-            const queryParams: Params = { startDate: startDate.getTime(), endDate: endDate.getTime(), pageIndex: 0 }
+            const queryParams: Params = { startDate, endDate, pageIndex: 0 }
+            Object.assign(this.params, queryParams)
             this.router.navigate([], {
                 relativeTo: this.activatedRoute,
                 queryParams: queryParams,

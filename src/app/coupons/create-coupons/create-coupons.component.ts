@@ -43,6 +43,7 @@ export class CreateCouponsComponent {
                     this.navigationService.loadBarFinish()
                     this.router.navigate(['/coupons'])
                     this.navigationService.showMessage('Registrado correctamente')
+                    this.couponsService.loadCoupons()
                 }, error: (error: HttpErrorResponse) => {
                     this.isLoading = false
                     this.navigationService.loadBarFinish()

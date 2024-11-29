@@ -1,13 +1,16 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
 import { PaymentMethodsService } from '../../payment-methods/payment-methods.service';
 import { PaymentModel } from '../payment.model';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-edit-payments',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-edit-payments.component.html',
     styleUrls: ['./dialog-edit-payments.component.sass']
 })
@@ -22,8 +25,9 @@ export class DialogEditPaymentsComponent {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        charge: [this.payment.charge, Validators.required],
-        paymentMethodId: [this.payment.paymentMethodId, Validators.required],
+        observations: '',
+        charge: [null, Validators.required],
+        paymentMethodId: [null, Validators.required],
     })
     paymentMethods: PaymentMethodModel[] = []
 
@@ -34,6 +38,7 @@ export class DialogEditPaymentsComponent {
     }
 
     ngOnInit(): void {
+        this.formGroup.patchValue(this.payment)
         this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
             this.paymentMethods = paymentMethods
         })

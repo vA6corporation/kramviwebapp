@@ -12,9 +12,13 @@ import { DialogRemissionGuidesComponent } from '../../remission-guides/dialog-re
 import { SalesService } from '../../sales/sales.service';
 import { DialogSendEmailComponent } from '../dialog-send-email/dialog-send-email.component';
 import { InvoicesService } from '../invoices.service';
+import { MaterialModule } from '../../material.module';
+import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-sheet-invoices',
+    standalone: true,
+    imports: [MaterialModule, RouterModule],
     templateUrl: './sheet-invoices.component.html',
     styleUrls: ['./sheet-invoices.component.sass']
 })

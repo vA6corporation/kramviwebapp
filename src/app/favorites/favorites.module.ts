@@ -6,14 +6,12 @@ import { CreateFavoritesComponent } from './create-favorites/create-favorites.co
 import { MaterialModule } from '../material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FavoritesComponent } from './favorites/favorites.component';
-import { FavoriteItemsComponent } from './favorite-items/favorite-items.component';
 
 
 @NgModule({
   declarations: [
     CreateFavoritesComponent,
     FavoritesComponent,
-    FavoriteItemsComponent
   ],
   imports: [
     CommonModule,

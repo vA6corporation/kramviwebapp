@@ -33,7 +33,7 @@ export class PurchaseSupplyItemsComponent {
         })
     }
 
-    onClickPurchaseItem(index: number) {
+    onSelectPurchaseSupplyItem(index: number) {
         this.matDialog.open(DialogPurchaseSupplyItemsComponent, {
             width: '600px',
             position: { top: '20px' },

@@ -51,15 +51,15 @@
                     <tbody>
                         <tr>
                             <td>Total en ventas</td>
-                            <td align="right">{{ totalSales().toFixed(2) }}</td>
+                            <td align="right">{{ totalSales().toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
                         </tr>
                         <tr>
                             <td>Total en compras</td>
-                            <td align="right">{{ totalPurchases().toFixed(2) }}</td>
+                            <td align="right">{{ totalPurchases().toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
                         </tr>
                         <tr class="text-primary">
                             <td>Total de utilidades</td>
-                            <td align="right">{{ (totalSales() - totalPurchases()).toFixed(2) }}</td>
+                            <td align="right">{{ (totalSales() - totalPurchases()).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -69,7 +69,7 @@
                 <table mat-table [dataSource]="dataSource" class="w-100" matSort matSortActive="totalUtility" matSortDirection="desc">
                     <ng-container matColumnDef="product">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header="fullName">Producto</th>
-                        <td mat-cell *matCellDef="let element" class="text-capitalize">{{ element.fullName }}</td>
+                        <td mat-cell *matCellDef="let element" class="text-capitalize">{{ element.fullName | uppercase }}</td>
                     </ng-container>
                     <ng-container matColumnDef="sale">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header="totalSale">T. de ventas</th>

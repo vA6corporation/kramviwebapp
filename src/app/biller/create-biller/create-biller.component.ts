@@ -35,6 +35,8 @@ import { MaterialModule } from '../../material.module';
 import { CommonModule } from '@angular/common';
 import { BillerItemsComponent } from '../biller-items/biller-items.component';
 import { DirectivesModule } from '../../directives/directives.module';
+import { DialogDetractionComponent } from '../dialog-detraction/dialog-detraction.component';
+import { DetractionModel } from '../detraction.model';
 
 @Component({
     selector: 'app-create-biller',
@@ -86,6 +88,7 @@ export class CreateBillerComponent {
     dues: CreateDueModel[] = []
     addresses: string[] = []
     paymentMethods: PaymentMethodModel[] = []
+    private detraction: DetractionModel | null = null
     private user: UserModel = new UserModel()
     private turn: TurnModel | null = null
 
@@ -238,6 +241,20 @@ export class CreateBillerComponent {
         })
     }
 
+    onDialogDetraction() {
+        const dialogRef = this.matDialog.open(DialogDetractionComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: this.detraction,
+        })
+
+        dialogRef.afterClosed().subscribe(detraction => {
+            if (detraction) {
+                this.detraction = detraction
+            }
+        })
+    }
+
     onCancel() {
         const ok = confirm('Esta seguro de anular?...')
         if (ok) {
@@ -337,58 +354,66 @@ export class CreateBillerComponent {
             this.isLoading = true
             this.navigationService.loadBarStart()
 
-            this.billsService.saveBill(createdSale, this.billItems, this.payments, this.dues).subscribe(sale => {
+            this.billsService.saveBill(
+                createdSale, 
+                this.billItems, 
+                this.payments, 
+                this.dues,
+                this.detraction
+            ).subscribe({
+                next: sale => {
 
-                let payments: CreatePaymentModel[] = []
+                    let payments: CreatePaymentModel[] = []
 
-                if (this.payments.length) {
-                    payments = this.payments
-                } else {
-                    payments[0] = {
-                        paymentMethodId: createdSale.paymentMethodId || '',
-                        charge: sale.charge,
-                        turnId: sale.turnId,
-                        createdAt: new Date(),
+                    if (this.payments.length) {
+                        payments = this.payments
+                    } else {
+                        payments[0] = {
+                            paymentMethodId: createdSale.paymentMethodId || '',
+                            charge: sale.charge,
+                            turnId: sale.turnId,
+                            createdAt: new Date(),
+                        }
                     }
+
+                    Object.assign(sale, {
+                        user: this.user,
+                        customer: this.customer,
+                        saleItems: this.billItems,
+                        worker: this.workers.find(e => e._id === sale.workerId),
+                        referred: this.workers.find(e => e._id === sale.referredId),
+                        payments,
+                    })
+
+                    switch (this.setting.papelImpresion) {
+                        case 'a4':
+                            this.printService.printA4Invoice(sale)
+                            break
+                        case 'a5':
+                            this.printService.printA5Invoice(sale)
+                            break
+                        case 'ticket80mm':
+                            this.printService.printTicket80mm(sale)
+                            break
+                        default:
+                            this.printService.printTicket58mm(sale)
+                            break
+                    }
+
+                    this.billsService.setBillItems([])
+                    this.dues = []
+                    this.payments = []
+                    this.formGroup.get('paymentMethodId')?.enable()
+                    this.customer = null
+
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage('Registrado correctamente')
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
                 }
-
-                Object.assign(sale, {
-                    user: this.user,
-                    customer: this.customer,
-                    saleItems: this.billItems,
-                    worker: this.workers.find(e => e._id === sale.workerId),
-                    referred: this.workers.find(e => e._id === sale.referredId),
-                    payments,
-                })
-
-                switch (this.setting.papelImpresion) {
-                    case 'a4':
-                        this.printService.printA4Invoice(sale)
-                        break
-                    case 'a5':
-                        this.printService.printA5Invoice(sale)
-                        break
-                    case 'ticket80mm':
-                        this.printService.printTicket80mm(sale)
-                        break
-                    default:
-                        this.printService.printTicket58mm(sale)
-                        break
-                }
-
-                this.billsService.setBillItems([])
-                this.dues = []
-                this.payments = []
-                this.formGroup.get('paymentMethodId')?.enable()
-                this.customer = null
-
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
-                this.navigationService.showMessage('Registrado correctamente')
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message)
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
             })
         } catch (error) {
             if (error instanceof Error) {

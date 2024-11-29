@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -8,9 +8,12 @@ import { OfficeModel } from '../../auth/office.model';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CreditNoteModel } from '../credit-note.model';
 import { CreditNotesService } from '../credit-notes.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-admin-credit-notes',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-admin-credit-notes.component.html',
     styleUrls: ['./dialog-admin-credit-notes.component.sass']
 })
@@ -56,7 +59,7 @@ export class DialogAdminCreditNotesComponent {
     }
 
     onDeleteCreditNote() {
-        this.creditNotesService.deleteById(this.creditNoteId).subscribe(() => {
+        this.creditNotesService.delete(this.creditNoteId).subscribe(() => {
             this.onUpdate$.next()
             this.matDialogRef.close()
         })
@@ -86,7 +89,7 @@ export class DialogAdminCreditNotesComponent {
     onSubmit() {
         if (this.creditNote) {
             Object.assign(this.creditNote, this.formGroup.value)
-            this.creditNotesService.updateCreditNote(this.creditNoteId, this.creditNote).subscribe({
+            this.creditNotesService.update(this.creditNoteId, this.creditNote).subscribe({
                 next: () => {
                     this.onUpdate$.next()
                     this.navigationService.showMessage('Se han guardado los cambios')

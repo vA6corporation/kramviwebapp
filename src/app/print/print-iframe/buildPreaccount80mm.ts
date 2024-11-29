@@ -24,7 +24,7 @@ export function buildPreaccount80mm(
         positionY += 5 * strArr.length
     }
     positionY += 3
-    pdf.text(`IMPORTE TOTAL: S/ ${board.boardItems.filter(e => e.igvCode !== '11').map(e => e.price * e.quantity).reduce((a, b) => a + b, 0).toFixed(2)}`, 1 + marginLeft, positionY)
+    pdf.text(`IMPORTE TOTAL: ${board.boardItems.filter(e => e.igvCode !== '11').map(e => e.price * e.quantity).reduce((a, b) => a + b, 0).toFixed(2)}`, 1 + marginLeft, positionY)
     positionY += 5
     pdf.text(formatDate(new Date(), 'M/d/yyyy, h:mm a', 'en-US'), pageCenter, positionY, { align: 'center' })
     positionY += 5

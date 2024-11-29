@@ -1,14 +1,17 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { SettingModel } from '../../auth/setting.model';
 import { CreateCreditNoteItemModel } from '../create-credit-note-item.model';
 import { CreditNotesService } from '../credit-notes.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-credit-note-items',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-credit-note-items.component.html',
     styleUrls: ['./dialog-credit-note-items.component.sass']
 })

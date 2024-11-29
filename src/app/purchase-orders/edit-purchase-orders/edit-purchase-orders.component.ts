@@ -14,9 +14,13 @@ import { ProductsService } from '../../products/products.service';
 import { PurchaseOrdersService } from '../purchase-orders.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogPurchaseOrderItemsComponent } from '../dialog-purchase-order-items/dialog-purchase-order-items.component';
+import { MaterialModule } from '../../material.module';
+import { PurchaseOrderItemsComponent } from '../purchase-order-items/purchase-order-items.component';
 
 @Component({
     selector: 'app-edit-purchase-orders',
+    standalone: true,
+    imports: [MaterialModule, PurchaseOrderItemsComponent],
     templateUrl: './edit-purchase-orders.component.html',
     styleUrls: ['./edit-purchase-orders.component.sass']
 })

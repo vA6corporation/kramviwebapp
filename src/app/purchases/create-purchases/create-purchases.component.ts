@@ -14,9 +14,16 @@ import { PurchasesService } from '../purchases.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogDetailProductsComponent } from '../../products/dialog-detail-products/dialog-detail-products.component';
 import { DialogPurchaseItemsComponent } from '../dialog-purchase-items/dialog-purchase-items.component';
+import { MaterialModule } from '../../material.module';
+import { PurchaseItemsComponent } from '../purchase-items/purchase-items.component';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-create-purchases',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule, PurchaseItemsComponent],
     templateUrl: './create-purchases.component.html',
     styleUrls: ['./create-purchases.component.sass']
 })

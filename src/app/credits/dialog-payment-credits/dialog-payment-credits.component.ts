@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -10,9 +10,12 @@ import { TurnModel } from '../../turns/turn.model';
 import { TurnsService } from '../../turns/turns.service';
 import { CreditsService } from '../credits.service';
 import { CreditModel } from '../credit.model';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-payment-credits',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-payment-credits.component.html',
     styleUrls: ['./dialog-payment-credits.component.sass']
 })

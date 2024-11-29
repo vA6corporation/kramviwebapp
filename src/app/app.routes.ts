@@ -64,7 +64,7 @@ export const routes: Routes = [
     },
     {
         path: 'credits',
-        loadChildren: () => import('./credits/credits.module').then(m => m.CreditsModule)
+        loadChildren: () => import('./credits/credits.routes').then(m => m.routes)
     },
     {
         path: 'promotions',
@@ -76,7 +76,7 @@ export const routes: Routes = [
     },
     {
         path: 'inventories',
-        loadChildren: () => import('./inventories/inventories.module').then(m => m.InventoriesModule)
+        loadChildren: () => import('./inventories/inventories.routes').then(m => m.routes)
     },
     {
         path: 'lots',
@@ -84,7 +84,7 @@ export const routes: Routes = [
     },
     {
         path: 'inventorySupplies',
-        loadChildren: () => import('./inventory-supplies/inventory-supplies.module').then(m => m.InventorySuppliesModule)
+        loadChildren: () => import('./inventory-supplies/inventory-supplies.routes').then(m => m.routes)
     },
     {
         path: 'incidents',
@@ -116,7 +116,7 @@ export const routes: Routes = [
     },
     {
         path: 'invoices',
-        loadChildren: () => import('./invoices/invoices.module').then(m => m.InvoicesModule)
+        loadChildren: () => import('./invoices/invoices.routes').then(m => m.routes)
     },
     {
         path: 'carriers',
@@ -124,7 +124,7 @@ export const routes: Routes = [
     },
     {
         path: 'creditNotes',
-        loadChildren: () => import('./credit-notes/credit-notes.module').then(m => m.CreditNotesModule)
+        loadChildren: () => import('./credit-notes/credit-notes.routes').then(m => m.routes)
     },
     {
         path: 'remissionGuides',
@@ -148,11 +148,11 @@ export const routes: Routes = [
     },
     {
         path: 'purchases',
-        loadChildren: () => import('./purchases/purchases.module').then(m => m.PurchasesModule)
+        loadChildren: () => import('./purchases/purchases.routes').then(m => m.routes)
     },
     {
         path: 'purchaseOrders',
-        loadChildren: () => import('./purchase-orders/purchase-orders.module').then(m => m.PurchaseOrdersModule)
+        loadChildren: () => import('./purchase-orders/purchase-orders.routes').then(m => m.routes)
     },
     {
         path: 'purchaseSupplies',
@@ -176,7 +176,7 @@ export const routes: Routes = [
     },
     {
         path: 'workers',
-        loadChildren: () => import('./workers/workers.module').then(m => m.WorkersModule)
+        loadChildren: () => import('./workers/workers.routes').then(m => m.routes)
     },
     {
         path: 'subscription',
@@ -212,7 +212,7 @@ export const routes: Routes = [
     },
     {
         path: 'payments',
-        loadChildren: () => import('./payments/payments.module').then(m => m.PaymentsModule)
+        loadChildren: () => import('./payments/payments.routes').then(m => m.routes)
     },
     {
         path: 'banks',

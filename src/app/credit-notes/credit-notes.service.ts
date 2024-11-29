@@ -20,12 +20,12 @@ export class CreditNotesService {
         private readonly httpService: HttpService,
     ) { }
 
-    private creditNote: CreditNoteModel | null = null;
-    private creditNoteItems: CreateCreditNoteItemModel[] = [];
-    private creditNoteItems$ = new BehaviorSubject<CreateCreditNoteItemModel[]>([]);
+    private creditNote: CreditNoteModel | null = null
+    private creditNoteItems: CreateCreditNoteItemModel[] = []
+    private creditNoteItems$ = new BehaviorSubject<CreateCreditNoteItemModel[]>([])
 
     setCreditNote(creditNote: CreditNoteModel): void {
-        this.creditNote = creditNote;
+        this.creditNote = creditNote
     }
 
     getCreditNotesByRangeDatePageWithItems(
@@ -34,31 +34,31 @@ export class CreditNotesService {
         pageIndex: number,
         pageSize: number
     ): Observable<CreditNoteModel[]> {
-        return this.httpService.get(`creditNotes/byRangeDatePageWithItems/${startDate}/${endDate}/${pageIndex}/${pageSize}`);
+        return this.httpService.get(`creditNotes/byRangeDatePageWithItems/${startDate}/${endDate}/${pageIndex}/${pageSize}`)
     }
 
     getCdrByCreditNote(creditNoteId: string): Observable<CdrNcModel> {
-        return this.httpService.get(`creditNotes/cdrxml/${creditNoteId}`);
+        return this.httpService.get(`creditNotes/cdrxml/${creditNoteId}`)
     }
 
     updateDate(creditNote: any, creditNoteId: string): Observable<void> {
-        return this.httpService.put(`creditNotes/updateDate/${creditNoteId}`, { creditNote });
+        return this.httpService.put(`creditNotes/updateDate/${creditNoteId}`, { creditNote })
     }
 
     cancelCreditNote(creditNoteId: string, reason: string) {
-        return this.httpService.delete(`tickets/creditNote/${creditNoteId}/${reason}`);
+        return this.httpService.delete(`tickets/creditNote/${creditNoteId}/${reason}`)
     }
 
     getCreditNote(): CreditNoteModel | null {
-        return this.creditNote;
+        return this.creditNote
     }
 
     getCreditNoteItem(index: number): CreateCreditNoteItemModel {
-        return this.creditNoteItems[index];
+        return this.creditNoteItems[index]
     }
 
     addCreditNoteItem(product: ProductModel) {
-        const index = this.creditNoteItems.findIndex(e => e.productId === product._id && e.igvCode === product.igvCode);
+        const index = this.creditNoteItems.findIndex(e => e.productId === product._id && e.igvCode === product.igvCode)
         if (index < 0) {
             const creditNoteItem: CreateCreditNoteItemModel = {
                 fullName: product.fullName,
@@ -70,14 +70,14 @@ export class CreditNotesService {
                 igvCode: product.igvCode,
                 preIgvCode: product.igvCode,
                 observations: '',
-            };
-            this.creditNoteItems.push(creditNoteItem);
+            }
+            this.creditNoteItems.push(creditNoteItem)
         } else {
-            const creditNoteItem: CreateCreditNoteItemModel = this.creditNoteItems[index];
-            creditNoteItem.quantity += 1;
-            this.creditNoteItems.splice(index, 1, creditNoteItem);
+            const creditNoteItem: CreateCreditNoteItemModel = this.creditNoteItems[index]
+            creditNoteItem.quantity += 1
+            this.creditNoteItems.splice(index, 1, creditNoteItem)
         }
-        this.creditNoteItems$.next(this.creditNoteItems);
+        this.creditNoteItems$.next(this.creditNoteItems)
     }
 
     getCreditNoteItemsByPageProduct(
@@ -90,74 +90,72 @@ export class CreditNotesService {
     }
 
     updateCreditNoteItem(index: number, creditNoteItem: CreateCreditNoteItemModel) {
-        this.creditNoteItems.splice(index, 1, creditNoteItem);
-        this.creditNoteItems$.next(this.creditNoteItems);
+        this.creditNoteItems.splice(index, 1, creditNoteItem)
+        this.creditNoteItems$.next(this.creditNoteItems)
     }
 
     removeCreditNoteItem(index: number) {
-        this.creditNoteItems.splice(index, 1);
-        this.creditNoteItems$.next(this.creditNoteItems);
+        this.creditNoteItems.splice(index, 1)
+        this.creditNoteItems$.next(this.creditNoteItems)
     }
 
     handleCreditNoteItems() {
-        return this.creditNoteItems$.asObservable();
+        return this.creditNoteItems$.asObservable()
     }
 
     setCreditNoteItems(creditNoteItems: CreditNoteItemModel[]) {
-        this.creditNoteItems = creditNoteItems;
-        this.creditNoteItems$.next(this.creditNoteItems);
+        this.creditNoteItems = creditNoteItems
+        this.creditNoteItems$.next(this.creditNoteItems)
     }
 
     getById(creditId: string) {
-        return this.httpService.get(`creditNotes/byId/${creditId}`);
+        return this.httpService.get(`creditNotes/byId/${creditId}`)
     }
 
     getCreditNotesBySale(saleId: string): Observable<CreditNoteModel[]> {
-        return this.httpService.get(`creditNotes/bySale/${saleId}`);
+        return this.httpService.get(`creditNotes/bySale/${saleId}`)
     }
 
     getCountQuantityCreditNoteItemsByProduct(
         productId: string,
     ): Observable<number> {
-        return this.httpService.get(`creditNotes/countQuantityCreditNoteItemsByProduct/${productId}`);
+        return this.httpService.get(`creditNotes/countQuantityCreditNoteItemsByProduct/${productId}`)
     }
 
     getCreditNoteById(creditNoteId: string): Observable<CreditNoteModel> {
-        return this.httpService.get(`creditNotes/byId/${creditNoteId}`);
+        return this.httpService.get(`creditNotes/byId/${creditNoteId}`)
     }
 
-    getCreditNotesByRangeDatePage(
-        startDate: Date,
-        endDate: Date,
+    getCreditNotesByPage(
         pageIndex: number,
         pageSize: number,
         params: Params,
     ): Observable<CreditNoteModel[]> {
-        return this.httpService.get(`creditNotes/byRangeDatePage/${startDate}/${endDate}/${pageIndex}/${pageSize}`, params);
+        return this.httpService.get(`creditNotes/byPage/${pageIndex}/${pageSize}`, params)
     }
 
-    getCountCreditNotesByRangeDate(startDate: Date, endDate: Date): Observable<number> {
-        return this.httpService.get(`creditNotes/countCreditNotesByRangeDate/${startDate}/${endDate}`);
+    getCountCreditNotes(params: Params): Observable<number> {
+        return this.httpService.get(`creditNotes/countCreditNotes`, params)
     }
 
     sendCreditNote(creditNoteId: string): Observable<CreditNoteModel> {
-        return this.httpService.get(`creditNotes/sendCreditNote/${creditNoteId}`);
+        return this.httpService.get(`creditNotes/sendCreditNote/${creditNoteId}`)
     }
 
-    saveCreditNote(
+    create(
         sale: SaleModel,
         creditNote: CreateCreditNoteModel,
         saleItems: CreateSaleItemModel[],
         saleId: string,
     ): Observable<CreditNoteModel> {
-        return this.httpService.post(`creditNotes/${saleId}`, { sale, creditNote, saleItems });
+        return this.httpService.post(`creditNotes/${saleId}`, { sale, creditNote, saleItems })
     }
 
-    updateCreditNote(
+    update(
         creditNoteId: string,
         creditNote: CreditNoteModel,
     ): Observable<void> {
-        return this.httpService.put(`creditNotes/${creditNoteId}`, { creditNote });
+        return this.httpService.put(`creditNotes/${creditNoteId}`, { creditNote })
     }
 
     updateCreditNoteWithItems(
@@ -165,15 +163,15 @@ export class CreditNotesService {
         creditNote: CreateCreditNoteModel,
         creditNoteItems: CreateCreditNoteItemModel[],
     ): Observable<void> {
-        return this.httpService.put(`creditNotes/withItems/${creditNoteId}`, { creditNote, creditNoteItems });
+        return this.httpService.put(`creditNotes/withItems/${creditNoteId}`, { creditNote, creditNoteItems })
     }
 
     deleteBySale(saleId: string): Observable<void> {
-        return this.httpService.delete(`creditNotes/bySale/${saleId}`);
+        return this.httpService.delete(`creditNotes/bySale/${saleId}`)
     }
 
-    deleteById(creditNoteId: string): Observable<void> {
-        return this.httpService.delete(`creditNotes/byId/${creditNoteId}`);
+    delete(creditNoteId: string): Observable<void> {
+        return this.httpService.delete(`creditNotes/byId/${creditNoteId}`)
     }
 
 }

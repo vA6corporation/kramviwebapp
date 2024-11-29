@@ -17,21 +17,24 @@ export class CouponsService {
     private couponItems: CouponItemModel[] = []
     private couponItems$ = new BehaviorSubject<CouponItemModel[]>([])
 
-    clearCouponItems(charge: number) {
-        const index = this.couponItems.findIndex(e => charge < e.charge)
-        if (index > -1) {
-            this.couponItems.splice(index, 1)
-            this.couponItems$.next(this.couponItems)
-        }
+    clearCouponItems() {
+        this.couponItems = []
+        this.couponItems$.next([])
+        // const index = this.couponItems.findIndex(e => charge < e.charge)
+        // if (index > -1) {
+        //     this.couponItems.splice(index, 1)
+        //     this.couponItems$.next(this.couponItems)
+        // }
     }
 
-    addCouponItem(coupon: CouponModel) {
+    addCouponItem(coupon: CouponModel, charge: number) {
         const foundCouponItem = this.couponItems.find(e => e.couponId === coupon._id)
         if (!foundCouponItem) {
             const couponItem = {
                 name: coupon.name,
                 charge: coupon.charge,
-                couponId: coupon._id
+                couponId: coupon._id,
+                quantity: Math.trunc(charge / coupon.charge)
             }
             this.couponItems.push(couponItem)
             this.couponItems$.next(this.couponItems)

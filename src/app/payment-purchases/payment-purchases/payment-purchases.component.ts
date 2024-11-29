@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -8,13 +8,17 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
 import { NavigationService } from '../../navigation/navigation.service';
-import { DialogFindProvidersComponent } from '../../providers/dialog-find-providers/dialog-find-providers.component';
 import { DialogDetailPurchasesComponent } from '../../purchases/dialog-detail-purchases/dialog-detail-purchases.component';
 import { PaymentPurchaseModel } from '../payment-purchase.model';
 import { PaymentPurchasesService } from '../payment-purchases.service';
+import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-payment-purchases',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './payment-purchases.component.html',
     styleUrls: ['./payment-purchases.component.sass']
 })
@@ -94,8 +98,8 @@ export class PaymentPurchasesComponent {
         this.fetchCount()
     }
 
-    onDialogProviders() {
-        const dialogRef = this.matDialog.open(DialogFindProvidersComponent, {
+    onDialogSearchProviders() {
+        const dialogRef = this.matDialog.open(DialogSearchProvidersComponent, {
             width: '600px',
             position: { top: '20px' },
         })
@@ -161,18 +165,6 @@ export class PaymentPurchasesComponent {
             position: { top: '20px' },
             data: purchaseId,
         })
-    }
-
-    onDeletePurchase(purchaseId: string) {
-        // const ok = confirm('Esta seguro de eliminar?...')
-        // if (ok) {
-        //   this.navigationService.loadBarStart()
-        //   this.paymentPurchasesService.delete(purchaseId).subscribe(() => {
-        //     this.navigationService.loadBarFinish()
-        //     this.navigationService.showMessage('Eliminado correctamente')
-        //     this.fetchData()
-        //   })
-        // }
     }
 
 }

@@ -42,27 +42,27 @@ export class SaleItemsComponent {
     }
 
     ngOnInit(): void {
-        this.handleSaleItems$ = this.salesService.handleSaleItems().subscribe(saleItems => {
-            this.saleItems = saleItems
-            this.charge = 0
-            for (const saleItem of this.saleItems) {
-                if (saleItem.igvCode !== '11') {
-                    this.charge += saleItem.price * saleItem.quantity
-                }
-            }
-            this.couponsService.clearCouponItems(this.charge)
-            const foundCoupon = this.coupons.find(e => this.charge > e.charge)
-            if (foundCoupon) {
-                this.couponsService.addCouponItem(foundCoupon)
-            }
-        })
-
         this.handleCouponItems$ = this.couponsService.handleCouponItems().subscribe(couponItems => {
             this.couponItems = couponItems
         })
 
         this.handleCoupos$ = this.couponsService.handleCoupons().subscribe(coupons => {
             this.coupons = coupons
+
+            this.handleSaleItems$ = this.salesService.handleSaleItems().subscribe(saleItems => {
+                this.saleItems = saleItems
+                this.charge = 0
+                for (const saleItem of this.saleItems) {
+                    if (saleItem.igvCode !== '11') {
+                        this.charge += saleItem.price * saleItem.quantity
+                    }
+                }
+                this.couponsService.clearCouponItems()
+                const foundCoupon = this.coupons.find(e => this.charge > e.charge)
+                if (foundCoupon) {
+                    this.couponsService.addCouponItem(foundCoupon, this.charge)
+                }
+            })
         })
     }
 

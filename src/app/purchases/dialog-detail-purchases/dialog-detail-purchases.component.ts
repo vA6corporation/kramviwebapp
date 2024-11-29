@@ -9,9 +9,14 @@ import { UserModel } from '../../users/user.model';
 import { PurchaseItemModel } from '../purchase-item.model';
 import { PurchaseModel } from '../purchase.model';
 import { PurchasesService } from '../purchases.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-dialog-detail-purchases',
+    standalone: true,
+    imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './dialog-detail-purchases.component.html',
     styleUrls: ['./dialog-detail-purchases.component.sass']
 })
@@ -27,7 +32,7 @@ export class DialogDetailPurchasesComponent {
 
     purchase: PurchaseModel | null = null
     purchaseItems: PurchaseItemModel[] = []
-    payments: PaymentPurchaseModel[] = []
+    paymentPurchases: PaymentPurchaseModel[] = []
     provider: ProviderModel | null = null
     office: OfficeModel | null = null
     user: UserModel | null = null
@@ -45,9 +50,9 @@ export class DialogDetailPurchasesComponent {
 
         this.purchasesService.getPurchaseById(this.purchaseId).subscribe(purchase => {
             this.purchase = purchase
-            const { purchaseItems, user, payments, provider } = purchase
+            const { purchaseItems, user, paymentPurchases, provider } = purchase
             this.purchaseItems = purchaseItems
-            this.payments = payments
+            this.paymentPurchases = paymentPurchases
             this.provider = provider
             this.user = user
         })

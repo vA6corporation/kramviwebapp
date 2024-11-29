@@ -9,7 +9,4 @@ export class EditPromotionsComponent {
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
-
 }

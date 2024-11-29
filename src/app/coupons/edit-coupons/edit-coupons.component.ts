@@ -48,6 +48,7 @@ export class EditCouponsComponent {
                     this.isLoading = false
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Se han guardado los cambios')
+                    this.couponsService.loadCoupons()
                 }, error: (error: HttpErrorResponse) => {
                     this.isLoading = false
                     this.navigationService.loadBarFinish()

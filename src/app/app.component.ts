@@ -84,7 +84,8 @@ export class AppComponent {
         '/biller',
         '/subscription',
         '/settings',
-        '/logout'
+        '/logout',
+        '/login'
     ]
 
     ngOnInit(): void {

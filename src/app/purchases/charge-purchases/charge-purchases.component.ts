@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -20,6 +20,9 @@ import { PurchasesService } from '../purchases.service';
 import { ProductsService } from '../../products/products.service';
 import { IgvType } from '../../products/igv-type.enum';
 import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
+import { PurchaseItemsComponent } from '../purchase-items/purchase-items.component';
 
 interface FormData {
     invoiceType: string,
@@ -32,6 +35,8 @@ interface FormData {
 
 @Component({
     selector: 'app-charge-purchases',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule, PurchaseItemsComponent],
     templateUrl: './charge-purchases.component.html',
     styleUrls: ['./charge-purchases.component.sass']
 })
@@ -179,6 +184,7 @@ export class ChargePurchasesComponent {
             const formData: FormData = this.formGroup.value
             const purchase: CreatePurchaseModel = {
                 invoiceType: formData.invoiceType,
+                isCredit: false,
                 paymentMethodId: formData.paymentMethodId,
                 serie: formData.serie,
                 purchasedAt: formData.purchasedAt,

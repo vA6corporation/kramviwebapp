@@ -1,12 +1,15 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
 import { WorkersService } from '../workers.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-create-workers',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule],
     templateUrl: './create-workers.component.html',
     styleUrls: ['./create-workers.component.sass']
 })
@@ -27,7 +30,7 @@ export class CreateWorkersComponent {
         mobileNumber: '',
         birthDate: '',
         address: '',
-    });
+    })
     isLoading: boolean = false
     maxLength: number = 11
 

@@ -1,3 +1,4 @@
+import { DetractionModel } from "../biller/detraction.model";
 import { BoardModel } from "../boards/board.model";
 import { CustomerModel } from "../customers/customer.model";
 import { DueModel } from "../dues/due.model";
@@ -46,6 +47,7 @@ export interface SaleModel {
 
     payments: PaymentModel[]
     saleItems: SaleItemModel[]
+    detraction: DetractionModel | null
     dues: DueModel[];
     board: BoardModel | null
     cdr: CdrModel | null

@@ -12,7 +12,6 @@ import { EventItemsComponent } from './event-items/event-items.component';
 import { ChargeEventsComponent } from './charge-events/charge-events.component';
 import { DialogDateEventsComponent } from './dialog-date-events/dialog-date-events.component';
 import { EditEventsComponent } from './edit-events/edit-events.component';
-import { EditChargeEventsComponent } from './edit-charge-events/edit-charge-events.component';
 import { EditItemEventsComponent } from './edit-item-events/edit-item-events.component';
 import { SaleItemsComponent } from '../sales/sale-items/sale-items.component';
 
@@ -27,7 +26,6 @@ import { SaleItemsComponent } from '../sales/sale-items/sale-items.component';
     ChargeEventsComponent,
     DialogDateEventsComponent,
     EditEventsComponent,
-    EditChargeEventsComponent,
     EditItemEventsComponent,
   ],
   imports: [

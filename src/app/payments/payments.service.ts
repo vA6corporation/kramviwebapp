@@ -83,7 +83,7 @@ export class PaymentsService {
         payment: CreatePaymentModel,
         saleId: string
     ): Observable<PaymentModel> {
-        return this.httpService.post(`sales/createPayment/${saleId}`, { payment })
+        return this.httpService.post(`payments/${saleId}`, { payment })
     }
 
     update(
@@ -98,7 +98,7 @@ export class PaymentsService {
         paymentId: string,
         saleId: string
     ): Observable<void> {
-        return this.httpService.delete(`sales/deletePayment/${saleId}/${paymentId}`)
+        return this.httpService.delete(`payments/${saleId}/${paymentId}`)
     }
 
 }

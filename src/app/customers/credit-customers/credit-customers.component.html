@@ -3,13 +3,18 @@
         <mat-card-header>
             <mat-card-title>Resumen</mat-card-title>
         </mat-card-header>
-        <mat-action-list>
-            <button type="button" class="m-1" mat-list-item>
-                Total deuda:
+        <mat-list>
+            <mat-list-item role="listitem">Total deuda:
                 <span class="spacer"></span>
-                S/ {{ charge.toFixed(2) }}
-            </button>
-        </mat-action-list>
+                {{ charge.toFixed(2) }}
+            </mat-list-item>
+            @if (customer) {
+                <mat-list-item role="listitem">Limite de credito:
+                    <span class="spacer"></span>
+                    {{ customer.creditLimit ? customer.creditLimit.toFixed(2) : 'SIN LIMITE' }}
+                </mat-list-item>
+                }
+        </mat-list>
     </mat-card>
     <button type="button" class="mb-3 w-100" mat-flat-button color="primary" (click)="onPayment()"
         [disabled]="!selectedCredits.length">PAGAR LA DEUDA {{ forPaid.toFixed(2) }}</button>

@@ -1,10 +1,10 @@
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Subscription, lastValueFrom } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { BusinessModel } from '../../auth/business.model';
@@ -12,13 +12,16 @@ import { OfficeModel } from '../../auth/office.model';
 import { buildExcel } from '../../buildExcel';
 import { NavigationService } from '../../navigation/navigation.service';
 import { PrintService } from '../../print/print.service';
-import { DialogFindProvidersComponent } from '../../providers/dialog-find-providers/dialog-find-providers.component';
 import { DialogDetailPurchasesComponent } from '../dialog-detail-purchases/dialog-detail-purchases.component';
 import { PurchaseModel } from '../purchase.model';
 import { PurchasesService } from '../purchases.service';
+import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-purchases',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './purchases.component.html',
     styleUrls: ['./purchases.component.sass']
 })
@@ -84,7 +87,7 @@ export class PurchasesComponent {
 
         this.navigationService.setMenu([
             { id: 'search', label: 'Buscar', icon: 'search', show: true },
-            { id: 'excel_simple', label: 'Excel Simple', icon: 'file_download', show: false },
+            { id: 'excel_simple', label: 'Exportar excel', icon: 'file_download', show: false },
         ])
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
@@ -119,7 +122,8 @@ export class PurchasesComponent {
                         'INAFECTO',
                         'GRATUITO',
                         'ANULADO',
-                        'F. PAGO'
+                        'F. PAGO',
+                        'OBSERVACIONES'
                     ])
                     for (const purchase of purchases) {
                         const { provider } = purchase
@@ -139,7 +143,8 @@ export class PurchasesComponent {
                             Number((purchase.inafecto || 0).toFixed(2)),
                             Number((purchase.gratuito || 0).toFixed(2)),
                             purchase.deletedAt ? 'SI' : 'NO',
-                            purchase.isPaid ? 'CONTADO' : 'CREDITO'
+                            purchase.isPaid ? 'CONTADO' : 'CREDITO',
+                            purchase.observations
                         ])
                     }
                     const name = `VENTAS_DESDE_${formatDate(this.startDate, 'dd/MM/yyyy', 'en-US')}_HASTA_${formatDate(this.endDate, 'dd/MM/yyyy', 'en-US')}_${this.office.name.replace(/ /g, '_')}_RUC_${this.business.ruc}`
@@ -170,8 +175,8 @@ export class PurchasesComponent {
         this.fetchCount()
     }
 
-    onDialogProviders() {
-        const dialogRef = this.matDialog.open(DialogFindProvidersComponent, {
+    onDialogSearchProviders() {
+        const dialogRef = this.matDialog.open(DialogSearchProvidersComponent, {
             width: '600px',
             position: { top: '20px' },
         })

@@ -8,7 +8,9 @@
             <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
                 <span class="mat-h1">{{ customer.name | uppercase }}</span>
             </button>
-            <p class="text-center mb-3">{{ customer.mobileNumber }}</p>
+            @if (customer.mobileNumber) {
+            <p class="text-center mb-3">Celular: {{ customer.formatMobileNumber }}</p>
+            }
             }
             <mat-form-field appearance="fill">
                 <mat-label>Comprobante</mat-label>

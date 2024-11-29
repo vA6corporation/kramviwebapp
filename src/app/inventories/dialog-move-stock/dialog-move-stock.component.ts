@@ -1,17 +1,21 @@
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
+import { MaterialModule } from '../../material.module';
+import { MovesService } from '../../moves/moves.service';
 import { NavigationService } from '../../navigation/navigation.service';
 import { OfficesService } from '../../offices/offices.service';
 import { ProductModel } from '../../products/product.model';
-import { HttpErrorResponse } from '@angular/common/http';
-import { MovesService } from '../../moves/moves.service';
-import { AuthService } from '../../auth/auth.service';
 
 @Component({
     selector: 'app-dialog-move-stock',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './dialog-move-stock.component.html',
     styleUrls: ['./dialog-move-stock.component.sass']
 })

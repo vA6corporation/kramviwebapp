@@ -14,9 +14,15 @@ import { ProductModel } from '../../products/product.model';
 import { ProductsService } from '../../products/products.service';
 import { DialogPurchaseOrderItemsComponent } from '../dialog-purchase-order-items/dialog-purchase-order-items.component';
 import { PurchaseOrdersService } from '../purchase-orders.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
+import { PurchaseOrderItemsComponent } from '../purchase-order-items/purchase-order-items.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-create-purchase-orders',
+    standalone: true,
+    imports: [MaterialModule, RouterModule, CommonModule, PurchaseOrderItemsComponent],
     templateUrl: './create-purchase-orders.component.html',
     styleUrls: ['./create-purchase-orders.component.sass']
 })
