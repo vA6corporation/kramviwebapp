@@ -6,10 +6,14 @@ import { Chart, ChartOptions, ChartType, registerables } from 'chart.js';
 import { Params } from '@angular/router';
 import { Subscription } from 'rxjs';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 Chart.register(...registerables);
 
 @Component({
     selector: 'app-collections',
+    standalone: true,
+    imports: [MaterialModule, CommonModule],
     templateUrl: './collections.component.html',
     styleUrls: ['./collections.component.sass']
 })

@@ -15,12 +15,12 @@ export class CanActivateTeam {
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        const auth = this.authService.getAuth();
+        const auth = this.authService.getAuth()
         if (auth) {
-            return auth.modules.find(e => e.name === route.data['routeName'] && e.isAuthorized) ? true : false;
+            return auth.modules.find(e => e.name === route.data['routeName'] && e.isAuthorized) ? true : false
         } else {
-            this.router.navigate(['/']);
-            return false;
+            this.router.navigate(['/'])
+            return false
         }
     }
 }

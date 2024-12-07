@@ -6,13 +6,13 @@ import { ExpensesComponent } from '../expenses/expenses.component';
 import { InvoicesComponent } from '../invoices/invoices.component';
 
 @Component({
-    selector: 'app-dashboard',
+    selector: 'app-index-dashboard',
     standalone: true,
     imports: [MaterialModule, CollectionsComponent, ExpensesComponent, InvoicesComponent],
-    templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.sass']
+    templateUrl: './index-dashboard.component.html',
+    styleUrl: './index-dashboard.component.sass'
 })
-export class DashboardComponent {
+export class IndexDashboardComponent {
 
     constructor(
         private readonly navigationService: NavigationService,

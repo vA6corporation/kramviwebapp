@@ -35,11 +35,9 @@ export class CategoriesComponent {
     pageIndex: number = 0
     categoriesId: string[] = []
 
-    private handleSaveCategory$: Subscription = new Subscription()
     private handleClickMenu$: Subscription = new Subscription()
 
     ngOnDestroy() {
-        this.handleSaveCategory$.unsubscribe()
         this.handleClickMenu$.unsubscribe()
     }
 
@@ -104,25 +102,27 @@ export class CategoriesComponent {
         })
     }
 
-    onAdd() {
+    onCreateCategory() {
         const dialogRef = this.matDialog.open(DialogCreateCategoriesComponent, {
             width: '600px',
             position: { top: '20px' },
         })
 
-        this.handleSaveCategory$ = dialogRef.componentInstance.handleSaveCategory().subscribe(name => {
-            this.navigationService.loadBarStart()
-            this.categoriesService.create(name).subscribe({
-                next: () => {
-                    this.navigationService.showMessage('Registrado correctamente')
-                    this.navigationService.loadBarFinish()
-                    this.categoriesService.loadCategories()
-                    this.fetchData()
-                }, error: (error: HttpErrorResponse) => {
-                    this.navigationService.loadBarFinish()
-                    this.navigationService.showMessage(error.error.message)
-                }
-            })
+        dialogRef.afterClosed().subscribe(category => {
+            if (category) {
+                this.navigationService.loadBarStart()
+                this.categoriesService.create(category).subscribe({
+                    next: () => {
+                        this.fetchData()
+                        this.navigationService.showMessage('Registrado correctamente')
+                        this.navigationService.loadBarFinish()
+                        this.categoriesService.loadCategories()
+                    }, error: (error: HttpErrorResponse) => {
+                        this.navigationService.loadBarFinish()
+                        this.navigationService.showMessage(error.error.message)
+                    }
+                })
+            }
         })
     }
 

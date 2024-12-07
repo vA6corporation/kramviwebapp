@@ -234,13 +234,25 @@ export class EditProductsComponent {
         const dialogRef = this.matDialog.open(DialogCreateCategoriesComponent, {
             width: '600px',
             position: { top: '20px' },
-        });
+        })
 
         dialogRef.afterClosed().subscribe(category => {
             if (category) {
-                this.categories.push(category);
-                this.categoriesService.loadCategories();
-                this.formGroup.patchValue({ categoryId: category._id });
+                this.isLoading = true
+                this.navigationService.loadBarStart()
+                this.categoriesService.create(category).subscribe({
+                    next: category => {
+                        this.isLoading = false
+                        this.navigationService.showMessage('Registrado correctamente')
+                        this.navigationService.loadBarFinish()
+                        this.categoriesService.loadCategories()
+                        this.formGroup.patchValue({ categoryId: category._id })
+                    }, error: (error: HttpErrorResponse) => {
+                        this.isLoading = false
+                        this.navigationService.loadBarFinish()
+                        this.navigationService.showMessage(error.error.message)
+                    }
+                })
             }
         })
     }

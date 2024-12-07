@@ -8,9 +8,13 @@ import { ReportsService } from '../../reports/reports.service';
 import { UserModel } from '../../users/user.model';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { randomColor } from '../../randomColor';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-invoices',
+    standalone: true,
+    imports: [MaterialModule, CommonModule],
     templateUrl: './invoices.component.html',
     styleUrls: ['./invoices.component.sass']
 })

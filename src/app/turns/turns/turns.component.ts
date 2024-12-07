@@ -293,6 +293,7 @@ export class TurnsComponent {
             let body = []
             body.push([
                 'F. EMISION',
+                'H. EMISION',
                 'RUC/DNI/CE',
                 'CLIENTE',
                 'COMPROBANTE',
@@ -306,6 +307,7 @@ export class TurnsComponent {
                 const { customer } = sale
                 body.push([
                     formatDate(sale.createdAt, 'dd/MM/yyyy', 'en-US'),
+                    formatDate(sale.createdAt, 'hh:mm a', 'en-US'),
                     customer?.document,
                     (customer?.name || 'VARIOS').toUpperCase(),
                     sale.invoiceType,

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Observable, Subject } from 'rxjs';
 import { MaterialModule } from '../../material.module';
 
 @Component({
@@ -21,16 +20,10 @@ export class DialogCreateCategoriesComponent {
     formGroup: FormGroup = this.formBuilder.group({
         name: [null, Validators.required]
     })
-    private onSave$: Subject<string> = new Subject();
-
-    handleSaveCategory(): Observable<string> {
-        return this.onSave$.asObservable();
-    }
 
     onSubmit() {
         if (this.formGroup.valid) {
-            this.onSave$.next(this.formGroup.value);
-            this.dialogRef.close();
+            this.dialogRef.close(this.formGroup.value)
         }
     }
 

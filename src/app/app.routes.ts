@@ -35,11 +35,11 @@ export const routes: Routes = [
     },
     {
         path: 'tables',
-        loadChildren: () => import('./tables/tables.module').then(m => m.TablesModule)
+        loadChildren: () => import('./tables/tables.routes').then(m => m.routes)
     },
     {
         path: 'dashboard',
-        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
+        loadChildren: () => import('./dashboard/dashboard.routes').then(m => m.routes)
     },
     {
         path: 'rooms',

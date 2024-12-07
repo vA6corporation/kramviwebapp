@@ -5,10 +5,14 @@ import { Chart, ChartOptions, ChartType, registerables } from 'chart.js';
 import { PurchaseSuppliesService } from '../../purchase-supplies/purchase-supplies.service';
 import { Subscription } from 'rxjs';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 Chart.register(...registerables);
 
 @Component({
     selector: 'app-expenses',
+    standalone: true,
+    imports: [MaterialModule, CommonModule],
     templateUrl: './expenses.component.html',
     styleUrls: ['./expenses.component.sass']
 })

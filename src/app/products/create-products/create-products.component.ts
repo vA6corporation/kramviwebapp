@@ -92,7 +92,6 @@ export class CreateProductsComponent {
     private handleAuth$: Subscription = new Subscription()
     private handlePriceLists$: Subscription = new Subscription()
     private handleOfficesByActivity$: Subscription = new Subscription()
-    private handleSaveCategory$: Subscription = new Subscription()
     private handlePaymentMethods$: Subscription = new Subscription()
 
     ngOnDestroy() {
@@ -100,7 +99,6 @@ export class CreateProductsComponent {
         this.handleAuth$.unsubscribe()
         this.handlePriceLists$.unsubscribe()
         this.handleOfficesByActivity$.unsubscribe()
-        this.handleSaveCategory$.unsubscribe()
         this.handlePaymentMethods$.unsubscribe()
     }
 
@@ -187,7 +185,6 @@ export class CreateProductsComponent {
         const dialogRef = this.matDialog.open(DialogAnnotationsComponent, {
             width: '600px',
             position: { top: '20px' },
-            // data: index,
         })
 
         dialogRef.afterClosed().subscribe(annotation => {
@@ -203,20 +200,24 @@ export class CreateProductsComponent {
             position: { top: '20px' },
         })
 
-        this.handleSaveCategory$ = dialogRef.componentInstance.handleSaveCategory().subscribe(name => {
-            this.isLoading = true
-            this.navigationService.loadBarStart()
-            this.categoriesService.create(name).subscribe(category => {
-                this.isLoading = false
-                this.navigationService.showMessage('Registrado correctamente')
-                this.navigationService.loadBarFinish()
-                this.categoriesService.loadCategories()
-                this.formGroup.patchValue({ categoryId: category._id })
-            }, (error: HttpErrorResponse) => {
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
-                this.navigationService.showMessage(error.error.message)
-            })
+        dialogRef.afterClosed().subscribe(category => {
+            if (category) {
+                this.isLoading = true
+                this.navigationService.loadBarStart()
+                this.categoriesService.create(category).subscribe({
+                    next: category => {
+                        this.isLoading = false
+                        this.navigationService.showMessage('Registrado correctamente')
+                        this.navigationService.loadBarFinish()
+                        this.categoriesService.loadCategories()
+                        this.formGroup.patchValue({ categoryId: category._id })
+                    }, error: (error: HttpErrorResponse) => {
+                        this.isLoading = false
+                        this.navigationService.loadBarFinish()
+                        this.navigationService.showMessage(error.error.message)
+                    }
+                })
+            }
         })
     }
 

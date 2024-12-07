@@ -3,9 +3,14 @@ import { PageEvent } from '@angular/material/paginator';
 import { NavigationService } from '../../navigation/navigation.service';
 import { TableModel } from '../table.model';
 import { TablesService } from '../tables.service';
+import { MaterialModule } from '../../material.module';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-tables',
+    standalone: true,
+    imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './tables.component.html',
     styleUrls: ['./tables.component.sass']
 })

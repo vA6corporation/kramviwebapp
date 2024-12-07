@@ -1,12 +1,15 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
 import { TablesService } from '../tables.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-create-tables',
+    standalone: true,
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule],
     templateUrl: './create-tables.component.html',
     styleUrls: ['./create-tables.component.sass']
 })
