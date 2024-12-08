@@ -29,7 +29,6 @@ import { DialogCouponsComponent } from '../../coupons/dialog-coupons/dialog-coup
 
 @Component({
     selector: 'app-pos-standard',
-    standalone: true,
     imports: [MaterialModule, CommonModule, RouterModule, SaleItemsComponent],
     templateUrl: './pos-standard.component.html',
     styleUrls: ['./pos-standard.component.sass']

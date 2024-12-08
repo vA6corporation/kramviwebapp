@@ -12,11 +12,14 @@ import { OfficeModel } from '../../auth/office.model';
 import { Subscription } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { MaterialModule } from '../../material.module';
+import { MoveItemsComponent } from '../move-items/move-items.component';
 
 @Component({
     selector: 'app-pos-edit-moves',
+    imports: [MaterialModule, MoveItemsComponent],
     templateUrl: './pos-edit-moves.component.html',
-    styleUrls: ['./pos-edit-moves.component.sass']
+    styleUrls: ['./pos-edit-moves.component.sass'],
 })
 export class PosEditMovesComponent {
 

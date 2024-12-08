@@ -20,7 +20,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-dialog-detail-sales',
-    standalone: true,
     imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './dialog-detail-sales.component.html',
     styleUrls: ['./dialog-detail-sales.component.sass']

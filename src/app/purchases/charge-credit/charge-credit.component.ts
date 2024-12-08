@@ -32,7 +32,6 @@ interface FormData {
 
 @Component({
     selector: 'app-charge-credit',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, PurchaseItemsComponent],
     templateUrl: './charge-credit.component.html',
     styleUrls: ['./charge-credit.component.sass']

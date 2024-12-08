@@ -16,7 +16,6 @@ Chart.register(...registerables);
 
 @Component({
     selector: 'app-supplies-in',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './supplies-in.component.html',
     styleUrls: ['./supplies-in.component.sass']

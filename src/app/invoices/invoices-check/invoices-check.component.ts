@@ -35,7 +35,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-invoices-check',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './invoices-check.component.html',
     styleUrls: ['./invoices-check.component.sass']

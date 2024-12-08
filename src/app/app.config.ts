@@ -7,10 +7,12 @@ import localePe from '@angular/common/locales/es-PE';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { routes } from './app.routes';
+import { CanActivateTeam } from './auth/can-activate-team';
 registerLocaleData(localePe, 'es-PE');
 
 export const appConfig: ApplicationConfig = {
     providers: [
+        CanActivateTeam,
         { provide: MAT_DATE_LOCALE, useValue: 'es-PE' },
         { provide: LOCALE_ID, useValue: 'es-PE' },
         provideZoneChangeDetection({ eventCoalescing: true }),

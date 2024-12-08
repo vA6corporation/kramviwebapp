@@ -6,7 +6,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-credit-expiration',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-credit-expiration.component.html',
     styleUrls: ['./dialog-credit-expiration.component.sass']

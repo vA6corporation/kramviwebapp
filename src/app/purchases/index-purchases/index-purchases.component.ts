@@ -7,7 +7,6 @@ import { CreditPurchasesComponent } from '../credit-purchases/credit-purchases.c
 
 @Component({
     selector: 'app-index-purchases',
-    standalone: true,
     imports: [MaterialModule, PurchasesComponent, CreditPurchasesComponent, PaymentPurchasesComponent],
     templateUrl: './index-purchases.component.html',
     styleUrls: ['./index-purchases.component.sass']

@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -11,6 +11,8 @@ import { CreateIncidentItemModel } from '../create-incident-item.model';
 import { CreateIncidentModel } from '../create-incident.model';
 import { IncidentsService } from '../incidents.service';
 import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component';
+import { MaterialModule } from '../../material.module';
+import { IncidentItemsComponent } from '../incident-items/incident-items.component';
 
 interface FormData {
     incidentType: any,
@@ -19,8 +21,9 @@ interface FormData {
 
 @Component({
     selector: 'app-charge-incidents',
+    imports: [MaterialModule, IncidentItemsComponent, ReactiveFormsModule],
     templateUrl: './charge-incidents.component.html',
-    styleUrls: ['./charge-incidents.component.sass']
+    styleUrls: ['./charge-incidents.component.sass'],
 })
 export class ChargeIncidentsComponent {
 

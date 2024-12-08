@@ -16,7 +16,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-payed-credits',
-    standalone: true,
     imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './payed-credits.component.html',
     styleUrls: ['./payed-credits.component.sass']

@@ -7,11 +7,10 @@ import { DetractionForm } from '../detraction.form';
 import { DetractionModel } from '../detraction.model';
 
 @Component({
-  selector: 'app-dialog-detraction',
-  standalone: true,
-  imports: [MaterialModule, ReactiveFormsModule, CommonModule],
-  templateUrl: './dialog-detraction.component.html',
-  styleUrl: './dialog-detraction.component.sass'
+    selector: 'app-dialog-detraction',
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
+    templateUrl: './dialog-detraction.component.html',
+    styleUrl: './dialog-detraction.component.sass'
 })
 export class DialogDetractionComponent {
 

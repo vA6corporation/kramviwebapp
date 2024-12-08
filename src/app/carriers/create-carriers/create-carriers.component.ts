@@ -1,14 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CarriersService } from '../carriers.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-create-carriers',
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule],
     templateUrl: './create-carriers.component.html',
-    styleUrls: ['./create-carriers.component.sass']
+    styleUrls: ['./create-carriers.component.sass'],
 })
 export class CreateCarriersComponent {
 

@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-disabled-users',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './disabled-users.component.html',
     styleUrls: ['./disabled-users.component.sass']

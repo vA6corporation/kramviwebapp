@@ -1,14 +1,17 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
 import { OfficesService } from '../offices.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-create-offices',
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './create-offices.component.html',
-    styleUrls: ['./create-offices.component.sass']
+    styleUrls: ['./create-offices.component.sass'],
 })
 export class CreateOfficesComponent {
 

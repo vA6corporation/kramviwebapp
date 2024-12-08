@@ -1,14 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CarriersService } from '../carriers.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-edit-carriers',
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './edit-carriers.component.html',
-    styleUrls: ['./edit-carriers.component.sass']
+    styleUrls: ['./edit-carriers.component.sass'],
 })
 export class EditCarriersComponent {
 
@@ -69,16 +71,17 @@ export class EditCarriersComponent {
         if (this.formGroup.valid) {
             this.isLoading = true
             this.navigationService.loadBarStart()
-            this.carriersService.update(this.formGroup.value, this.carrierId).subscribe(res => {
-                console.log(res)
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
-                this.router.navigate(['/carriers'])
-                this.navigationService.showMessage('Registrado correctamente')
-            }, (error: HttpErrorResponse) => {
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
-                this.navigationService.showMessage(error.error.message)
+            this.carriersService.update(this.formGroup.value, this.carrierId).subscribe({
+                next: () => {
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.router.navigate(['/carriers'])
+                    this.navigationService.showMessage('Registrado correctamente')
+                }, error: (error: HttpErrorResponse) => {
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage(error.error.message)
+                }
             })
         }
     }

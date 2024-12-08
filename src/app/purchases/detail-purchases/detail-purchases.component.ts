@@ -21,7 +21,6 @@ import { DialogEditPaymentPurchasesComponent } from '../../payment-purchases/dia
 
 @Component({
     selector: 'app-detail-purchases',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './detail-purchases.component.html',
     styleUrl: './detail-purchases.component.sass'

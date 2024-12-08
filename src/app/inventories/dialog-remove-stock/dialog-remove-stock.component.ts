@@ -9,7 +9,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-remove-stock',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-remove-stock.component.html',
     styleUrls: ['./dialog-remove-stock.component.sass']

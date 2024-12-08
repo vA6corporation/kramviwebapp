@@ -1,13 +1,12 @@
-import { formatDate } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
+import { CommonModule, formatDate } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Subscription, lastValueFrom } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
-import { BusinessModel } from '../../auth/business.model';
 import { OfficeModel } from '../../auth/office.model';
 import { buildExcel } from '../../buildExcel';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -18,13 +17,14 @@ import { UsersService } from '../../users/users.service';
 import { DialogDetailRemissionGuidesComponent } from '../dialog-detail-remission-guides/dialog-detail-remission-guides.component';
 import { RemissionGuideModel } from '../remission-guide.model';
 import { RemissionGuidesService } from '../remission-guides.service';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { SheetRemissionGuidesComponent } from '../sheet-remission-guides/sheet-remission-guides.component';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-remission-guides',
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './remission-guides.component.html',
-    styleUrls: ['./remission-guides.component.sass']
+    styleUrls: ['./remission-guides.component.sass'],
 })
 export class RemissionGuidesComponent {
 

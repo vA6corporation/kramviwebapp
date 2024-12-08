@@ -1,3 +1,3 @@
 export interface ActivityModel {
-  name: string
+    name: string
 }

@@ -1,7 +1,7 @@
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -19,6 +19,8 @@ import { CreateEventModel } from '../create-event.model';
 import { EventsService } from '../events.service';
 import { SpecialtyModel } from '../specialty.model';
 import { DialogSearchCustomersComponent } from '../../customers/dialog-search-customers/dialog-search-customers.component';
+import { MaterialModule } from '../../material.module';
+import { EventItemsComponent } from '../event-items/event-items.component';
 
 interface FormData {
     hours: any,
@@ -33,8 +35,9 @@ interface FormData {
 
 @Component({
     selector: 'app-edit-events',
+    imports: [MaterialModule, ReactiveFormsModule, EventItemsComponent, CommonModule],
     templateUrl: './edit-events.component.html',
-    styleUrls: ['./edit-events.component.sass']
+    styleUrls: ['./edit-events.component.sass'],
 })
 export class EditEventsComponent {
 

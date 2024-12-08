@@ -15,7 +15,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-workers',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './workers.component.html',
     styleUrls: ['./workers.component.sass']

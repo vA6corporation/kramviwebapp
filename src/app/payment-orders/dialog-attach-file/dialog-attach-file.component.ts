@@ -4,7 +4,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-attach-file',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './dialog-attach-file.component.html',
     styleUrls: ['./dialog-attach-file.component.sass']

@@ -51,16 +51,15 @@ export const routes: Routes = [
     },
     {
         path: 'favorites',
-        loadChildren: () => import('./favorites/favorites.module').then(m => m.FavoritesModule)
+        loadChildren: () => import('./favorites/favorites.routes').then(m => m.routes)
     },
-
     {
         path: 'posCopy',
-        loadChildren: () => import('./pos-copy/pos-copy.module').then(m => m.PosCopyModule)
+        loadChildren: () => import('./pos-copy/pos-copy.routes').then(m => m.routes)
     },
     {
         path: 'posFastFood',
-        loadChildren: () => import('./pos-fast-food/pos-fast-food.module').then(m => m.PosFastFoodModule)
+        loadChildren: () => import('./pos-fast-food/pos-fast-food.routes').then(m => m.routes)
     },
     {
         path: 'credits',
@@ -68,7 +67,7 @@ export const routes: Routes = [
     },
     {
         path: 'promotions',
-        loadChildren: () => import('./promotions/promotions.module').then(m => m.PromotionsModule)
+        loadChildren: () => import('./promotions/promotions.routes').then(m => m.routes)
     },
     {
         path: 'coupons',
@@ -88,15 +87,11 @@ export const routes: Routes = [
     },
     {
         path: 'incidents',
-        loadChildren: () => import('./incidents/incidents.module').then(m => m.IncidentsModule)
-    },
-    {
-        path: 'incidentSupplies',
-        loadChildren: () => import('./incident-supplies/incident-supplies.module').then(m => m.IncidentSuppliesModule)
+        loadChildren: () => import('./incidents/incidents.routes').then(m => m.routes)
     },
     {
         path: 'moves',
-        loadChildren: () => import('./moves/moves.module').then(m => m.MovesModule)
+        loadChildren: () => import('./moves/moves.routes').then(m => m.routes)
     },
     {
         path: 'customers',
@@ -104,7 +99,7 @@ export const routes: Routes = [
     },
     {
         path: 'events',
-        loadChildren: () => import('./events/events.module').then(m => m.EventsModule)
+        loadChildren: () => import('./events/events.routes').then(m => m.routes)
     },
     {
         path: 'users',
@@ -120,7 +115,7 @@ export const routes: Routes = [
     },
     {
         path: 'carriers',
-        loadChildren: () => import('./carriers/carriers.module').then(m => m.CarriersModule)
+        loadChildren: () => import('./carriers/carriers.routes').then(m => m.routes)
     },
     {
         path: 'creditNotes',
@@ -128,7 +123,7 @@ export const routes: Routes = [
     },
     {
         path: 'remissionGuides',
-        loadChildren: () => import('./remission-guides/remission-guides.module').then(m => m.RemissionGuidesModule)
+        loadChildren: () => import('./remission-guides/remission-guides.routes').then(m => m.routes)
     },
     {
         path: 'settings',
@@ -136,11 +131,11 @@ export const routes: Routes = [
     },
     {
         path: 'expenses',
-        loadChildren: () => import('./expenses/expenses.module').then(m => m.ExpensesModule)
+        loadChildren: () => import('./expenses/expenses.routes').then(m => m.routes)
     },
     {
         path: 'recipes',
-        loadChildren: () => import('./recipes/recipes.module').then(m => m.RecipesModule)
+        loadChildren: () => import('./recipes/recipes.routes').then(m => m.routes)
     },
     {
         path: 'supplies',
@@ -156,7 +151,7 @@ export const routes: Routes = [
     },
     {
         path: 'purchaseSupplies',
-        loadChildren: () => import('./purchase-supplies/purchase-supplies.module').then(m => m.PurchaseSuppliesModule)
+        loadChildren: () => import('./purchase-supplies/purchase-supplies.routes').then(m => m.routes)
     },
     {
         path: 'providers',
@@ -164,15 +159,15 @@ export const routes: Routes = [
     },
     {
         path: 'printers',
-        loadChildren: () => import('./printers/printers.module').then(m => m.PrintersModule)
+        loadChildren: () => import('./printers/printers.routes').then(m => m.routes)
     },
     {
         path: 'events',
-        loadChildren: () => import('./events/events.module').then(m => m.EventsModule)
+        loadChildren: () => import('./events/events.routes').then(m => m.routes)
     },
     {
         path: 'specialties',
-        loadChildren: () => import('./specialties/specialties.module').then(m => m.SpecialtiesModule)
+        loadChildren: () => import('./specialties/specialties.routes').then(m => m.routes)
     },
     {
         path: 'workers',
@@ -180,7 +175,7 @@ export const routes: Routes = [
     },
     {
         path: 'subscription',
-        loadChildren: () => import('./subscription/subscription.module').then(m => m.SubscriptionModule)
+        loadChildren: () => import('./subscription/subscription.routes').then(m => m.routes)
     },
     {
         path: 'patients',
@@ -192,7 +187,7 @@ export const routes: Routes = [
     },
     {
         path: 'offices',
-        loadChildren: () => import('./offices/offices.module').then(m => m.OfficesModule)
+        loadChildren: () => import('./offices/offices.routes').then(m => m.routes)
     },
     {
         path: 'tools',
@@ -220,14 +215,14 @@ export const routes: Routes = [
     },
     {
         path: 'activities',
-        loadChildren: () => import('./activities/activities.module').then(m => m.ActivitiesModule)
+        loadChildren: () => import('./activities/activities.routes').then(m => m.routes)
     },
     {
         path: 'paymentMethods',
-        loadChildren: () => import('./payment-methods/payment-methods.module').then(m => m.PaymentMethodsModule)
+        loadChildren: () => import('./payment-methods/payment-methods.routes').then(m => m.routes)
     },
     {
         path: 'deliveries',
-        loadChildren: () => import('./deliveries/deliveries.module').then(m => m.DeliveriesModule)
+        loadChildren: () => import('./deliveries/deliveries.routes').then(m => m.routes)
     },
 ];

@@ -5,7 +5,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-create-categories',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-create-categories.component.html',
     styleUrls: ['./dialog-create-categories.component.sass']

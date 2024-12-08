@@ -6,11 +6,10 @@ import { PrintService } from '../../print/print.service';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 
 @Component({
-  selector: 'app-sheet-purchase-orders',
-  standalone: true,
-  imports: [MaterialModule],
-  templateUrl: './sheet-purchase-orders.component.html',
-  styleUrl: './sheet-purchase-orders.component.sass'
+    selector: 'app-sheet-purchase-orders',
+    imports: [MaterialModule],
+    templateUrl: './sheet-purchase-orders.component.html',
+    styleUrl: './sheet-purchase-orders.component.sass'
 })
 export class SheetPurchaseOrdersComponent {
 

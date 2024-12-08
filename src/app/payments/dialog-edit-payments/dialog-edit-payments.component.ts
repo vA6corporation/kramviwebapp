@@ -9,7 +9,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-edit-payments',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-edit-payments.component.html',
     styleUrls: ['./dialog-edit-payments.component.sass']

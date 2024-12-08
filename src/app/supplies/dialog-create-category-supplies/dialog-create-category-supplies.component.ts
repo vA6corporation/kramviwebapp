@@ -10,7 +10,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-create-category-supplies',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-create-category-supplies.component.html',
     styleUrls: ['./dialog-create-category-supplies.component.sass']

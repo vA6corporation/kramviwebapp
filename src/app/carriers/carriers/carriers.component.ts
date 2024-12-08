@@ -1,16 +1,19 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CarrierModel } from '../carrier.model';
 import { CarriersService } from '../carriers.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-carriers',
+    imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './carriers.component.html',
-    styleUrls: ['./carriers.component.sass']
+    styleUrls: ['./carriers.component.sass'],
 })
 export class CarriersComponent {
 

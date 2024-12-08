@@ -24,7 +24,6 @@ import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-create-proformas',
-    standalone: true,
     imports: [MaterialModule, CommonModule, RouterModule, ProformaItemsComponent],
     templateUrl: './create-proformas.component.html',
     styleUrls: ['./create-proformas.component.sass']

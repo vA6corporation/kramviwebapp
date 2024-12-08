@@ -10,7 +10,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-credit-note-items',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-credit-note-items.component.html',
     styleUrls: ['./dialog-credit-note-items.component.sass']

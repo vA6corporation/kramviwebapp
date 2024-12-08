@@ -10,7 +10,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-add-product',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-add-product.component.html',
     styleUrls: ['./dialog-add-product.component.sass']

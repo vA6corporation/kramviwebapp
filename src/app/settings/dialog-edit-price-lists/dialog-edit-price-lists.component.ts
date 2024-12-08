@@ -14,7 +14,6 @@ export interface DialogEditPriceListsData {
 
 @Component({
     selector: 'app-dialog-edit-price-lists',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-edit-price-lists.component.html',
     styleUrls: ['./dialog-edit-price-lists.component.sass']

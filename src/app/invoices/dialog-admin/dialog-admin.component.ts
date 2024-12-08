@@ -27,7 +27,6 @@ export interface DialogAdminData {
 
 @Component({
     selector: 'app-dialog-admin',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './dialog-admin.component.html',
     styleUrls: ['./dialog-admin.component.sass']

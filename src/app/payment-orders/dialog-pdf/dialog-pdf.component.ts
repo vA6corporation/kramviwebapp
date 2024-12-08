@@ -5,7 +5,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-pdf',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './dialog-pdf.component.html',
     styleUrls: ['./dialog-pdf.component.sass']

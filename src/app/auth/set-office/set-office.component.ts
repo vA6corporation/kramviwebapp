@@ -11,7 +11,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-set-office',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './set-office.component.html',
     styleUrls: ['./set-office.component.sass']

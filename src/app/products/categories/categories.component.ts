@@ -14,7 +14,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-categories',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './categories.component.html',
     styleUrls: ['./categories.component.sass']

@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
@@ -10,11 +10,14 @@ import { DialogDetailSalesComponent } from '../../invoices/dialog-detail-sales/d
 import { NavigationService } from '../../navigation/navigation.service';
 import { SaleModel } from '../../sales/sale.model';
 import { SalesService } from '../../sales/sales.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-deliveries',
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './deliveries.component.html',
-    styleUrls: ['./deliveries.component.sass']
+    styleUrls: ['./deliveries.component.sass'],
 })
 export class DeliveriesComponent {
 

@@ -10,11 +10,10 @@ import { CouponsService } from '../coupons.service';
 import { DialogCouponItemsComponent } from '../dialog-coupon-items/dialog-coupon-items.component';
 
 @Component({
-  selector: 'app-coupons',
-  standalone: true,
-  imports: [MaterialModule, RouterModule, CommonModule],
-  templateUrl: './coupons.component.html',
-  styleUrl: './coupons.component.sass'
+    selector: 'app-coupons',
+    imports: [MaterialModule, RouterModule, CommonModule],
+    templateUrl: './coupons.component.html',
+    styleUrl: './coupons.component.sass'
 })
 export class CouponsComponent {
 

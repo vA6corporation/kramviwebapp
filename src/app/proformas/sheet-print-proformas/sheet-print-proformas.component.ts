@@ -8,7 +8,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-sheet-print-proformas',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './sheet-print-proformas.component.html',
     styleUrls: ['./sheet-print-proformas.component.sass']

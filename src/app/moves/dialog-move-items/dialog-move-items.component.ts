@@ -1,13 +1,15 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MovesService } from '../moves.service';
 import { CreateMoveItemModel } from '../create-move-item.model';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-move-items',
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-move-items.component.html',
-    styleUrls: ['./dialog-move-items.component.sass']
+    styleUrls: ['./dialog-move-items.component.sass'],
 })
 export class DialogMoveItemsComponent {
 

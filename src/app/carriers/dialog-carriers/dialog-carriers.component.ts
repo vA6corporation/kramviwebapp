@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -8,11 +8,14 @@ import { SettingModel } from '../../auth/setting.model';
 import { CarrierModel } from '../../carriers/carrier.model';
 import { CarriersService } from '../../carriers/carriers.service';
 import { NavigationService } from '../../navigation/navigation.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-dialog-carriers',
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './dialog-carriers.component.html',
-    styleUrls: ['./dialog-carriers.component.sass']
+    styleUrls: ['./dialog-carriers.component.sass'],
 })
 export class DialogCarriersComponent {
 

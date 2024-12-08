@@ -32,7 +32,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-open-turn',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './open-turn.component.html',
     styleUrls: ['./open-turn.component.sass']

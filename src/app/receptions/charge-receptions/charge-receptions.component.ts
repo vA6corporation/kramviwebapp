@@ -35,7 +35,6 @@ import { ReceptionsService } from '../receptions.service';
 
 @Component({
     selector: 'app-charge-receptions',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, DirectivesModule, SaleItemsComponent],
     templateUrl: './charge-receptions.component.html',
     styleUrls: ['./charge-receptions.component.sass']

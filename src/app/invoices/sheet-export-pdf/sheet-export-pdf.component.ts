@@ -6,7 +6,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-sheet-export-pdf',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './sheet-export-pdf.component.html',
     styleUrls: ['./sheet-export-pdf.component.sass']

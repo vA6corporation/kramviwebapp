@@ -11,7 +11,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-update-prices',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './update-prices.component.html',
     styleUrls: ['./update-prices.component.sass']

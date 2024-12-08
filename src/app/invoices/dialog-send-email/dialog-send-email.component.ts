@@ -8,7 +8,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-send-email',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-send-email.component.html',
     styleUrls: ['./dialog-send-email.component.sass']

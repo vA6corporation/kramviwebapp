@@ -9,7 +9,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-tables',
-    standalone: true,
     imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './tables.component.html',
     styleUrls: ['./tables.component.sass']

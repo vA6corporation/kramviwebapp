@@ -18,11 +18,10 @@ import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
 
 @Component({
-  selector: 'app-boards',
-  standalone: true,
-  imports: [MaterialModule, CommonModule, ReactiveFormsModule],
-  templateUrl: './boards.component.html',
-  styleUrl: './boards.component.sass'
+    selector: 'app-boards',
+    imports: [MaterialModule, CommonModule, ReactiveFormsModule],
+    templateUrl: './boards.component.html',
+    styleUrl: './boards.component.sass'
 })
 export class BoardsComponent {
 

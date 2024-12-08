@@ -10,11 +10,14 @@ import { CategoryModel } from '../../products/category.model';
 import { ProductModel } from '../../products/product.model';
 import { ProductsService } from '../../products/products.service';
 import { IncidentsService } from '../incidents.service';
+import { MaterialModule } from '../../material.module';
+import { IncidentItemsComponent } from '../incident-items/incident-items.component';
 
 @Component({
     selector: 'app-create-incidents',
+    imports: [MaterialModule, IncidentItemsComponent],
     templateUrl: './create-incidents.component.html',
-    styleUrls: ['./create-incidents.component.sass']
+    styleUrls: ['./create-incidents.component.sass'],
 })
 export class CreateIncidentsComponent {
 

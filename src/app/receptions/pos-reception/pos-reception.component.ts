@@ -19,7 +19,6 @@ import { SalesService } from '../../sales/sales.service';
 
 @Component({
     selector: 'app-pos-reception',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './pos-reception.component.html',
     styleUrls: ['./pos-reception.component.sass']

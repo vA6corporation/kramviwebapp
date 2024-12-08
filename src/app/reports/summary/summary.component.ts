@@ -17,7 +17,6 @@ export interface Section {
 
 @Component({
     selector: 'app-summary',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './summary.component.html',
     styleUrls: ['./summary.component.sass']

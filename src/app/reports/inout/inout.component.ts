@@ -15,7 +15,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-inout',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './inout.component.html',
     styleUrls: ['./inout.component.sass']

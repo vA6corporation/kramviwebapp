@@ -10,11 +10,14 @@ import { SuppliesService } from '../../supplies/supplies.service';
 import { SupplyModel } from '../../supplies/supply.model';
 import { PurchaseSuppliesService } from '../purchase-supplies.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MaterialModule } from '../../material.module';
+import { PurchaseSupplyItemsComponent } from '../purchase-supply-items/purchase-supply-items.component';
 
 @Component({
     selector: 'app-create-purchase-supplies',
+    imports: [MaterialModule, PurchaseSupplyItemsComponent],
     templateUrl: './create-purchase-supplies.component.html',
-    styleUrls: ['./create-purchase-supplies.component.sass']
+    styleUrls: ['./create-purchase-supplies.component.sass'],
 })
 export class CreatePurchaseSuppliesComponent {
 

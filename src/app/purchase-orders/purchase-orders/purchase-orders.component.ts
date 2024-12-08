@@ -18,7 +18,6 @@ import { SheetPurchaseOrdersComponent } from '../sheet-purchase-orders/sheet-pur
 
 @Component({
     selector: 'app-purchase-orders',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './purchase-orders.component.html',
     styleUrls: ['./purchase-orders.component.sass']

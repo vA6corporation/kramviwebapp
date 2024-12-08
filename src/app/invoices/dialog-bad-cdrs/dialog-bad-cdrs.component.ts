@@ -8,7 +8,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-bad-cdrs',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './dialog-bad-cdrs.component.html',
     styleUrls: ['./dialog-bad-cdrs.component.sass']

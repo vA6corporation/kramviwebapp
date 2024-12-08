@@ -17,7 +17,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-disabled-products',
-    standalone: true,
     imports: [MaterialModule, CommonModule, RouterModule],
     templateUrl: './disabled-products.component.html',
     styleUrls: ['./disabled-products.component.sass']

@@ -14,7 +14,6 @@ import { ProductModel } from '../../products/product.model';
 
 @Component({
     selector: 'app-dialog-move-stock',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './dialog-move-stock.component.html',
     styleUrls: ['./dialog-move-stock.component.sass']

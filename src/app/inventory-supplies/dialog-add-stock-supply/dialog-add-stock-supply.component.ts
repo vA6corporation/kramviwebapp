@@ -8,7 +8,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-add-stock-supply',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-add-stock-supply.component.html',
     styleUrls: ['./dialog-add-stock-supply.component.sass']

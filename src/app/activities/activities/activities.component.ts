@@ -3,11 +3,15 @@ import { Component } from '@angular/core';
 import { NavigationService } from '../../navigation/navigation.service';
 import { ActivitiesService } from '../activities.service';
 import { ActivityModel } from '../activity.model';
+import { MaterialModule } from '../../material.module';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-activities',
+    imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './activities.component.html',
-    styleUrls: ['./activities.component.sass']
+    styleUrls: ['./activities.component.sass'],
 })
 export class ActivitiesComponent {
 

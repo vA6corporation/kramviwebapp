@@ -3,11 +3,14 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { OfficesService } from '../offices.service';
 import { OfficeModel } from '../../auth/office.model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-disabled-offices',
+    imports: [MaterialModule, CommonModule],
     templateUrl: './disabled-offices.component.html',
-    styleUrls: ['./disabled-offices.component.sass']
+    styleUrls: ['./disabled-offices.component.sass'],
 })
 export class DisabledOfficesComponent {
 

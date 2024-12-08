@@ -8,7 +8,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-edit-tables',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule],
     templateUrl: './edit-tables.component.html',
     styleUrls: ['./edit-tables.component.sass']

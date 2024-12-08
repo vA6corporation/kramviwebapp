@@ -14,7 +14,6 @@ import { PaymentsService } from '../payments.service';
 
 @Component({
     selector: 'app-turn-payments',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './turn-payments.component.html',
     styleUrls: ['./turn-payments.component.sass']

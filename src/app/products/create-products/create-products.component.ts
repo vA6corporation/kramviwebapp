@@ -30,7 +30,6 @@ import { DialogSearchProvidersComponent } from '../../providers/dialog-search-pr
 
 @Component({
     selector: 'app-create-products',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './create-products.component.html',
     styleUrls: ['./create-products.component.sass']

@@ -6,11 +6,15 @@ import { OfficeModel } from '../../auth/office.model';
 import { NavigationService } from '../../navigation/navigation.service';
 import { PromotionModel } from '../promotion.model';
 import { PromotionsService } from '../promotions.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-promotions',
+    imports: [MaterialModule, CommonModule, RouterModule],
     templateUrl: './promotions.component.html',
-    styleUrls: ['./promotions.component.sass']
+    styleUrls: ['./promotions.component.sass'],
 })
 export class PromotionsComponent {
 

@@ -23,7 +23,6 @@ import { ProformaItemsComponent } from '../proforma-items/proforma-items.compone
 
 @Component({
     selector: 'app-edit-proformas',
-    standalone: true,
     imports: [MaterialModule, RouterModule, CommonModule, ProformaItemsComponent],
     templateUrl: './edit-proformas.component.html',
     styleUrls: ['./edit-proformas.component.sass']

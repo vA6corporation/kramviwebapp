@@ -26,7 +26,6 @@ import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component'
 
 @Component({
     selector: 'app-pos-pre-sales-edit',
-    standalone: true,
     imports: [MaterialModule, CommonModule, RouterModule, SaleItemsComponent],
     templateUrl: './pos-pre-sales-edit.component.html',
     styleUrls: ['./pos-pre-sales-edit.component.sass']

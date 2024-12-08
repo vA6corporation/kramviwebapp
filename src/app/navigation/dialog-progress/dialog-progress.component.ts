@@ -5,7 +5,8 @@ import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 @Component({
     selector: 'app-dialog-progress',
     templateUrl: './dialog-progress.component.html',
-    styleUrls: ['./dialog-progress.component.sass']
+    styleUrls: ['./dialog-progress.component.sass'],
+    standalone: false
 })
 export class DialogProgressComponent {
 

@@ -40,7 +40,6 @@ import { DetractionModel } from '../detraction.model';
 
 @Component({
     selector: 'app-create-biller',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, BillerItemsComponent, DirectivesModule],
     templateUrl: './create-biller.component.html',
     styleUrls: ['./create-biller.component.sass']

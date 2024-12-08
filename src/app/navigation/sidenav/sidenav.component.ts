@@ -7,9 +7,10 @@ import { OfficeModel } from '../../auth/office.model';
 import { UserModel } from '../../users/user.model';
 
 @Component({
-  selector: 'app-sidenav',
-  templateUrl: './sidenav.component.html',
-  styleUrl: './sidenav.component.sass'
+    selector: 'app-sidenav',
+    templateUrl: './sidenav.component.html',
+    styleUrl: './sidenav.component.sass',
+    standalone: false
 })
 export class SidenavComponent {
     

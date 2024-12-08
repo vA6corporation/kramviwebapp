@@ -14,7 +14,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-payment-credits',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-payment-credits.component.html',
     styleUrls: ['./dialog-payment-credits.component.sass']

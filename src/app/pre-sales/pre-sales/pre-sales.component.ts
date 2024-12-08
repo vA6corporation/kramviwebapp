@@ -10,7 +10,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-pre-sales',
-    standalone: true,
     imports: [MaterialModule, CommonModule, RouterModule],
     templateUrl: './pre-sales.component.html',
     styleUrls: ['./pre-sales.component.sass']

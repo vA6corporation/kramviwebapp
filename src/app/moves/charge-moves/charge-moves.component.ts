@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -12,6 +12,9 @@ import { ProviderModel } from '../../providers/provider.model';
 import { CreateMoveItemModel } from '../create-move-item.model';
 import { CreateMoveModel } from '../create-move.model';
 import { MovesService } from '../moves.service';
+import { MaterialModule } from '../../material.module';
+import { MoveItemsComponent } from '../move-items/move-items.component';
+import { CommonModule } from '@angular/common';
 
 interface FormData {
     toOfficeId: any,
@@ -20,8 +23,9 @@ interface FormData {
 
 @Component({
     selector: 'app-charge-moves',
+    imports: [MaterialModule, MoveItemsComponent, ReactiveFormsModule, CommonModule],
     templateUrl: './charge-moves.component.html',
-    styleUrls: ['./charge-moves.component.sass']
+    styleUrls: ['./charge-moves.component.sass'],
 })
 export class ChargeMovesComponent {
 

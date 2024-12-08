@@ -22,7 +22,6 @@ import { PurchaseItemsComponent } from '../purchase-items/purchase-items.compone
 
 @Component({
     selector: 'app-edit-purchases',
-    standalone: true,
     imports: [MaterialModule, RouterModule, CommonModule, PurchaseItemsComponent],
     templateUrl: './edit-purchases.component.html',
     styleUrls: ['./edit-purchases.component.sass']

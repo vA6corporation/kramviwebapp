@@ -16,7 +16,6 @@ interface UserModel {
 
 @Component({
     selector: 'app-login',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.sass']

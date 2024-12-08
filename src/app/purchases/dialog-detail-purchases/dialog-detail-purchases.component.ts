@@ -15,7 +15,6 @@ import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-dialog-detail-purchases',
-    standalone: true,
     imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './dialog-detail-purchases.component.html',
     styleUrls: ['./dialog-detail-purchases.component.sass']

@@ -4,11 +4,13 @@ import { Subscription } from 'rxjs';
 import { CreateMoveItemModel } from '../create-move-item.model';
 import { DialogMoveItemsComponent } from '../dialog-move-items/dialog-move-items.component';
 import { MovesService } from '../moves.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-move-items',
+    imports: [MaterialModule],
     templateUrl: './move-items.component.html',
-    styleUrls: ['./move-items.component.sass']
+    styleUrls: ['./move-items.component.sass'],
 })
 export class MoveItemsComponent {
 

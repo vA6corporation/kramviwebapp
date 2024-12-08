@@ -10,7 +10,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-providers',
-    standalone: true,
     imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './providers.component.html',
     styleUrls: ['./providers.component.sass']

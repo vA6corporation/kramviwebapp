@@ -1,16 +1,18 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { SettingModel } from '../../auth/setting.model';
 import { RemissionGuideItemModel } from '../remission-guide-item.model';
 import { RemissionGuidesService } from '../remission-guides.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-remission-guide-items',
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-remission-guide-items.component.html',
-    styleUrls: ['./dialog-remission-guide-items.component.sass']
+    styleUrls: ['./dialog-remission-guide-items.component.sass'],
 })
 export class DialogRemissionGuideItemsComponent {
 

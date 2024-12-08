@@ -9,7 +9,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-credit-note-items',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './credit-note-items.component.html',
     styleUrls: ['./credit-note-items.component.sass']

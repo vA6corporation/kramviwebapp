@@ -15,7 +15,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-create-supplies',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './create-supplies.component.html',
     styleUrls: ['./create-supplies.component.sass']

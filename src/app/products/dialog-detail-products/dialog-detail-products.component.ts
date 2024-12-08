@@ -8,7 +8,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-detail-products',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './dialog-detail-products.component.html',
     styleUrls: ['./dialog-detail-products.component.sass']

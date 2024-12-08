@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-dialog-version-boards',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './dialog-version-boards.component.html',
     styleUrls: ['./dialog-version-boards.component.sass']

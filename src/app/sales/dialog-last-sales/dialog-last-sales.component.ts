@@ -13,7 +13,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-last-sales',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './dialog-last-sales.component.html',
     styleUrls: ['./dialog-last-sales.component.sass']

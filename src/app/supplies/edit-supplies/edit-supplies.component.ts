@@ -15,7 +15,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-edit-supplies',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './edit-supplies.component.html',
     styleUrls: ['./edit-supplies.component.sass']

@@ -6,7 +6,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-sheet-print-barcodes',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './sheet-print-barcodes.component.html',
     styleUrls: ['./sheet-print-barcodes.component.sass']

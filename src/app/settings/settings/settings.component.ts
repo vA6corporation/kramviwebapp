@@ -24,7 +24,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-settings',
-    standalone: true,
     imports: [MaterialModule, RouterModule, ReactiveFormsModule, CommonModule],
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.sass']

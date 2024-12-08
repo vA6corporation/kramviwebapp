@@ -9,7 +9,6 @@ import { NavigationService } from '../../navigation/navigation.service';
 
 @Component({
     selector: 'app-dialog-edit-categories',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-edit-categories.component.html',
     styleUrls: ['./dialog-edit-categories.component.sass']

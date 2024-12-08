@@ -12,11 +12,13 @@ import { SupplyModel } from '../../supplies/supply.model';
 import { SuppliesService } from '../../supplies/supplies.service';
 import { CategorySuppliesService } from '../../supplies/category-supplies.service';
 import { CategorySupplyModel } from '../../supplies/category-supply.model';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-edit-recipes',
+    imports: [MaterialModule],
     templateUrl: './edit-recipes.component.html',
-    styleUrls: ['./edit-recipes.component.sass']
+    styleUrls: ['./edit-recipes.component.sass'],
 })
 export class EditRecipesComponent {
 

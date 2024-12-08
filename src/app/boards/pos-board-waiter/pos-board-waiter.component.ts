@@ -30,7 +30,6 @@ import { BoardItemsComponent } from '../board-items/board-items.component';
 
 @Component({
     selector: 'app-pos-board-waiter',
-    standalone: true,
     imports: [MaterialModule, CommonModule, BoardItemsComponent],
     templateUrl: './pos-board-waiter.component.html',
     styleUrls: ['./pos-board-waiter.component.sass']

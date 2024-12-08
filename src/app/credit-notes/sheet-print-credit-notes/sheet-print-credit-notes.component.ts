@@ -8,7 +8,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-sheet-print-credit-notes',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './sheet-print-credit-notes.component.html',
     styleUrls: ['./sheet-print-credit-notes.component.sass']

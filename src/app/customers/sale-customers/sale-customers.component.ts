@@ -19,7 +19,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-sale-customers',
-    standalone: true,
     imports: [MaterialModule, CommonModule, ReactiveFormsModule],
     templateUrl: './sale-customers.component.html',
     styleUrls: ['./sale-customers.component.sass']

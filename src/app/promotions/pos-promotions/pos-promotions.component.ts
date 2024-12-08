@@ -21,11 +21,14 @@ import { DialogLastSalesComponent } from '../../sales/dialog-last-sales/dialog-l
 import { DialogSaleItemsComponent } from '../../sales/dialog-sale-items/dialog-sale-items.component';
 import { SalesService } from '../../sales/sales.service';
 import { environment } from '../../../environments/environment';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-pos-promotions',
+    imports: [MaterialModule, CommonModule],
     templateUrl: './pos-promotions.component.html',
-    styleUrls: ['./pos-promotions.component.sass']
+    styleUrls: ['./pos-promotions.component.sass'],
 })
 export class PosPromotionsComponent {
 

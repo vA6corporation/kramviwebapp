@@ -8,8 +8,12 @@
                 <div class="d-flex">
                     <span class="text-muted mr-2">x{{ eventItem.quantity }}</span>
                     <span class="mr-2" [style.color]="'green'" [hidden]="eventItem.igvCode !== '11'">bonificacion</span>
-                    <span class="text-primary mr-2" *ngIf="eventItem.igvCode === '20'">Exonerado</span>
-                    <span class="text-primary mr-2" *ngIf="eventItem.igvCode === '30'">Inafecto</span>
+                    @if (eventItem.igvCode === '20') {
+                        <span class="text-primary mr-2">Exonerado</span>
+                    }
+                    @if (eventItem.igvCode === '30') {
+                        <span class="text-primary mr-2">Inafecto</span>
+                    }
                     <span class="text-muted ">{{ eventItem.observations }}</span>
                     <span class="spacer"></span>
                     <span class="text-muted">

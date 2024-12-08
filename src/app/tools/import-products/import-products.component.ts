@@ -18,7 +18,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-import-products',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './import-products.component.html',
     styleUrls: ['./import-products.component.sass']

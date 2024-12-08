@@ -35,7 +35,6 @@ interface FormData {
 
 @Component({
     selector: 'app-create-credit-notes',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent],
     templateUrl: './create-credit-notes.component.html',
     styleUrls: ['./create-credit-notes.component.sass']

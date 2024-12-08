@@ -11,7 +11,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-boards-waiter',
-    standalone: true,
     imports: [MaterialModule, RouterModule],
     templateUrl: './boards-waiter.component.html',
     styleUrls: ['./boards-waiter.component.sass']

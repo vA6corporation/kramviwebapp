@@ -7,7 +7,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-boards',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './dialog-boards.component.html',
     styleUrls: ['./dialog-boards.component.sass']

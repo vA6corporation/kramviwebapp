@@ -17,7 +17,6 @@ import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-sheet-invoices',
-    standalone: true,
     imports: [MaterialModule, RouterModule],
     templateUrl: './sheet-invoices.component.html',
     styleUrls: ['./sheet-invoices.component.sass']

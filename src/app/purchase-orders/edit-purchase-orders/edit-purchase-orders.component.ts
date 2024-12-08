@@ -19,7 +19,6 @@ import { PurchaseOrderItemsComponent } from '../purchase-order-items/purchase-or
 
 @Component({
     selector: 'app-edit-purchase-orders',
-    standalone: true,
     imports: [MaterialModule, PurchaseOrderItemsComponent],
     templateUrl: './edit-purchase-orders.component.html',
     styleUrls: ['./edit-purchase-orders.component.sass']

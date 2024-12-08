@@ -7,11 +7,10 @@ import { CouponsService } from '../coupons.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-create-coupons',
-  standalone: true,
-  imports: [MaterialModule, ReactiveFormsModule, RouterModule],
-  templateUrl: './create-coupons.component.html',
-  styleUrl: './create-coupons.component.sass'
+    selector: 'app-create-coupons',
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule],
+    templateUrl: './create-coupons.component.html',
+    styleUrl: './create-coupons.component.sass'
 })
 export class CreateCouponsComponent {
 

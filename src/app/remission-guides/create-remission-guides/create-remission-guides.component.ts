@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
@@ -17,11 +17,15 @@ import { ProductsService } from '../../products/products.service';
 import { DialogLastSalesComponent } from '../../sales/dialog-last-sales/dialog-last-sales.component';
 import { RemissionGuideItemModel } from '../remission-guide-item.model';
 import { RemissionGuidesService } from '../remission-guides.service';
+import { MaterialModule } from '../../material.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RemissionGuideItemsComponent } from '../remission-guide-items/remission-guide-items.component';
 
 @Component({
     selector: 'app-create-remission-guides',
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule, RemissionGuideItemsComponent],
     templateUrl: './create-remission-guides.component.html',
-    styleUrls: ['./create-remission-guides.component.sass']
+    styleUrls: ['./create-remission-guides.component.sass'],
 })
 export class CreateRemissionGuidesComponent {
 

@@ -41,7 +41,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-invoices',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './invoices.component.html',
     styleUrls: ['./invoices.component.sass']

@@ -4,11 +4,15 @@ import { Subscription } from 'rxjs';
 import { CustomerModel } from '../../customers/customer.model';
 import { NavigationService } from '../../navigation/navigation.service';
 import { SpecialtiesService } from '../specialties.service';
+import { MaterialModule } from '../../material.module';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-specialties',
+    imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './specialties.component.html',
-    styleUrls: ['./specialties.component.sass']
+    styleUrls: ['./specialties.component.sass'],
 })
 export class SpecialtiesComponent {
 

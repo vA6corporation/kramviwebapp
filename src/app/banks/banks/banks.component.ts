@@ -10,7 +10,6 @@ import { BanksService } from '../banks.service';
 
 @Component({
     selector: 'app-banks',
-    standalone: true,
     imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './banks.component.html',
     styleUrls: ['./banks.component.sass']

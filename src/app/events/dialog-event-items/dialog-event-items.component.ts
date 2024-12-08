@@ -1,13 +1,15 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateEventItemModel } from '../create-event-item.model';
 import { EventsService } from '../events.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-event-items',
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-event-items.component.html',
-    styleUrls: ['./dialog-event-items.component.sass']
+    styleUrls: ['./dialog-event-items.component.sass'],
 })
 export class DialogEventItemsComponent {
 

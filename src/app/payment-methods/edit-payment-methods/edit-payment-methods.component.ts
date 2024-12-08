@@ -1,14 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
 import { PaymentMethodsService } from '../payment-methods.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-edit-payment-methods',
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule],
     templateUrl: './edit-payment-methods.component.html',
-    styleUrls: ['./edit-payment-methods.component.sass']
+    styleUrls: ['./edit-payment-methods.component.sass'],
 })
 export class EditPaymentMethodsComponent {
 

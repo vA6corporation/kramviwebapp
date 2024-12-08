@@ -1,14 +1,14 @@
 <div class="container">
-  <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
-    <mat-form-field appearance="fill">
-      <mat-label>N° de cuenta</mat-label>
-      <input type="text" matInput formControlName="name">
-    </mat-form-field>
-    <div class="d-flex">
-      <span class="spacer"></span>
-      <button type="button" mat-raised-button routerLink="/paymentMethods" color="primary">CANCELAR</button>
-      <span class="divider"></span>
-      <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
-    </div>
-  </form>
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+        <mat-form-field appearance="fill">
+            <mat-label>N° de cuenta</mat-label>
+            <input type="text" matInput formControlName="name">
+        </mat-form-field>
+        <div class="d-flex">
+            <span class="spacer"></span>
+            <button type="button" mat-raised-button routerLink="/paymentMethods" color="primary">CANCELAR</button>
+            <span class="divider"></span>
+            <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
+        </div>
+    </form>
 </div>

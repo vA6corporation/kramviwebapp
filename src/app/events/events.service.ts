@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpService } from '../http.service';
-import { CreatePaymentModel } from '../payments/create-payment.model';
 import { ProductModel } from '../products/product.model';
-import { CreateSaleItemModel } from '../sales/create-sale-item.model';
-import { CreateSaleModel } from '../sales/create-sale.model';
-import { OutStockModel } from '../sales/out-stock.model';
-import { SaleModel } from '../sales/sale.model';
 import { CreateEventItemModel } from './create-event-item.model';
 import { CreateEventModel } from './create-event.model';
 import { EventItemModel } from './event-item.model';

@@ -11,7 +11,6 @@ import { SettingModel } from '../../auth/setting.model';
 
 @Component({
     selector: 'app-create-rooms',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule],
     templateUrl: './create-rooms.component.html',
     styleUrls: ['./create-rooms.component.sass']

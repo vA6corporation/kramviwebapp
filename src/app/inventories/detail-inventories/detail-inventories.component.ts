@@ -33,7 +33,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-detail-inventories',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './detail-inventories.component.html',
     styleUrls: ['./detail-inventories.component.sass']

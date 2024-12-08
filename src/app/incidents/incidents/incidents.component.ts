@@ -1,6 +1,6 @@
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -17,11 +17,13 @@ import { UsersService } from '../../users/users.service';
 import { DialogDetailIncidentsComponent } from '../dialog-detail-incidents/dialog-detail-incidents.component';
 import { IncidentItemModel } from '../incident-item.model';
 import { IncidentsService } from '../incidents.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-incidents',
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './incidents.component.html',
-    styleUrls: ['./incidents.component.sass']
+    styleUrls: ['./incidents.component.sass'],
 })
 export class IncidentsComponent {
 

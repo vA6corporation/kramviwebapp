@@ -34,7 +34,6 @@ import { DirectivesModule } from '../../directives/directives.module';
 
 @Component({
     selector: 'app-charge-fast-food',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent, DirectivesModule],
     templateUrl: './charge-fast-food.component.html',
     styleUrls: ['./charge-fast-food.component.sass']

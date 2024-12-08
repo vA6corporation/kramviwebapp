@@ -31,7 +31,6 @@ import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component'
 
 @Component({
     selector: 'app-create-pre-sales',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent, DirectivesModule],
     templateUrl: './create-pre-sales.component.html',
     styleUrls: ['./create-pre-sales.component.sass']

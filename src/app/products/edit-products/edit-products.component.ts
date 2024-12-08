@@ -27,7 +27,6 @@ import { IgvCodeModel, ProductsService, UnitCodeModel } from '../products.servic
 
 @Component({
     selector: 'app-edit-products',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './edit-products.component.html',
     styleUrls: ['./edit-products.component.sass']

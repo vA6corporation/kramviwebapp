@@ -11,7 +11,6 @@ import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-generals',
-    standalone: true,
     imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './generals.component.html',
     styleUrls: ['./generals.component.sass']

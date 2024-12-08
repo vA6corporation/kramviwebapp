@@ -9,7 +9,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-board-items',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-board-items.component.html',
     styleUrls: ['./dialog-board-items.component.sass']

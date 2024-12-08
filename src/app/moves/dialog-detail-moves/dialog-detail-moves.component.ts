@@ -5,11 +5,15 @@ import { UserModel } from '../../users/user.model';
 import { MoveItemModel } from '../move-item.model';
 import { MoveModel } from '../move.model';
 import { MovesService } from '../moves.service';
+import { MaterialModule } from '../../material.module';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-dialog-detail-moves',
+    imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './dialog-detail-moves.component.html',
-    styleUrls: ['./dialog-detail-moves.component.sass']
+    styleUrls: ['./dialog-detail-moves.component.sass'],
 })
 export class DialogDetailMovesComponent {
 

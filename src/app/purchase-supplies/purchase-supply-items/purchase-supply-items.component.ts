@@ -4,11 +4,13 @@ import { Subscription } from 'rxjs';
 import { CreatePurchaseSupplyItemModel } from '../create-purchase-supply-item.model';
 import { DialogPurchaseSupplyItemsComponent } from '../dialog-purchase-supply-items/dialog-purchase-supply-items.component';
 import { PurchaseSuppliesService } from '../purchase-supplies.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-purchase-supply-items',
+    imports: [MaterialModule],
     templateUrl: './purchase-supply-items.component.html',
-    styleUrls: ['./purchase-supply-items.component.sass']
+    styleUrls: ['./purchase-supply-items.component.sass'],
 })
 export class PurchaseSupplyItemsComponent {
 

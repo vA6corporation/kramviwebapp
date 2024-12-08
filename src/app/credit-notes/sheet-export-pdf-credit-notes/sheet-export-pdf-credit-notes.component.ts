@@ -7,7 +7,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-sheet-export-pdf-credit-notes',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './sheet-export-pdf-credit-notes.component.html',
     styleUrls: ['./sheet-export-pdf-credit-notes.component.sass']

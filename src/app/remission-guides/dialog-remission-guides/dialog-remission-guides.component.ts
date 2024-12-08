@@ -9,11 +9,14 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { PrintService } from '../../print/print.service';
 import { RemissionGuideModel } from '../remission-guide.model';
 import { RemissionGuidesService } from '../remission-guides.service';
+import { MaterialModule } from '../../material.module';
+import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-dialog-remission-guides',
+    imports: [MaterialModule, RouterModule],
     templateUrl: './dialog-remission-guides.component.html',
-    styleUrls: ['./dialog-remission-guides.component.sass']
+    styleUrls: ['./dialog-remission-guides.component.sass'],
 })
 export class DialogRemissionGuidesComponent {
 

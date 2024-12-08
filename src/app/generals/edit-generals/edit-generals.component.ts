@@ -17,7 +17,6 @@ import { DialogSearchPatientsComponent } from '../../patients/dialog-search-pati
 
 @Component({
     selector: 'app-edit-generals',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, RouterModule],
     templateUrl: './edit-generals.component.html',
     styleUrls: ['./edit-generals.component.sass']

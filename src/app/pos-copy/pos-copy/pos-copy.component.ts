@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
@@ -19,11 +19,15 @@ import { ProductsService } from '../../products/products.service';
 import { DialogSaleItemsComponent } from '../../sales/dialog-sale-items/dialog-sale-items.component';
 import { SaleModel } from '../../sales/sale.model';
 import { SalesService } from '../../sales/sales.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
+import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component';
 
 @Component({
     selector: 'app-pos-copy',
+    imports: [MaterialModule, CommonModule, RouterModule, SaleItemsComponent],
     templateUrl: './pos-copy.component.html',
-    styleUrls: ['./pos-copy.component.sass']
+    styleUrls: ['./pos-copy.component.sass'],
 })
 export class PosCopyComponent {
 

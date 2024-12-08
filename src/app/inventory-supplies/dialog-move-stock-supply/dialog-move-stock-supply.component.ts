@@ -14,7 +14,6 @@ import { OfficesService } from '../../offices/offices.service';
 
 @Component({
     selector: 'app-dialog-move-stock-supply',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './dialog-move-stock-supply.component.html',
     styleUrls: ['./dialog-move-stock-supply.component.sass']

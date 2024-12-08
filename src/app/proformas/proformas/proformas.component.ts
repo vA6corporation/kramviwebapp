@@ -24,7 +24,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-proformas',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, RouterModule],
     templateUrl: './proformas.component.html',
     styleUrls: ['./proformas.component.sass']

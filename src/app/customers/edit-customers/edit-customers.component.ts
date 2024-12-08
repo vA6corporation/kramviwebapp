@@ -10,7 +10,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-edit-customers',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule],
     templateUrl: './edit-customers.component.html',
     styleUrls: ['./edit-customers.component.sass']

@@ -9,7 +9,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-purchase-order-items',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './purchase-order-items.component.html',
     styleUrls: ['./purchase-order-items.component.sass']

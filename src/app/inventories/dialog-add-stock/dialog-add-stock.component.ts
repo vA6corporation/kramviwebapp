@@ -14,7 +14,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-add-stock',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-add-stock.component.html',
     styleUrls: ['./dialog-add-stock.component.sass']

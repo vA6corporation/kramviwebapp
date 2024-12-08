@@ -5,7 +5,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-create-lots',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-create-lots.component.html',
     styleUrl: './dialog-create-lots.component.sass'

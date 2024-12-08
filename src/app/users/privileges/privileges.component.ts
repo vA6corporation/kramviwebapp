@@ -12,7 +12,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-privileges',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './privileges.component.html',
     styleUrls: ['./privileges.component.sass']

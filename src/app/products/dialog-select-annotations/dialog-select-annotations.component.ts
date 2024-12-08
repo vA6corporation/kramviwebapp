@@ -18,7 +18,6 @@ export interface DialogSelectAnnotationData {
 
 @Component({
     selector: 'app-dialog-select-annotations',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './dialog-select-annotations.component.html',
     styleUrls: ['./dialog-select-annotations.component.sass']

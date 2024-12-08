@@ -11,7 +11,6 @@ Chart.register(...registerables);
 
 @Component({
     selector: 'app-expenses',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './expenses.component.html',
     styleUrls: ['./expenses.component.sass']

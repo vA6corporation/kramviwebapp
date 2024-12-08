@@ -23,7 +23,6 @@ Chart.register(...registerables);
 
 @Component({
     selector: 'app-incomes',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './incomes.component.html',
     styleUrls: ['./incomes.component.sass']

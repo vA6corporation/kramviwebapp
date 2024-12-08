@@ -8,7 +8,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-create-workers',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule],
     templateUrl: './create-workers.component.html',
     styleUrls: ['./create-workers.component.sass']

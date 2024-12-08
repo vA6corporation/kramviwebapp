@@ -7,7 +7,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-supplies',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './supplies.component.html',
     styleUrls: ['./supplies.component.sass']

@@ -8,7 +8,6 @@ import { CategoriesComponent } from '../categories/categories.component';
 
 @Component({
     selector: 'app-index-products',
-    standalone: true,
     imports: [MaterialModule, ProductsComponent, DisabledProductsComponent, DeletedProductsComponent, CategoriesComponent],
     templateUrl: './index-products.component.html',
     styleUrls: ['./index-products.component.sass']

@@ -7,11 +7,10 @@ import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
 import { PaymentMethodsService } from '../../payment-methods/payment-methods.service';
 
 @Component({
-  selector: 'app-dialog-create-payment-purchases',
-  standalone: true,
-  imports: [MaterialModule, ReactiveFormsModule],
-  templateUrl: './dialog-create-payment-purchases.component.html',
-  styleUrl: './dialog-create-payment-purchases.component.sass'
+    selector: 'app-dialog-create-payment-purchases',
+    imports: [MaterialModule, ReactiveFormsModule],
+    templateUrl: './dialog-create-payment-purchases.component.html',
+    styleUrl: './dialog-create-payment-purchases.component.sass'
 })
 export class DialogCreatePaymentPurchasesComponent {
 

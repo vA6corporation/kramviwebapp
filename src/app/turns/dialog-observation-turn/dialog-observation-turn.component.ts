@@ -12,7 +12,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-observation-turn',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-observation-turn.component.html',
     styleUrls: ['./dialog-observation-turn.component.sass']

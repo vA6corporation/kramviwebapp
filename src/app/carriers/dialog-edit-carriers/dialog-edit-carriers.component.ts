@@ -1,15 +1,17 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CarrierModel } from '../carrier.model';
 import { CarriersService } from '../carriers.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-edit-carriers',
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-edit-carriers.component.html',
-    styleUrls: ['./dialog-edit-carriers.component.sass']
+    styleUrls: ['./dialog-edit-carriers.component.sass'],
 })
 export class DialogEditCarriersComponent {
 

@@ -15,7 +15,6 @@ export interface DialogSelectLotsData {
 
 @Component({
     selector: 'app-dialog-select-lots',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './dialog-select-lots.component.html',
     styleUrl: './dialog-select-lots.component.sass'

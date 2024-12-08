@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
@@ -17,11 +17,15 @@ import { ProductsService } from '../../products/products.service';
 import { DialogLastSalesComponent } from '../../sales/dialog-last-sales/dialog-last-sales.component';
 import { SalesService } from '../../sales/sales.service';
 import { DialogLastCommandComponent } from '../dialog-last-command/dialog-last-command.component';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
+import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component';
 
 @Component({
     selector: 'app-pos-fast-food',
+    imports: [MaterialModule, CommonModule, SaleItemsComponent, RouterModule],
     templateUrl: './pos-fast-food.component.html',
-    styleUrls: ['./pos-fast-food.component.sass']
+    styleUrls: ['./pos-fast-food.component.sass'],
 })
 export class PosFastFoodComponent {
 

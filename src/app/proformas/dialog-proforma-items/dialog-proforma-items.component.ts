@@ -15,7 +15,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-proforma-items',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-proforma-items.component.html',
     styleUrls: ['./dialog-proforma-items.component.sass']

@@ -12,7 +12,6 @@ import { formatDate } from '@angular/common';
 
 @Component({
     selector: 'app-dialog-coupon-items',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './dialog-coupon-items.component.html',
     styleUrl: './dialog-coupon-items.component.sass'

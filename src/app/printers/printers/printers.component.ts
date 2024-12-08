@@ -5,11 +5,13 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { DialogAddPrintersComponent } from '../dialog-add-printers/dialog-add-printers.component';
 import { PrinterModel } from '../printer.model';
 import { PrintersService } from '../printers.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-printers',
+    imports: [MaterialModule],
     templateUrl: './printers.component.html',
-    styleUrls: ['./printers.component.sass']
+    styleUrls: ['./printers.component.sass'],
 })
 export class PrintersComponent {
 

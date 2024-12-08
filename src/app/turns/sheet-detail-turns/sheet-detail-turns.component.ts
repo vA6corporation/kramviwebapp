@@ -5,11 +5,10 @@ import { DialogDetailSalesComponent } from '../../invoices/dialog-detail-sales/d
 import { MaterialModule } from '../../material.module';
 
 @Component({
-  selector: 'app-sheet-detail-turns',
-  standalone: true,
-  imports: [MaterialModule],
-  templateUrl: './sheet-detail-turns.component.html',
-  styleUrl: './sheet-detail-turns.component.sass'
+    selector: 'app-sheet-detail-turns',
+    imports: [MaterialModule],
+    templateUrl: './sheet-detail-turns.component.html',
+    styleUrl: './sheet-detail-turns.component.sass'
 })
 export class SheetDetailTurnsComponent {
 

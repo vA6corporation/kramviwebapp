@@ -1,7 +1,7 @@
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -31,11 +31,14 @@ import { WorkerModel } from '../../workers/worker.model';
 import { WorkersService } from '../../workers/workers.service';
 import { EventsService } from '../events.service';
 import { SpecialtyModel } from '../specialty.model';
+import { MaterialModule } from '../../material.module';
+import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component';
 
 @Component({
     selector: 'app-charge-events',
+    imports: [MaterialModule, ReactiveFormsModule, SaleItemsComponent, CommonModule],
     templateUrl: './charge-events.component.html',
-    styleUrls: ['./charge-events.component.sass']
+    styleUrls: ['./charge-events.component.sass'],
 })
 export class ChargeEventsComponent {
 

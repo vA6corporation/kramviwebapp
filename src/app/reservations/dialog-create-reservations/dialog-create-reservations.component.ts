@@ -12,7 +12,6 @@ export interface DialogCreateReservationData {
 
 @Component({
     selector: 'app-dialog-create-reservations',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-create-reservations.component.html',
     styleUrl: './dialog-create-reservations.component.sass'

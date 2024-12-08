@@ -44,7 +44,6 @@ import { CouponItemModel } from '../../coupons/coupon-item.model';
 
 @Component({
     selector: 'app-charge-credit',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent, DirectivesModule],
     templateUrl: './charge-credit.component.html',
     styleUrls: ['./charge-credit.component.sass']

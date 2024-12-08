@@ -1,17 +1,20 @@
 import { Component } from '@angular/core';
 import { PaymentMethodsService } from '../payment-methods.service';
 import { NavigationService } from '../../navigation/navigation.service';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { UserModel } from '../../users/user.model';
 import { PaymentMethodModel } from '../payment-method.model';
 import { Subscription } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-disabled-payment-methods',
+    imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './disabled-payment-methods.component.html',
-    styleUrls: ['./disabled-payment-methods.component.sass']
+    styleUrls: ['./disabled-payment-methods.component.sass'],
 })
 export class DisabledPaymentMethodsComponent {
 

@@ -8,7 +8,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-check-cdrs',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './dialog-check-cdrs.component.html',
     styleUrls: ['./dialog-check-cdrs.component.sass']

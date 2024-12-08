@@ -16,7 +16,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-add-stock',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './add-stock.component.html',
     styleUrls: ['./add-stock.component.sass']

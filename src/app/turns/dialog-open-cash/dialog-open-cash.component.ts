@@ -11,7 +11,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-open-cash',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-open-cash.component.html',
     styleUrls: ['./dialog-open-cash.component.sass']

@@ -12,11 +12,14 @@ import { PriceType } from '../../products/price-type.enum';
 import { ProductModel } from '../../products/product.model';
 import { ProductsService } from '../../products/products.service';
 import { FavoritesService } from '../favorites.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-favorites',
+    imports: [MaterialModule, CommonModule],
     templateUrl: './favorites.component.html',
-    styleUrls: ['./favorites.component.sass']
+    styleUrls: ['./favorites.component.sass'],
 })
 export class FavoritesComponent {
 

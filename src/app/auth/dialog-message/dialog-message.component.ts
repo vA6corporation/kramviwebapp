@@ -4,7 +4,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-message',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './dialog-message.component.html',
     styleUrls: ['./dialog-message.component.sass']

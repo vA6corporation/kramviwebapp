@@ -33,7 +33,6 @@ import { DirectivesModule } from '../../directives/directives.module';
 
 @Component({
     selector: 'app-edit-biller',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, BillerItemsComponent, DirectivesModule],
     templateUrl: './edit-biller.component.html',
     styleUrls: ['./edit-biller.component.sass']

@@ -24,17 +24,16 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-index-reports',
-    standalone: true,
     imports: [
         MaterialModule,
         IncomesComponent,
         InoutComponent,
         UtilitiesComponent,
         ProductsComponent,
-        CategoriesComponent, 
+        CategoriesComponent,
         CustomersComponent,
         InvoicesComponent,
-        BoardsComponent, 
+        BoardsComponent,
         ProformasComponent,
         // CollectionsComponent,
         // PurchasesComponent,

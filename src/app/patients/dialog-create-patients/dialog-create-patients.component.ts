@@ -8,7 +8,6 @@ import { PatientsService } from '../patients.service';
 
 @Component({
     selector: 'app-dialog-create-patients',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-create-patients.component.html',
     styleUrls: ['./dialog-create-patients.component.sass']

@@ -19,7 +19,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-detail-inventory-supplies',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './detail-inventory-supplies.component.html',
     styleUrls: ['./detail-inventory-supplies.component.sass']

@@ -17,7 +17,6 @@ import { CategorySuppliesComponent } from '../category-supplies/category-supplie
 
 @Component({
     selector: 'app-supplies',
-    standalone: true,
     imports: [MaterialModule, RouterModule, ReactiveFormsModule, CategorySuppliesComponent, CommonModule],
     templateUrl: './supplies.component.html',
     styleUrls: ['./supplies.component.sass']

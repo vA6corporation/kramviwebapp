@@ -11,11 +11,14 @@ import { CategoryModel } from '../../products/category.model';
 import { ProductModel } from '../../products/product.model';
 import { ProductsService } from '../../products/products.service';
 import { MovesService } from '../moves.service';
+import { MaterialModule } from '../../material.module';
+import { MoveItemsComponent } from '../move-items/move-items.component';
 
 @Component({
     selector: 'app-pos-moves',
+    imports: [MaterialModule, MoveItemsComponent],
     templateUrl: './pos-moves.component.html',
-    styleUrls: ['./pos-moves.component.sass']
+    styleUrls: ['./pos-moves.component.sass'],
 })
 export class PosMovesComponent {
 

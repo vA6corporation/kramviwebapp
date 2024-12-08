@@ -14,7 +14,6 @@ import { PurchaseOrdersService } from '../purchase-orders.service';
 
 @Component({
     selector: 'app-dialog-detail-purchase-orders',
-    standalone: true,
     imports: [MaterialModule, CommonModule, RouterModule],
     templateUrl: './dialog-detail-purchase-orders.component.html',
     styleUrls: ['./dialog-detail-purchase-orders.component.sass']

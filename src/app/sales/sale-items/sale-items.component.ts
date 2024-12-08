@@ -12,7 +12,6 @@ import { CouponItemModel } from '../../coupons/coupon-item.model';
 
 @Component({
     selector: 'app-sale-items',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './sale-items.component.html',
     styleUrls: ['./sale-items.component.sass']

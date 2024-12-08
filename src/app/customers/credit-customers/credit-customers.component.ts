@@ -22,7 +22,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-credit-customers',
-    standalone: true,
     imports: [MaterialModule, CommonModule, RouterModule],
     templateUrl: './credit-customers.component.html',
     styleUrls: ['./credit-customers.component.sass']

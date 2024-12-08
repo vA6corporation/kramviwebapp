@@ -14,11 +14,14 @@ import { CreateSaleItemModel } from '../../sales/create-sale-item.model';
 import { SalesService } from '../../sales/sales.service';
 import { FavoritesService } from '../favorites.service';
 import { environment } from '../../../environments/environment';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-create-favorites',
+    imports: [MaterialModule, CommonModule],
     templateUrl: './create-favorites.component.html',
-    styleUrls: ['./create-favorites.component.sass']
+    styleUrls: ['./create-favorites.component.sass'],
 })
 export class CreateFavoritesComponent {
 

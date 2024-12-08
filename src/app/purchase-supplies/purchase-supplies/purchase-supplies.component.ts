@@ -1,10 +1,10 @@
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
@@ -13,11 +13,13 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { PurchaseModel } from '../../purchases/purchase.model';
 import { DialogDetailPurchaseSuppliesComponent } from '../dialog-detail-purchase-supplies/dialog-detail-purchase-supplies.component';
 import { PurchaseSuppliesService } from '../purchase-supplies.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-purchase-supplies',
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './purchase-supplies.component.html',
-    styleUrls: ['./purchase-supplies.component.sass']
+    styleUrls: ['./purchase-supplies.component.sass'],
 })
 export class PurchaseSuppliesComponent {
 

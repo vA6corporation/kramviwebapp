@@ -10,7 +10,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-change-boards',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './change-boards.component.html',
     styleUrls: ['./change-boards.component.sass']

@@ -12,7 +12,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-admin-credit-notes',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-admin-credit-notes.component.html',
     styleUrls: ['./dialog-admin-credit-notes.component.sass']

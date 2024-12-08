@@ -5,7 +5,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-create-expenses',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-create-expenses.component.html',
     styleUrl: './dialog-create-expenses.component.sass'

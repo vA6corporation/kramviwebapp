@@ -14,7 +14,6 @@ export interface DialogDueData {
 
 @Component({
     selector: 'app-dialog-dues',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-dues.component.html',
     styleUrls: ['./dialog-dues.component.sass']

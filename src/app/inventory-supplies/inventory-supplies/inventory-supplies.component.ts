@@ -18,7 +18,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-inventory-supplies',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './inventory-supplies.component.html',
     styleUrls: ['./inventory-supplies.component.sass']

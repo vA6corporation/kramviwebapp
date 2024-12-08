@@ -37,7 +37,6 @@ import { DirectivesModule } from '../../directives/directives.module';
 
 @Component({
     selector: 'app-charge-pre-sales',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent, DirectivesModule],
     templateUrl: './charge-pre-sales.component.html',
     styleUrls: ['./charge-pre-sales.component.sass']

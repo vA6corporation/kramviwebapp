@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -15,6 +15,8 @@ import { CreatePurchaseSupplyItemModel } from '../create-purchase-supply-item.mo
 import { CreatePurchaseSupplyModel } from '../create-purchase-supply.model';
 import { PurchaseSuppliesService } from '../purchase-supplies.service';
 import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component';
+import { MaterialModule } from '../../material.module';
+import { PurchaseSupplyItemsComponent } from '../purchase-supply-items/purchase-supply-items.component';
 
 interface FormData {
     invoiceCode: string
@@ -26,8 +28,9 @@ interface FormData {
 
 @Component({
     selector: 'app-charge-purchase-supplies',
+    imports: [MaterialModule, ReactiveFormsModule, PurchaseSupplyItemsComponent],
     templateUrl: './charge-purchase-supplies.component.html',
-    styleUrls: ['./charge-purchase-supplies.component.sass']
+    styleUrls: ['./charge-purchase-supplies.component.sass'],
 })
 export class ChargePurchaseSuppliesComponent {
 

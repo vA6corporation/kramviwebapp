@@ -9,7 +9,6 @@ import { AuthService } from '../../auth/auth.service';
 
 @Component({
     selector: 'app-pos-rooms',
-    standalone: true,
     imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './pos-rooms.component.html',
     styleUrls: ['./pos-rooms.component.sass']

@@ -22,7 +22,6 @@ Chart.register(...registerables);
 
 @Component({
     selector: 'app-products',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './products.component.html',
     styleUrls: ['./products.component.sass']

@@ -20,7 +20,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-utilities',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './utilities.component.html',
     styleUrls: ['./utilities.component.sass']

@@ -30,7 +30,6 @@ import { SaleItemsComponent } from '../sale-items/sale-items.component';
 
 @Component({
     selector: 'app-charge-edit',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent],
     templateUrl: './charge-edit.component.html',
     styleUrls: ['./charge-edit.component.sass']

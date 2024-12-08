@@ -11,7 +11,6 @@ import { NavigationService } from '../../navigation/navigation.service';
 
 @Component({
     selector: 'app-dialog-edit-customers',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-edit-customers.component.html',
     styleUrls: ['./dialog-edit-customers.component.sass']

@@ -14,7 +14,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-board-items',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './board-items.component.html',
     styleUrls: ['./board-items.component.sass']

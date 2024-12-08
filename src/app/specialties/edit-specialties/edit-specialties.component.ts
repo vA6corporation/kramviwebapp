@@ -1,14 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
 import { SpecialtiesService } from '../specialties.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-edit-specialties',
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './edit-specialties.component.html',
-    styleUrls: ['./edit-specialties.component.sass']
+    styleUrls: ['./edit-specialties.component.sass'],
 })
 export class EditSpecialtiesComponent {
 

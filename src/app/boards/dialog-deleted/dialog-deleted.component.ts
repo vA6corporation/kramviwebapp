@@ -5,7 +5,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-deleted',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-deleted.component.html',
     styleUrls: ['./dialog-deleted.component.sass']

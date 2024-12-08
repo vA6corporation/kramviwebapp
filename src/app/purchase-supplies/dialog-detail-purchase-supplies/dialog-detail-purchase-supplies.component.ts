@@ -5,11 +5,15 @@ import { UserModel } from '../../users/user.model';
 import { PurchaseSuppliesService } from '../purchase-supplies.service';
 import { PurchaseSupplyItemModel } from '../purchase-supply-item.model';
 import { PurchaseSupplyModel } from '../purchase-supply.model';
+import { MaterialModule } from '../../material.module';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-dialog-detail-purchase-supplies',
+    imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './dialog-detail-purchase-supplies.component.html',
-    styleUrls: ['./dialog-detail-purchase-supplies.component.sass']
+    styleUrls: ['./dialog-detail-purchase-supplies.component.sass'],
 })
 export class DialogDetailPurchaseSuppliesComponent {
 

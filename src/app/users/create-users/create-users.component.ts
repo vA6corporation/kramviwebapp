@@ -13,7 +13,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-create-users',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './create-users.component.html',
     styleUrls: ['./create-users.component.sass']

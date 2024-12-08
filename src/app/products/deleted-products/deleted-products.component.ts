@@ -17,7 +17,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-deleted-products',
-    standalone: true,
     imports: [MaterialModule, CommonModule, RouterModule],
     templateUrl: './deleted-products.component.html',
     styleUrls: ['./deleted-products.component.sass']

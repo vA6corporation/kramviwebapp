@@ -9,7 +9,6 @@ import { SettingsService } from '../settings.service';
 
 @Component({
     selector: 'app-dialog-price-lists',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-price-lists.component.html',
     styleUrls: ['./dialog-price-lists.component.sass']

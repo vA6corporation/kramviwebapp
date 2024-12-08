@@ -7,7 +7,8 @@ import { AuthService } from '../../auth/auth.service';
 @Component({
     selector: 'app-toolbar',
     templateUrl: './toolbar.component.html',
-    styleUrls: ['./toolbar.component.sass']
+    styleUrls: ['./toolbar.component.sass'],
+    standalone: false
 })
 export class ToolbarComponent {
 

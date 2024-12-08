@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { ProductsService } from '../../products/products.service';
 import { SalesService } from '../../sales/sales.service';
@@ -11,8 +12,9 @@ import { RecipesService } from '../recipes.service';
 
 @Component({
     selector: 'app-create-recipes',
+    imports: [MaterialModule],
     templateUrl: './create-recipes.component.html',
-    styleUrls: ['./create-recipes.component.sass']
+    styleUrls: ['./create-recipes.component.sass'],
 })
 export class CreateRecipesComponent {
 

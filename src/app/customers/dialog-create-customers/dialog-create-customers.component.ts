@@ -10,7 +10,6 @@ import { NavigationService } from '../../navigation/navigation.service';
 
 @Component({
     selector: 'app-dialog-create-customers',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-create-customers.component.html',
     styleUrls: ['./dialog-create-customers.component.sass']

@@ -1,14 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
 import { ActivitiesService } from '../activities.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-create-activities',
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule],
     templateUrl: './create-activities.component.html',
-    styleUrls: ['./create-activities.component.sass']
+    styleUrls: ['./create-activities.component.sass'],
 })
 export class CreateActivitiesComponent {
 

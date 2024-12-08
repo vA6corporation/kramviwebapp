@@ -10,7 +10,6 @@ import { AuthService } from '../../auth/auth.service';
 
 @Component({
     selector: 'app-dialog-search-products',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-search-products.component.html',
     styleUrls: ['./dialog-search-products.component.sass']

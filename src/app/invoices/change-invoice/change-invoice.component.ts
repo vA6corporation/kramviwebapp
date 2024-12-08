@@ -32,7 +32,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-change-invoice',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './change-invoice.component.html',
     styleUrls: ['./change-invoice.component.sass']

@@ -9,7 +9,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-dialog-change-turn',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './dialog-change-turn.component.html',
     styleUrls: ['./dialog-change-turn.component.sass']

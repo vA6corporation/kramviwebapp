@@ -12,11 +12,10 @@ import { MaterialModule } from '../../material.module';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-dialog-search-patients',
-  standalone: true,
-  imports: [MaterialModule, ReactiveFormsModule, CommonModule],
-  templateUrl: './dialog-search-patients.component.html',
-  styleUrl: './dialog-search-patients.component.sass'
+    selector: 'app-dialog-search-patients',
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
+    templateUrl: './dialog-search-patients.component.html',
+    styleUrl: './dialog-search-patients.component.sass'
 })
 export class DialogSearchPatientsComponent {
 

@@ -5,11 +5,10 @@ import { ProductModel } from '../../products/product.model';
 import { NavigationService } from '../../navigation/navigation.service';
 
 @Component({
-  selector: 'app-check-stock',
-  standalone: true,
-  imports: [MaterialModule],
-  templateUrl: './check-stock.component.html',
-  styleUrl: './check-stock.component.sass'
+    selector: 'app-check-stock',
+    imports: [MaterialModule],
+    templateUrl: './check-stock.component.html',
+    styleUrl: './check-stock.component.sass'
 })
 export class CheckStockComponent {
 

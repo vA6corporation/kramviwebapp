@@ -18,7 +18,6 @@ import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component'
 
 @Component({
     selector: 'app-create-credit-note-items',
-    standalone: true,
     imports: [MaterialModule, RouterModule, SaleItemsComponent],
     templateUrl: './create-credit-note-items.component.html',
     styleUrls: ['./create-credit-note-items.component.sass']

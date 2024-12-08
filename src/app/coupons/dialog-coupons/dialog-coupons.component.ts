@@ -5,11 +5,10 @@ import { CouponsService } from '../coupons.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-dialog-coupons',
-  standalone: true,
-  imports: [MaterialModule, CommonModule],
-  templateUrl: './dialog-coupons.component.html',
-  styleUrl: './dialog-coupons.component.sass'
+    selector: 'app-dialog-coupons',
+    imports: [MaterialModule, CommonModule],
+    templateUrl: './dialog-coupons.component.html',
+    styleUrl: './dialog-coupons.component.sass'
 })
 export class DialogCouponsComponent {
 

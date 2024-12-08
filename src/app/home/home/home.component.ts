@@ -8,7 +8,6 @@ import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-home',
-    standalone: true,
     imports: [MaterialModule, RouterModule],
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.sass']

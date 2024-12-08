@@ -9,11 +9,10 @@ import { MaterialModule } from '../../material.module';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-edit-lots',
-  standalone: true,
-  imports: [MaterialModule, ReactiveFormsModule, RouterModule],
-  templateUrl: './edit-lots.component.html',
-  styleUrl: './edit-lots.component.sass'
+    selector: 'app-edit-lots',
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule],
+    templateUrl: './edit-lots.component.html',
+    styleUrl: './edit-lots.component.sass'
 })
 export class EditLotsComponent {
 

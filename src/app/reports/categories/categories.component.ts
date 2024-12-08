@@ -19,7 +19,6 @@ Chart.register(...registerables);
 
 @Component({
     selector: 'app-categories',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './categories.component.html',
     styleUrls: ['./categories.component.sass']

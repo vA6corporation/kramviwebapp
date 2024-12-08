@@ -27,7 +27,6 @@ import { DialogCreatePaymentData, DialogCreatePaymentsComponent } from '../../pa
 
 @Component({
     selector: 'app-detail-credits',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './detail-credits.component.html',
     styleUrls: ['./detail-credits.component.sass']

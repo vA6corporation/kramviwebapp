@@ -7,7 +7,6 @@ import { InvoicesComponent } from '../invoices/invoices.component';
 
 @Component({
     selector: 'app-dashboard',
-    standalone: true,
     imports: [MaterialModule, CollectionsComponent, ExpensesComponent, InvoicesComponent],
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.sass']

@@ -12,7 +12,6 @@ import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-patients',
-    standalone: true,
     imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './patients.component.html',
     styleUrls: ['./patients.component.sass']

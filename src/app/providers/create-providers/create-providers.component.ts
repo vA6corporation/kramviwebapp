@@ -8,7 +8,6 @@ import { ProvidersService } from '../providers.service';
 
 @Component({
     selector: 'app-create-providers',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule],
     templateUrl: './create-providers.component.html',
     styleUrls: ['./create-providers.component.sass']

@@ -10,7 +10,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-login-waiter',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './login-waiter.component.html',
     styleUrls: ['./login-waiter.component.sass']

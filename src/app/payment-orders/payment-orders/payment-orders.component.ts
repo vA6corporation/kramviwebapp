@@ -18,7 +18,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-payment-orders',
-    standalone: true,
     imports: [MaterialModule, RouterModule, ReactiveFormsModule, CommonModule],
     templateUrl: './payment-orders.component.html',
     styleUrls: ['./payment-orders.component.sass']

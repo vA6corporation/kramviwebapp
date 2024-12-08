@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -19,11 +19,15 @@ import { CreateRemissionGuideModel } from '../create-remission-guide.model';
 import { RemissionGuideItemModel } from '../remission-guide-item.model';
 import { RemissionGuidesService } from '../remission-guides.service';
 import { DialogSearchCustomersComponent } from '../../customers/dialog-search-customers/dialog-search-customers.component';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
+import { RemissionGuideItemsComponent } from '../remission-guide-items/remission-guide-items.component';
 
 @Component({
     selector: 'app-charge-remission-guides',
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule, RemissionGuideItemsComponent],
     templateUrl: './charge-remission-guides.component.html',
-    styleUrls: ['./charge-remission-guides.component.sass']
+    styleUrls: ['./charge-remission-guides.component.sass'],
 })
 export class ChargeRemissionGuidesComponent {
 

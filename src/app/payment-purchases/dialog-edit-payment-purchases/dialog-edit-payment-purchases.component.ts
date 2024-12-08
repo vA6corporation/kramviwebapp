@@ -9,11 +9,10 @@ import { MaterialModule } from '../../material.module';
 import { PaymentPurchaseModel } from '../payment-purchase.model';
 
 @Component({
-  selector: 'app-dialog-edit-payment-purchases',
-  standalone: true,
-  imports: [MaterialModule, ReactiveFormsModule],
-  templateUrl: './dialog-edit-payment-purchases.component.html',
-  styleUrl: './dialog-edit-payment-purchases.component.sass'
+    selector: 'app-dialog-edit-payment-purchases',
+    imports: [MaterialModule, ReactiveFormsModule],
+    templateUrl: './dialog-edit-payment-purchases.component.html',
+    styleUrl: './dialog-edit-payment-purchases.component.sass'
 })
 export class DialogEditPaymentPurchasesComponent {
 

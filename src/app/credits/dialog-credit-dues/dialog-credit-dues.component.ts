@@ -7,7 +7,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-credit-dues',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-credit-dues.component.html',
     styleUrls: ['./dialog-credit-dues.component.sass']

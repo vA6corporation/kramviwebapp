@@ -39,7 +39,6 @@ import { SalesService } from '../sales.service';
 
 @Component({
     selector: 'app-charge',
-    standalone: true,
     imports: [MaterialModule, CommonModule, ReactiveFormsModule, SaleItemsComponent, DirectivesModule],
     templateUrl: './charge.component.html',
     styleUrls: ['./charge.component.sass']

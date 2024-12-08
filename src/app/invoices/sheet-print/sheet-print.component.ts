@@ -7,7 +7,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-sheet-print',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './sheet-print.component.html',
     styleUrls: ['./sheet-print.component.sass']

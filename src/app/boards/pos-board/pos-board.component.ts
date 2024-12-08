@@ -31,7 +31,6 @@ import { BoardItemsComponent } from '../board-items/board-items.component';
 
 @Component({
     selector: 'app-pos-board',
-    standalone: true,
     imports: [MaterialModule, CommonModule, BoardItemsComponent, RouterModule],
     templateUrl: './pos-board.component.html',
     styleUrls: ['./pos-board.component.sass']

@@ -1,14 +1,16 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NavigationService } from '../../navigation/navigation.service';
 import { EventModel } from '../event.model';
 import { EventsService } from '../events.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-date-events',
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-date-events.component.html',
-    styleUrls: ['./dialog-date-events.component.sass']
+    styleUrls: ['./dialog-date-events.component.sass'],
 })
 export class DialogDateEventsComponent {
 

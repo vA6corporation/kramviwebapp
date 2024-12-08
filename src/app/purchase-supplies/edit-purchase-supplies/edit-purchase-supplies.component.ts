@@ -10,11 +10,14 @@ import { CategorySupplyModel } from '../../supplies/category-supply.model';
 import { SuppliesService } from '../../supplies/supplies.service';
 import { SupplyModel } from '../../supplies/supply.model';
 import { PurchaseSuppliesService } from '../purchase-supplies.service';
+import { MaterialModule } from '../../material.module';
+import { PurchaseSupplyItemsComponent } from '../purchase-supply-items/purchase-supply-items.component';
 
 @Component({
     selector: 'app-edit-purchase-supplies',
+    imports: [MaterialModule, PurchaseSupplyItemsComponent],
     templateUrl: './edit-purchase-supplies.component.html',
-    styleUrls: ['./edit-purchase-supplies.component.sass']
+    styleUrls: ['./edit-purchase-supplies.component.sass'],
 })
 export class EditPurchaseSuppliesComponent {
 

@@ -35,7 +35,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-detail-turns',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './detail-turns.component.html',
     styleUrls: ['./detail-turns.component.sass']

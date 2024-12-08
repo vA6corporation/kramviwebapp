@@ -20,7 +20,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-deleted-boards',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './deleted-boards.component.html',
     styleUrls: ['./deleted-boards.component.sass']

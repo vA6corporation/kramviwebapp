@@ -11,7 +11,6 @@ import { SettingModel } from '../../auth/setting.model';
 
 @Component({
     selector: 'app-dialog-search-customers',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './dialog-search-customers.component.html',
     styleUrl: './dialog-search-customers.component.sass'

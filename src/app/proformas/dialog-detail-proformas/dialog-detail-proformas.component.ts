@@ -13,7 +13,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-dialog-detail-proformas',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './dialog-detail-proformas.component.html',
     styleUrls: ['./dialog-detail-proformas.component.sass']

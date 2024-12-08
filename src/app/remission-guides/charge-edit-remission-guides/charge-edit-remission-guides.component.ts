@@ -1,6 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -14,15 +15,18 @@ import { CustomerModel } from '../../customers/customer.model';
 import { DialogCreateCustomersComponent } from '../../customers/dialog-create-customers/dialog-create-customers.component';
 import { DialogEditCustomersComponent } from '../../customers/dialog-edit-customers/dialog-edit-customers.component';
 import { DialogSearchCustomersComponent } from '../../customers/dialog-search-customers/dialog-search-customers.component';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CreateRemissionGuideModel } from '../create-remission-guide.model';
 import { RemissionGuideItemModel } from '../remission-guide-item.model';
+import { RemissionGuideItemsComponent } from '../remission-guide-items/remission-guide-items.component';
 import { RemissionGuidesService } from '../remission-guides.service';
 
 @Component({
     selector: 'app-charge-edit-remission-guides',
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule, RemissionGuideItemsComponent],
     templateUrl: './charge-edit-remission-guides.component.html',
-    styleUrls: ['./charge-edit-remission-guides.component.sass']
+    styleUrls: ['./charge-edit-remission-guides.component.sass'],
 })
 export class ChargeEditRemissionGuidesComponent {
 

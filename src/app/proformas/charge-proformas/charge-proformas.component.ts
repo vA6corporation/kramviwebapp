@@ -31,7 +31,6 @@ interface FormData {
 
 @Component({
     selector: 'app-charge-proformas',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, ProformaItemsComponent],
     templateUrl: './charge-proformas.component.html',
     styleUrls: ['./charge-proformas.component.sass']

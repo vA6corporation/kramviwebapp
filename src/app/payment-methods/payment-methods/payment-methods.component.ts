@@ -1,17 +1,19 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { NavigationService } from '../../navigation/navigation.service';
 import { UserModel } from '../../users/user.model';
 import { PaymentMethodModel } from '../payment-method.model';
 import { PaymentMethodsService } from '../payment-methods.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-payment-methods',
+    imports: [MaterialModule, RouterModule],
     templateUrl: './payment-methods.component.html',
-    styleUrls: ['./payment-methods.component.sass']
+    styleUrls: ['./payment-methods.component.sass'],
 })
 export class PaymentMethodsComponent {
 

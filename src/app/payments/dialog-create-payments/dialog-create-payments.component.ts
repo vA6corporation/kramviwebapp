@@ -12,11 +12,10 @@ export interface DialogCreatePaymentData {
 }
 
 @Component({
-  selector: 'app-dialog-create-payments',
-  standalone: true,
-  imports: [MaterialModule, ReactiveFormsModule],
-  templateUrl: './dialog-create-payments.component.html',
-  styleUrl: './dialog-create-payments.component.sass'
+    selector: 'app-dialog-create-payments',
+    imports: [MaterialModule, ReactiveFormsModule],
+    templateUrl: './dialog-create-payments.component.html',
+    styleUrl: './dialog-create-payments.component.sass'
 })
 export class DialogCreatePaymentsComponent {
 

@@ -9,7 +9,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-biller-items',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './biller-items.component.html',
     styleUrls: ['./biller-items.component.sass']

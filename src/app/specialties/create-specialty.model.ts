@@ -1,3 +1,3 @@
 export interface CreateSpecialtyModel {
-  name: string,
+    name: string
 }

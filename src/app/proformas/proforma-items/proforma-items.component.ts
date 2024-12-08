@@ -8,7 +8,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-proforma-items',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './proforma-items.component.html',
     styleUrls: ['./proforma-items.component.sass']

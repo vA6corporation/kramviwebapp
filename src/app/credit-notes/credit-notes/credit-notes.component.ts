@@ -27,7 +27,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-credit-notes',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './credit-notes.component.html',
     styleUrls: ['./credit-notes.component.sass']

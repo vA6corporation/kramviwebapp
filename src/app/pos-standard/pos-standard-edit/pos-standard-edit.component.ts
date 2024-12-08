@@ -26,7 +26,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-pos-standard-edit',
-    standalone: true,
     imports: [MaterialModule, CommonModule, RouterModule, SaleItemsComponent],
     templateUrl: './pos-standard-edit.component.html',
     styleUrls: ['./pos-standard-edit.component.sass']

@@ -53,7 +53,8 @@ if ((window as any).versions) {
 @Component({
     selector: 'app-print-iframe',
     templateUrl: './print-iframe.component.html',
-    styleUrls: ['./print-iframe.component.sass']
+    styleUrls: ['./print-iframe.component.sass'],
+    standalone: false
 })
 export class PrintIframeComponent {
 

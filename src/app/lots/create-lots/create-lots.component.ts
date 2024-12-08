@@ -10,7 +10,6 @@ import { LotsService } from '../lots.service';
 
 @Component({
     selector: 'app-create-lots',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule],
     templateUrl: './create-lots.component.html',
     styleUrl: './create-lots.component.sass'

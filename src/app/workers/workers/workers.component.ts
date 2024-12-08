@@ -10,7 +10,6 @@ import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-workers',
-    standalone: true,
     imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './workers.component.html',
     styleUrls: ['./workers.component.sass']

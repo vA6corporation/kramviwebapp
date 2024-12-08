@@ -7,11 +7,13 @@ import { SettingModel } from '../../auth/setting.model';
 import { BoardModel } from '../../boards/board.model';
 import { BoardsService } from '../../boards/boards.service';
 import { PrintService } from '../../print/print.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-last-command',
+    imports: [MaterialModule],
     templateUrl: './dialog-last-command.component.html',
-    styleUrls: ['./dialog-last-command.component.sass']
+    styleUrls: ['./dialog-last-command.component.sass'],
 })
 export class DialogLastCommandComponent {
 

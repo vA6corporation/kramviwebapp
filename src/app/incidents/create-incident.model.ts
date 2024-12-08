@@ -1,4 +1,4 @@
 export interface CreateIncidentModel {
-  incidentType: string
-  observations: string
+    incidentType: string
+    observations: string
 }

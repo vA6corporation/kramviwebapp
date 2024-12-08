@@ -37,7 +37,6 @@ import { DirectivesModule } from '../../directives/directives.module';
 
 @Component({
     selector: 'app-charge-from',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent, DirectivesModule],
     templateUrl: './charge-from.component.html',
     styleUrls: ['./charge-from.component.sass']

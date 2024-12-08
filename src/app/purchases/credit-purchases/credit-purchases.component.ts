@@ -14,7 +14,6 @@ import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-credit-purchases',
-    standalone: true,
     imports: [MaterialModule, RouterModule, CommonModule],
     templateUrl: './credit-purchases.component.html',
     styleUrl: './credit-purchases.component.sass'

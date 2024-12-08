@@ -6,7 +6,6 @@ import { NavigationService } from '../../navigation/navigation.service';
 
 @Component({
     selector: 'app-delete-data',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './delete-data.component.html',
     styleUrls: ['./delete-data.component.sass']

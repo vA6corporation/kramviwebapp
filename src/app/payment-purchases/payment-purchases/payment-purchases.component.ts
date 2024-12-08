@@ -17,7 +17,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-payment-purchases',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './payment-purchases.component.html',
     styleUrls: ['./payment-purchases.component.sass']

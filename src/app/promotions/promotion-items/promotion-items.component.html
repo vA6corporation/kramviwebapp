@@ -8,8 +8,12 @@
             <div class="d-flex">
                 <span class="text-muted mr-2">x{{ promotionItem.quantity }}</span>
                 <span class="mr-2" [style.color]="'green'" [hidden]="promotionItem.igvCode !== '11'">bonificacion</span>
-                <span class="text-primary mr-2" *ngIf="promotionItem.igvCode === '20'">Exonerado</span>
-                <span class="text-primary mr-2" *ngIf="promotionItem.igvCode === '30'">Inafecto</span>
+                @if (promotionItem.igvCode === '20') {
+                    <span class="text-primary mr-2">Exonerado</span>
+                }
+                @if (promotionItem.igvCode === '30') {
+                    <span class="text-primary mr-2">Inafecto</span>
+                }
                 <span class="text-muted">{{ promotionItem.observations }}</span>
                 <span class="spacer"></span>
                 <span class="text-muted">

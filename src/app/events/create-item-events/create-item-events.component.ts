@@ -16,11 +16,14 @@ import { ProductsService } from '../../products/products.service';
 import { CreateEventItemModel } from '../create-event-item.model';
 import { EventsService } from '../events.service';
 import { CategoriesService } from '../../products/categories.service';
+import { MaterialModule } from '../../material.module';
+import { EventItemsComponent } from '../event-items/event-items.component';
 
 @Component({
     selector: 'app-create-item-events',
+    imports: [MaterialModule, EventItemsComponent],
     templateUrl: './create-item-events.component.html',
-    styleUrls: ['./create-item-events.component.sass']
+    styleUrls: ['./create-item-events.component.sass'],
 })
 export class CreateItemEventsComponent {
 

@@ -36,7 +36,6 @@ import { BoardItemsComponent } from '../board-items/board-items.component';
 
 @Component({
     selector: 'app-charge-boards',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, BoardItemsComponent],
     templateUrl: './charge-boards.component.html',
     styleUrls: ['./charge-boards.component.sass']

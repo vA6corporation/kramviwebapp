@@ -1,35 +1,33 @@
-<div>
-    <h2 mat-dialog-title>Agregar Impresora</h2>
-    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
-        <div mat-dialog-content>
-            <mat-form-field appearance="fill">
-                <mat-label>Nombre</mat-label>
-                <input type="text" matInput formControlName="name">
-            </mat-form-field>
-            <div class="py-3">
-                <mat-slide-toggle formControlName="printInvoice">Comprobantes</mat-slide-toggle>
-            </div>
-            <div class="py-3">
-                <mat-slide-toggle formControlName="printAccount">Precuentas</mat-slide-toggle>
-            </div>
-            <span class="mat-divider"></span>
-            <div class="py-3">
-                <mat-slide-toggle formControlName="printKitchen">Comandas cocina</mat-slide-toggle>
-            </div>
-            <div class="py-3">
-                <mat-slide-toggle formControlName="printBar">Comandas barra</mat-slide-toggle>
-            </div>
-            <div class="py-3">
-                <mat-slide-toggle formControlName="printOven">Comandas horno</mat-slide-toggle>
-            </div>
-            <div class="py-3">
-                <mat-slide-toggle formControlName="printBox">Comandas caja</mat-slide-toggle>
-            </div>
+<h2 mat-dialog-title>Agregar Impresora</h2>
+<form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+    <div mat-dialog-content>
+        <mat-form-field appearance="fill">
+            <mat-label>Nombre</mat-label>
+            <input type="text" matInput formControlName="name">
+        </mat-form-field>
+        <div class="py-3">
+            <mat-slide-toggle formControlName="printInvoice">Comprobantes</mat-slide-toggle>
         </div>
-        <mat-dialog-actions>
-            <span class="spacer"></span>
-            <button type="button" mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
-            <button type="submit" mat-flat-button color="primary">GUARDAR</button>
-        </mat-dialog-actions>
-    </form>
-</div>
+        <div class="py-3">
+            <mat-slide-toggle formControlName="printAccount">Precuentas</mat-slide-toggle>
+        </div>
+        <span class="mat-divider"></span>
+        <div class="py-3">
+            <mat-slide-toggle formControlName="printKitchen">Comandas cocina</mat-slide-toggle>
+        </div>
+        <div class="py-3">
+            <mat-slide-toggle formControlName="printBar">Comandas barra</mat-slide-toggle>
+        </div>
+        <div class="py-3">
+            <mat-slide-toggle formControlName="printOven">Comandas horno</mat-slide-toggle>
+        </div>
+        <div class="py-3">
+            <mat-slide-toggle formControlName="printBox">Comandas caja</mat-slide-toggle>
+        </div>
+    </div>
+    <mat-dialog-actions>
+        <span class="spacer"></span>
+        <button type="button" mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+        <button type="submit" mat-flat-button color="primary">GUARDAR</button>
+    </mat-dialog-actions>
+</form>

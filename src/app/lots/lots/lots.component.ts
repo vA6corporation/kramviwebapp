@@ -17,11 +17,10 @@ import { LotsService } from '../lots.service';
 import { DialogDetailPurchasesComponent } from '../../purchases/dialog-detail-purchases/dialog-detail-purchases.component';
 
 @Component({
-  selector: 'app-lots',
-  standalone: true,
-  imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
-  templateUrl: './lots.component.html',
-  styleUrl: './lots.component.sass'
+    selector: 'app-lots',
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
+    templateUrl: './lots.component.html',
+    styleUrl: './lots.component.sass'
 })
 export class LotsComponent {
 

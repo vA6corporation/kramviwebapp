@@ -11,7 +11,6 @@ import { DialogMessageComponent } from './auth/dialog-message/dialog-message.com
 
 @Component({
     selector: 'app-root',
-    standalone: true,
     imports: [
         RouterOutlet,
         MaterialModule,

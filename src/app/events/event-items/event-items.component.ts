@@ -4,11 +4,13 @@ import { Subscription } from 'rxjs';
 import { CreateEventItemModel } from '../create-event-item.model';
 import { DialogEventItemsComponent } from '../dialog-event-items/dialog-event-items.component';
 import { EventsService } from '../events.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-event-items',
+    imports: [MaterialModule],
     templateUrl: './event-items.component.html',
-    styleUrls: ['./event-items.component.sass']
+    styleUrls: ['./event-items.component.sass'],
 })
 export class EventItemsComponent {
 

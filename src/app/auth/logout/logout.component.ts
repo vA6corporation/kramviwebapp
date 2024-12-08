@@ -11,7 +11,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-logout',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './logout.component.html',
     styleUrls: ['./logout.component.sass']

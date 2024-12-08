@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-dialog-products',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './dialog-products.component.html',
     styleUrls: ['./dialog-products.component.sass']

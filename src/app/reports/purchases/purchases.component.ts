@@ -13,7 +13,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-purchases',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './purchases.component.html',
     styleUrls: ['./purchases.component.sass']

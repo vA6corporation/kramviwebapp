@@ -17,7 +17,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-credits',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './credits.component.html',
     styleUrls: ['./credits.component.sass']

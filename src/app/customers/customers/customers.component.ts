@@ -20,7 +20,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-customers',
-    standalone: true,
     imports: [MaterialModule, CommonModule, RouterModule, ReactiveFormsModule, DeletedCustomersComponent],
     templateUrl: './customers.component.html',
     styleUrls: ['./customers.component.sass']

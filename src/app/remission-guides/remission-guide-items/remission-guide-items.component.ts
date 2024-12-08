@@ -4,11 +4,13 @@ import { Subscription } from 'rxjs';
 import { DialogRemissionGuideItemsComponent } from '../dialog-remission-guide-items/dialog-remission-guide-items.component';
 import { RemissionGuideItemModel } from '../remission-guide-item.model';
 import { RemissionGuidesService } from '../remission-guides.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-remission-guide-items',
+    imports: [MaterialModule],
     templateUrl: './remission-guide-items.component.html',
-    styleUrls: ['./remission-guide-items.component.sass']
+    styleUrls: ['./remission-guide-items.component.sass'],
 })
 export class RemissionGuideItemsComponent {
 
@@ -17,17 +19,17 @@ export class RemissionGuideItemsComponent {
         private readonly matDialog: MatDialog,
     ) { }
 
-    remissionGuideItems: RemissionGuideItemModel[] = [];
-    private handleRemissionGuideItems$: Subscription = new Subscription();
+    remissionGuideItems: RemissionGuideItemModel[] = []
+    private handleRemissionGuideItems$: Subscription = new Subscription()
 
     ngOnDestroy() {
-        this.handleRemissionGuideItems$.unsubscribe();
+        this.handleRemissionGuideItems$.unsubscribe()
     }
 
     ngOnInit(): void {
         this.handleRemissionGuideItems$ = this.remissionGuidesService.handleRemissionGuideItems().subscribe(remissionGuideItems => {
-            this.remissionGuideItems = remissionGuideItems;
-        });
+            this.remissionGuideItems = remissionGuideItems
+        })
     }
 
     onSelectRemissionGuideItem(index: number) {
@@ -35,6 +37,6 @@ export class RemissionGuideItemsComponent {
             width: '600px',
             position: { top: '20px' },
             data: index,
-        });
+        })
     }
 }

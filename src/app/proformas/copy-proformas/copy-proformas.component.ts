@@ -21,7 +21,6 @@ import { ProformaItemsComponent } from '../proforma-items/proforma-items.compone
 
 @Component({
     selector: 'app-copy-proformas',
-    standalone: true,
     imports: [MaterialModule, RouterModule, ProformaItemsComponent],
     templateUrl: './copy-proformas.component.html',
     styleUrls: ['./copy-proformas.component.sass']

@@ -9,11 +9,10 @@ import { MaterialModule } from '../../material.module';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-dialog-search-providers',
-  standalone: true,
-  imports: [MaterialModule, ReactiveFormsModule, CommonModule],
-  templateUrl: './dialog-search-providers.component.html',
-  styleUrl: './dialog-search-providers.component.sass'
+    selector: 'app-dialog-search-providers',
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
+    templateUrl: './dialog-search-providers.component.html',
+    styleUrl: './dialog-search-providers.component.sass'
 })
 export class DialogSearchProvidersComponent {
     

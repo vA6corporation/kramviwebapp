@@ -16,7 +16,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-purchase-order-items',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-purchase-order-items.component.html',
     styleUrls: ['./dialog-purchase-order-items.component.sass']

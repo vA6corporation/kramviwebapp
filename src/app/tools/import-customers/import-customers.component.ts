@@ -13,7 +13,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-import-customers',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './import-customers.component.html',
     styleUrls: ['./import-customers.component.sass']

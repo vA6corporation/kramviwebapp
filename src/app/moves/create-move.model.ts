@@ -1,4 +1,4 @@
 export interface CreateMoveModel {
-  toOfficeId: string
-  observations: string
+    toOfficeId: string
+    observations: string
 }

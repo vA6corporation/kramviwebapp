@@ -7,11 +7,10 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { CouponsService } from '../coupons.service';
 
 @Component({
-  selector: 'app-edit-coupons',
-  standalone: true,
-  imports: [MaterialModule, ReactiveFormsModule, RouterModule],
-  templateUrl: './edit-coupons.component.html',
-  styleUrl: './edit-coupons.component.sass'
+    selector: 'app-edit-coupons',
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule],
+    templateUrl: './edit-coupons.component.html',
+    styleUrl: './edit-coupons.component.sass'
 })
 export class EditCouponsComponent {
 

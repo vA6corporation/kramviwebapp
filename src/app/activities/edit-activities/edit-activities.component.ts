@@ -1,14 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
 import { ActivitiesService } from '../activities.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-edit-activities',
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule],
     templateUrl: './edit-activities.component.html',
-    styleUrls: ['./edit-activities.component.sass']
+    styleUrls: ['./edit-activities.component.sass'],
 })
 export class EditActivitiesComponent {
 

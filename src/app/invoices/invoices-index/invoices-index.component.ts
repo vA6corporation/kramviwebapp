@@ -6,7 +6,6 @@ import { CreditNotesComponent } from '../../credit-notes/credit-notes/credit-not
 
 @Component({
     selector: 'app-invoices-index',
-    standalone: true,
     imports: [MaterialModule, InvoicesComponent, CreditNotesComponent],
     templateUrl: './invoices-index.component.html',
     styleUrls: ['./invoices-index.component.sass']

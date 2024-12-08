@@ -8,7 +8,6 @@ import { SheetPrintProformasComponent } from '../sheet-print-proformas/sheet-pri
 
 @Component({
     selector: 'app-sheet-export-pdf-proformas',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './sheet-export-pdf-proformas.component.html',
     styleUrls: ['./sheet-export-pdf-proformas.component.sass']

@@ -7,7 +7,8 @@ import { PurchasesService } from '../purchases.service';
 @Component({
     selector: 'app-sheet-purchase-items',
     templateUrl: './sheet-purchase-items.component.html',
-    styleUrls: ['./sheet-purchase-items.component.sass']
+    styleUrls: ['./sheet-purchase-items.component.sass'],
+    standalone: false
 })
 export class SheetPurchaseItemsComponent {
 

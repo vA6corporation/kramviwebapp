@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavigationService } from '../../navigation/navigation.service';
 import { MovesService } from '../moves.service';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PageEvent } from '@angular/material/paginator';
@@ -10,15 +10,17 @@ import { OfficeModel } from '../../auth/office.model';
 import { AuthService } from '../../auth/auth.service';
 import { Subscription, lastValueFrom } from 'rxjs';
 import { OfficesService } from '../../offices/offices.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MoveModel } from '../move.model';
-import { formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { buildExcel } from '../../buildExcel';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-moves',
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule, RouterModule],
     templateUrl: './moves.component.html',
-    styleUrls: ['./moves.component.sass']
+    styleUrls: ['./moves.component.sass'],
 })
 export class MovesComponent {
 

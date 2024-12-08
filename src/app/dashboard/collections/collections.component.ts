@@ -12,7 +12,6 @@ Chart.register(...registerables);
 
 @Component({
     selector: 'app-collections',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './collections.component.html',
     styleUrls: ['./collections.component.sass']

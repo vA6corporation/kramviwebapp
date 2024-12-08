@@ -33,7 +33,6 @@ import { DirectivesModule } from '../../directives/directives.module';
 
 @Component({
     selector: 'app-edit-pre-sales',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent, DirectivesModule],
     templateUrl: './edit-pre-sales.component.html',
     styleUrls: ['./edit-pre-sales.component.sass']

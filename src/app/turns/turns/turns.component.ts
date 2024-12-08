@@ -22,7 +22,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-turns',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, RouterModule],
     templateUrl: './turns.component.html',
     styleUrls: ['./turns.component.sass']

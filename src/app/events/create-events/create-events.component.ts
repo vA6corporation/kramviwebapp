@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -18,22 +18,26 @@ import { CreateEventModel } from '../create-event.model';
 import { EventsService } from '../events.service';
 import { SpecialtyModel } from '../specialty.model';
 import { DialogSearchCustomersComponent } from '../../customers/dialog-search-customers/dialog-search-customers.component';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
+import { EventItemsComponent } from '../event-items/event-items.component';
 
 interface FormData {
-    hours: any,
-    minutes: any,
-    ampm: string,
-    scheduledAt: any,
-    workerId: any,
-    specialtyId: any,
-    referredId: any,
-    observations: string,
+    hours: any
+    minutes: any
+    ampm: string
+    scheduledAt: any
+    workerId: any
+    specialtyId: any
+    referredId: any
+    observations: string
 }
 
 @Component({
     selector: 'app-create-events',
+    imports: [MaterialModule, ReactiveFormsModule, EventItemsComponent, CommonModule],
     templateUrl: './create-events.component.html',
-    styleUrls: ['./create-events.component.sass']
+    styleUrls: ['./create-events.component.sass'],
 })
 export class CreateEventsComponent {
 
@@ -170,7 +174,6 @@ export class CreateEventsComponent {
     }
 
     onSubmit() {
-
         try {
             if (this.customer === null) {
                 throw new Error("Agrega un cliente")
@@ -211,19 +214,20 @@ export class CreateEventsComponent {
                 }
                 event.scheduledAt.setMinutes(minutes)
 
-                this.eventsService.saveEvent(event, this.eventItems).subscribe(() => {
-                    this.eventsService.setEventItems([])
-                    this.router.navigate(['/events'])
-                    this.isLoading = false
-                    this.navigationService.loadBarFinish()
-                    this.navigationService.showMessage('Registrado correctamente')
-                }, (error: HttpErrorResponse) => {
-                    this.navigationService.showMessage(error.error.message)
-                    this.isLoading = false
-                    this.navigationService.loadBarFinish()
+                this.eventsService.saveEvent(event, this.eventItems).subscribe({
+                    next: () => {
+                        this.eventsService.setEventItems([])
+                        this.router.navigate(['/events'])
+                        this.isLoading = false
+                        this.navigationService.loadBarFinish()
+                        this.navigationService.showMessage('Registrado correctamente')
+                    }, error: (error: HttpErrorResponse) => {
+                        this.navigationService.showMessage(error.error.message)
+                        this.isLoading = false
+                        this.navigationService.loadBarFinish()
+                    }
                 })
             }
-
         } catch (error) {
             if (error instanceof Error) {
                 this.navigationService.showMessage(error.message)

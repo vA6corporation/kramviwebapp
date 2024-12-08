@@ -36,7 +36,6 @@ import { DirectivesModule } from '../../directives/directives.module';
 
 @Component({
     selector: 'app-charge-copy',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent, DirectivesModule],
     templateUrl: './charge-copy.component.html',
     styleUrls: ['./charge-copy.component.sass']

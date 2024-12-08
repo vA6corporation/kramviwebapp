@@ -20,7 +20,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-purchases',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './purchases.component.html',
     styleUrls: ['./purchases.component.sass']

@@ -10,12 +10,11 @@ import { CheckStockComponent } from '../check-stock/check-stock.component';
 
 @Component({
     selector: 'app-tools',
-    standalone: true,
     imports: [
-        MaterialModule, 
-        ImportProductsComponent, 
-        ImportCustomersComponent, 
-        UpdatePricesComponent, 
+        MaterialModule,
+        ImportProductsComponent,
+        ImportCustomersComponent,
+        UpdatePricesComponent,
         AddStockComponent,
         DeleteDataComponent,
         CheckStockComponent,

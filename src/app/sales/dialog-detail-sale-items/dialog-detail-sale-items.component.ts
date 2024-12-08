@@ -10,11 +10,10 @@ import { IgvType } from '../../products/igv-type.enum';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-dialog-detail-sale-items',
-  standalone: true,
-  imports: [MaterialModule, ReactiveFormsModule, CommonModule],
-  templateUrl: './dialog-detail-sale-items.component.html',
-  styleUrl: './dialog-detail-sale-items.component.sass'
+    selector: 'app-dialog-detail-sale-items',
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
+    templateUrl: './dialog-detail-sale-items.component.html',
+    styleUrl: './dialog-detail-sale-items.component.sass'
 })
 export class DialogDetailSaleItemsComponent {
 

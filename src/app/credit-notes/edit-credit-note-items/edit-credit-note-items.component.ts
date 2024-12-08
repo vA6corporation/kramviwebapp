@@ -16,7 +16,6 @@ import { CreditNoteItemsComponent } from '../credit-note-items/credit-note-items
 
 @Component({
     selector: 'app-edit-credit-note-items',
-    standalone: true,
     imports: [MaterialModule, CreditNoteItemsComponent],
     templateUrl: './edit-credit-note-items.component.html',
     styleUrls: ['./edit-credit-note-items.component.sass']

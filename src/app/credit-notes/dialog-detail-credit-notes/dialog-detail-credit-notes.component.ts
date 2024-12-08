@@ -18,7 +18,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-dialog-detail-credit-notes',
-    standalone: true,
     imports: [MaterialModule, CommonModule],
     templateUrl: './dialog-detail-credit-notes.component.html',
     styleUrls: ['./dialog-detail-credit-notes.component.sass']

@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { PrinterModel } from '../printer.model';
 import { PrintersService } from '../printers.service';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-add-printers',
+    imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-add-printers.component.html',
-    styleUrls: ['./dialog-add-printers.component.sass']
+    styleUrls: ['./dialog-add-printers.component.sass'],
 })
 export class DialogAddPrintersComponent {
 

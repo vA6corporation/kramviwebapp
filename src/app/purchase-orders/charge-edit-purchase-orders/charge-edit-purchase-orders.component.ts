@@ -17,7 +17,6 @@ import { PurchaseOrderItemsComponent } from '../purchase-order-items/purchase-or
 
 @Component({
     selector: 'app-charge-edit-purchase-orders',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, PurchaseOrderItemsComponent],
     templateUrl: './charge-edit-purchase-orders.component.html',
     styleUrls: ['./charge-edit-purchase-orders.component.sass']

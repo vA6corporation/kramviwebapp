@@ -6,7 +6,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-detail-supplies',
-    standalone: true,
     imports: [MaterialModule],
     templateUrl: './dialog-detail-supplies.component.html',
     styleUrls: ['./dialog-detail-supplies.component.sass']

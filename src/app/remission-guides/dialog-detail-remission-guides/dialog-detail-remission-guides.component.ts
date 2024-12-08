@@ -10,11 +10,14 @@ import { CdrRgModel } from '../cdr-rg.model';
 import { RemissionGuideItemModel } from '../remission-guide-item.model';
 import { RemissionGuideModel } from '../remission-guide.model';
 import { RemissionGuidesService } from '../remission-guides.service';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-dialog-detail-remission-guides',
+    imports: [MaterialModule, CommonModule],
     templateUrl: './dialog-detail-remission-guides.component.html',
-    styleUrls: ['./dialog-detail-remission-guides.component.sass']
+    styleUrls: ['./dialog-detail-remission-guides.component.sass'],
 })
 export class DialogDetailRemissionGuidesComponent {
 

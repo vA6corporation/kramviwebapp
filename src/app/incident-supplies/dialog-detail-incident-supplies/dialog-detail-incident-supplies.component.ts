@@ -4,11 +4,14 @@ import { UserModel } from '../../users/user.model';
 import { IncidentSuppliesService } from '../incident-supplies.service';
 import { IncidentSupplyItemModel } from '../incident-supply-item.model';
 import { IncidentSupplyModel } from '../incident-supply.model';
+import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-dialog-detail-incident-supplies',
+    imports: [MaterialModule, CommonModule],
     templateUrl: './dialog-detail-incident-supplies.component.html',
-    styleUrls: ['./dialog-detail-incident-supplies.component.sass']
+    styleUrls: ['./dialog-detail-incident-supplies.component.sass'],
 })
 export class DialogDetailIncidentSuppliesComponent {
 

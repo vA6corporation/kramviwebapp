@@ -9,7 +9,6 @@ import { ProvidersService } from '../../providers/providers.service';
 
 @Component({
     selector: 'app-dialog-edit-providers',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-edit-providers.component.html',
     styleUrls: ['./dialog-edit-providers.component.sass']

@@ -33,7 +33,6 @@ interface FormData {
 
 @Component({
     selector: 'app-edit-credit-notes',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, CommonModule, CreditNoteItemsComponent],
     templateUrl: './edit-credit-notes.component.html',
     styleUrls: ['./edit-credit-notes.component.sass']

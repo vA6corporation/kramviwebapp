@@ -27,7 +27,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-inventories',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './inventories.component.html',
     styleUrls: ['./inventories.component.sass']

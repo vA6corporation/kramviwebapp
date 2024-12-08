@@ -17,7 +17,6 @@ export interface DialogSplitPaymentsData {
 
 @Component({
     selector: 'app-dialog-split-payments',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-split-payments.component.html',
     styleUrls: ['./dialog-split-payments.component.sass']

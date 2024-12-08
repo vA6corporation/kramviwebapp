@@ -5,11 +5,13 @@ import { CreateIncidentItemModel } from '../create-incident-item.model';
 import { DialogIncidentItemsComponent } from '../dialog-incident-items/dialog-incident-items.component';
 import { IncidentsService } from '../incidents.service';
 import { IgvType } from '../../products/igv-type.enum';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-incident-items',
+    imports: [MaterialModule],
     templateUrl: './incident-items.component.html',
-    styleUrls: ['./incident-items.component.sass']
+    styleUrls: ['./incident-items.component.sass'],
 })
 export class IncidentItemsComponent {
 

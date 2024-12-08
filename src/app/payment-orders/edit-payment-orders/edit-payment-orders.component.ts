@@ -20,7 +20,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-edit-payment-orders',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule],
     templateUrl: './edit-payment-orders.component.html',
     styleUrls: ['./edit-payment-orders.component.sass']

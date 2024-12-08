@@ -4,15 +4,6 @@
             <span matListItemTitle>{{ purchaseSupplyItem.fullName }}</span>
             <div matListItemLine class="d-flex">
                 <span class="mr-3">x{{ purchaseSupplyItem.quantity }}</span>
-                <!-- @if (purchaseSupplyItem.igvCode === igvType.BONIFICACION) {
-                    <span class="mr-3" [style.color]="'green'">Bonificacion</span>
-                }
-                @if (purchaseSupplyItem.igvCode === igvType.EXONERADO) {
-                    <span class="text-primary mr-3">Exonerado</span>
-                }
-                @if (purchaseSupplyItem.igvCode === igvType.INAFECTO) {
-                    <span class="text-primary mr-3">Inafecto</span>
-                } -->
                 <span class="spacer"></span>
                 <span>{{ (purchaseSupplyItem.cost * purchaseSupplyItem.quantity).toFixed(2) }}</span>
             </div>

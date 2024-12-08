@@ -22,7 +22,6 @@ import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-create-purchases',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule, RouterModule, CommonModule, PurchaseItemsComponent],
     templateUrl: './create-purchases.component.html',
     styleUrls: ['./create-purchases.component.sass']

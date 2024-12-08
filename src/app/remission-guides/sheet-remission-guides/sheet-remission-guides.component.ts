@@ -12,11 +12,10 @@ import { RemissionGuidesService } from '../remission-guides.service';
 import { PrintService } from '../../print/print.service';
 
 @Component({
-  selector: 'app-sheet-remission-guides',
-  standalone: true,
-  imports: [MaterialModule],
-  templateUrl: './sheet-remission-guides.component.html',
-  styleUrl: './sheet-remission-guides.component.sass'
+    selector: 'app-sheet-remission-guides',
+    imports: [MaterialModule],
+    templateUrl: './sheet-remission-guides.component.html',
+    styleUrl: './sheet-remission-guides.component.sass'
 })
 export class SheetRemissionGuidesComponent {
 

@@ -13,7 +13,6 @@ import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-boards',
-    standalone: true,
     imports: [MaterialModule, RouterModule],
     templateUrl: './boards.component.html',
     styleUrls: ['./boards.component.sass']

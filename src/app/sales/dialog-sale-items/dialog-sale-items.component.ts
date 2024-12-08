@@ -15,7 +15,6 @@ import { IgvType } from '../../products/igv-type.enum';
 
 @Component({
     selector: 'app-dialog-sale-items',
-    standalone: true,
     imports: [MaterialModule, ReactiveFormsModule],
     templateUrl: './dialog-sale-items.component.html',
     styleUrls: ['./dialog-sale-items.component.sass']

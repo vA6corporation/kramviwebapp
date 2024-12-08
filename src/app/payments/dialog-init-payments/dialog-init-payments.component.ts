@@ -8,8 +8,7 @@ import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
 
 @Component({
     selector: 'app-dialog-init-payments',
-    standalone: true,
-    imports: [MaterialModule, ReactiveFormsModule, ],
+    imports: [MaterialModule, ReactiveFormsModule,],
     templateUrl: './dialog-init-payments.component.html',
     styleUrls: ['./dialog-init-payments.component.sass']
 })
