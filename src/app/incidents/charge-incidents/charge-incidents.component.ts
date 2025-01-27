@@ -66,9 +66,9 @@ export class ChargeIncidentsComponent {
     ngOnInit(): void {
         this.navigationService.setTitle('Retirar')
 
-        this.navigationService.setMenu([
-            { id: 'add_provider', label: 'Agregar proveedor', icon: 'person_add', show: true },
-        ])
+        // this.navigationService.setMenu([
+        //     { id: 'add_provider', label: 'Agregar proveedor', icon: 'person_add', show: true },
+        // ])
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
             switch (id) {
@@ -103,7 +103,7 @@ export class ChargeIncidentsComponent {
             this.navigationService.loadBarStart()
             const formData: FormData = this.formGroup.value
             const incident: CreateIncidentModel = {
-                incidentType: formData.incidentType,
+                // incidentType: formData.incidentType,
                 observations: formData.observations || '',
             }
 
@@ -111,7 +111,7 @@ export class ChargeIncidentsComponent {
                 throw new Error('Agrega un producto')
             }
 
-            this.incidentsService.create(incident, this.incidentItems).subscribe({
+            this.incidentsService.createOut(incident, this.incidentItems).subscribe({
                 next: () => {
                     this.incidentsService.setIncidentItems([])
                     this.router.navigate(['/incidents'])

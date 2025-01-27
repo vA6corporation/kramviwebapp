@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Params } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { OfficeModel } from '../auth/office.model';
+import { SettingModel } from '../auth/setting.model';
 import { HttpService } from '../http.service';
 import { PriceListModel } from './price-list.model';
-import { ProductModel } from './product.model';
-import { SettingModel } from '../auth/setting.model';
 import { PriceType } from './price-type.enum';
-import { OfficeModel } from '../auth/office.model';
 import { PriceModel } from './price.model';
+import { ProductModel } from './product.model';
 
 export interface UnitCodeModel {
     code: string
@@ -56,7 +56,8 @@ export class ProductsService {
         { code: 'GLL', name: 'GALONES' },
         { code: 'DZN', name: 'DOCENA' },
         { code: 'CEN', name: 'CIENTO' },
-        { code: 'MIL', name: 'MILLARES' }
+        { code: 'MIL', name: 'MILLARES' },
+        { code: 'TNE', name: 'TONELADAS' },
     ]
 
     private priceLists$: BehaviorSubject<PriceListModel[]> | null = null

@@ -402,6 +402,9 @@ export async function buildTicket80mm(
         const pageCenter = 35
         text = 'TICKET DE ATENCION'
         pdf.text(text, pageCenter + marginLeft, positionY, { align: 'center' })
+        text = `${sale.invoicePrefix}${office.serialPrefix}-${sale.invoiceNumber}`
+        positionY += 4
+        pdf.text(text, pageCenter + marginLeft, positionY, { align: 'center' })
         pdf.setFont('Helvetica', 'normal')
         pdf.setFontSize(body)
         positionY += 4

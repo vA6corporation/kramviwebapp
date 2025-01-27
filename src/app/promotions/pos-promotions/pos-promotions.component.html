@@ -71,9 +71,10 @@
         <span class="spacer"></span>
         <div class="p-3">
             <button type="button" mat-raised-button (click)="onCancel()" color="primary">CANCELAR</button>
-            <span class="divider" *ngIf="setting.allowCredit"></span>
-            <button type="button" mat-raised-button color="primary" routerLink="/charge/credit"
-                *ngIf="setting.allowCredit">CREDITO</button>
+            @if (setting.allowCredit) {
+            <span class="divider"></span>
+            <button type="button" mat-raised-button color="primary" routerLink="/charge/credit">CREDITO</button>
+            }
             <span class="divider"></span>
             <button type="button" mat-flat-button color="primary" routerLink="/charge">COBRAR</button>
         </div>

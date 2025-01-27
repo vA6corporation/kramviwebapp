@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -6,20 +7,18 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
 import { SettingModel } from '../../auth/setting.model';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategoriesService } from '../../products/categories.service';
 import { CategoryModel } from '../../products/category.model';
 import { DialogSelectAnnotationData, DialogSelectAnnotationsComponent } from '../../products/dialog-select-annotations/dialog-select-annotations.component';
 import { PriceListModel } from '../../products/price-list.model';
-import { PriceType } from '../../products/price-type.enum';
 import { ProductModel } from '../../products/product.model';
 import { ProductsService } from '../../products/products.service';
 import { DialogLastSalesComponent } from '../../sales/dialog-last-sales/dialog-last-sales.component';
+import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component';
 import { SalesService } from '../../sales/sales.service';
 import { DialogLastCommandComponent } from '../dialog-last-command/dialog-last-command.component';
-import { MaterialModule } from '../../material.module';
-import { CommonModule } from '@angular/common';
-import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component';
 
 @Component({
     selector: 'app-pos-fast-food',
@@ -117,33 +116,8 @@ export class PosFastFoodComponent {
                 next: products => {
                     this.navigationService.loadBarFinish()
                     this.selectedIndex = 1
-
-                    switch (this.setting.defaultPrice) {
-                        case PriceType.GLOBAL:
-                            this.products = products
-                            break
-                        case PriceType.OFICINA:
-                            for (const product of products) {
-                                const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                                product.price = price ? price.price : product.price
-                            }
-                            this.products = products
-                            break
-                        case PriceType.LISTA:
-                            for (const product of products) {
-                                const price = product.prices.find(e => e.priceListId === this.priceListId)
-                                product.price = price ? price.price : product.price
-                            }
-                            this.products = products
-                            break
-                        case PriceType.LISTAOFICINA:
-                            for (const product of products) {
-                                const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-                                product.price = price ? price.price : product.price
-                            }
-                            this.products = products
-                            break
-                    }
+                    ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                    this.products = products
 
                     if (this.sortByName) {
                         this.products.sort((a, b) => {
@@ -193,33 +167,7 @@ export class PosFastFoodComponent {
     }
 
     onChangePriceList() {
-        const products = this.products
-        switch (this.setting.defaultPrice) {
-            case PriceType.GLOBAL:
-                this.products = products
-                break
-            case PriceType.OFICINA:
-                for (const product of products) {
-                    const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId === null)
-                    product.price = price ? price.price : product.price
-                }
-                this.products = products
-                break
-            case PriceType.LISTA:
-                for (const product of products) {
-                    const price = product.prices.find(e => e.priceListId === this.priceListId)
-                    product.price = price ? price.price : product.price
-                }
-                this.products = products
-                break
-            case PriceType.LISTAOFICINA:
-                for (const product of products) {
-                    const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-                    product.price = price ? price.price : product.price
-                }
-                this.products = products
-                break
-        }
+        ProductsService.setPrices(this.products, this.priceListId, this.setting, this.office)
     }
 
     onCancel() {
@@ -234,33 +182,8 @@ export class PosFastFoodComponent {
         this.products = []
         if (category.products) {
             const products = category.products
-
-            switch (this.setting.defaultPrice) {
-                case PriceType.GLOBAL:
-                    this.products = products
-                    break
-                case PriceType.OFICINA:
-                    for (const product of products) {
-                        const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                        product.price = price ? price.price : product.price
-                    }
-                    this.products = products
-                    break
-                case PriceType.LISTA:
-                    for (const product of products) {
-                        const price = product.prices.find(e => e.priceListId === this.priceListId)
-                        product.price = price ? price.price : product.price
-                    }
-                    this.products = products
-                    break
-                case PriceType.LISTAOFICINA:
-                    for (const product of products) {
-                        const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-                        product.price = price ? price.price : product.price
-                    }
-                    this.products = products
-                    break
-            }
+            ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+            this.products = products
 
             if (this.sortByName) {
                 this.products.sort((a, b) => {
@@ -281,33 +204,8 @@ export class PosFastFoodComponent {
             this.productsService.getProductsByCategoryPage(category._id, 1, 500).subscribe(products => {
                 this.navigationService.loadBarFinish()
                 category.products = products
-
-                switch (this.setting.defaultPrice) {
-                    case PriceType.GLOBAL:
-                        this.products = products
-                        break
-                    case PriceType.OFICINA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.products = products
-                        break
-                    case PriceType.LISTA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.priceListId === this.priceListId)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.products = products
-                        break
-                    case PriceType.LISTAOFICINA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.products = products
-                        break
-                }
+                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                this.products = products
 
                 if (this.sortByName) {
                     this.products.sort((a, b) => {

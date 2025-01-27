@@ -7,12 +7,14 @@ import { DeletedBoardsComponent } from './deleted-boards/deleted-boards.componen
 import { LoginWaiterComponent } from './login-waiter/login-waiter.component';
 import { PosBoardWaiterComponent } from './pos-board-waiter/pos-board-waiter.component';
 import { PosBoardComponent } from './pos-board/pos-board.component';
+import { SplitBoardsComponent } from './split-boards/split-boards.component';
 
 export const routes: Routes = [
     { path: '', component: BoardsComponent },
     { path: 'login', component: LoginWaiterComponent },
     { path: 'deletedBoards', component: DeletedBoardsComponent },
     { path: 'posBoards/:tableIndex', component: PosBoardComponent },
+    { path: 'splitBoards/:tableIndex', component: SplitBoardsComponent },
     { path: 'changeBoards/:boardId', component: ChangeBoardsComponent },
     { path: 'chargeBoards', component: ChargeBoardsComponent },
     { path: 'waiter', component: BoardsWaiterComponent },

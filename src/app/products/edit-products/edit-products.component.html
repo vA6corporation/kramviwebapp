@@ -24,9 +24,9 @@
             <mat-label>Categoria</mat-label>
             <mat-select formControlName="categoryId" class="text-uppercase">
                 @for (category of categories; track category._id) {
-                    <mat-option [value]="category._id">
-                        {{ category.name | uppercase }}
-                    </mat-option>
+                <mat-option [value]="category._id">
+                    {{ category.name | uppercase }}
+                </mat-option>
                 }
             </mat-select>
         </mat-form-field>
@@ -39,7 +39,7 @@
             <mat-label>Unidad de medida</mat-label>
             <mat-select formControlName="unitCode">
                 @for (unitCode of unitCodes; track $index) {
-                    <mat-option [value]="unitCode.code">{{ unitCode.name }}</mat-option>
+                <mat-option [value]="unitCode.code">{{ unitCode.name }}</mat-option>
                 }
             </mat-select>
         </mat-form-field>
@@ -52,7 +52,8 @@
                 <mat-option value="11">BONIFICACION</mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-form-field appearance="fill" *ngIf="setting.showPrintZone">
+        @if (setting.showPrintZone) {
+        <mat-form-field appearance="fill">
             <mat-label>Comanda</mat-label>
             <mat-select formControlName="printZone">
                 <mat-option value="COCINA">COCINA</mat-option>
@@ -61,6 +62,7 @@
                 <mat-option value="CAJA">CAJA</mat-option>
             </mat-select>
         </mat-form-field>
+        }
         <mat-form-field appearance="fill">
             <mat-label>Codigo interno</mat-label>
             <input type="text" matInput formControlName="sku">
@@ -75,87 +77,88 @@
             </button>
         </div>
         @if (setting.defaultPrice === 'GLOBAL') {
-            <mat-form-field appearance="fill">
-                <mat-label>Precio</mat-label>
+        <mat-form-field appearance="fill">
+            <mat-label>Precio</mat-label>
+            <input type="number" matInput formControlName="price">
+        </mat-form-field>
+        } @else {
+        <ng-container formArrayName="prices">
+            @for (price of formArray.controls; track i; let i = $index) {
+            <mat-form-field appearance="fill" [formGroupName]="i">
+                <mat-label>{{ price.value.name }}</mat-label>
                 <input type="number" matInput formControlName="price">
             </mat-form-field>
-        } @else {
-            <ng-container formArrayName="prices">
-                @for (price of formArray.controls; track i; let i = $index) {
-                    <mat-form-field appearance="fill" [formGroupName]="i">
-                        <mat-label>{{ price.value.name }}</mat-label>
-                        <input type="number" matInput formControlName="price">
-                    </mat-form-field>
-                }
-            </ng-container>
+            }
+        </ng-container>
         }
         <mat-form-field appearance="fill">
             <mat-label>Costo</mat-label>
             <input type="number" matInput formControlName="cost">
         </mat-form-field>
         @if (urlImage) {
-            <div class="text-center mb-3">
-                <img [src]="urlImage" alt="producto" width="400" class="mat-elevation-z2">
-            </div>
-            <p class="text-center text-danger">Si actualizas la imagen puede demorar hasta 1 hora en reflejarse los cambios</p>
+        <div class="text-center mb-3">
+            <img [src]="urlImage" alt="producto" width="400" class="mat-elevation-z2">
+        </div>
+        <p class="text-center text-danger">Si actualizas la imagen puede demorar hasta 1 hora en reflejarse los cambios
+        </p>
         }
         <div class="mb-3">
-            <button type="button" mat-flat-button color="primary" (click)="fileImageInput.click()"
-                class="w-100">AGREGAR IMAGEN</button>
-            <input type="file" #fileImageInput accept="image/png, image/gif, image/jpeg" (change)="onFileImageSelected(fileImageInput.files, fileImageInput)"
-                hidden>
+            <button type="button" mat-flat-button color="primary" (click)="fileImageInput.click()" class="w-100">AGREGAR
+                IMAGEN</button>
+            <input type="file" #fileImageInput accept="image/png, image/gif, image/jpeg"
+                (change)="onFileImageSelected(fileImageInput.files, fileImageInput)" hidden>
         </div>
         <mat-list>
             <div mat-subheader>Productos vinculados</div>
             @for (linkProduct of linkProducts; track linkProduct._id; let i = $index) {
-                <mat-list-item>
-                    <span matListItemTitle>{{ linkProduct.fullName }}</span>
-                    <div matListItemMeta>
-                        <button type="button" mat-icon-button (click)="onRemoveProduct(i)">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                    </div>
-                </mat-list-item>
+            <mat-list-item>
+                <span matListItemTitle>{{ linkProduct.fullName }}</span>
+                <div matListItemMeta>
+                    <button type="button" mat-icon-button (click)="onRemoveProduct(i)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </mat-list-item>
             }
         </mat-list>
         <div class="mb-3">
-            <button type="button" class="w-100" mat-flat-button color="primary"
-                (click)="onDialogProducts()">VINCULAR PRODUCTO</button>
+            <button type="button" class="w-100" mat-flat-button color="primary" (click)="onDialogProducts()">VINCULAR
+                PRODUCTO</button>
         </div>
         <mat-list>
             <div mat-subheader>Anotaciones</div>
             @for (annotation of annotations; track $index; let i = $index) {
-                <mat-list-item>
-                    <span matListItemTitle>{{ annotation }}</span>
-                    <div matListItemMeta>
-                        <button type="button" mat-icon-button (click)="onRemoveAnnotation(i)">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                    </div>
-                </mat-list-item>
+            <mat-list-item>
+                <span matListItemTitle>{{ annotation }}</span>
+                <div matListItemMeta>
+                    <button type="button" mat-icon-button (click)="onRemoveAnnotation(i)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </mat-list-item>
             }
         </mat-list>
         <div class="mb-3">
-            <button type="button" class="w-100" mat-flat-button color="primary"
-                (click)="onDialogAnnotations()">AGREGAR ANOTACION</button>
+            <button type="button" class="w-100" mat-flat-button color="primary" (click)="onDialogAnnotations()">AGREGAR
+                ANOTACION</button>
         </div>
         <mat-list>
             <div mat-subheader>Proveedores</div>
             @for (provider of providers; track provider._id; let i = $index) {
-                <mat-list-item>
-                    <span matListItemTitle>{{ provider.name }}</span>
-                    <span matListItemLine>{{ provider.documentType }}: {{ provider.document }}</span>
-                    <div matListItemMeta>
-                        <button type="button" mat-icon-button (click)="onRemoveProvider(i)">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                    </div>
-                </mat-list-item>
+            <mat-list-item>
+                <span matListItemTitle>{{ provider.name }}</span>
+                <span matListItemLine>{{ provider.documentType }}: {{ provider.document }}</span>
+                <div matListItemMeta>
+                    <button type="button" mat-icon-button (click)="onRemoveProvider(i)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </mat-list-item>
             }
         </mat-list>
         <div class="mb-3">
-            <button type="button" class="w-100" mat-flat-button color="primary"
-                (click)="onDialogProviders()">AGREGAR PROVEEDOR</button>
+            <button type="button" class="w-100" mat-flat-button color="primary" (click)="onDialogProviders()">AGREGAR
+                PROVEEDOR</button>
         </div>
         <div class="py-3">
             <mat-slide-toggle formControlName="isTrackStock">Trackear stock</mat-slide-toggle>

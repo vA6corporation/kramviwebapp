@@ -1,67 +1,64 @@
 <div class="container">
-    @if (turn === null) {
-    <h2 class="text-muted text-center mb-3 mat-title-large">La caja esta cerrada</h2>
-    <div class="d-flex">
-        <span class="spacer"></span>
-        <button type="button" mat-flat-button color="primary" (click)="onOpenTurn()">APERTURAR CAJA</button>
-        <span class="spacer"></span>
-    </div>
-    } @else {
+    @if (turn) {
     <mat-card class="mb-3">
         <mat-card-header>
             <mat-card-title>Resumen de caja</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <table class="w-100 mb-3">
-                <tbody>
-                    <tr>
-                        <td>F/H de apertura</td>
-                        <td align="right">{{ turn.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</td>
-                    </tr>
-                    <tr>
-                        <td>Monto de apertura</td>
-                        <td align="right">{{ turn.openCash.toFixed(2) }}</td>
-                    </tr>
-                    <tr *ngIf="totalExpenses">
-                        <td>Total gastos</td>
-                        <td align="right">{{ totalExpenses.toFixed(2) }}</td>
-                    </tr>
-                    <tr>
-                        <td>Total recaudado</td>
-                        <td align="right">{{ (totalCollected).toFixed(2) }}</td>
-                    </tr>
-                    <tr class="text-success">
-                        <td>Efectivo final</td>
-                        <td align="right">{{ (totalCash - totalExpenses + turn.openCash).toFixed(2) }}</td>
-                    </tr>
-                    <tr class="text-danger" *ngIf="totalCredit">
-                        <td>Total credito</td>
-                        <td align="right">{{ (totalCredit).toFixed(2) }}</td>
-                    </tr>
-                    <tr class="text-danger" *ngIf="totalDebt">
-                        <td>Total pendiente de pago</td>
-                        <td align="right">{{ (totalDebt).toFixed(2) }}</td>
-                    </tr>
-                    <tr>
-                        <td>Observaciones</td>
-                        <td align="right" [ngClass]="{ 'text-muted': !turn.observations }">{{ turn.observations ||
-                            'NINGUNO' }}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <mat-list role="list">
+                <mat-list-item>
+                    <span matListItemTitle>F/H de apertura</span>
+                    <span>{{ turn.createdAt | date: 'dd MMM yyyy, hh:mm a' }}</span>
+                </mat-list-item>
+                <mat-list-item>
+                    <span matListItemTitle>Monto de apertura</span>
+                    <span>{{ turn.openCash.toFixed(2) }}</span>
+                </mat-list-item>
+                @if (totalExpenses) {
+                <mat-list-item>
+                    <span matListItemTitle>Total gastos</span>
+                    <span>{{ totalExpenses.toFixed(2) }}</span>
+                </mat-list-item>
+                }
+                <mat-list-item>
+                    <span matListItemTitle>Total recaudado</span>
+                    <span>{{ (totalCollected).toFixed(2) }}</span>
+                </mat-list-item>
+                <mat-list-item>
+                    <span matListItemTitle class="text-success">Efectivo final (Monto de apertura + Efectivo - Gastos)</span>
+                    <span class="text-success">{{ (totalCash - totalExpenses + turn.openCash).toFixed(2) }}</span>
+                </mat-list-item>
+                @if (totalCredit) {
+                <mat-list-item>
+                    <span matListItemTitle>Total credito</span>
+                    <span>{{ (totalCredit).toFixed(2) }}</span>
+                </mat-list-item>
+                }
+                @if (totalDebt) {
+                <mat-list-item>
+                    <span matListItemTitle>Total pendiente de pago</span>
+                    <span>{{ (totalDebt).toFixed(2) }}</span>
+                </mat-list-item>
+                }
+                <mat-list-item>
+                    <span matListItemTitle>Observaciones</span>
+                    <span align="right" [ngClass]="{ 'text-muted': !turn.observations }">
+                        {{ turn.observations || 'NINGUNO' }}
+                    </span>
+                </mat-list-item>
+            </mat-list>
             <div class="pb-3">
                 <mat-divider></mat-divider>
             </div>
-            <table class="w-100">
-                <tbody>
-                    @for (summaryPayment of summaryPayments; track $index) {
-                    <tr>
-                        <td>{{ summaryPayment.paymentMethod.name }} ({{ summaryPayment.totalQuantity }})</td>
-                        <td align="right">{{ summaryPayment.totalCharge.toFixed(2) }}</td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
+            <mat-list role="list">
+                @for (summaryPayment of summaryPayments; track $index) {
+                <mat-list-item>
+                    <span matListItemTitle>{{ summaryPayment.paymentMethod.name }} ({{ summaryPayment.totalQuantity
+                        }})</span>
+                    <span>{{ summaryPayment.totalCharge.toFixed(2) }}</span>
+                </mat-list-item>
+                }
+            </mat-list>
         </mat-card-content>
     </mat-card>
     <button type="button" (click)="onCloseTurn()" mat-flat-button color="primary" class="w-100 mb-3">
@@ -71,14 +68,23 @@
         <mat-card-header>
             <mat-card-title>Gastos</mat-card-title>
         </mat-card-header>
-        <mat-action-list>
-            @for (expense of expenses; track expense._id) {
-            <button type="button" (click)="onEditExpense(expense)" mat-list-item>
-                <span matListItemTitle>{{ expense.concept }}</span>
-                <span matListItemLine>{{ expense.charge.toFixed(2) }}</span>
-            </button>
-            }
-        </mat-action-list>
+        <mat-card-content>
+            <mat-list role="list">
+                @for (expense of expenses; track expense._id) {
+                <mat-list-item>
+                    <span matListItemTitle>{{ expense.concept }}</span>
+                    <span matListItemLine>{{ expense.charge.toFixed(2) }}</span>
+                    <div class="py-3" matListItemMeta>
+                        <button type="button" mat-icon-button aria-label="trash" (click)="onEditExpense(expense)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    </div>
+                </mat-list-item>
+                } @empty {
+                <mat-list-item class="text-center">SIN GASTOS</mat-list-item>
+                }
+            </mat-list>
+        </mat-card-content>
     </mat-card>
     <button type="button" (click)="onAddExpense()" mat-flat-button color="primary" class="w-100 mb-3">
         AGREGAR GASTO
@@ -88,27 +94,30 @@
             <mat-card-title>Productos vendidos</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <table class="w-100 mb-3">
-                <tbody>
-                    @for (summarySaleItem of summarySaleItems; track $index) {
-                    <tr>
-                        <td>
-                            {{ summarySaleItem.fullName | uppercase }} ({{ summarySaleItem.totalQuantity }})
-                            <span *ngIf="summarySaleItem.totalQuantityBonus" class="ml-3 text-success">Bonificacion
-                                ({{ summarySaleItem.totalQuantityBonus }})</span>
-                        </td>
-                        <td align="right">{{ summarySaleItem.totalSale.toFixed(2) }}</td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
+            <mat-list role="list">
+                @for (summarySaleItem of summarySaleItems; track $index) {
+                <mat-list-item role="listitem">
+                    <span matListItemTitle>{{ summarySaleItem.fullName | uppercase }} ({{ summarySaleItem.totalQuantity
+                        }})
+                    </span>
+                    <span matListItemLine>{{ summarySaleItem.totalSale.toFixed(2) }}
+                        @if (summarySaleItem.totalQuantityBonus) {
+                        <span class="ml-1 text-success">
+                            Bonificacion ({{ summarySaleItem.totalQuantityBonus }})
+                        </span>
+                        }
+                    </span>
+                </mat-list-item>
+                }
+            </mat-list>
         </mat-card-content>
     </mat-card>
     <button type="button" (click)="onGetSummarySales()" mat-flat-button color="primary" class="w-100 mb-3">MOSTRAR
         PRODUCTOS VENDIDOS</button>
-    <mat-card class="mb-3" *ngIf="credits.length">
+    @if (credits.length) {
+    <mat-card class="mb-3">
         <mat-card-header>
-            <mat-card-title>Creditos o pendientes de pago</mat-card-title>
+            <mat-card-title>Creditos</mat-card-title>
         </mat-card-header>
         <mat-card-content>
             <mat-action-list role="list">
@@ -134,6 +143,7 @@
             </mat-action-list>
         </mat-card-content>
     </mat-card>
+    }
     <mat-card class="mb-3">
         <mat-card-header>
             <mat-card-title>Ventas</mat-card-title>
@@ -151,6 +161,8 @@
                         <span>{{ paymentMethod.name }}: {{ payment.charge.toFixed(2) }}</span>
                         }
                         }
+                        } @empty {
+                            <span>SIN PAGOS</span>
                         }
                     </span>
                     <span matListItemLine>{{ sale.user.name | uppercase }} - {{ sale.createdAt | date: 'dd/MM/yyyy'
@@ -163,5 +175,12 @@
     <button type="button" (click)="onGetAllSales()" mat-flat-button color="primary" class="w-100">
         MOSTRAR TODAS LAS VENTAS
     </button>
+    } @else {
+    <h2 class="text-muted text-center mb-3 mat-title-large">La caja esta cerrada</h2>
+    <div class="d-flex">
+        <span class="spacer"></span>
+        <button type="button" mat-flat-button color="primary" (click)="onOpenTurn()">APERTURAR CAJA</button>
+        <span class="spacer"></span>
+    </div>
     }
 </div>

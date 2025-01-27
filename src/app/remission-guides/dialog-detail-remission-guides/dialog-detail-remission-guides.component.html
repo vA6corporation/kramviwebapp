@@ -1,18 +1,40 @@
 <h2 mat-dialog-title>
     Detalles T{{ office.serialPrefix }}-{{ remissionGuide?.remissionGuideNumber }}
-    <span class="ml-2 text-danger" *ngIf="remissionGuide?.deletedAt">ANULADO</span>
+    @if (remissionGuide?.deletedAt) {
+    <span class="ml-2 text-danger">ANULADO</span>
+    }
 </h2>
 <div mat-dialog-content>
-    <mat-list class="m-0">
+    <mat-list>
         @for (remissionGuideItem of remissionGuideItems; track remissionGuideItem.productId) {
-        <mat-list-item>
-            <span class="mr-2 text-muted">x{{ remissionGuideItem.quantity }}</span>
-            {{ remissionGuideItem.fullName }}
-            <span class="spacer"></span>
+        <mat-list-item class="px-0">
+            <span matListItemTitle>{{ remissionGuideItem.fullName }}</span>
+            <span>{{ remissionGuideItem.quantity }}</span>
         </mat-list-item>
         }
     </mat-list>
-    <mat-divider class="mb-0"></mat-divider>
+    <mat-divider></mat-divider>
+    @if (carrier) {
+        <mat-list>
+            <mat-list-item class="px-0">
+                <span matListItemTitle>Documento</span>
+                <span>{{ carrier.documentType }}: {{ carrier.document }}</span>
+            </mat-list-item>
+            <mat-list-item class="px-0">
+                <span matListItemTitle>Nombre/Razon social</span>
+                <span>{{ carrier.name }}</span>
+            </mat-list-item>
+            <mat-list-item class="px-0">
+                <span matListItemTitle>N° de placa</span>
+                <span>{{ carrier.carriagePlate }}</span>
+            </mat-list-item>
+            <mat-list-item class="px-0">
+                <span matListItemTitle>N° de licencia de conducir</span>
+                <span>{{ carrier.licenseNumber }}</span>
+            </mat-list-item>
+        </mat-list>
+    }
+    <mat-divider></mat-divider>
     <table class="w-100">
         <tbody>
             <tr>
@@ -33,10 +55,12 @@
                 <td>ID</td>
                 <td align="right">{{ remissionGuide?._id }}</td>
             </tr>
-            <tr *ngIf="cdr" class="text-primary">
+            @if (cdr) {
+            <tr class="text-primary">
                 <td>Mensaje Sunat</td>
                 <td align="right">{{ cdr.sunatMessage }}</td>
             </tr>
+            }
         </tbody>
     </table>
 </div>

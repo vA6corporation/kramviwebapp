@@ -86,16 +86,18 @@
                             <mat-icon>download</mat-icon>
                             <span>Exportar PDF</span>
                         </button>
-                        <button [routerLink]="['/creditNotes', element._id, 'editItems']" mat-menu-item
-                            *ngIf="element.deletedAt === null && element.cdr === null">
+                        @if (element.deletedAt === null && element.cdr === null) {
+                        <button [routerLink]="['/creditNotes', element._id, 'editItems']" mat-menu-item>
                             <mat-icon>edit</mat-icon>
                             <span>Editar</span>
                         </button>
-                        <button (click)="onSendInvoice(element._id)" *ngIf="element.invoiceType !== 'NOTA DE VENTA'"
-                            mat-menu-item>
+                        }
+                        @if (element.invoiceType !== 'NOTA DE VENTA') {
+                        <button (click)="onSendInvoice(element._id)" mat-menu-item>
                             <mat-icon>near_me</mat-icon>
                             <span>Enviar a Sunat</span>
                         </button>
+                        }
                         <button type="button" mat-menu-item (click)="onDeleteInvoice(element)">
                             <mat-icon>delete</mat-icon>
                             <span>Anular</span>

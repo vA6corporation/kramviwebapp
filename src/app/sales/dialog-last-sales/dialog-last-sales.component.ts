@@ -10,10 +10,11 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { OfficeModel } from '../../auth/office.model';
 import { SettingModel } from '../../auth/setting.model';
 import { MaterialModule } from '../../material.module';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-dialog-last-sales',
-    imports: [MaterialModule],
+    imports: [MaterialModule, CommonModule],
     templateUrl: './dialog-last-sales.component.html',
     styleUrls: ['./dialog-last-sales.component.sass']
 })
@@ -38,7 +39,7 @@ export class DialogLastSalesComponent {
     }
 
     ngOnInit(): void {
-        this.salesService.getSalesByPage(1, 5, {}).subscribe(sales => {
+        this.salesService.getSalesOfTheDay().subscribe(sales => {
             this.sales = sales
         })
 

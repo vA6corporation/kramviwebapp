@@ -6,7 +6,7 @@
             <p class="caption text-center text-muted mb-2">Total a cobrar</p>
             @if (customer) {
             <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
-                <span class="mat-h1">{{ customer.name | uppercase }}</span>
+                <span>{{ customer.name | uppercase }}</span>
             </button>
             @if (customer.mobileNumber) {
             <p class="text-center mb-3">Celular: {{ customer.formatMobileNumber }}</p>

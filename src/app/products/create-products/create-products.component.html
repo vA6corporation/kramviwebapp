@@ -162,10 +162,12 @@
             <mat-slide-toggle formControlName="isTrackStock" (change)="onIsTrackStockChange()">Trackear
                 stock</mat-slide-toggle>
         </div>
-        <mat-form-field appearance="fill" *ngIf="isTrackStock">
+        @if (isTrackStock) {
+        <mat-form-field appearance="fill">
             <mat-label>Stock inicial</mat-label>
             <input type="number" matInput formControlName="stock">
         </mat-form-field>
+        }
         <div class="d-flex">
             <span class="spacer"></span>
             <button type="button" mat-raised-button routerLink="/products" color="primary">CANCELAR</button>

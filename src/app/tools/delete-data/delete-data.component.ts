@@ -23,7 +23,22 @@ export class DeleteDataComponent {
             next: () => {
                 this.navigationService.loadBarFinish()
                 this.navigationService.showMessage('Productos eliminados')
-                location.reload()
+                setTimeout(() => {
+                    location.reload()
+                }, 3000)
+            }, error: (error: HttpErrorResponse) => {
+                this.navigationService.loadBarFinish()
+                this.navigationService.showMessage(error.error.message)
+            }
+        })
+    }
+
+    onDeletePurchases() {
+        this.navigationService.loadBarStart()
+        this.httpService.delete(`tools/deletePurchases`).subscribe({
+            next: () => {
+                this.navigationService.loadBarFinish()
+                this.navigationService.showMessage('Compras eliminados')
             }, error: (error: HttpErrorResponse) => {
                 this.navigationService.loadBarFinish()
                 this.navigationService.showMessage(error.error.message)

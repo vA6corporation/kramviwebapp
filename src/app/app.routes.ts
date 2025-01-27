@@ -50,16 +50,16 @@ export const routes: Routes = [
         loadChildren: () => import('./receptions/receptions.routes').then(m => m.routes)
     },
     {
-        path: 'favorites',
-        loadChildren: () => import('./favorites/favorites.routes').then(m => m.routes)
-    },
-    {
         path: 'posCopy',
         loadChildren: () => import('./pos-copy/pos-copy.routes').then(m => m.routes)
     },
     {
         path: 'posFastFood',
         loadChildren: () => import('./pos-fast-food/pos-fast-food.routes').then(m => m.routes)
+    },
+    {
+        path: 'prePosFastFood',
+        loadChildren: () => import('./pre-pos-fast-food/pre-pos-fast-food.routes').then(m => m.routes)
     },
     {
         path: 'credits',

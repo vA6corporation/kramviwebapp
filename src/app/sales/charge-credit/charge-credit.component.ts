@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CreateCreditModel } from '../create-credit.model';
 import { CreateSaleItemModel } from '../create-sale-item.model';
@@ -41,6 +41,8 @@ import { DirectivesModule } from '../../directives/directives.module';
 import { PreSalesService } from '../../pre-sales/pre-sales.service';
 import { CouponsService } from '../../coupons/coupons.service';
 import { CouponItemModel } from '../../coupons/coupon-item.model';
+import { DetractionModel } from '../../biller/detraction.model';
+import { DialogDetractionComponent } from '../../biller/dialog-detraction/dialog-detraction.component';
 
 @Component({
     selector: 'app-charge-credit',
@@ -66,6 +68,7 @@ export class ChargeCreditComponent {
         private readonly printService: PrintService,
         private readonly authService: AuthService,
         private readonly activatedRoute: ActivatedRoute,
+        private readonly router: Router,
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
@@ -97,6 +100,9 @@ export class ChargeCreditComponent {
     workers: WorkerModel[] = []
     specialties: SpecialtyModel[] = []
     paymentMethods: PaymentMethodModel[] = []
+
+    private backTo: string = ''
+    private detraction: DetractionModel | null = null
     private couponItems: CouponItemModel[] = []
     private user: UserModel = new UserModel()
     private turn: TurnModel | null = null
@@ -233,7 +239,7 @@ export class ChargeCreditComponent {
                             position: { top: '20px' },
                             data: this.turn._id,
                         })
-    
+
                         dialogRef.afterClosed().subscribe(payments => {
                             if (payments) {
                                 this.payments = payments
@@ -271,7 +277,8 @@ export class ChargeCreditComponent {
             this.dues = [due]
         })
 
-        const { proformaId } = this.activatedRoute.snapshot.queryParams
+        const { proformaId, backTo } = this.activatedRoute.snapshot.queryParams
+        this.backTo = backTo
 
         if (proformaId) {
             Object.assign(this.params, { proformaId })
@@ -291,6 +298,7 @@ export class ChargeCreditComponent {
             Object.assign(this.params, { preSaleId: preSale._id })
             this.formGroup.patchValue({ workerId: preSale.workerId })
         }
+
     }
 
     onClickSaleItem(index: number) {
@@ -323,6 +331,20 @@ export class ChargeCreditComponent {
 
             this.dues = [due]
         }
+    }
+
+    onDialogDetraction() {
+        const dialogRef = this.matDialog.open(DialogDetractionComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: this.detraction,
+        })
+
+        dialogRef.afterClosed().subscribe(detraction => {
+            if (detraction) {
+                this.detraction = detraction
+            }
+        })
     }
 
     onSubmit() {
@@ -378,9 +400,15 @@ export class ChargeCreditComponent {
             }
 
             if (this.setting.allowFreeStock) {
-                this.salesService.createCredit(createdCredit, this.saleItems, this.payments, this.dues, this.couponItems, this.params).subscribe({
+                this.salesService.createCredit(
+                    createdCredit, this.saleItems, 
+                    this.payments, 
+                    this.dues, 
+                    this.couponItems,
+                    this.detraction, 
+                    this.params
+                ).subscribe({
                     next: sale => {
-
                         Object.assign(sale, {
                             user: this.user,
                             customer: this.customer,
@@ -403,7 +431,13 @@ export class ChargeCreditComponent {
                         }
 
                         this.salesService.setSaleItems([])
-                        this.location.back()
+
+                        if (this.backTo) {
+                            this.router.navigate([this.backTo])
+                        } else {
+                            this.location.back()
+                        }
+
                         this.isLoading = false
                         this.navigationService.loadBarFinish()
                         this.navigationService.showMessage('Registrado correctamente')
@@ -414,15 +448,21 @@ export class ChargeCreditComponent {
                     }
                 })
             } else {
-                this.salesService.createCreditStock(createdCredit, this.saleItems, this.payments, this.dues, this.couponItems, this.params).subscribe({
+                this.salesService.createCreditStock(
+                    createdCredit, 
+                    this.saleItems, 
+                    this.payments, 
+                    this.dues, 
+                    this.couponItems,
+                    this.detraction,
+                    this.params
+                ).subscribe({
                     next: res => {
-
                         const { sale, outStocks } = res
 
                         if (outStocks.length || sale === null) {
                             this.navigationService.loadBarFinish()
                             this.isLoading = false
-                            console.log(outStocks)
                             this.matDialog.open(DialogOutStockComponent, {
                                 width: '600px',
                                 position: { top: '20px' },
@@ -452,12 +492,17 @@ export class ChargeCreditComponent {
                             }
 
                             this.salesService.setSaleItems([])
-                            this.location.back()
+
+                            if (this.backTo) {
+                                this.router.navigate([this.backTo])
+                            } else {
+                                this.location.back()
+                            }
+
                             this.isLoading = false
                             this.navigationService.loadBarFinish()
                             this.navigationService.showMessage('Registrado correctamente')
                         }
-
                     }, error: (error: HttpErrorResponse) => {
                         this.navigationService.showMessage(error.error.message)
                         this.isLoading = false

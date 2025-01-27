@@ -87,21 +87,7 @@ export class DisabledProductsComponent {
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {
             this.productsService.getProductsByKey(key).subscribe({
                 next: products => {
-                    switch (this.setting.defaultPrice) {
-                        case PriceType.OFICINA:
-                            for (const product of products) {
-                                product.price = product.prices.find(e => e.officeId === this.office._id)?.price || 0
-                            }
-                            break
-                        case PriceType.LISTA:
-                            for (const product of products) {
-                                const price = product.prices.find(e => e.priceListId === this.priceListId)
-                                product.price = price ? price.price : product.price
-                            }
-                            break
-                        default:
-                            break
-                    }
+                    ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
                     this.dataSource = products
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.showMessage(error.error.message)
@@ -120,22 +106,7 @@ export class DisabledProductsComponent {
         this.navigationService.loadBarStart()
         this.productsService.getDisabledProducts(this.pageIndex + 1, this.pageSize).subscribe(products => {
             this.navigationService.loadBarFinish()
-            switch (this.setting.defaultPrice) {
-                case PriceType.OFICINA:
-                    for (const product of products) {
-                        product.price = product.prices.find(e => e.officeId === this.office._id)?.price || 0
-                    }
-                    break
-                case PriceType.LISTA:
-                    for (const product of products) {
-                        const price = product.prices.find(e => e.priceListId === this.priceListId)
-                        product.price = price ? price.price : product.price
-                    }
-                    break
-                default:
-                    break
-            }
-
+            ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
             this.dataSource = products
         })
     }

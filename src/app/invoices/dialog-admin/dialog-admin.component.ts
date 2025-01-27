@@ -130,7 +130,7 @@ export class DialogAdminComponent {
     onSubmit() {
         if (this.sale) {
             Object.assign(this.sale, this.formGroup.value)
-            this.salesService.updateSale(this.sale, this.data.saleId).subscribe({
+            this.salesService.update(this.sale, this.data.saleId).subscribe({
                 next: () => {
                     this.navigationService.showMessage('Se han guardado los cambios')
                     this.onUpdate$.emit()

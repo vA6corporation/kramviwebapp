@@ -26,11 +26,10 @@ export class DialogRemoveStockComponent {
 
     formGroup: FormGroup = this.formBuilder.group({
         quantity: ['', Validators.required],
-        incidentType: ['', Validators.required],
         observations: '',
     })
     isLoading: boolean = false
-    incidentTypes = [
+    observations = [
         'DIVISION',
         'VENCIMIENTO',
         'DESTRUCCION',
@@ -46,12 +45,11 @@ export class DialogRemoveStockComponent {
             this.navigationService.loadBarStart()
             this.dialogRef.disableClose = true
             this.isLoading = true
-            const { quantity, incidentType, observations } = this.formGroup.value
+            const { quantity, observations } = this.formGroup.value
             const incident = {
-                incidentType,
                 observations,
             }
-            const incidentItem = {
+            const incidentOutItem = {
                 fullName: this.product.fullName,
                 productId: this.product._id,
                 preIgvCode: this.product.igvCode,
@@ -60,7 +58,7 @@ export class DialogRemoveStockComponent {
                 igvCode: '10',
                 unitCode: 'NIU'
             }
-            this.incidentsService.create(incident, [incidentItem]).subscribe({
+            this.incidentsService.createOut(incident, [incidentOutItem]).subscribe({
                 next: () => {
                     this.dialogRef.disableClose = false
                     this.navigationService.loadBarFinish()

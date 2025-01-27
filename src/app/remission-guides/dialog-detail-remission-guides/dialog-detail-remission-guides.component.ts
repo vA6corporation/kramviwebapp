@@ -12,6 +12,7 @@ import { RemissionGuideModel } from '../remission-guide.model';
 import { RemissionGuidesService } from '../remission-guides.service';
 import { MaterialModule } from '../../material.module';
 import { CommonModule } from '@angular/common';
+import { CarrierModel } from '../../carriers/carrier.model';
 
 @Component({
     selector: 'app-dialog-detail-remission-guides',
@@ -35,6 +36,7 @@ export class DialogDetailRemissionGuidesComponent {
     office: OfficeModel = new OfficeModel()
     business: BusinessModel = new BusinessModel()
     cdr: CdrRgModel | null = null
+    carrier: CarrierModel | null = null
 
     private handleAuth$: Subscription = new Subscription()
 
@@ -49,11 +51,12 @@ export class DialogDetailRemissionGuidesComponent {
         })
 
         this.remissionGuidesService.getRemissionGuideById(this.remissionGuideId).subscribe(remissionGuide => {
+            const { remissionGuideItems, user, cdr, carrier } = remissionGuide
             this.remissionGuide = remissionGuide
-            const { remissionGuideItems, user, cdr } = remissionGuide
             this.remissionGuideItems = remissionGuideItems
             this.user = user
             this.cdr = cdr
+            this.carrier = carrier
         })
     }
 

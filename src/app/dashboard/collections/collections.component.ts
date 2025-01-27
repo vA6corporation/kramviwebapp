@@ -1,14 +1,13 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { PaymentsService } from '../../payments/payments.service';
-import { OfficeModel } from '../../auth/office.model';
-import { AuthService } from '../../auth/auth.service';
-import { Chart, ChartOptions, ChartType, registerables } from 'chart.js';
-import { Params } from '@angular/router';
-import { Subscription } from 'rxjs';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { MaterialModule } from '../../material.module';
 import { CommonModule } from '@angular/common';
-Chart.register(...registerables);
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Params } from '@angular/router';
+import { Chart, ChartOptions, ChartType } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../auth/auth.service';
+import { OfficeModel } from '../../auth/office.model';
+import { MaterialModule } from '../../material.module';
+import { PaymentsService } from '../../payments/payments.service';
 
 @Component({
     selector: 'app-collections',

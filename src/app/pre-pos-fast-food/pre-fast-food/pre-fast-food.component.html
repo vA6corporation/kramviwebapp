@@ -1,0 +1,118 @@
+<mat-tab-group [selectedIndex]="selectedIndex" animationDuration="0ms">
+    <mat-tab label="Pendientes">
+        <div class="container-fluid">
+            <div class="wrapper">
+                @for (sale of sales; track sale._id; let i = $index) {
+                @if (sale.deliveryAt === null) {
+                <div class="p-1">
+                    <mat-card>
+                        <mat-card-header>
+                            <div class="hours mat-title-large">
+                                {{ checkHours(sale.createdAt) }}
+                            </div>
+                            @if (sale.worker) {
+                            <mat-card-title>{{ sale.worker.name | uppercase }}</mat-card-title>
+                            }
+                            <!-- @if (sale.observations) {
+                            } -->
+                            <mat-card-subtitle>{{ sale.observations || 'Sin observaciones' }}</mat-card-subtitle>
+                            @if (sale.customer) {
+                            <mat-card-subtitle>{{ sale.customer.name }}</mat-card-subtitle>
+                            }
+                        </mat-card-header>
+                        <mat-card-content>
+                            <mat-list role="list">
+                                @for (saleItem of sale.saleItems; track saleItem._id) {
+                                <mat-list-item role="listitem" class="px-0">
+                                    <span matListItemTitle>{{ saleItem.fullName }} ({{ saleItem.quantity }})</span>
+                                    @if (saleItem.deliveryAt === null) {
+                                    <span matListItemLine>{{ (saleItem.price * saleItem.quantity).toFixed(2) }}</span>
+                                    } @else {
+                                    <span matListItemLine class="text-success">Entregado</span>
+                                    }
+                                    @if (saleItem.deliveryAt === null) {
+                                    <div matListItemMeta class="py-2 mx-0"
+                                        (click)="onDeliverySaleItem(sale._id, saleItem._id)">
+                                        <button mat-button>ENTREGAR</button>
+                                    </div>
+                                    }
+                                </mat-list-item>
+                                }
+                                <mat-list-item class="pl-0">
+                                    <div class="d-flex font-weight-bold">
+                                        Total
+                                        <span class="spacer"></span>
+                                        {{ sale.charge.toFixed(2) }}
+                                    </div>
+                                </mat-list-item>
+                            </mat-list>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button mat-button color="primary" (click)="onEditSale(sale)">EDITAR</button>
+                            <span class="spacer"></span>
+                            <button mat-icon-button (click)="onPrintCommand(sale)">
+                                <mat-icon>print</mat-icon>
+                            </button>
+                            <span class="divider"></span>
+                            <button mat-flat-button (click)="onDeliverySale(sale._id)" color="primary" class="mx-0">
+                                ENTREGAR TODO
+                            </button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+                }
+                }
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Entregados">
+        <div class="container-fluid">
+            <div class="wrapper">
+                @for (sale of sales; track sale._id; let i = $index) {
+                @if (sale.deliveryAt) {
+                <div class="p-1">
+                    <mat-card>
+                        <mat-card-header>
+                            <div class="hours mat-title-large">
+                                {{ checkHours(sale.createdAt) }}
+                            </div>
+                            @if (sale.worker) {
+                            <mat-card-title>{{ sale.worker.name | uppercase }}</mat-card-title>
+                            }
+                            <mat-card-subtitle>{{ sale.observations || 'Sin observaciones' }}</mat-card-subtitle>
+                            @if (sale.customer) {
+                            <mat-card-subtitle>{{ sale.customer.name }}</mat-card-subtitle>
+                            }
+                        </mat-card-header>
+                        <mat-card-content>
+                            <mat-list role="list">
+                                @for (saleItem of sale.saleItems; track saleItem._id) {
+                                <mat-list-item role="listitem" class="px-0">
+                                    <span matListItemTitle>{{ saleItem.fullName }} ({{ saleItem.quantity }})</span>
+                                    <span matListItemLine>{{ (saleItem.price * saleItem.quantity).toFixed(2) }}</span>
+                                </mat-list-item>
+                                }
+                                <mat-list-item class="pl-0">
+                                    <div class="d-flex font-weight-bold">
+                                        Total
+                                        <span class="spacer"></span>
+                                        {{ sale.charge.toFixed(2) }}
+                                    </div>
+                                </mat-list-item>
+                            </mat-list>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                }
+                }
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>
+<div class="container-fluid">
+    <div class="fixed-bottom p-3" style="right: 0; left: unset; width: auto; z-index: 1000;">
+        <button mat-fab color="primary" class="float-right" routerLink="/prePosFastFood/prePosFastFood">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+</div>

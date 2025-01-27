@@ -31,6 +31,7 @@ import { DialogEditCustomersComponent } from '../../customers/dialog-edit-custom
 import { MaterialModule } from '../../material.module';
 import { SaleItemsComponent } from '../sale-items/sale-items.component';
 import { DirectivesModule } from '../../directives/directives.module';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-charge-fast-food',
@@ -49,6 +50,8 @@ export class ChargeFastFoodComponent {
         private readonly turnsService: TurnsService,
         private readonly workersService: WorkersService,
         private readonly specialtiesService: SpecialtiesService,
+        private readonly activatedRoute: ActivatedRoute,
+        private readonly router: Router,
         private readonly matDialog: MatDialog,
         private readonly printService: PrintService,
         private readonly authService: AuthService,
@@ -65,6 +68,7 @@ export class ChargeFastFoodComponent {
         deliveryAt: null,
         emitionAt: null,
         isRetainer: false,
+        isDelivery: false,
 
         paymentMethodId: null,
         workerId: null,
@@ -85,6 +89,7 @@ export class ChargeFastFoodComponent {
     private turn: TurnModel | null = null
     private user: UserModel = new UserModel()
     paymentMethods: PaymentMethodModel[] = []
+    backTo: string = ''
 
     invoiceTypes = [
         { code: 'NOTA DE VENTA', name: 'NOTA DE VENTA' },
@@ -112,6 +117,8 @@ export class ChargeFastFoodComponent {
 
     ngOnInit(): void {
         this.navigationService.setTitle('Cobrar')
+
+        this.backTo = this.activatedRoute.snapshot.queryParams['backTo']
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.user = auth.user
@@ -312,9 +319,15 @@ export class ChargeFastFoodComponent {
             this.isLoading = true
             this.navigationService.loadBarStart()
 
-            this.salesService.createSale(createdSale, this.saleItems, this.payments, [], {}).subscribe({
+            this.salesService.createSale(
+                createdSale, 
+                this.saleItems, 
+                this.payments, 
+                [],
+                null, 
+                {}
+            ).subscribe({
                 next: sale => {
-
                     let payments: CreatePaymentModel[] = []
 
                     if (this.payments.length) {
@@ -347,7 +360,11 @@ export class ChargeFastFoodComponent {
                     }
 
                     this.salesService.setSaleItems([])
-                    this.location.back()
+                    if (this.backTo) {
+                        this.router.navigate([this.backTo])
+                    } else {
+                        this.location.back()
+                    }
                     this.isLoading = false
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Registrado correctamente')

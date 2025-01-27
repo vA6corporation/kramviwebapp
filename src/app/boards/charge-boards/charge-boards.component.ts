@@ -29,10 +29,10 @@ import { WorkerModel } from '../../workers/worker.model';
 import { WorkersService } from '../../workers/workers.service';
 import { BoardModel } from '../board.model';
 import { BoardsService } from '../boards.service';
-import { CreateBoardItemModel } from '../create-board-item.model';
 import { MaterialModule } from '../../material.module';
 import { CommonModule } from '@angular/common';
 import { BoardItemsComponent } from '../board-items/board-items.component';
+import { CreateBoardItemModel } from '../create-board-item.model';
 
 @Component({
     selector: 'app-charge-boards',
@@ -320,7 +320,8 @@ export class ChargeBoardsComponent {
                 createdSale,
                 this.boardItems,
                 this.payments,
-                [],                
+                [],
+                null,
                 this.params
             ).subscribe({
                 next: sale => {

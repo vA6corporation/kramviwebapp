@@ -104,7 +104,7 @@ export class ExcelConcar {
                 this.formatCodigoAnexo(sale),
                 '',
                 'D',
-                sale.deletedAt ? 0 : Number(sale.charge.toFixed(2)),
+                sale.deletedAt && sale.ticket && sale.ticket.sunatCode === '0' ? 0 : Number(sale.charge.toFixed(2)),
                 0,
                 0,
                 sale.invoiceCode === '01' ? 'FT' : 'BV',
@@ -113,7 +113,7 @@ export class ExcelConcar {
                 this.formatDateSlash(sale.emitionAt),
                 '',
                 this.formatGlosa(sale),
-            ]);
+            ])
 
             this.body.push([
                 '',
@@ -130,7 +130,7 @@ export class ExcelConcar {
                 this.formatCodigoAnexo(sale),
                 '',
                 'H',
-                sale.deletedAt ? 0 : Number(sale.igv.toFixed(2)),
+                sale.deletedAt && sale.ticket && sale.ticket.sunatCode === '0' ? 0 : Number(sale.igv.toFixed(2)),
                 0,
                 0,
                 sale.invoiceCode === '01' ? 'FT' : 'BV',
@@ -139,7 +139,7 @@ export class ExcelConcar {
                 this.formatDateSlash(sale.emitionAt),
                 '',
                 this.formatGlosa(sale),
-            ]);
+            ])
 
             this.body.push([
                 '',
@@ -156,7 +156,7 @@ export class ExcelConcar {
                 this.formatCodigoAnexo(sale),
                 '',
                 'H',
-                sale.deletedAt ? 0 : Number((sale.charge - sale.igv).toFixed(2)),
+                sale.deletedAt && sale.ticket && sale.ticket.sunatCode === '0' ? 0 : Number((sale.charge - sale.igv).toFixed(2)),
                 0,
                 0,
                 sale.invoiceCode === '01' ? 'FT' : 'BV',
@@ -188,20 +188,20 @@ export class ExcelConcar {
         switch (sale.invoiceType) {
             case 'BOLETA':
                 if (sale.deletedAt || sale.cdr?.sunatCode !== '0') {
-                    return '0001';
+                    return '0001'
                 } else {
-                    return '003';
+                    return '003'
                 }
             case 'FACTURA': {
-                let customer = sale.customer;
+                let customer = sale.customer
                 if (sale.deletedAt || sale.cdr?.sunatCode !== '0') {
-                    return '0001';
+                    return '0001'
                 } else {
-                    return customer?.document;
+                    return customer?.document
                 }
             }
         }
-        return '';
+        return ''
     }
 
     private formatSerie(sale: SaleModel, index: number) {

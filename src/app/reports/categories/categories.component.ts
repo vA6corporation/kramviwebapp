@@ -2,20 +2,18 @@ import { CommonModule, formatDate } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Params } from '@angular/router';
-import { Chart, ChartOptions, ChartType, registerables } from 'chart.js';
+import { Chart, ChartOptions, ChartType } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Subscription } from 'rxjs';
 import { buildExcel } from '../../buildExcel';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategoriesService } from '../../products/categories.service';
 import { CategoryModel } from '../../products/category.model';
-import { randomColor } from '../../randomColor';
 import { SalesService } from '../../sales/sales.service';
 import { SummarySaleItemModel } from '../../sales/summary-sale-item.model';
 import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
-import { MaterialModule } from '../../material.module';
-Chart.register(...registerables);
 
 @Component({
     selector: 'app-categories',
@@ -65,11 +63,6 @@ export class CategoriesComponent {
             this.fetchData()
         })
 
-        this.navigationService.setMenu([
-            // { id: 'search', label: 'Buscar', icon: 'search', show: true },
-            // { id: 'excel_simple', label: 'Exportar Excel', icon: 'file_download', show: false },
-        ])
-
         this.handleUsers$ = this.usersService.handleUsers().subscribe(users => {
             this.users = users
         })
@@ -111,7 +104,6 @@ export class CategoriesComponent {
                 params
             ).subscribe(summarySaleItems => {
                 this.navigationService.loadBarFinish()
-                const colors = summarySaleItems.map(() => randomColor())
                 this.summarySaleItems = summarySaleItems
                 const filterCategories: any[] = []
 
@@ -135,13 +127,10 @@ export class CategoriesComponent {
                 this.filterCategories = filterCategories.filter(e => e.totalCharge)
 
                 const dataCharge = {
-                    // labels: ['Ene', 'Feb', 'Mar'],
                     datasets: [
                         {
                             label: 'Dataset 1',
                             data: this.filterCategories.slice(0, 100).map(e => e.totalCharge || 0),
-                            // borderColor: '#3f51b5',
-                            backgroundColor: colors,
                             fill: true
                         },
                     ]
@@ -196,4 +185,5 @@ export class CategoriesComponent {
     onChange() {
         this.fetchData()
     }
+    
 }

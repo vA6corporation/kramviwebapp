@@ -29,8 +29,9 @@
     </form>
 </div>
 <mat-dialog-actions>
-    <button type="button" *ngIf="creditNote != null" mat-raised-button color="primary"
-        (click)="onDeleteCreditNote()">ELIM. NOTA</button>
+    @if (creditNote != null) {
+    <button type="button" mat-raised-button color="primary" (click)="onDeleteCreditNote()">ELIM. NOTA</button>
+    }
     <span class="spacer"></span>
     <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
 </mat-dialog-actions>

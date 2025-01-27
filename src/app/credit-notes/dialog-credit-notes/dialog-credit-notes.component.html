@@ -1,15 +1,15 @@
 <h2 mat-dialog-title>Notas de credito</h2>
 <div mat-dialog-content>
     @for (creditNote of creditNotes; track creditNote._id) {
-        <mat-action-list>
-            <button mat-list-item (click)="onPrintCreditNote(creditNote._id)">
-                {{ creditNote.invoicePrefix }}{{ office.serialPrefix }}-{{ creditNote.invoiceNumber }}
-                <span class="spacer"></span>
-                {{ creditNote.charge.toFixed(2) }}
-            </button>
-        </mat-action-list>
+    <mat-action-list>
+        <button mat-list-item (click)="onPrintCreditNote(creditNote._id)">
+            {{ creditNote.invoicePrefix }}{{ office.serialPrefix }}-{{ creditNote.invoiceNumber }}
+            <span class="spacer"></span>
+            {{ creditNote.charge.toFixed(2) }}
+        </button>
+    </mat-action-list>
     } @empty {
-        <h2 class="text-center text-muted">Sin notas de credito</h2>
+    <h2 class="text-center text-muted mat-title-large">Sin notas de credito</h2>
     }
 </div>
 <mat-dialog-actions>

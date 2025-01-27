@@ -6,13 +6,14 @@
             <p class="caption text-center text-muted mb-2">Total a cobrar</p>
             @if (customer) {
             <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
-                <span class="mat-h1">{{ customer.name | uppercase }}</span>
+                <span>{{ customer.name | uppercase }}</span>
             </button>
             @if (customer.mobileNumber) {
             <p class="text-center mb-3">Celular: {{ customer.formatMobileNumber }}</p>
             }
             }
-            <mat-form-field appearance="fill" *ngIf="customer">
+            @if (customer) {
+            <mat-form-field appearance="fill">
                 <mat-label>Direccion</mat-label>
                 <mat-select formControlName="addressIndex">
                     @for (address of addresses; track $index; let i = $index) {
@@ -22,7 +23,9 @@
                     }
                 </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showWorker">
+            }
+            @if (setting.showWorker) {
+            <mat-form-field appearance="fill">
                 <mat-label>Personal a cargo</mat-label>
                 <mat-select formControlName="workerId">
                     @for (worker of workers; track worker._id) {
@@ -32,10 +35,13 @@
                     }
                 </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showTotalDiscount">
+            }
+            @if (setting.showTotalDiscount) {
+            <mat-form-field appearance="fill">
                 <mat-label>Descuento global</mat-label>
                 <input type="number" matInput formControlName="discount" (input)="onChangeDiscount()">
             </mat-form-field>
+            }
             <mat-form-field appearance="fill">
                 <mat-label>Observaciones</mat-label>
                 <input type="text" matInput formControlName="observations" [autofocus]>

@@ -1,6 +1,8 @@
 <h2 mat-dialog-title>
     Detalles venta {{ sale?.invoicePrefix }}{{ office.serialPrefix }}-{{ sale?.invoiceNumber }}
-    <span class="ml-2 text-danger" *ngIf="sale?.deletedAt">ANULADO</span>
+    @if (sale?.deletedAt) {
+    <span class="ml-2 text-danger">ANULADO</span>
+    }
 </h2>
 <div mat-dialog-content>
     <mat-list class="m-0">
@@ -30,22 +32,22 @@
         }
     </mat-list>
     @if (sale?.detraction) {
-        <table class="w-100 mb-3">
-            <tbody>
-                <tr>
-                    <td>N° de cuenta Banco de la Nacion</td>
-                    <td align="right">{{ sale?.detraction?.bankAccountNumber }}</td>
-                </tr>
-                <tr>
-                    <td>Porcentaje</td>
-                    <td align="right">{{ sale?.detraction?.percent }}%</td>
-                </tr>
-                <tr>
-                    <td>Monto</td>
-                    <td align="right">{{ (sale?.detraction?.amount || 0).toFixed(2) }}</td>
-                </tr>
-            </tbody>
-        </table>
+    <table class="w-100 mb-3">
+        <tbody>
+            <tr>
+                <td>N° de cuenta Banco de la Nacion</td>
+                <td align="right">{{ sale?.detraction?.bankAccountNumber }}</td>
+            </tr>
+            <tr>
+                <td>Porcentaje</td>
+                <td align="right">{{ sale?.detraction?.percent }}%</td>
+            </tr>
+            <tr>
+                <td>Monto</td>
+                <td align="right">{{ (sale?.detraction?.amount || 0).toFixed(2) }}</td>
+            </tr>
+        </tbody>
+    </table>
     }
     <table class="w-100 mb-3">
         <tbody>
@@ -89,47 +91,59 @@
             </tr>
         </tbody>
     </table>
-    <table class="w-100" *ngIf="sale">
+    @if (sale) {
+    <table class="w-100">
         <tbody>
-            <tr *ngIf="sale.deletedAt" class="text-danger">
+            @if (sale.deletedAt) {
+            <tr class="text-danger">
                 <td>F/H de anulacion</td>
                 <td align="right">{{ sale.deletedAt | date: 'medium' }}</td>
             </tr>
-            <tr *ngIf="sale.deletedReason" class="text-danger">
+            }
+            @if (sale.deletedReason) {
+            <tr class="text-danger">
                 <td>Motivo de anulacion</td>
                 <td align="right">{{ sale.deletedReason }}</td>
             </tr>
-            <tr *ngIf="sale.createdAt !== sale.updatedAt" class="text-danger">
+            }
+            @if (sale.createdAt !== sale.updatedAt) {
+            <tr class="text-danger">
                 <td>F/H ultima modificacion</td>
                 <td align="right">{{ sale.updatedAt | date: 'medium' }}</td>
             </tr>
+            }
             <tr>
                 <td>F/H venta</td>
                 <td align="right">{{ sale.createdAt | date: 'medium' }}</td>
             </tr>
             <tr>
                 <td>Observaciones</td>
-                <td align="right" *ngIf="sale.observations; else elseBlock">{{ sale.observations }}</td>
-                <ng-template #elseBlock>
-                    <td class="text-muted" align="right">NINGUNO</td>
-                </ng-template>
+                <td align="right" [ngClass]="{ 'text-muted': !sale.observations}">
+                    {{ sale.observations || 'NINGUNO' }}
+                </td>
             </tr>
             <tr>
                 <td>Usuario</td>
                 <td align="right">{{ user.name | uppercase }}</td>
             </tr>
-            <tr *ngIf="sale?.specialty">
+            @if (sale.specialty) {
+            <tr>
                 <td>Especialidad</td>
-                <td align="right">{{ sale.specialty?.name }}</td>
+                <td align="right">{{ sale.specialty.name }}</td>
             </tr>
-            <tr *ngIf="sale?.worker">
+            }
+            @if (sale.worker) {
+            <tr>
                 <td>Personal</td>
-                <td align="right">{{ sale.worker?.name }}</td>
+                <td align="right">{{ sale.worker.name }}</td>
             </tr>
-            <tr *ngIf="sale?.referred">
+            }
+            @if (sale.referred) {
+            <tr>
                 <td>Referido por</td>
-                <td align="right">{{ sale.referred?.name }}</td>
+                <td align="right">{{ sale.referred.name }}</td>
             </tr>
+            }
             <tr>
                 <td>Forma de pago</td>
                 <td align="right">{{ sale.isCredit ? 'CREDITO' : 'CONTADO' }}</td>
@@ -143,28 +157,31 @@
                 <td>Moneda</td>
                 <td align="right">{{ sale.currencyCode === 'PEN' ? 'SOLES' : 'DOLARES' }}</td>
             </tr>
-            <tr *ngIf="cdr" class="text-primary">
+            @if (cdr) {
+            <tr class="text-primary">
                 <td>Mensaje Sunat</td>
                 <td align="right">{{ cdr.sunatMessage }}</td>
             </tr>
-            <ng-container *ngIf="cdr && cdr.sunatNotes.length">
-                @for (sunatNote of cdr.sunatNotes; track $index; let i = $index) {
-                <tr class="text-primary">
-                    <td>Nota: {{ i + 1 }}</td>
-                    <td align="right">{{ sunatNote }}</td>
-                </tr>
-                }
-            </ng-container>
-            <tr *ngIf="ticket" class="text-danger">
+            }
+            @for (sunatNote of cdr?.sunatNotes; track $index; let i = $index) {
+            <tr class="text-primary">
+                <td>Nota: {{ i + 1 }}</td>
+                <td align="right">{{ sunatNote }}</td>
+            </tr>
+            }
+            @if (ticket) {
+            <tr class="text-danger">
                 <td>Comunicacion de baja</td>
                 <td align="right">{{ ticket.sunatMessage }}</td>
             </tr>
+            }
             <tr class="text-muted">
                 <td>ID</td>
                 <td align="right">{{ sale._id }}</td>
             </tr>
         </tbody>
     </table>
+    }
     @if (customer) {
     <table class="my-3 w-100">
         <tr>

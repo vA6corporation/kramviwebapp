@@ -40,6 +40,7 @@ export class AppComponent {
         '/turns/openTurn',
         '/posStandard',
         '/posFastFood',
+        '/prePosFastFood',
         '/boards',
         '/boards/waiter',
         '/preSales',

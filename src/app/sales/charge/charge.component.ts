@@ -36,6 +36,8 @@ import { DialogOutStockComponent } from '../dialog-out-stock/dialog-out-stock.co
 import { SaleItemsComponent } from '../sale-items/sale-items.component';
 import { SaleForm } from '../sale.form';
 import { SalesService } from '../sales.service';
+import { DialogDetractionComponent } from '../../biller/dialog-detraction/dialog-detraction.component';
+import { DetractionModel } from '../../biller/detraction.model';
 
 @Component({
     selector: 'app-charge',
@@ -97,6 +99,8 @@ export class ChargeComponent {
     setting = new SettingModel()
     addresses: string[] = []
     paymentMethods: PaymentMethodModel[] = []
+    private backTo: string = ''
+    private detraction: DetractionModel | null = null
     private couponItems: CouponItemModel[] = []
     private turn: TurnModel | null = null
     private user: UserModel = new UserModel()
@@ -316,6 +320,20 @@ export class ChargeComponent {
         this.charge -= discount
     }
 
+    onDialogDetraction() {
+        const dialogRef = this.matDialog.open(DialogDetractionComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: this.detraction,
+        })
+
+        dialogRef.afterClosed().subscribe(detraction => {
+            if (detraction) {
+                this.detraction = detraction
+            }
+        })
+    }
+
     onChangeDiscountPercent() {
         const { discountPercent } = this.formGroup.value
         let charge = 0
@@ -398,9 +416,15 @@ export class ChargeComponent {
             this.navigationService.loadBarStart()
 
             if (this.setting.allowFreeStock) {
-                this.salesService.createSale(createdSale, this.saleItems, this.payments, this.couponItems, this.params).subscribe({
+                this.salesService.createSale(
+                    createdSale,
+                    this.saleItems,
+                    this.payments,
+                    this.couponItems,
+                    this.detraction,
+                    this.params
+                ).subscribe({
                     next: sale => {
-
                         let payments: CreatePaymentModel[] = []
 
                         if (this.payments.length) {
@@ -450,9 +474,15 @@ export class ChargeComponent {
                     }
                 })
             } else {
-                this.salesService.createSaleStock(createdSale, this.saleItems, this.payments, this.couponItems, this.params).subscribe({
+                this.salesService.createSaleStock(
+                    createdSale,
+                    this.saleItems,
+                    this.payments,
+                    this.couponItems,
+                    this.detraction,
+                    this.params,
+                ).subscribe({
                     next: res => {
-
                         const { sale, outStocks } = res
 
                         if (outStocks.length || sale === null) {

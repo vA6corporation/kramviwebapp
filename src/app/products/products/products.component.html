@@ -91,11 +91,11 @@
                             <mat-icon>checklist_rtl</mat-icon>
                             <span>Lotes</span>
                         </a>
-                        <a [routerLink]="['/products', element._id, 'edit']" mat-menu-item>
+                        <button type="button" (click)="onEditProduct(element._id)" mat-menu-item>
                             <mat-icon>edit</mat-icon>
                             <span>Editar</span>
-                        </a>
-                        <button type="button" (click)="deleteProduct(element._id)" mat-menu-item>
+                        </button>
+                        <button type="button" (click)="onDeleteProduct(element._id)" mat-menu-item>
                             <mat-icon>delete</mat-icon>
                             <span>Eliminar</span>
                         </button>

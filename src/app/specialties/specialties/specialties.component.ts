@@ -42,7 +42,6 @@ export class SpecialtiesComponent {
         })
 
         this.specialtiesService.getSpecialtiesByPage(this.pageIndex + 1, this.pageSize).subscribe(specialties => {
-            console.log(specialties)
             this.dataSource = specialties
         })
     }

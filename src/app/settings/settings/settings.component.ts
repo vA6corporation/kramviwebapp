@@ -65,11 +65,15 @@ export class SettingsComponent {
             showReferred: false,
             showDeliveryAt: false,
             showEmitionAt: false,
+            isBlockChangeBoard: false,
+            isBlockPrintCommand: false,
+            isBlockEditProducts: false,
             hideIgvTicket: false,
             showQrCode: true,
             showAddressOnTicket: false,
             showQrOnTicket: false,
             showIsRetainer: false,
+            showDetraction: false,
             defaultPriceListId: null,
             allowFreePrice: false,
             allowFreeStock: true,
@@ -222,8 +226,6 @@ export class SettingsComponent {
 
     onGetCertificates() {
         this.settingsService.getCertificates().subscribe(certificates => {
-            console.log(certificates)
-
             this.certificates = certificates
         })
     }

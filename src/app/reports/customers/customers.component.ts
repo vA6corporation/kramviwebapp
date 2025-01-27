@@ -13,7 +13,6 @@ import { SummaryCustomerSaleModel } from '../../customers/summary-customer-sale.
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategoriesService } from '../../products/categories.service';
 import { CategoryModel } from '../../products/category.model';
-import { randomColor } from '../../randomColor';
 import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -129,7 +128,6 @@ export class CustomersComponent {
             ).subscribe({
                 next: summaryCustomerSale => {
                     this.navigationService.loadBarFinish()
-                    const colors = summaryCustomerSale.map(() => randomColor())
                     this.summaryCustomerSales = summaryCustomerSale
                     this.dataSource = new MatTableDataSource(summaryCustomerSale)
                     this.dataSource.sort = this.sort
@@ -140,7 +138,6 @@ export class CustomersComponent {
                             {
                                 label: 'Dataset 1',
                                 data: summaryCustomerSale.slice(0, 10).map(e => e.totalSale || 0),
-                                backgroundColor: colors,
                                 fill: true
                             },
                         ]

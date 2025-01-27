@@ -29,8 +29,9 @@ export class DialogDetailIncidentsComponent {
 
     ngOnInit(): void {
         this.incidentsService.getIncidentById(this.incidentId).subscribe(incident => {
+            console.log(incident)
             this.incident = incident
-            this.incidentItems = incident.incidentItems
+            this.incidentItems = incident.incidentOutItems || incident.incidentInItems
             this.user = incident.user
         })
     }

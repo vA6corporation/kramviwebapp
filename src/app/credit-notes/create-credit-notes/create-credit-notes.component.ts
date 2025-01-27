@@ -60,7 +60,6 @@ export class CreateCreditNotesComponent {
         observations: '',
         workerId: null,
     })
-
     saleItems: CreateSaleItemModel[] = []
     charge: number = 0
     customer: CustomerModel | null = null
@@ -215,6 +214,8 @@ export class CreateCreditNotesComponent {
                 emitionAt: formData.emitionAt,
                 customerId: this.customer?._id || null,
                 workerId: formData.workerId,
+                igvPercent: this.sale.igvPercent,
+                rcPercent: this.sale.rcPercent
             }
 
             this.creditNotesService.create(this.sale, createdCreditNote, this.saleItems, this.saleId).subscribe({

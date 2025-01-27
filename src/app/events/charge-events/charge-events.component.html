@@ -5,7 +5,7 @@
             <p class="caption text-center text-muted mb-2">Total a cobrar</p>
             @if (customer) {
             <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
-                <span class="mat-h1">{{ customer.name | uppercase }}</span>
+                <span>{{ customer.name | uppercase }}</span>
             </button>
             <p class="text-center mb-0">{{ customer.mobileNumber }}</p>
             }
@@ -64,42 +64,46 @@
                 <input type="text" matInput formControlName="observations">
             </mat-form-field>
             @if (setting.showChange) {
-                <div class="d-flex">
-                    <mat-form-field appearance="fill">
-                        <input type="number" class="text-center" #inputCash matInput formControlName="cash"
-                            (input)="setCash(inputCash.value)">
-                    </mat-form-field>
-                    <mat-form-field appearance="fill">
-                        <mat-label>Vuelto</mat-label>
-                        <input type="number" class="text-center" matInput *ngIf="cash === 0">
-                        <input type="number" class="text-center" matInput *ngIf="cash !== 0" [value]="cash - efectivo()">
-                    </mat-form-field>
-                </div>
-                <div class="my-2 d-flex">
-                    <span class="spacer"></span>
-                    <button type="button" mat-fab color="warn" class="mx-1" (click)="resetCash()">
-                        <mat-icon>delete</mat-icon>
-                    </button>
-                    <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(1)">
-                        <span>1</span>
-                    </button>
-                    <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(5)">
-                        <span>5</span>
-                    </button>
-                    <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(10)">
-                        <span>10</span>
-                    </button>
-                    <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(20)">
-                        <span>20</span>
-                    </button>
-                    <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(50)">
-                        <span>50</span>
-                    </button>
-                    <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(100)">
-                        <span>100</span>
-                    </button>
-                    <span class="spacer"></span>
-                </div>
+            <div class="d-flex">
+                <mat-form-field appearance="fill">
+                    <input type="number" class="text-center" #inputCash matInput formControlName="cash"
+                        (input)="setCash(inputCash.value)">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Vuelto</mat-label>
+                    @if (cash === 0) {
+                    <input type="number" class="text-center" matInput>
+                    }
+                    @if (cash !== 0) {
+                    <input type="number" class="text-center" matInput [value]="cash - efectivo()">
+                    }
+                </mat-form-field>
+            </div>
+            <div class="my-2 d-flex">
+                <span class="spacer"></span>
+                <button type="button" mat-fab color="warn" class="mx-1" (click)="resetCash()">
+                    <mat-icon>delete</mat-icon>
+                </button>
+                <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(1)">
+                    <span>1</span>
+                </button>
+                <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(5)">
+                    <span>5</span>
+                </button>
+                <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(10)">
+                    <span>10</span>
+                </button>
+                <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(20)">
+                    <span>20</span>
+                </button>
+                <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(50)">
+                    <span>50</span>
+                </button>
+                <button type="button" mat-fab color="primary" class="mx-1" (click)="addCash(100)">
+                    <span>100</span>
+                </button>
+                <span class="spacer"></span>
+            </div>
             }
             <div class="p-1"></div>
             <button type="button" class="w-100" mat-flat-button [disabled]="isLoading" color="primary"

@@ -26,7 +26,7 @@ export class DialogVersionBoardsComponent {
     ngOnInit(): void {
         this.boardsService.getBoardById(this.boardId).subscribe(board => {
             this.board = board
-            this.versions = board.versions
+            this.versions = board.versions.reverse()
         })
     }
 

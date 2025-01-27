@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Params } from '@angular/router';
@@ -6,12 +7,11 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
 import { ReportsService } from '../reports.service';
-import { MaterialModule } from '../../material.module';
-import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-inout',
@@ -126,8 +126,6 @@ export class InoutComponent {
                 dataSource.push(data)
             }
             
-            console.log(purchaseSupplies)
-
             if (purchaseSupplies.map((e: any) => e.total).reduce((a: any, b: any) => a + b, 0)) {
                 this.displayedColumns.splice(3, 0, 'purchaseSupplies')
             }
@@ -144,8 +142,6 @@ export class InoutComponent {
                     {
                         label: 'Ventas',
                         data: sales.map((e: any) => e.total),
-                        borderColor: '#3f51b5',
-                        backgroundColor: 'rgba(63, 81, 181, 0.3)',
                         fill: true,
                         datalabels: {
                             align: 'end',
@@ -155,8 +151,6 @@ export class InoutComponent {
                     {
                         label: 'Compras',
                         data: purchases.map((e: any) => e.total),
-                        borderColor: '#e32929',
-                        backgroundColor: 'rgba(227, 41, 41, 0.3)',
                         fill: true,
                         datalabels: {
                             align: 'start',
@@ -166,8 +160,6 @@ export class InoutComponent {
                     {
                         label: 'Insumos',
                         data: purchaseSupplies.map((e: any) => e.total),
-                        borderColor: '#90ee90',
-                        backgroundColor: 'rgba(144, 238, 144, 0.3)',
                         fill: true,
                         datalabels: {
                             align: 'start',
@@ -177,8 +169,6 @@ export class InoutComponent {
                     {
                         label: 'Ordenes de pago',
                         data: paymentOrders.map((e: any) => e.total),
-                        borderColor: '#ffff35',
-                        backgroundColor: 'rgba(255, 255, 53, 0.3)',
                         fill: true,
                         datalabels: {
                             align: 'start',
@@ -197,7 +187,6 @@ export class InoutComponent {
                         datalabels: {
                             backgroundColor: function (context) {
                                 return 'rgba(73, 79, 87, 0.5)'
-                                // return context.dataset.backgroundColor
                             },
                             borderRadius: 4,
                             color: 'white',
@@ -214,8 +203,6 @@ export class InoutComponent {
                             padding: 6
                         }
                     },
-
-                    // Core options
                     aspectRatio: 5 / 3,
                     layout: {
                         padding: {

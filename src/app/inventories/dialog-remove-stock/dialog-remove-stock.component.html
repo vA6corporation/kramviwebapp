@@ -1,18 +1,18 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
-    <h2 mat-dialog-title>Remover stock</h2>
+    <h2 mat-dialog-title>Reducir stock</h2>
     <div mat-dialog-content>
         <mat-form-field appearance="fill">
             <mat-label>Cantidad</mat-label>
             <input type="number" matInput formControlName="quantity">
         </mat-form-field>
-        <mat-form-field appearance="fill">
+        <!-- <mat-form-field appearance="fill">
             <mat-label>Seleccione un motivo</mat-label>
             <mat-select formControlName="incidentType">
                 @for (incidentType of incidentTypes; track $index) {
                 <mat-option [value]="incidentType">{{ incidentType }}</mat-option>
                 }
             </mat-select>
-        </mat-form-field>
+        </mat-form-field> -->
         <mat-form-field appearance="fill">
             <mat-label>Observaciones</mat-label>
             <input type="text" matInput formControlName="observations">

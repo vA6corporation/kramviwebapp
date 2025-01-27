@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { BoardsService } from '../boards.service';
-import { CreateBoardItemModel } from '../create-board-item.model';
 import { DialogBoardItemsComponent } from '../dialog-board-items/dialog-board-items.component';
 import { DialogPasswordComponent } from '../dialog-password/dialog-password.component';
 import { AuthService } from '../../auth/auth.service';
@@ -11,6 +10,7 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { IgvType } from '../../products/igv-type.enum';
 import { SettingModel } from '../../auth/setting.model';
 import { MaterialModule } from '../../material.module';
+import { CreateBoardItemModel } from '../create-board-item.model';
 
 @Component({
     selector: 'app-board-items',
@@ -83,20 +83,24 @@ export class BoardItemsComponent {
                         this.boardsService.updateBoardItem(index, boardItem)
 
                         this.navigationService.loadBarStart()
-                        this.boardsService.deleteBoardItem(boardItem.boardId, boardItem._id, boardItem.quantity - updateBoardItem.quantity).subscribe({
-                            next: () => {
-                                if (boardItem.quantity === 0) {
-                                    this.boardsService.removeBoardItem(index)
+                        if (boardItem._id) {
+                            this.navigationService.loadBarStart()
+                            this.boardsService.deleteBoardItem(boardItem.boardId, boardItem._id, boardItem.quantity - updateBoardItem.quantity).subscribe({
+                                next: () => {
+                                    this.navigationService.loadBarFinish()
+                                    if (boardItem.quantity === 0) {
+                                        this.boardsService.removeBoardItem(index)
+                                    }
+                                    this.navigationService.loadBarFinish()
+                                    this.navigationService.showMessage('Anulado correctamente')
+                                    boardItem.quantity = updateBoardItem.quantity
+                                    boardItem.preQuantity = boardItem.quantity
+                                }, error: (error: HttpErrorResponse) => {
+                                    this.navigationService.loadBarFinish()
+                                    this.navigationService.showMessage(error.error.message)
                                 }
-                                this.navigationService.loadBarFinish()
-                                this.navigationService.showMessage('Eliminado correctamente')
-                                boardItem.quantity = updateBoardItem.quantity
-                                boardItem.preQuantity = boardItem.quantity
-                            }, error: (error: HttpErrorResponse) => {
-                                this.navigationService.loadBarFinish()
-                                this.navigationService.showMessage(error.error.message)
-                            }
-                        })
+                            })
+                        }
                     }
                 })
             } else {
@@ -111,6 +115,7 @@ export class BoardItemsComponent {
                         } else {
                             boardItem.igvCode = boardItem.preIgvCode
                         }
+                        this.navigationService.loadBarStart()
                         this.boardsService.deleteBoardItem(boardItem.boardId, boardItem._id, boardItem.quantity - updateBoardItem.quantity).subscribe({
                             next: () => {
                                 this.navigationService.loadBarFinish()
@@ -152,8 +157,10 @@ export class BoardItemsComponent {
 
                     dialogRef.afterClosed().subscribe(ok => {
                         if (ok && boardItem._id) {
+                            this.navigationService.loadBarStart()
                             this.boardsService.deleteBoardItem(boardItem.boardId, boardItem._id, boardItem.quantity).subscribe({
                                 next: () => {
+                                    this.navigationService.loadBarFinish()
                                     this.navigationService.showMessage('Anulado correctamente')
                                     this.boardsService.removeBoardItem(index)
                                 }, error: (error: HttpErrorResponse) => {
@@ -166,8 +173,10 @@ export class BoardItemsComponent {
                 } else {
                     const ok = confirm('Esta producto ya fue ordenado, esta seguro de anular?...')
                     if (ok) {
+                        this.navigationService.loadBarStart()
                         this.boardsService.deleteBoardItem(boardItem.boardId, boardItem._id, boardItem.quantity).subscribe({
                             next: () => {
+                                this.navigationService.loadBarFinish()
                                 this.navigationService.showMessage('Anulado correctamente')
                                 this.boardsService.removeBoardItem(index)
                             }, error: (error: HttpErrorResponse) => {

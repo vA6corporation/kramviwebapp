@@ -44,7 +44,7 @@ export class DeletedBoardsComponent {
         filterCommands: false,
         tableId: '',
     })
-    displayedColumns: string[] = ['createdAt', 'ticketNumber', 'boardNumber', 'sale', 'user', 'charge', 'deletedBoardItems', 'deletedObservations', 'actions']
+    displayedColumns: string[] = ['createdAt', 'ticketNumber', 'boardNumber', 'sale', 'user', 'charge', 'deletedBoardItems', 'observations', 'actions']
     dataSource: BoardModel[] = []
     length: number = 0
     pageSize: number = 10
@@ -77,8 +77,8 @@ export class DeletedBoardsComponent {
 
         if (startDate && endDate) {
             this.formGroup.patchValue({
-                startDate: new Date(Number(startDate)),
-                endDate: new Date(Number(startDate)),
+                startDate: new Date(startDate),
+                endDate: new Date(startDate),
             })
         }
 
@@ -131,7 +131,7 @@ export class DeletedBoardsComponent {
             this.pageIndex = 0
             const { startDate, endDate } = this.formGroup.value
 
-            const queryParams: Params = { startDate: startDate.getTime(), endDate: endDate.getTime(), pageIndex: 0 }
+            const queryParams: Params = { startDate, endDate, pageIndex: 0 }
 
             this.router.navigate([], {
                 relativeTo: this.activatedRoute,

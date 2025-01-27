@@ -53,6 +53,8 @@ export class PrintService {
     private printTicket58mm$: EventEmitter<SaleModel> = new EventEmitter()
     private exportPdfTicket58mm$: EventEmitter<SaleModel> = new EventEmitter()
 
+    private printCommandFastFood80mm$: EventEmitter<SaleModel> = new EventEmitter()
+
     private printCommand80mm$: EventEmitter<BoardModel> = new EventEmitter()
     private printPreaccount80mm$: EventEmitter<BoardModel> = new EventEmitter()
 
@@ -436,6 +438,14 @@ export class PrintService {
 
     handlePrintCommand80mm() {
         return this.printCommand80mm$.asObservable()
+    }
+
+    printCommandFastFood80mm(sale: SaleModel): void {
+        this.printCommandFastFood80mm$.emit(sale)
+    }
+
+    handlePrintCommandFastFood80mm() {
+        return this.printCommandFastFood80mm$.asObservable()
     }
 
     printCommand58mm(board: BoardModel): void {

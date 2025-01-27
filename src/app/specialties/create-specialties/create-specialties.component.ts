@@ -1,14 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NavigationService } from '../../navigation/navigation.service';
 import { SpecialtiesService } from '../specialties.service';
 import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-create-specialties',
-    imports: [MaterialModule, ReactiveFormsModule],
+    imports: [MaterialModule, ReactiveFormsModule, RouterModule],
     templateUrl: './create-specialties.component.html',
     styleUrls: ['./create-specialties.component.sass'],
 })

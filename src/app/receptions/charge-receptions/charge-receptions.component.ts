@@ -344,7 +344,14 @@ export class ChargeReceptionsComponent {
             this.isLoading = true
             this.navigationService.loadBarStart()
 
-            this.salesService.createSale(createdSale, this.saleItems, this.payments, [], this.params).subscribe({
+            this.salesService.createSale(
+                createdSale, 
+                this.saleItems, 
+                this.payments, 
+                [],
+                null, 
+                this.params
+            ).subscribe({
                 next: sale => {
 
                     let payments: CreatePaymentModel[] = []

@@ -13,6 +13,7 @@ export class SettingModel {
     showAddressOnTicket: boolean = false
     showQrOnTicket: boolean = false
     showIsRetainer: boolean = false
+    showDetraction: boolean = false
     showChange: boolean = false
     showCurrencyCode: boolean = false
     showObservationItems: boolean = false
@@ -24,6 +25,9 @@ export class SettingModel {
     showReferred: boolean = false
     showDeliveryAt: boolean = false
     showEmitionAt: boolean = false
+    isBlockChangeBoard: boolean = false
+    isBlockPrintCommand: boolean = false
+    isBlockEditProducts: boolean = false
     hideIgvTicket: boolean = false
     isConsumption: boolean = false
     isOfficeTurn: boolean = false

@@ -1,4 +1,24 @@
-<mat-action-list>
-    <button mat-list-item (click)="onSelectProduct()">Save</button>
-    <button mat-list-item (click)="onSelectProduct()">Undo</button>
-</mat-action-list>
+<h2 mat-dialog-title>Seleccione los productos</h2>
+<div mat-dialog-content>
+    <mat-list>
+        @for (boardItem of splitBoardItems; track $index) {
+        <mat-list-item>
+            <span matListItemTitle>{{ boardItem.fullName }} ({{ boardItem.preQuantity }})</span>
+            <span matListItemLine>Cantidad: {{ boardItem.quantity || 'NINGUNO' }}</span>
+            <div matListItemMeta>
+                <button mat-icon-button aria-label="add item" (click)="onRemoveBoardItem(boardItem)">
+                    <mat-icon>remove</mat-icon>
+                </button>
+                <button mat-icon-button aria-label="add item" (click)="onAddBoardItem(boardItem)">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
+        </mat-list-item>
+        }
+    </mat-list>
+</div>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    <button type="button" mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+    <button type="button" mat-flat-button mat-dialog-close color="primary" (click)="onSubmit()">GUARDAR</button>
+</mat-dialog-actions>

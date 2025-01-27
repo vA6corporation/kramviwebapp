@@ -27,15 +27,21 @@
     <mat-divider class="mb-0"></mat-divider>
     <mat-list class="m-0">
         @for (purchaseSupplyItem of purchaseSupplyItems; track purchaseSupplyItem._id) {
-            <mat-list-item>
-                {{ purchaseSupplyItem.fullName }}
-                <span class="ml-2 text-muted">x{{ purchaseSupplyItem.quantity }}</span>
-                <span class="text-success ml-2" *ngIf="purchaseSupplyItem.igvCode === '11'">Bon</span>
-                <span class="text-primary ml-2" *ngIf="purchaseSupplyItem.igvCode === '20'">Exo</span>
-                <span class="text-primary ml-2" *ngIf="purchaseSupplyItem.igvCode === '30'">Ina</span>
-                <span class="spacer"></span>
-                {{ (purchaseSupplyItem.cost * purchaseSupplyItem.quantity).toFixed(2) }}
-            </mat-list-item>
+        <mat-list-item>
+            {{ purchaseSupplyItem.fullName }}
+            <span class="ml-2 text-muted">x{{ purchaseSupplyItem.quantity }}</span>
+            @if (purchaseSupplyItem.igvCode === '11') {
+            <span class="text-success ml-2">Bon</span>
+            }
+            @if (purchaseSupplyItem.igvCode === '20') {
+            <span class="text-primary ml-2">Exo</span>
+            }
+            @if (purchaseSupplyItem.igvCode === '30') {
+            <span class="text-primary ml-2">Ina</span>
+            }
+            <span class="spacer"></span>
+            {{ (purchaseSupplyItem.cost * purchaseSupplyItem.quantity).toFixed(2) }}
+        </mat-list-item>
         }
     </mat-list>
 </div>

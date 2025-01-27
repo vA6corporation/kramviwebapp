@@ -1,6 +1,8 @@
 <h2 mat-dialog-title>
     Detalles {{ creditNote?.invoicePrefix }}{{ office.serialPrefix }}-{{ creditNote?.invoiceNumber }}
-    <span class="ml-2 text-danger" *ngIf="creditNote?.deletedAt">ANULADO</span>
+    @if (creditNote?.deletedAt) {
+    <span class="ml-2 text-danger">ANULADO</span>
+    }
 </h2>
 <div mat-dialog-content>
     <table class="w-100">
@@ -30,12 +32,12 @@
     <mat-divider class="mb-0"></mat-divider>
     <mat-list class="m-0">
         @for (creditNoteItem of creditNoteItems; track creditNoteItem._id) {
-            <mat-list-item>
-                <span class="mr-2 text-muted">x{{ creditNoteItem.quantity }}</span>
-                {{ creditNoteItem.fullName }}
-                <span class="spacer"></span>
-                {{ (creditNoteItem.price * creditNoteItem.quantity).toFixed(2) }}
-            </mat-list-item>
+        <mat-list-item>
+            <span class="mr-2 text-muted">x{{ creditNoteItem.quantity }}</span>
+            {{ creditNoteItem.fullName }}
+            <span class="spacer"></span>
+            {{ (creditNoteItem.price * creditNoteItem.quantity).toFixed(2) }}
+        </mat-list-item>
         }
     </mat-list>
 </div>

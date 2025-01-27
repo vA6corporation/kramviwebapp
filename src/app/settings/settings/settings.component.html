@@ -108,17 +108,17 @@
                         Certificado digital
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <h2 class="text-center text-muted mb-0 mat-title-large" *ngIf="certificates.length === 0">No hay
-                    certificado</h2>
                 <mat-action-list>
                     @for (certificate of certificates; track certificate._id) {
                     <button type="button" mat-list-item (click)="onSelectCertificate(certificate._id)">
-                        <span matListItemTitle>{{ certificate.expirationAt | date: 'dd/MM/yyyy' }}</span>
-                        <div matListItemMeta>
-                            <button type="button" mat-icon-button aria-label="done"
-                                *ngIf="localBusiness?.certificateId === certificate._id">
+                        <span matListItemTitle>Vence: {{ certificate.expirationAt | date: 'dd MMM yyyy' }}</span>
+                        <span matListItemLine>Registro: {{ certificate.createdAt | date: 'dd MMM yyyy' }}</span>
+                        <div matListItemMeta class="py-3">
+                            @if (localBusiness?.certificateId === certificate._id) {
+                            <button type="button" mat-icon-button aria-label="done">
                                 <mat-icon>done</mat-icon>
                             </button>
+                            }
                             <button type="button" mat-icon-button aria-label="trash"
                                 (click)="onDeleteCertificate(certificate._id, $event)">
                                 <mat-icon>delete</mat-icon>
@@ -129,6 +129,10 @@
                             </button>
                         </div>
                     </button>
+                    } @empty {
+                    <h2 class="text-center text-muted mb-0 mat-title-large">
+                        No hay certificado
+                    </h2>
                     }
                 </mat-action-list>
                 <div class="p-3"></div>
@@ -232,15 +236,21 @@
                 <input type="file" accept=".jpg, .jpeg" #fileTittleInput
                     (change)="onFileTittleSelected(fileTittleInput.files, fileTittleInput)" hidden>
                 <div class="text-center">
-                    <img [src]="setting.header" *ngIf="setting.header" alt="business title" width="500">
+                    @if (setting.header) {
+                    <img [src]="setting.header" alt="business title" width="500">
+                    }
                 </div>
                 <hr>
                 <div class="text-center">
-                    <img [src]="setting.logo" *ngIf="setting.logo" alt="business logo" width="500">
+                    @if (setting.logo) {
+                    <img [src]="setting.logo" alt="business logo" width="500">
+                    }
                 </div>
                 <hr>
                 <div class="text-center">
-                    <img [src]="setting.banner" *ngIf="setting.banner" alt="business banner" width="500">
+                    @if (setting.banner) {
+                    <img [src]="setting.banner" alt="business banner" width="500">
+                    }
                 </div>
             </mat-expansion-panel>
 
@@ -284,6 +294,11 @@
                     <mat-list-item>
                         <mat-slide-toggle formControlName="showSpecialty">
                             Mostrar especialidad
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="showDetraction">
+                            Mostrar informacion de la detraccion
                         </mat-slide-toggle>
                     </mat-list-item>
                     <mat-list-item>
@@ -434,6 +449,23 @@
                         <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
                     </button>
                 </mat-form-field>
+                <mat-list role="list">
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="isBlockChangeBoard">
+                            Bloquear cambio de mesa
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="isBlockPrintCommand">
+                            Bloquear reimprimir comanda
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="isBlockEditProducts">
+                            Bloquear editar productos
+                        </mat-slide-toggle>
+                    </mat-list-item>
+                </mat-list>
             </mat-expansion-panel>
 
             <mat-expansion-panel formGroupName="setting">
@@ -568,7 +600,7 @@
                     <mat-list-item role="listitem">
                         <mat-slide-toggle [formControlName]="module.name">
                             {{ module.label }}
-                            <span *ngIf="module.info" class="text-muted ml-2">{{ module.info }}</span>
+                            <span class="text-muted ml-2">{{ module.info }}</span>
                         </mat-slide-toggle>
                     </mat-list-item>
                     }

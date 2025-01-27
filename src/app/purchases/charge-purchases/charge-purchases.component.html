@@ -6,7 +6,7 @@
             <p class="caption text-center text-muted mb-2">Total a comprar</p>
             @if (provider) {
             <button type="button" mat-button color="primary" (click)="onEditProvider()" class="w-100 mb-3">
-                <span class="mat-h1">{{ provider.name | uppercase }}</span>
+                <span>{{ provider.name | uppercase }}</span>
             </button>
             <p class="text-center mb-3">{{ provider.mobileNumber }}</p>
             }

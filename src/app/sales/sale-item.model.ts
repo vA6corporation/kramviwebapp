@@ -1,4 +1,5 @@
 import { LotModel } from "../lots/lot.model"
+import { PrintZoneType } from "../print/print-zone-type.enum"
 import { IgvType } from "../products/igv-type.enum"
 import { PriceModel } from "../products/price.model"
 import { RecipeModel } from "../recipes/recipe.model"
@@ -22,8 +23,10 @@ export interface SaleItemModel {
     isTrackStock: boolean
     observations: string
     createdAt: string
+    deliveryAt?: string
     saleId: string
     categoryId: string
+    printZone?: PrintZoneType
     lot?: LotModel
     sale?: SaleModel
     recipes: RecipeModel[]

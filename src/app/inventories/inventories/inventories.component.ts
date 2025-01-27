@@ -11,6 +11,8 @@ import { BusinessModel } from '../../auth/business.model';
 import { OfficeModel } from '../../auth/office.model';
 import { SettingModel } from '../../auth/setting.model';
 import { buildExcel } from '../../buildExcel';
+import { MaterialModule } from '../../material.module';
+import { DialogProgressComponent } from '../../navigation/dialog-progress/dialog-progress.component';
 import { NavigationService } from '../../navigation/navigation.service';
 import { OfficesService } from '../../offices/offices.service';
 import { CategoriesService } from '../../products/categories.service';
@@ -22,8 +24,9 @@ import { ProductsService } from '../../products/products.service';
 import { DialogAddStockComponent } from '../dialog-add-stock/dialog-add-stock.component';
 import { DialogMoveStockComponent } from '../dialog-move-stock/dialog-move-stock.component';
 import { DialogRemoveStockComponent } from '../dialog-remove-stock/dialog-remove-stock.component';
-import { DialogProgressComponent } from '../../navigation/dialog-progress/dialog-progress.component';
-import { MaterialModule } from '../../material.module';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { SheetAddStockComponent } from '../sheet-add-stock/sheet-add-stock.component';
+import { DialogCreatePurchaseComponent } from '../dialog-create-purchase/dialog-create-purchase.component';
 
 @Component({
     selector: 'app-inventories',
@@ -34,15 +37,16 @@ import { MaterialModule } from '../../material.module';
 export class InventoriesComponent {
 
     constructor(
-        private readonly formBuilder: FormBuilder,
-        private readonly productsService: ProductsService,
         private readonly navigationService: NavigationService,
         private readonly categoriesService: CategoriesService,
+        private readonly productsService: ProductsService,
         private readonly officesService: OfficesService,
-        private readonly authService: AuthService,
-        private readonly router: Router,
         private readonly activatedRoute: ActivatedRoute,
+        private readonly bottomSheet: MatBottomSheet,
+        private readonly authService: AuthService,
+        private readonly formBuilder: FormBuilder,
         private readonly matDialog: MatDialog,
+        private readonly router: Router,
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
@@ -57,10 +61,10 @@ export class InventoriesComponent {
         'sku',
         'upc',
         'location',
-        'stock',
         'cost',
         'price',
-        'actions'
+        'stock',
+        'actions',
     ]
     dataSource: ProductModel[] = []
     length: number = 0
@@ -395,31 +399,7 @@ export class InventoriesComponent {
     }
 
     onChangePriceList() {
-        switch (this.setting.defaultPrice) {
-            case PriceType.LISTA: {
-                for (const product of this.dataSource) {
-                    const price = product.prices.find(e => e.priceListId === this.priceListId)
-                    product.price = price ? price.price : product.price
-                }
-            }
-                break
-            case PriceType.LISTAOFICINA: {
-                for (const product of this.dataSource) {
-                    const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-
-                    if (price) {
-                        product.price = price.price
-                    } else {
-                        const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                        product.price = price ? price.price : product.price
-                    }
-                }
-            }
-                break
-            default:
-                break
-        }
-
+        ProductsService.setPrices(this.dataSource, this.priceListId, this.setting, this.office)
     }
 
     onTrackStock(product: ProductModel) {
@@ -433,6 +413,31 @@ export class InventoriesComponent {
 
     onAddStock(product: ProductModel) {
         const dialogRef = this.matDialog.open(DialogAddStockComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: product,
+        })
+
+        dialogRef.afterClosed().subscribe(ok => {
+            if (ok) {
+                this.fetchData()
+            }
+        })
+    }
+
+    onEditStock(product: ProductModel) {
+        const bottomSheetRef = this.bottomSheet.open(SheetAddStockComponent)
+        bottomSheetRef.instance.handleAddStock().subscribe(() => {
+            this.onAddStock(product)
+        })
+
+        bottomSheetRef.instance.handleRemoveStock().subscribe(() => {
+            this.onRemoveStock(product)
+        })
+    }
+
+    onPurchaseStock(product: ProductModel) {
+        const dialogRef = this.matDialog.open(DialogCreatePurchaseComponent, {
             width: '600px',
             position: { top: '20px' },
             data: product,
@@ -502,35 +507,9 @@ export class InventoriesComponent {
             this.productsService.getProductsByKeyPage(this.pageIndex + 1, this.pageSize, this.params).subscribe({
                 next: products => {
                     this.navigationService.loadBarFinish()
-                    switch (this.setting.defaultPrice) {
-                        case PriceType.OFICINA:
-                            for (const product of products) {
-                                product.price = product.prices.find(e => e.officeId === this.office._id)?.price || product.price
-                            }
-                            break
-                        case PriceType.LISTA:
-                            for (const product of products) {
-                                const price = product.prices.find(e => e.priceListId === this.priceListId)
-                                product.price = price ? price.price : product.price
-                            }
-                            break
-                        case PriceType.LISTAOFICINA:
-                            for (const product of products) {
-                                const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-
-                                if (price) {
-                                    product.price = price.price
-                                } else {
-                                    const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId === null)
-                                    product.price = price ? price.price : product.price
-                                }
-                            }
-                            break
-                        default:
-                            break
-                    }
-
+                    ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
                     this.dataSource = products
+
                     if (!products.find(e => e.feature)) {
                         const index = this.displayedColumns.findIndex(e => e === 'feature')
                         if (index >= 0) {
@@ -564,35 +543,9 @@ export class InventoriesComponent {
             this.navigationService.loadBarStart()
             this.productsService.getProductsByPage(this.pageIndex + 1, this.pageSize, this.params).subscribe(products => {
                 this.navigationService.loadBarFinish()
-                switch (this.setting.defaultPrice) {
-                    case PriceType.OFICINA:
-                        for (const product of products) {
-                            product.price = product.prices.find(e => e.officeId === this.office._id)?.price || product.price
-                        }
-                        break
-                    case PriceType.LISTA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.priceListId === this.priceListId)
-                            product.price = price ? price.price : product.price
-                        }
-                        break
-                    case PriceType.LISTAOFICINA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-
-                            if (price) {
-                                product.price = price.price
-                            } else {
-                                const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                                product.price = price ? price.price : product.price
-                            }
-                        }
-                        break
-                    default:
-                        break
-                }
-
+                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
                 this.dataSource = products
+
                 if (!products.find(e => e.feature)) {
                     const index = this.displayedColumns.findIndex(e => e === 'feature')
                     if (index >= 0) {

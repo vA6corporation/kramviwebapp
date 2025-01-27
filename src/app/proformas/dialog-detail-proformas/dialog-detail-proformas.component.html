@@ -61,25 +61,25 @@
             </tr>
         </tbody>
     </table>
-    <ng-container *ngIf="customer !== null">
-        <mat-divider class="mb-0"></mat-divider>
-        <table class="my-3 w-100">
-            <tr>
-                <td>Cliente:</td>
-                <td align="right">{{ customer.name }}</td>
-            </tr>
-            <tr>
-                <td>RUC/DNI:</td>
-                <td align="right">{{ customer.documentType }}: {{ customer.document }}</td>
-            </tr>
-            <tr>
-                <td>Celular:</td>
-                <td align="right" [ngClass]="{ 'text-muted': customer.mobileNumber === null }">
-                    {{ customer.mobileNumber || 'NINGUNO' }}
-                </td>
-            </tr>
-        </table>
-    </ng-container>
+    @if (customer !== null) {
+    <mat-divider class="mb-0"></mat-divider>
+    <table class="my-3 w-100">
+        <tr>
+            <td>Cliente:</td>
+            <td align="right">{{ customer.name }}</td>
+        </tr>
+        <tr>
+            <td>RUC/DNI:</td>
+            <td align="right">{{ customer.documentType }}: {{ customer.document }}</td>
+        </tr>
+        <tr>
+            <td>Celular:</td>
+            <td align="right" [ngClass]="{ 'text-muted': customer.mobileNumber === null }">
+                {{ customer.mobileNumber || 'NINGUNO' }}
+            </td>
+        </tr>
+    </table>
+    }
     <mat-divider class="mb-0"></mat-divider>
     <mat-list class="m-0">
         @for (proformaItem of proformaItems; track $index) {

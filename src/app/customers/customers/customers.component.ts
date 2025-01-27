@@ -120,13 +120,16 @@ export class CustomersComponent {
                         'DIRECCION',
                         'EMAIL',
                         'CELULAR',
-                        'ULT. PRODUCTO/SERVICIO'
+                        'ULT. PRODUCTO/SERVICIO',
+                        'FECHA ULTIMA COMPRA'
                     ])
                     for (const customer of customers) {
                         const lastSale = customer.lastSale
                         let lastProduct = ''
+                        let lastSaleAt = ''
                         if (lastSale && lastSale.saleItems) {
                             lastProduct = (lastSale.saleItems[0] || { fullName: '' }).fullName
+                            lastSaleAt = formatDate(new Date(lastSale.createdAt), 'dd/MM/yyyy', 'en-US')
                         }
                         body.push([
                             customer.documentType,
@@ -136,9 +139,10 @@ export class CustomersComponent {
                             customer.email,
                             customer.mobileNumber,
                             (lastProduct || '').toUpperCase(),
+                            lastSaleAt,
                         ])
                     }
-                    const name = `CLIENTES_${formatDate(new Date(), 'dd/MM/yyyy', 'en-US')}_${this.business.businessName.replace(/ /g, '_')}`
+                    const name = `CLIENTES_${formatDate(new Date(), 'dd/MM/yyyy', 'en-US')}_${this.business.businessName.replace(/ /g, '_').toUpperCase()}`
                     buildExcel(body, name, wscols, [])
                 }
             }

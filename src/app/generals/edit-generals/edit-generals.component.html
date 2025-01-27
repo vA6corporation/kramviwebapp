@@ -1,7 +1,7 @@
 <div class="container py-4">
     @if (patient) {
     <button type="button" mat-button color="primary" (click)="onEditPatient()" class="w-100">
-        <span class="mat-h1">{{ patient.name | uppercase }}</span>
+        <span>{{ patient.name | uppercase }}</span>
     </button>
     <div class="mb-5">
         <p class="text-center mb-0">{{ patient.documentType }}: {{ patient.document }}</p>

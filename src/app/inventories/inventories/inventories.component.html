@@ -24,7 +24,7 @@
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill">
-                <mat-label>Seleccione una estado</mat-label>
+                <mat-label>Productos con stock</mat-label>
                 <mat-select (selectionChange)="onStockStateChange()" formControlName="stockState">
                     <mat-option value="01">TODOS LOS PRODUCTOS</mat-option>
                     <mat-option value="02">SOLO PRODUCTOS CON STOCK</mat-option>
@@ -95,13 +95,13 @@
                             <mat-icon>info</mat-icon>
                             <span>Detalles</span>
                         </button>
-                        <button type="button" (click)="onAddStock(element)" mat-menu-item>
+                        <button type="button" (click)="onPurchaseStock(element)" mat-menu-item>
                             <mat-icon>add</mat-icon>
-                            <span>Agregar stock</span>
+                            <span>Ingresar compra</span>
                         </button>
-                        <button type="button" (click)="onRemoveStock(element)" mat-menu-item>
-                            <mat-icon>remove</mat-icon>
-                            <span>Remover stock</span>
+                        <button type="button" (click)="onEditStock(element)" mat-menu-item>
+                            <mat-icon>swap_vert</mat-icon>
+                            <span>Ajustar stock</span>
                         </button>
                         <button type="button" (click)="onMoveStock(element)" mat-menu-item>
                             <mat-icon>north_east</mat-icon>

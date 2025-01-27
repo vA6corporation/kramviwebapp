@@ -1,0 +1,57 @@
+<div class="d-flex">
+    <div class="flex-70 overflow-auto" style="margin-bottom: 60px;">
+        <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndex = $event"
+            animationDuration="0ms">
+            <mat-tab label="Categorias">
+                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                    @for (category of categories; track category._id) {
+                    <mat-grid-tile (click)="onSelectCategory(category)" [style.background]="'lightgreen'">
+                        {{ category.name }}
+                    </mat-grid-tile>
+                    }
+                </mat-grid-list>
+            </mat-tab>
+            <mat-tab label="Productos">
+                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                    @for (product of products; track product._id) {
+                    <mat-grid-tile (click)="onSelectProduct(product)" [style.background]="'lightblue'"
+                        [ngStyle]="urlImage(product)">
+                        {{ product.fullName }}
+                        <small class="text-muted text-price">
+                            {{ product.price.toFixed(2) }}
+                        </small>
+                    </mat-grid-tile>
+                    }
+                </mat-grid-list>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+    <div class="flex-30 bg-white sale-items" style="margin-bottom: 60px;">
+        <app-sale-items></app-sale-items>
+    </div>
+    <div class="fixed-bottom d-flex align-items-center footer-button">
+        <div class="px-3">
+            @if (setting.defaultPrice === 'LISTA' || setting.defaultPrice === 'LISTAOFICINA') {
+            <mat-form-field appearance="fill">
+                <mat-select [(value)]="priceListId" (selectionChange)="onChangePriceList()">
+                    @for (priceList of priceLists; track $index) {
+                    <mat-option [value]="priceList._id">{{ priceList.name }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            }
+        </div>
+        <span class="spacer"></span>
+        <div class="p-3">
+            <button type="button" mat-raised-button (click)="onCancel()" color="primary">CANCELAR</button>
+            <span class="divider"></span>
+            @if (setting.allowCredit) {
+            <button type="button" mat-raised-button color="primary" routerLink="/charge/credit"
+                [queryParams]="{ backTo: '/prePosFastFood' }">CREDITO</button>
+            <span class="divider"></span>
+            }
+            <button type="button" mat-flat-button color="primary" routerLink="/charge/fastFood"
+                [queryParams]="{ backTo: '/prePosFastFood' }">COBRAR</button>
+        </div>
+    </div>
+</div>

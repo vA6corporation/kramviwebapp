@@ -44,10 +44,12 @@ import { SettingModel } from '../../auth/setting.model';
 import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
 import { BankModel } from '../../providers/bank.model';
 import { buildBarcode50x25mmTwo } from './buildBarcode50x25mmTwo';
-let main: any;
+import { buildCommandFastFood80mm } from './buildCommandFastFood80mm';
+
+let main: any
 
 if ((window as any).versions) {
-    main = (window as any).versions;
+    main = (window as any).versions
 }
 
 @Component({
@@ -513,6 +515,61 @@ export class PrintIframeComponent {
                 }
             } else {
                 const pdf = buildCommand80mm(board, board.boardItems, this.setting)
+                pdf.autoPrint({ variant: 'non-conform' })
+                const urlString = pdf.output('datauristring')
+                this.print(urlString)
+            }
+        })
+
+        this.printService.handlePrintCommandFastFood80mm().subscribe(async sale => {
+            if (main) {
+                const printers = this.printers
+                if (printers.length) {
+                    for (const printer of printers) {
+                        if (printer.printKitchen) {
+                            const saleItems = sale.saleItems.filter(e => e.printZone === PrintZoneType.COCINA)
+                            if (saleItems.length) {
+                                const pdf = buildCommandFastFood80mm(sale, saleItems, this.office, this.setting)
+                                const file = pdf.output('arraybuffer')
+                                main.print(file, printer.name)
+                            }
+                        }
+
+                        if (printer.printBar) {
+                            const saleItems = sale.saleItems.filter(e => e.printZone === PrintZoneType.BARRA)
+                            if (saleItems.length) {
+                                const pdf = buildCommandFastFood80mm(sale, saleItems, this.office, this.setting)
+                                const file = pdf.output('arraybuffer')
+                                main.print(file, printer.name)
+                            }
+                        }
+
+                        if (printer.printOven) {
+                            const saleItems = sale.saleItems.filter(e => e.printZone === PrintZoneType.HORNO)
+                            if (saleItems.length) {
+                                const pdf = buildCommandFastFood80mm(sale, saleItems, this.office, this.setting)
+                                const file = pdf.output('arraybuffer')
+                                main.print(file, printer.name)
+                            }
+                        }
+
+                        if (printer.printBox) {
+                            const saleItems = sale.saleItems.filter(e => e.printZone === PrintZoneType.CAJA)
+                            if (saleItems.length) {
+                                const pdf = buildCommandFastFood80mm(sale, saleItems, this.office, this.setting)
+                                const file = pdf.output('arraybuffer')
+                                main.print(file, printer.name)
+                            }
+                        }
+
+                    }
+                } else {
+                    const pdf = buildCommandFastFood80mm(sale, sale.saleItems, this.office, this.setting)
+                    const file = pdf.output('arraybuffer')
+                    main.print(file)
+                }
+            } else {
+                const pdf = buildCommandFastFood80mm(sale, sale.saleItems, this.office, this.setting)
                 pdf.autoPrint({ variant: 'non-conform' })
                 const urlString = pdf.output('datauristring')
                 this.print(urlString)

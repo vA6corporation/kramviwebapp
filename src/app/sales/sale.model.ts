@@ -43,7 +43,8 @@ export interface SaleModel {
     currencyCode: string
     discount: number | null
     payed: number
-    deliveryAt: string
+    deliveryAt: any
+    isDelivery: boolean
 
     payments: PaymentModel[]
     saleItems: SaleItemModel[]

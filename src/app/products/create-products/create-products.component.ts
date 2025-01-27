@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, NgZone } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -5,28 +6,27 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterModule } from '@angular/router';
 import Compressor from 'compressorjs';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../../auth/auth.service';
+import { OfficeModel } from '../../auth/office.model';
+import { SettingModel } from '../../auth/setting.model';
+import { DialogCreateLotsComponent } from '../../lots/dialog-create-lots/dialog-create-lots.component';
+import { LotModel } from '../../lots/lot.model';
+import { MaterialModule } from '../../material.module';
+import { NavigationService } from '../../navigation/navigation.service';
+import { OfficesService } from '../../offices/offices.service';
+import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
+import { PaymentMethodsService } from '../../payment-methods/payment-methods.service';
+import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component';
+import { ProviderModel } from '../../providers/provider.model';
+import { CategoriesService } from '../categories.service';
+import { CategoryModel } from '../category.model';
 import { DialogAnnotationsComponent } from '../dialog-annotations/dialog-annotations.component';
 import { DialogCreateCategoriesComponent } from '../dialog-create-categories/dialog-create-categories.component';
 import { DialogSearchProductsComponent } from '../dialog-search-products/dialog-search-products.component';
+import { PriceListModel } from '../price-list.model';
 import { PriceType } from '../price-type.enum';
 import { ProductModel } from '../product.model';
 import { IgvCodeModel, ProductsService, UnitCodeModel } from '../products.service';
-import { NavigationService } from '../../navigation/navigation.service';
-import { PaymentMethodsService } from '../../payment-methods/payment-methods.service';
-import { OfficesService } from '../../offices/offices.service';
-import { CategoriesService } from '../categories.service';
-import { AuthService } from '../../auth/auth.service';
-import { CategoryModel } from '../category.model';
-import { OfficeModel } from '../../auth/office.model';
-import { SettingModel } from '../../auth/setting.model';
-import { PriceListModel } from '../price-list.model';
-import { LotModel } from '../../lots/lot.model';
-import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
-import { DialogCreateLotsComponent } from '../../lots/dialog-create-lots/dialog-create-lots.component';
-import { MaterialModule } from '../../material.module';
-import { CommonModule } from '@angular/common';
-import { ProviderModel } from '../../providers/provider.model';
-import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component';
 
 @Component({
     selector: 'app-create-products',

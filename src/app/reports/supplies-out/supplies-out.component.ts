@@ -2,17 +2,15 @@ import { formatDate } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Params } from '@angular/router';
-import { Chart, ChartOptions, ChartType, registerables } from 'chart.js';
+import { Chart, ChartOptions, ChartType } from 'chart.js';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
 import { buildExcel } from '../../buildExcel';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategoryModel } from '../../products/category.model';
-import { randomColor } from '../../randomColor';
 import { ReportsService } from '../reports.service';
-import { MaterialModule } from '../../material.module';
-Chart.register(...registerables);
 
 @Component({
     selector: 'app-supplies-out',
@@ -39,7 +37,6 @@ export class SuppliesOutComponent {
     categories: CategoryModel[] = []
     supplyItems: any[] = []
     offices: OfficeModel[] = []
-    colors: string[] = []
     @ViewChild('incomesChart')
     private incomesChart!: ElementRef<HTMLCanvasElement>
 
@@ -106,8 +103,6 @@ export class SuppliesOutComponent {
                 params
             ).subscribe(supplyItems => {
                 this.navigationService.loadBarFinish()
-                console.log(supplyItems)
-                this.colors = supplyItems.map(() => randomColor())
                 this.supplyItems = supplyItems
                 this.supplyItems.sort((a, b) => {
                     if (a.totalOut * a.cost < b.totalOut * b.cost) {
@@ -119,14 +114,11 @@ export class SuppliesOutComponent {
                     return 0
                 })
                 const data = {
-                    // labels: ['Ene', 'Feb', 'Mar'],
                     labels: supplyItems.slice(0, 10).map(e => e.name),
                     datasets: [
                         {
                             label: 'Dataset 1',
                             data: supplyItems.slice(0, 10).map(e => e.totalOut || 0),
-                            // borderColor: '#3f51b5',
-                            backgroundColor: this.colors,
                             fill: true
                         },
                     ]

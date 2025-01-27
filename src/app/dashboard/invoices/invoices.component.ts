@@ -7,7 +7,6 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { ReportsService } from '../../reports/reports.service';
 import { UserModel } from '../../users/user.model';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { randomColor } from '../../randomColor';
 import { MaterialModule } from '../../material.module';
 import { CommonModule } from '@angular/common';
 
@@ -86,16 +85,12 @@ export class InvoicesComponent {
             endDate,
             officeId: this.officeId,
         }).subscribe(summaryInvoices => {
-            const colors = summaryInvoices.map(() => randomColor())
             this.summaryInvoices = summaryInvoices
             const data = {
-                // labels: ['Ene', 'Feb', 'Mar'],
                 datasets: [
                     {
                         label: 'Dataset 1',
                         data: summaryInvoices.map((e: any) => e.charge),
-                        // borderColor: '#3f51b5',
-                        backgroundColor: colors,
                         fill: true
                     },
                 ]
@@ -111,7 +106,6 @@ export class InvoicesComponent {
                         datalabels: {
                             backgroundColor: function (ctx) {
                                 return 'rgba(73, 79, 87, 0.5)'
-                                // return context.dataset.backgroundColor
                             },
                             borderRadius: 4,
                             color: 'white',
@@ -133,9 +127,6 @@ export class InvoicesComponent {
                             },
                             padding: 6
                         },
-                        // legend: {
-                        //   display: false,
-                        // },
                     }
                 } as ChartOptions,
             }

@@ -2,23 +2,21 @@ import { CommonModule, formatDate } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Params } from '@angular/router';
-import { Chart, ChartOptions, ChartType, registerables } from 'chart.js';
+import { Chart, ChartOptions, ChartType } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
 import { buildExcel } from '../../buildExcel';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { OfficesService } from '../../offices/offices.service';
 import { CategoriesService } from '../../products/categories.service';
 import { CategoryModel } from '../../products/category.model';
-import { randomColor } from '../../randomColor';
 import { SalesService } from '../../sales/sales.service';
 import { SummarySaleItemModel } from '../../sales/summary-sale-item.model';
 import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
-import { MaterialModule } from '../../material.module';
-Chart.register(...registerables);
 
 @Component({
     selector: 'app-products',
@@ -166,7 +164,6 @@ export class ProductsComponent {
                 params
             ).subscribe(summarySaleItems => {
                 this.navigationService.loadBarFinish()
-                const colors = summarySaleItems.map(() => randomColor())
                 this.summarySaleItems = summarySaleItems
                 this.dataSource = summarySaleItems
 
@@ -174,26 +171,20 @@ export class ProductsComponent {
                 this.totalQuantity = summarySaleItems.map(e => e.totalQuantity).reduce((a, b) => a + b, 0)
 
                 const dataCharge = {
-                    // labels: ['Ene', 'Feb', 'Mar'],
                     datasets: [
                         {
                             label: 'Dataset 1',
                             data: summarySaleItems.slice(0, 10).map(e => e.totalSale || 0),
-                            // borderColor: '#3f51b5',
-                            backgroundColor: colors,
                             fill: true
                         },
                     ]
                 }
 
                 const dataQuantity = {
-                    // labels: ['Ene', 'Feb', 'Mar'],
                     datasets: [
                         {
                             label: 'Dataset 1',
                             data: summarySaleItems.slice(0, 10).map(e => e.totalQuantity || 0),
-                            // borderColor: '#3f51b5',
-                            backgroundColor: colors,
                             fill: true
                         },
                     ]
@@ -209,7 +200,6 @@ export class ProductsComponent {
                             datalabels: {
                                 backgroundColor: function (context) {
                                     return 'rgba(73, 79, 87, 0.5)'
-                                    // return context.dataset.backgroundColor
                                 },
                                 borderRadius: 4,
                                 color: 'white',
@@ -239,7 +229,6 @@ export class ProductsComponent {
                             datalabels: {
                                 backgroundColor: function (context) {
                                     return 'rgba(73, 79, 87, 0.5)'
-                                    // return context.dataset.backgroundColor
                                 },
                                 borderRadius: 4,
                                 color: 'white',

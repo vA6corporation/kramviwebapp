@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -6,27 +7,25 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
 import { SettingModel } from '../../auth/setting.model';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { PrintService } from '../../print/print.service';
 import { CategoriesService } from '../../products/categories.service';
 import { CategoryModel } from '../../products/category.model';
 import { DialogSelectAnnotationData, DialogSelectAnnotationsComponent } from '../../products/dialog-select-annotations/dialog-select-annotations.component';
 import { PriceListModel } from '../../products/price-list.model';
-import { PriceType } from '../../products/price-type.enum';
 import { ProductModel } from '../../products/product.model';
 import { ProductsService } from '../../products/products.service';
 import { TableModel } from '../../tables/table.model';
 import { TablesService } from '../../tables/tables.service';
 import { UserModel } from '../../users/user.model';
 import { BoardItemModel } from '../board-item.model';
+import { BoardItemsComponent } from '../board-items/board-items.component';
 import { BoardModel } from '../board.model';
 import { BoardsService } from '../boards.service';
-import { CreateBoardItemModel } from '../create-board-item.model';
 import { DialogDeletedComponent } from '../dialog-deleted/dialog-deleted.component';
 import { DialogPasswordComponent } from '../dialog-password/dialog-password.component';
-import { MaterialModule } from '../../material.module';
-import { CommonModule } from '@angular/common';
-import { BoardItemsComponent } from '../board-items/board-items.component';
+import { CreateBoardItemModel } from '../create-board-item.model';
 
 @Component({
     selector: 'app-pos-board-waiter',
@@ -106,8 +105,21 @@ export class PosBoardWaiterComponent {
             switch (id) {
                 case 'change_board': {
                     if (this.board) {
-                        const board = this.board
-                        this.router.navigate(['/boards/changeBoards', board._id])
+                        if (this.setting.password && this.setting.isBlockChangeBoard) {
+                            const board = this.board
+                            const dialogRef = this.matDialog.open(DialogPasswordComponent, {
+                                width: '600px',
+                                position: { top: '20px' },
+                            })
+            
+                            dialogRef.afterClosed().subscribe(ok => {
+                                if (ok) {
+                                    this.router.navigate(['/boards/changeBoards', board._id])
+                                }
+                            })
+                        } else {
+                            this.router.navigate(['/boards/changeBoards', this.board._id])
+                        }
                     } else {
                         this.navigationService.showMessage('Esta mesa esta sin ordenar')
                     }
@@ -144,33 +156,8 @@ export class PosBoardWaiterComponent {
                 next: products => {
                     this.navigationService.loadBarFinish()
                     this.selectedIndex = 2
-
-                    switch (this.setting.defaultPrice) {
-                        case PriceType.GLOBAL:
-                            this.products = products
-                            break
-                        case PriceType.OFICINA:
-                            for (const product of products) {
-                                const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                                product.price = price ? price.price : product.price
-                            }
-                            this.products = products
-                            break
-                        case PriceType.LISTA:
-                            for (const product of products) {
-                                const price = product.prices.find(e => e.priceListId === this.priceListId)
-                                product.price = price ? price.price : product.price
-                            }
-                            this.products = products
-                            break
-                        case PriceType.LISTAOFICINA:
-                            for (const product of products) {
-                                const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-                                product.price = price ? price.price : product.price
-                            }
-                            this.products = products
-                            break
-                    }
+                    ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                    this.products = products
 
                     if (this.sortByName) {
                         this.products.sort((a, b) => {
@@ -246,7 +233,7 @@ export class PosBoardWaiterComponent {
             styleObject['background-position'] = 'center'
         } else {
             if (product.isTrackStock && product.stock < 1) {
-                styleObject['background'] = '#ffa7a6' 
+                styleObject['background'] = '#ffa7a6'
             }
         }
         return styleObject
@@ -258,7 +245,7 @@ export class PosBoardWaiterComponent {
             board.boardItems = board.boardItems.filter(e => (e.quantity - e.preQuantity) > 0)
             board.boardItems.forEach(e => e.quantity = (e.quantity - e.preQuantity))
 
-            if (this.setting.password) {
+            if (this.setting.password && this.setting.isBlockPrintCommand) {
                 const dialogRef = this.matDialog.open(DialogPasswordComponent, {
                     width: '600px',
                     position: { top: '20px' },
@@ -287,7 +274,7 @@ export class PosBoardWaiterComponent {
         if (this.board) {
             const board: BoardModel = JSON.parse(JSON.stringify(this.board))
 
-            if (this.setting.password) {
+            if (this.setting.password && this.setting.isBlockPrintCommand) {
                 const dialogRef = this.matDialog.open(DialogPasswordComponent, {
                     width: '600px',
                     position: { top: '20px' },
@@ -313,33 +300,7 @@ export class PosBoardWaiterComponent {
     }
 
     onChangePriceList() {
-        const products = this.products
-        switch (this.setting.defaultPrice) {
-            case PriceType.GLOBAL:
-                this.products = products
-                break
-            case PriceType.OFICINA:
-                for (const product of products) {
-                    const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId === null)
-                    product.price = price ? price.price : product.price
-                }
-                this.products = products
-                break
-            case PriceType.LISTA:
-                for (const product of products) {
-                    const price = product.prices.find(e => e.priceListId === this.priceListId)
-                    product.price = price ? price.price : product.price
-                }
-                this.products = products
-                break
-            case PriceType.LISTAOFICINA:
-                for (const product of products) {
-                    const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-                    product.price = price ? price.price : product.price
-                }
-                this.products = products
-                break
-        }
+        ProductsService.setPrices(this.products, this.priceListId, this.setting, this.office)
     }
 
     onCancel() {
@@ -354,33 +315,8 @@ export class PosBoardWaiterComponent {
         this.products = []
         if (category.products) {
             const products = category.products
-
-            switch (this.setting.defaultPrice) {
-                case PriceType.GLOBAL:
-                    this.products = products
-                    break
-                case PriceType.OFICINA:
-                    for (const product of products) {
-                        const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                        product.price = price ? price.price : product.price
-                    }
-                    this.products = products
-                    break
-                case PriceType.LISTA:
-                    for (const product of products) {
-                        const price = product.prices.find(e => e.priceListId === this.priceListId)
-                        product.price = price ? price.price : product.price
-                    }
-                    this.products = products
-                    break
-                case PriceType.LISTAOFICINA:
-                    for (const product of products) {
-                        const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-                        product.price = price ? price.price : product.price
-                    }
-                    this.products = products
-                    break
-            }
+            ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+            this.products = products
 
             if (this.sortByName) {
                 this.products.sort((a, b) => {
@@ -401,33 +337,8 @@ export class PosBoardWaiterComponent {
             this.productsService.getProductsByCategoryPage(category._id, 1, 500).subscribe(products => {
                 this.navigationService.loadBarFinish()
                 category.products = products
-
-                switch (this.setting.defaultPrice) {
-                    case PriceType.GLOBAL:
-                        this.products = products
-                        break
-                    case PriceType.OFICINA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.products = products
-                        break
-                    case PriceType.LISTA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.priceListId === this.priceListId)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.products = products
-                        break
-                    case PriceType.LISTAOFICINA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.products = products
-                        break
-                }
+                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                this.products = products
 
                 if (this.sortByName) {
                     this.products.sort((a, b) => {
@@ -453,7 +364,7 @@ export class PosBoardWaiterComponent {
                 priceListId: this.priceListId || '',
             }
 
-            const dialogRef = this.matDialog.open(DialogSelectAnnotationsComponent, {
+            this.matDialog.open(DialogSelectAnnotationsComponent, {
                 width: '600px',
                 position: { top: '20px' },
                 data,

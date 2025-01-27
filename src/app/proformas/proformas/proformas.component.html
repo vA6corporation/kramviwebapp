@@ -73,10 +73,12 @@
                             <mat-icon>info</mat-icon>
                             <span>Detalles de proforma</span>
                         </button>
-                        <button mat-menu-item *ngIf="element.saleId" (click)="onOpenDetailsSale(element.saleId)">
+                        @if (element.saleId) {
+                        <button mat-menu-item (click)="onOpenDetailsSale(element.saleId)">
                             <mat-icon>info</mat-icon>
                             <span>Detalles de venta</span>
                         </button>
+                        }
                         <button type="button" mat-menu-item (click)="onPrint(element._id)">
                             <mat-icon>print</mat-icon>
                             <span>Imprimir</span>
@@ -85,26 +87,30 @@
                             <mat-icon>download</mat-icon>
                             <span>Exportar PDF</span>
                         </button>
-                        <button *ngIf="element.saleId === null" [routerLink]="['/charge']"
-                            [queryParams]="{ proformaId: element._id }" mat-menu-item>
+                        @if (element.saleId === null) {
+                        <button [routerLink]="['/charge']" [queryParams]="{ proformaId: element._id }" mat-menu-item>
                             <mat-icon>receipt</mat-icon>
                             <span>Vender al contado</span>
                         </button>
-                        <button *ngIf="element.saleId === null" [routerLink]="['/charge/credit']"
-                            [queryParams]="{ proformaId: element._id }" mat-menu-item>
+                        }
+                        @if (element.saleId === null) {
+                        <button [routerLink]="['/charge/credit']" [queryParams]="{ proformaId: element._id }"
+                            mat-menu-item>
                             <mat-icon>receipt</mat-icon>
                             <span>Vender al credito</span>
                         </button>
+                        }
                         <button [routerLink]="['/proformas/copy']" [queryParams]="{ proformaId: element._id }"
                             mat-menu-item>
                             <mat-icon>content_copy</mat-icon>
                             <span>Copiar proforma</span>
                         </button>
-                        <button *ngIf="element.saleId === null" [routerLink]="['/proformas', element._id, 'edit']"
-                            mat-menu-item>
+                        @if (element.saleId === null) {
+                        <button [routerLink]="['/proformas', element._id, 'edit']" mat-menu-item>
                             <mat-icon>edit</mat-icon>
                             <span>Editar</span>
                         </button>
+                        }
                     </mat-menu>
                 </td>
             </ng-container>

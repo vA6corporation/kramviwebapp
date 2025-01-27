@@ -28,6 +28,10 @@ export interface CreditNoteModel {
     inafecto: number
 
     igv: number
+    rc: number
+    discount: number
+    igvPercent: number
+    rcPercent: number
     currencyCode: string
     createdAt: string
     emitionAt: string

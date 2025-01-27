@@ -1,37 +1,39 @@
 <h2 mat-dialog-title>{{ product.fullName }}</h2>
-<mat-list role="list">
-    @if (product.description) {
-        <mat-list-item role="listitem">
-            {{ product.description }}
-        </mat-list-item>
-    }
-    @if (product.location) {
-        <mat-list-item role="listitem">
-            Ubicacion: {{ product.location }}
-        </mat-list-item>
-    }
-    @if (product.isTrackStock) {
-        <mat-list-item role="listitem">
-            @if (product.stock > 0) {
-                <span>
-                    Stock: {{ product.stock.toFixed(2) }}
-                </span>
-            }
-            @if (product.stock <= 0) {
-                <span>
-                    Stock: <span class="text-danger">Agotado</span>
-                </span>
-            }
-        </mat-list-item>
-    } @else {
-        <mat-list-item role="listitem">
-            Stock: Venta libre
-        </mat-list-item>
-    }
-    @if (product.urlImage) {
-        <img [src]="product.urlImage" class="w-100" alt="Product image">
-    }
-</mat-list>
+<div mat-dialog-content>
+    <mat-list role="list">
+        @if (product.description) {
+            <mat-list-item role="listitem">
+                {{ product.description }}
+            </mat-list-item>
+        }
+        @if (product.location) {
+            <mat-list-item role="listitem">
+                Ubicacion: {{ product.location }}
+            </mat-list-item>
+        }
+        @if (product.isTrackStock) {
+            <mat-list-item role="listitem">
+                @if (product.stock > 0) {
+                    <span>
+                        Stock: {{ product.stock.toFixed(2) }}
+                    </span>
+                }
+                @if (product.stock <= 0) {
+                    <span>
+                        Stock: <span class="text-danger">Agotado</span>
+                    </span>
+                }
+            </mat-list-item>
+        } @else {
+            <mat-list-item role="listitem">
+                Stock: Venta libre
+            </mat-list-item>
+        }
+        @if (product.urlImage) {
+            <img [src]="product.urlImage" class="w-100" alt="Product image">
+        }
+    </mat-list>
+</div>
 <mat-dialog-actions>
     <span class="spacer"></span>
     @if (isFavorite) {

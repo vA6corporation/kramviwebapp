@@ -2,17 +2,15 @@ import { formatDate } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Params } from '@angular/router';
-import { Chart, ChartOptions, ChartType, registerables } from 'chart.js';
+import { Chart, ChartOptions, ChartType } from 'chart.js';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
 import { buildExcel } from '../../buildExcel';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategoryModel } from '../../products/category.model';
-import { randomColor } from '../../randomColor';
 import { ReportsService } from '../reports.service';
-import { MaterialModule } from '../../material.module';
-Chart.register(...registerables);
 
 @Component({
     selector: 'app-supplies-in',
@@ -107,8 +105,6 @@ export class SuppliesInComponent {
                 params
             ).subscribe(supplyItems => {
                 this.navigationService.loadBarFinish()
-                console.log(supplyItems)
-                this.colors = supplyItems.map(() => randomColor())
                 this.supplyItems = supplyItems
                 this.supplyItems.sort((a, b) => {
                     if (a.totalCost < b.totalCost) {
@@ -125,8 +121,6 @@ export class SuppliesInComponent {
                         {
                             label: 'Dataset 1',
                             data: supplyItems.slice(0, 10).map(e => e.totalCost || 0),
-                            // borderColor: '#3f51b5',
-                            backgroundColor: this.colors,
                             fill: true
                         },
                     ]

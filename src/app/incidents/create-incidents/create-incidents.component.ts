@@ -12,10 +12,12 @@ import { ProductsService } from '../../products/products.service';
 import { IncidentsService } from '../incidents.service';
 import { MaterialModule } from '../../material.module';
 import { IncidentItemsComponent } from '../incident-items/incident-items.component';
+import { RouterModule } from '@angular/router';
+import { CategoriesService } from '../../products/categories.service';
 
 @Component({
     selector: 'app-create-incidents',
-    imports: [MaterialModule, IncidentItemsComponent],
+    imports: [MaterialModule, RouterModule, IncidentItemsComponent],
     templateUrl: './create-incidents.component.html',
     styleUrls: ['./create-incidents.component.sass'],
 })
@@ -23,6 +25,7 @@ export class CreateIncidentsComponent {
 
     constructor(
         private readonly navigationService: NavigationService,
+        private readonly categoriesService: CategoriesService,
         private readonly productsService: ProductsService,
         private readonly favoritesService: FavoritesService,
         private readonly incidentsService: IncidentsService,
@@ -36,23 +39,31 @@ export class CreateIncidentsComponent {
     gridListCols = 4
     setting: SettingModel = new SettingModel()
     office: OfficeModel = new OfficeModel()
+    private sortByName: boolean = true
 
     private handleSearch$: Subscription = new Subscription()
     private handleFavorites$: Subscription = new Subscription()
     private handleAuth$: Subscription = new Subscription()
+    private handleCategories$: Subscription = new Subscription()
 
     ngOnDestroy() {
         this.handleSearch$.unsubscribe()
         this.handleFavorites$.unsubscribe()
         this.handleAuth$.unsubscribe()
+        this.handleCategories$.unsubscribe()
     }
 
     ngOnInit(): void {
         this.navigationService.setTitle('Nueva incidencia')
+        this.navigationService.showSearch()
 
         this.navigationService.setMenu([
             { id: 'search', icon: 'search', show: true, label: '' }
         ])
+
+        this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
+            this.categories = categories
+        })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.setting = auth.setting
@@ -63,7 +74,7 @@ export class CreateIncidentsComponent {
             this.productsService.getProductsByKey(key).subscribe({
                 next: products => {
                     this.products = products
-                    this.selectedIndex = 1
+                    this.selectedIndex = 2
                     const foundProduct = products.find(e => e.sku.match(new RegExp(`^${key}$`, 'i')) || e.upc.match(new RegExp(`^${key}$`, 'i')))
                     if (foundProduct) {
                         this.onSelectProduct(foundProduct)
@@ -88,6 +99,22 @@ export class CreateIncidentsComponent {
 
     onSelectProduct(product: ProductModel): void {
         this.incidentsService.addIncidentItem(product)
+    }
+
+    onSelectCategory(category: CategoryModel) {
+        this.selectedIndex = 2
+        this.products = []
+        if (category.products) {
+            const products = category.products
+            this.products = products
+        } else {
+            this.navigationService.loadBarStart()
+            this.productsService.getProductsByCategoryPage(category._id, 1, 500).subscribe(products => {
+                this.navigationService.loadBarFinish()
+                category.products = products
+                this.products = products
+            })
+        }
     }
 
 }

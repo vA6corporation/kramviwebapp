@@ -49,7 +49,6 @@ export class RemissionGuidesComponent {
     })
     users: UserModel[] = []
     displayedColumns: string[] = ['created', 'serial', 'sale', 'customer', 'user', 'actions']
-    // sunattk: string = ''
     dataSource: RemissionGuideModel[] = []
     length: number = 0
     pageSize: number = 10
@@ -57,7 +56,6 @@ export class RemissionGuidesComponent {
     pageIndex: number = 0
     office: OfficeModel = new OfficeModel()
     private params: Params = {}
-    // private business: BusinessModel = new BusinessModel()
 
     private handleClickMenu$: Subscription = new Subscription()
     private handleUsers$: Subscription = new Subscription()
@@ -97,7 +95,6 @@ export class RemissionGuidesComponent {
         ])
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            // this.business = auth.business
             this.office = auth.office
 
             if (!auth.business.clientId) {

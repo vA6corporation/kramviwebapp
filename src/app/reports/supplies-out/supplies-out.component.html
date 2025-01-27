@@ -14,7 +14,7 @@
                 <mat-label>Sucursal</mat-label>
                 <mat-select (selectionChange)="onOfficeChange()" formControlName="officeId">
                     @for (office of offices; track $index) {
-                        <mat-option [value]="office._id">{{ office.name }}</mat-option>
+                    <mat-option [value]="office._id">{{ office.name }}</mat-option>
                     }
                 </mat-select>
             </mat-form-field>
@@ -25,17 +25,16 @@
     </div>
     <mat-list>
         @for (supplyItem of supplyItems; track supplyItem._id; let i = $index) {
-            <mat-list-item class="text-uppercase"
-                [style.backgroundColor]="colors[i]">
-                {{ supplyItem.fullName }}
-                <span class="spacer"></span>
-                <div>
-                    <span class="mr-3">
-                        {{ (supplyItem.totalOut * supplyItem.cost || 0).toFixed(2) }}
-                    </span>
-                    {{ (supplyItem.totalOut || 0).toFixed(2) }}
-                </div>
-            </mat-list-item>
+        <mat-list-item class="text-uppercase">
+            {{ supplyItem.fullName }}
+            <span class="spacer"></span>
+            <div>
+                <span class="mr-3">
+                    {{ (supplyItem.totalOut * supplyItem.cost || 0).toFixed(2) }}
+                </span>
+                {{ (supplyItem.totalOut || 0).toFixed(2) }}
+            </div>
+        </mat-list-item>
         }
     </mat-list>
 </div>

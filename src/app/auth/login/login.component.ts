@@ -47,6 +47,7 @@ export class LoginComponent {
         this.loadDb().then(() => {
             this.loadUsers()
         })
+        this.navigationService.loadBarFinish()
     }
 
     onDeploy() {

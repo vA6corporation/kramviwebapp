@@ -4,7 +4,7 @@
             <p class="caption text-center text-muted mb-0">Transportista</p>
             @if (carrier) {
             <button type="button" mat-button color="primary" (click)="onEditCarrier()" class="w-100">
-                <span class="mat-h1">{{ carrier.name | uppercase }}</span>
+                <span>{{ carrier.name | uppercase }}</span>
             </button>
             <p class="text-center m-0">Placa: {{ carrier.carriagePlate || 'NINGUNO' }}</p>
             <p class="text-center m-0">N° de licencia: {{ carrier.licenseNumber || 'NINGUNO' }}</p>
@@ -13,13 +13,14 @@
             <p class="caption text-center text-muted mb-0">Destinatario</p>
             @if (customer) {
             <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100">
-                <span class="mat-h1">{{ customer.name | uppercase }}</span>
+                <span>{{ customer.name | uppercase }}</span>
             </button>
             @if (customer.mobileNumber) {
             <p class="text-center mb-3">Celular: {{ customer.formatMobileNumber }}</p>
             }
             }
-            <mat-form-field appearance="fill" *ngIf="customer">
+            @if (customer) {
+            <mat-form-field appearance="fill">
                 <mat-label>Direccion</mat-label>
                 <mat-select formControlName="addressIndex">
                     @for (address of addresses; track address; let i = $index) {
@@ -29,6 +30,7 @@
                     }
                 </mat-select>
             </mat-form-field>
+            }
             <mat-form-field appearance="fill">
                 <mat-label>Fecha de transporte</mat-label>
                 <input matInput [matDatepicker]="transportAtDatePicker" formControlName="transportAt">

@@ -5,24 +5,26 @@
             <h2 class="text-center mat-display-small mb-0">{{ charge.toFixed(2) }}</h2>
             <p class="caption text-center text-muted mb-2">Total a cobrar</p>
             @if (customer) {
-                <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
-                    <span class="mat-h1">{{ customer.name | uppercase }}</span>
-                </button>
-                @if (customer.mobileNumber) {
+            <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
+                <span>{{ customer.name | uppercase }}</span>
+            </button>
+            @if (customer.mobileNumber) {
             <p class="text-center mb-3">Celular: {{ customer.formatMobileNumber }}</p>
             }
             }
-            <mat-form-field appearance="fill" *ngIf="setting.showEmitionAt">
+            @if (setting.showEmitionAt) {
+            <mat-form-field appearance="fill">
                 <mat-label>Fecha de emision</mat-label>
                 <input matInput [matDatepicker]="picker" formControlName="emitionAt">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
+            }
             <mat-form-field appearance="fill">
                 <mat-label>Motivo</mat-label>
                 <mat-select formControlName="reasonCode">
                     @for (reason of reasons; track $index) {
-                        <mat-option [value]="reason.code">{{ reason.label }}</mat-option>
+                    <mat-option [value]="reason.code">{{ reason.label }}</mat-option>
                     }
                 </mat-select>
             </mat-form-field>
@@ -30,16 +32,18 @@
                 <mat-label>Descripcion del motivo</mat-label>
                 <input type="text" matInput formControlName="reasonDescription">
             </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showWorker">
+            @if (setting.showWorker) {
+            <mat-form-field appearance="fill">
                 <mat-label>Personal a cargo</mat-label>
                 <mat-select formControlName="workerId">
                     @for (worker of workers; track worker._id) {
-                        <mat-option [value]="worker._id">
-                            {{ worker.name | uppercase }}
-                        </mat-option>
+                    <mat-option [value]="worker._id">
+                        {{ worker.name | uppercase }}
+                    </mat-option>
                     }
                 </mat-select>
             </mat-form-field>
+            }
             <mat-form-field appearance="fill">
                 <mat-label>Observaciones</mat-label>
                 <input type="text" matInput formControlName="observations">

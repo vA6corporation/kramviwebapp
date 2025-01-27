@@ -11,13 +11,13 @@ import { SettingModel } from '../../auth/setting.model';
 import { OfficeModel } from '../../auth/office.model';
 import { Subscription } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MaterialModule } from '../../material.module';
 import { MoveItemsComponent } from '../move-items/move-items.component';
 
 @Component({
     selector: 'app-pos-edit-moves',
-    imports: [MaterialModule, MoveItemsComponent],
+    imports: [MaterialModule, RouterModule, MoveItemsComponent],
     templateUrl: './pos-edit-moves.component.html',
     styleUrls: ['./pos-edit-moves.component.sass'],
 })

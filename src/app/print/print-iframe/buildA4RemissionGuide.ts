@@ -157,6 +157,8 @@ export async function buildA4RemissionGuide(
     pdf.text(':', 165, 55)
     pdf.text('COMPROBANTE', 135, 60)
     pdf.text(':', 165, 60)
+    pdf.text('PESO', 135, 65)
+    pdf.text(':', 165, 65)
 
     pdf.setFont('Helvetica', 'normal')
 
@@ -173,19 +175,21 @@ export async function buildA4RemissionGuide(
     }
     pdf.text(text, 170, 60)
 
+    text = `${remissionGuide.shippingWeight.toString()} KGM`
+    pdf.text(text, 170, 65)
+
     let positionYCarrier = positionYCustomer
     positionYCarrier += 5
 
     pdf.setDrawColor(0)
     pdf.setFillColor(255, 255, 255)
-    pdf.roundedRect(5, positionYCarrier, 200, 25, 1, 1, 'FD')
+    pdf.roundedRect(5, positionYCarrier, 200, 35, 1, 1, 'FD')
 
     positionYCarrier += 5
 
     pdf.setFont('Helvetica', 'bold')
-    pdf.text('Razon social del transportista', 8, positionYCarrier)
-    pdf.text('Documento de identidad', 90, positionYCarrier)
-    pdf.text('Vendedor', 170, positionYCarrier)
+    pdf.text('Nombres/Razon social del transportista', 8, positionYCarrier)
+    pdf.text('Documento de identidad', pageCenter + 3, positionYCarrier)
 
     positionYCarrier += 5
 
@@ -196,10 +200,23 @@ export async function buildA4RemissionGuide(
     pdf.text(strArr, 8, positionYCarrier)
 
     text = (carrier ? `${carrier.documentType}: ${carrier.document}` : '').toUpperCase()
-    pdf.text(text, 90, positionYCarrier)
+    pdf.text(text, pageCenter + 3, positionYCarrier)
 
-    text = user.name
-    pdf.text(text, 170, positionYCarrier)
+    positionYCarrier += 5
+
+    pdf.setFont('Helvetica', 'bold')
+    pdf.text('N° de placa', 8, positionYCarrier)
+    pdf.text('N° de licencia de conducir', pageCenter + 3, positionYCarrier)
+
+    positionYCarrier += 5
+
+    pdf.setFont('Helvetica', 'normal')
+
+    text = carrier?.carriagePlate || 'NINGUNO'
+    pdf.text(text, 8, positionYCarrier)
+
+    text = carrier?.licenseNumber || 'NINGUNO'
+    pdf.text(text, pageCenter + 3, positionYCarrier)
 
     positionYCarrier += 5
 

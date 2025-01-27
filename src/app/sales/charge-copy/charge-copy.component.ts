@@ -343,9 +343,15 @@ export class ChargeCopyComponent {
             this.navigationService.loadBarStart()
 
             if (this.setting.allowFreeStock) {
-                this.salesService.createSale(createdSale, this.saleItems, this.payments, [], this.params).subscribe({
+                this.salesService.createSale(
+                    createdSale, 
+                    this.saleItems, 
+                    this.payments, 
+                    [],
+                    null,
+                    this.params
+                ).subscribe({
                     next: sale => {
-
                         let payments: CreatePaymentModel[] = []
 
                         if (this.payments.length) {
@@ -395,7 +401,14 @@ export class ChargeCopyComponent {
                     }
                 })
             } else {
-                this.salesService.createSaleStock(createdSale, this.saleItems, this.payments, [], this.params).subscribe({
+                this.salesService.createSaleStock(
+                    createdSale, 
+                    this.saleItems, 
+                    this.payments, 
+                    [],
+                    null, 
+                    this.params
+                ).subscribe({
                     next: res => {
                         const { sale, outStocks } = res
 

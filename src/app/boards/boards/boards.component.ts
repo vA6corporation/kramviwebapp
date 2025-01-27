@@ -10,6 +10,7 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { AuthService } from '../../auth/auth.service';
 import { TableModel } from '../../tables/table.model';
 import { MaterialModule } from '../../material.module';
+import { io } from "socket.io-client";
 
 @Component({
     selector: 'app-boards',
@@ -20,16 +21,17 @@ import { MaterialModule } from '../../material.module';
 export class BoardsComponent {
 
     constructor(
+        private readonly navigationService: NavigationService,
         private readonly boardsService: BoardsService,
         private readonly tablesService: TablesService,
-        private readonly navigationService: NavigationService,
         private readonly authService: AuthService,
-        private readonly router: Router,
         private readonly matDialog: MatDialog,
+        private readonly router: Router,
     ) { }
 
     boards: BoardModel[] = []
     tables: TableModel[] = []
+    officeId: string = ''
 
     private handleAuth$: Subscription = new Subscription()
     private handleClickMenu$: Subscription = new Subscription()
@@ -42,6 +44,7 @@ export class BoardsComponent {
     }
 
     ngOnInit(): void {
+        // const socket = io('http://localhost:3000')
 
         if (this.authService.isDebtorCancel()) {
             this.router.navigate(['/subscription'])
@@ -58,23 +61,35 @@ export class BoardsComponent {
             })
         })
 
+        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
+            this.officeId = auth.office._id
+            // socket.emit('join', this.officeId)
+            // socket.on('changeBoards', () => {
+            //     this.fetchData()
+            // })
+        })
+
         this.handleTables$ = this.tablesService.handleTables().subscribe(tables => {
             this.tables = tables
             if (this.tables.length) {
-                this.boardsService.getActiveBoards().subscribe(boards => {
-                    for (const table of this.tables) {
-                        const foundBoard = boards.find(e => e.tableId === table._id)
-                        if (foundBoard) {
-                            table.board = foundBoard
-                        } else {
-                            table.board = null
-                        }
-                    }
-                })
+                this.fetchData()
             }
         })
 
         this.boardsService.setBoardItems([])
         this.navigationService.setTitle('Atencion de mesas')
+    }
+
+    fetchData() {
+        this.boardsService.getActiveBoards().subscribe(boards => {
+            for (const table of this.tables) {
+                const foundBoard = boards.find(e => e.tableId === table._id)
+                if (foundBoard) {
+                    table.board = foundBoard
+                } else {
+                    table.board = null
+                }
+            }
+        })
     }
 }

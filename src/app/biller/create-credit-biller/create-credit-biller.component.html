@@ -14,7 +14,7 @@
             }
             @if (customer) {
             <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
-                <span class="mat-h1">{{ customer.name | uppercase }}</span>
+                <span>{{ customer.name | uppercase }}</span>
             </button>
             @if (customer.mobileNumber) {
             <p class="text-center mb-3">Celular: {{ customer.formatMobileNumber }}</p>
@@ -102,14 +102,16 @@
                 <input type="text" matInput formControlName="observations" [autofocus]>
             </mat-form-field>
             @if (setting.showIsRetainer) {
-            <div class="py-3">
+            <div class="pb-3">
                 <mat-slide-toggle formControlName="isRetainer">Es agente retenedor</mat-slide-toggle>
             </div>
             }
+            @if (setting.showDetraction) {
             <button type="button" class="w-100 mb-3" mat-flat-button [disabled]="isLoading" color="primary"
                 (click)="onDialogDetraction()">
                 INFORMACION DE LA DETRACCION
             </button>
+            }
             <button type="button" class="w-100" mat-flat-button [disabled]="isLoading" color="primary"
                 (click)="onSubmit()">
                 GUARDAR

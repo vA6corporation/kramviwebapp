@@ -1,0 +1,44 @@
+<mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="onChangeSelected($event)" animationDuration="0ms">
+    <mat-tab label="Productos a separar">
+        <div class="container">
+            <mat-card class="mb-3">
+                <mat-card-header>
+                    <mat-card-title>Productos a separar</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <mat-list>
+                        @for (boardItem of boardItems; track $index) {
+                        <mat-list-item>
+                            <span matListItemTitle>{{ boardItem.fullName }} ({{ boardItem.preQuantity }})</span>
+                            <span matListItemLine>Separar: {{ boardItem.quantity || 'NINGUNO' }}</span>
+                            <div matListItemMeta class="py-3">
+                                <button mat-icon-button aria-label="add item" (click)="onRemoveBoardItem(boardItem)">
+                                    <mat-icon>remove</mat-icon>
+                                </button>
+                                <button mat-icon-button aria-label="add item" (click)="onAddBoardItem(boardItem)">
+                                    <mat-icon>add</mat-icon>
+                                </button>
+                            </div>
+                        </mat-list-item>
+                        }
+                    </mat-list>
+                </mat-card-content>
+            </mat-card>
+            <div class="d-flex">
+                <span class="spacer"></span>
+                <button type="button" mat-raised-button routerLink="/boards" color="primary">CANCELAR</button>
+                <span class="divider"></span>
+                <button type="button" mat-flat-button color="primary" (click)="onContinue()">CONTINUAR</button>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Seleccion de mesa">
+        <mat-grid-list cols="5" rowHeight="100px">
+            @for (table of tables; track table._id; let i = $index) {
+            <mat-grid-tile (click)="onSplitBoard(table)" [style.background]="table.board ? '#ff0000' : 'lightblue'">
+                <span class="mat-title-large">{{ table.name }}</span>
+            </mat-grid-tile>
+            }
+        </mat-grid-list>
+    </mat-tab>
+</mat-tab-group>

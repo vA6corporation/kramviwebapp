@@ -6,14 +6,16 @@
             <p class="caption text-center text-muted mb-2">Total a cobrar</p>
             @if (customer) {
             <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
-                <span class="mat-h1">{{ customer.name | uppercase }}</span>
+                <span>{{ customer.name | uppercase }}</span>
             </button>
-            <p class="text-center mb-3">Limite de credito: {{ customer.creditLimit ? customer.creditLimit.toFixed(2) : 'SIN LIMITE' }}</p>
+            <p class="text-center mb-3">Limite de credito: {{ customer.creditLimit ? customer.creditLimit.toFixed(2) :
+                'SIN LIMITE' }}</p>
             @if (customer.mobileNumber) {
             <p class="text-center mb-3">Celular: {{ customer.formatMobileNumber }}</p>
             }
             }
-            <mat-form-field appearance="fill" *ngIf="customer">
+            @if (customer) {
+            <mat-form-field appearance="fill">
                 <mat-label>Direccion</mat-label>
                 <mat-select formControlName="addressIndex">
                     @for (address of addresses; track $index; let i = $index) {
@@ -23,6 +25,7 @@
                     }
                 </mat-select>
             </mat-form-field>
+            }
             <mat-form-field appearance="fill">
                 <mat-label>Comprobante</mat-label>
                 <mat-select formControlName="invoiceType">
@@ -33,7 +36,8 @@
                     }
                 </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showSpecialty">
+            @if (setting.showSpecialty) {
+            <mat-form-field appearance="fill">
                 <mat-label>Especialidad</mat-label>
                 <mat-select formControlName="specialtyId">
                     @for (specialty of specialties; track specialty._id) {
@@ -43,7 +47,9 @@
                     }
                 </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showWorker">
+            }
+            @if (setting.showWorker) {
+            <mat-form-field appearance="fill">
                 <mat-label>Personal a cargo</mat-label>
                 <mat-select formControlName="workerId">
                     @for (worker of workers; track worker._id) {
@@ -53,7 +59,9 @@
                     }
                 </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showReferred">
+            }
+            @if (setting.showReferred) {
+            <mat-form-field appearance="fill">
                 <mat-label>Referido por</mat-label>
                 <mat-select formControlName="referredId">
                     @for (worker of workers; track worker._id) {
@@ -63,33 +71,53 @@
                     }
                 </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showEmitionAt">
+            }
+            @if (setting.showEmitionAt) {
+            <mat-form-field appearance="fill">
                 <mat-label>Fecha de emision</mat-label>
                 <input matInput [matDatepicker]="picker" formControlName="emitionAt">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showDeliveryAt">
+            }
+            @if (setting.showDeliveryAt) {
+            <mat-form-field appearance="fill">
                 <mat-label>Fecha de entrega</mat-label>
                 <input matInput [matDatepicker]="picker" formControlName="deliveryAt">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showTotalDiscount">
+            }
+            @if (setting.showTotalDiscount) {
+            <mat-form-field appearance="fill">
                 <mat-label>Descuento global</mat-label>
                 <input type="number" matInput formControlName="discount" (input)="onChangeDiscount()">
             </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showCurrencyCode">
+            }
+            @if (setting.showCurrencyCode) {
+            <mat-form-field appearance="fill">
                 <mat-label>Moneda</mat-label>
                 <mat-select formControlName="currencyCode">
                     <mat-option value="PEN">SOLES</mat-option>
                     <mat-option value="USD">DOLARES</mat-option>
                 </mat-select>
             </mat-form-field>
+            }
             <mat-form-field appearance="fill">
                 <mat-label>Observaciones</mat-label>
                 <input type="text" matInput formControlName="observations" [autofocus]>
             </mat-form-field>
+            <!-- @if (setting.showIsRetainer) {
+            <div class="py-3">
+                <mat-slide-toggle formControlName="isRetainer">Es agente retenedor</mat-slide-toggle>
+            </div>
+            } -->
+            @if (setting.showDetraction) {
+            <button type="button" class="w-100 mb-3" mat-flat-button [disabled]="isLoading" color="primary"
+                (click)="onDialogDetraction()">
+                INFORMACION DE LA DETRACCION
+            </button>
+            }
             <button type="button" class="w-100" mat-flat-button [disabled]="isLoading" color="primary"
                 (click)="onSubmit()">
                 GUARDAR

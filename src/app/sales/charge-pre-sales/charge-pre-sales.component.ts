@@ -352,7 +352,14 @@ export class ChargePreSalesComponent {
             this.navigationService.loadBarStart()
 
             if (this.setting.allowFreeStock) {
-                this.salesService.createSale(createdSale, this.saleItems, this.payments, [], this.params).subscribe({
+                this.salesService.createSale(
+                    createdSale, 
+                    this.saleItems, 
+                    this.payments, 
+                    [],
+                    null, 
+                    this.params
+                ).subscribe({
                     next: sale => {
 
                         let payments: CreatePaymentModel[] = []
@@ -404,9 +411,15 @@ export class ChargePreSalesComponent {
                     }
                 })
             } else {
-                this.salesService.createSaleStock(createdSale, this.saleItems, this.payments, [], this.params).subscribe({
+                this.salesService.createSaleStock(
+                    createdSale, 
+                    this.saleItems, 
+                    this.payments, 
+                    [],
+                    null, 
+                    this.params
+                ).subscribe({
                     next: res => {
-
                         const { sale, outStocks } = res
 
                         if (outStocks.length || sale === null) {

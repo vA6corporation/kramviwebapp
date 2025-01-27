@@ -1,28 +1,27 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { NavigationService } from '../../navigation/navigation.service';
-import { ProductsService } from '../../products/products.service';
-import { FavoritesService } from '../../favorites/favorites.service';
-import { SalesService } from '../../sales/sales.service';
 import { AuthService } from '../../auth/auth.service';
+import { OfficeModel } from '../../auth/office.model';
+import { SettingModel } from '../../auth/setting.model';
+import { FavoritesService } from '../../favorites/favorites.service';
+import { LotModel } from '../../lots/lot.model';
+import { MaterialModule } from '../../material.module';
+import { NavigationService } from '../../navigation/navigation.service';
 import { CategoriesService } from '../../products/categories.service';
 import { CategoryModel } from '../../products/category.model';
-import { ProductModel } from '../../products/product.model';
-import { PriceListModel } from '../../products/price-list.model';
-import { SettingModel } from '../../auth/setting.model';
-import { OfficeModel } from '../../auth/office.model';
-import { LotModel } from '../../lots/lot.model';
-import { SaleModel } from '../../sales/sale.model';
-import { PriceType } from '../../products/price-type.enum';
 import { DialogDetailProductsComponent } from '../../products/dialog-detail-products/dialog-detail-products.component';
 import { DialogSelectAnnotationData, DialogSelectAnnotationsComponent } from '../../products/dialog-select-annotations/dialog-select-annotations.component';
+import { PriceListModel } from '../../products/price-list.model';
+import { ProductModel } from '../../products/product.model';
+import { ProductsService } from '../../products/products.service';
 import { DialogSaleItemsComponent } from '../../sales/dialog-sale-items/dialog-sale-items.component';
-import { MaterialModule } from '../../material.module';
 import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component';
-import { CommonModule } from '@angular/common';
+import { SaleModel } from '../../sales/sale.model';
+import { SalesService } from '../../sales/sales.service';
 
 @Component({
     selector: 'app-pos-standard-edit',
@@ -107,25 +106,8 @@ export class PosStandardEditComponent {
             this.office = auth.office
 
             this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
-                switch (this.setting.defaultPrice) {
-                    case PriceType.GLOBAL:
-                        this.favorites = products
-                        break
-                    case PriceType.OFICINA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId === null)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.favorites = products
-                        break
-                    case PriceType.LISTA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.priceListId === this.priceListId)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.favorites = products
-                        break
-                }
+                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                this.favorites = products
             })
         })
 
@@ -135,33 +117,8 @@ export class PosStandardEditComponent {
                 next: products => {
                     this.navigationService.loadBarFinish()
                     this.selectedIndex = 2
-
-                    switch (this.setting.defaultPrice) {
-                        case PriceType.GLOBAL:
-                            this.products = products
-                            break
-                        case PriceType.OFICINA:
-                            for (const product of products) {
-                                const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                                product.price = price ? price.price : product.price
-                            }
-                            this.products = products
-                            break
-                        case PriceType.LISTA:
-                            for (const product of products) {
-                                const price = product.prices.find(e => e.priceListId === this.priceListId)
-                                product.price = price ? price.price : product.price
-                            }
-                            this.products = products
-                            break
-                        case PriceType.LISTAOFICINA:
-                            for (const product of products) {
-                                const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-                                product.price = price ? price.price : product.price
-                            }
-                            this.products = products
-                            break
-                    }
+                    ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                    this.products = products
 
                     if (this.sortByName) {
                         this.products.sort((a, b) => {
@@ -192,26 +149,7 @@ export class PosStandardEditComponent {
     }
 
     onChangePriceList() {
-        const products = this.products
-        switch (this.setting.defaultPrice) {
-            case PriceType.GLOBAL:
-                this.products = products
-                break
-            case PriceType.OFICINA:
-                for (const product of products) {
-                    const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                    product.price = price ? price.price : product.price
-                }
-                this.products = products
-                break
-            case PriceType.LISTA:
-                for (const product of products) {
-                    const price = product.prices.find(e => e.priceListId === this.priceListId)
-                    product.price = price ? price.price : product.price
-                }
-                this.products = products
-                break
-        }
+        ProductsService.setPrices(this.products, this.priceListId, this.setting, this.office)
     }
 
     onCancel() {
@@ -274,33 +212,8 @@ export class PosStandardEditComponent {
         this.products = []
         if (category.products) {
             const products = category.products
-
-            switch (this.setting.defaultPrice) {
-                case PriceType.GLOBAL:
-                    this.products = products
-                    break
-                case PriceType.OFICINA:
-                    for (const product of products) {
-                        const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                        product.price = price ? price.price : product.price
-                    }
-                    this.products = products
-                    break
-                case PriceType.LISTA:
-                    for (const product of products) {
-                        const price = product.prices.find(e => e.priceListId === this.priceListId)
-                        product.price = price ? price.price : product.price
-                    }
-                    this.products = products
-                    break
-                case PriceType.LISTAOFICINA:
-                    for (const product of products) {
-                        const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-                        product.price = price ? price.price : product.price
-                    }
-                    this.products = products
-                    break
-            }
+            ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+            this.products = products
 
             if (this.sortByName) {
                 this.products.sort((a, b) => {
@@ -321,32 +234,8 @@ export class PosStandardEditComponent {
             this.productsService.getProductsByCategoryPage(category._id, 1, 500).subscribe(products => {
                 this.navigationService.loadBarFinish()
                 category.products = products
-                switch (this.setting.defaultPrice) {
-                    case PriceType.GLOBAL:
-                        this.products = products
-                        break
-                    case PriceType.OFICINA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.products = products
-                        break
-                    case PriceType.LISTA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.priceListId === this.priceListId)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.products = products
-                        break
-                    case PriceType.LISTAOFICINA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.products = products
-                        break
-                }
+                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                this.products = products
 
                 if (this.sortByName) {
                     this.products.sort((a, b) => {

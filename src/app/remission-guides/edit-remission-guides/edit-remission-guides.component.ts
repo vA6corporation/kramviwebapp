@@ -7,18 +7,17 @@ import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
 import { SettingModel } from '../../auth/setting.model';
 import { FavoritesService } from '../../favorites/favorites.service';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategoryModel } from '../../products/category.model';
 import { DialogSelectAnnotationData, DialogSelectAnnotationsComponent } from '../../products/dialog-select-annotations/dialog-select-annotations.component';
 import { PriceListModel } from '../../products/price-list.model';
-import { PriceType } from '../../products/price-type.enum';
 import { ProductModel } from '../../products/product.model';
 import { ProductsService } from '../../products/products.service';
 import { DialogLastSalesComponent } from '../../sales/dialog-last-sales/dialog-last-sales.component';
 import { RemissionGuideItemModel } from '../remission-guide-item.model';
-import { RemissionGuidesService } from '../remission-guides.service';
-import { MaterialModule } from '../../material.module';
 import { RemissionGuideItemsComponent } from '../remission-guide-items/remission-guide-items.component';
+import { RemissionGuidesService } from '../remission-guides.service';
 
 @Component({
     selector: 'app-edit-remission-guides',
@@ -49,6 +48,7 @@ export class EditRemissionGuidesComponent {
     gridListCols = 4
     setting: SettingModel = new SettingModel()
     office: OfficeModel = new OfficeModel()
+    isLoading: boolean = true
 
     private handleSearch$: Subscription = new Subscription()
     private handleClickMenu$: Subscription = new Subscription()
@@ -68,11 +68,15 @@ export class EditRemissionGuidesComponent {
 
     ngOnInit(): void {
         const remissionGuideId = this.activatedRoute.snapshot.params['remissionGuideId']
+        this.navigationService.loadBarStart()
         this.remissionGuidesService.getRemissionGuideById(remissionGuideId).subscribe({
             next: remissionGuide => {
+                this.isLoading = false
+                this.navigationService.loadBarFinish()
                 this.remissionGuidesService.setRemissionGuide(remissionGuide)
                 this.remissionGuidesService.setRemissionGuideItems(remissionGuide.remissionGuideItems)
             }, error: (error: HttpErrorResponse) => {
+                this.navigationService.loadBarStart()
                 this.navigationService.showMessage(error.error.message)
             }
         })
@@ -85,7 +89,7 @@ export class EditRemissionGuidesComponent {
 
         this.navigationService.setMenu([
             { id: 'search', icon: 'search', show: true, label: '' },
-            { id: 'printer', icon: 'printer', show: false, label: 'Imprimir' }
+            // { id: 'printer', icon: 'printer', show: false, label: 'Imprimir' }
         ])
 
         this.handleRemissionGuideItems$ = this.remissionGuidesService.handleRemissionGuideItems().subscribe(remissionGuideItems => {
@@ -116,25 +120,8 @@ export class EditRemissionGuidesComponent {
             this.setting = auth.setting
 
             this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
-                switch (this.setting.defaultPrice) {
-                    case PriceType.GLOBAL:
-                        this.favorites = products
-                        break
-                    case PriceType.OFICINA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.favorites = products
-                        break
-                    case PriceType.LISTA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.priceListId === this.priceListId)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.favorites = products
-                        break
-                }
+                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                this.favorites = products
             })
         })
 
@@ -143,34 +130,8 @@ export class EditRemissionGuidesComponent {
             this.productsService.getProductsByKey(key).subscribe({
                 next: products => {
                     this.navigationService.loadBarFinish()
-                    this.selectedIndex = 1
-
-                    switch (this.setting.defaultPrice) {
-                        case PriceType.GLOBAL:
-                            this.products = products
-                            break
-                        case PriceType.OFICINA:
-                            for (const product of products) {
-                                const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                                product.price = price ? price.price : product.price
-                            }
-                            this.products = products
-                            break
-                        case PriceType.LISTA:
-                            for (const product of products) {
-                                const price = product.prices.find(e => e.priceListId === this.priceListId)
-                                product.price = price ? price.price : product.price
-                            }
-                            this.products = products
-                            break
-                        case PriceType.LISTAOFICINA:
-                            for (const product of products) {
-                                const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-                                product.price = price ? price.price : product.price
-                            }
-                            this.products = products
-                            break
-                    }
+                    this.selectedIndex = 2
+                    this.products = products
 
                     const foundProduct = products.find(e => e.sku.match(new RegExp(`^${key}$`, 'i')) || e.upc.match(new RegExp(`^${key}$`, 'i')))
 
@@ -184,36 +145,6 @@ export class EditRemissionGuidesComponent {
                 }
             })
         })
-    }
-
-    onChangePriceList() {
-        const products = this.products
-        switch (this.setting.defaultPrice) {
-            case PriceType.GLOBAL:
-                this.products = products
-                break
-            case PriceType.OFICINA:
-                for (const product of products) {
-                    const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                    product.price = price ? price.price : product.price
-                }
-                this.products = products
-                break
-            case PriceType.LISTA:
-                for (const product of products) {
-                    const price = product.prices.find(e => e.priceListId === this.priceListId)
-                    product.price = price ? price.price : product.price
-                }
-                this.products = products
-                break
-            case PriceType.LISTAOFICINA:
-                for (const product of products) {
-                    const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-                    product.price = price ? price.price : product.price
-                }
-                this.products = products
-                break
-        }
     }
 
     onCancel() {
@@ -238,6 +169,22 @@ export class EditRemissionGuidesComponent {
 
         } else {
             this.remissionGuidesService.addRemissionGuideItem(product)
+        }
+    }
+
+    onSelectCategory(category: CategoryModel) {
+        this.selectedIndex = 2
+        this.products = []
+        if (category.products) {
+            const products = category.products
+            this.products = products
+        } else {
+            this.navigationService.loadBarStart()
+            this.productsService.getProductsByCategoryPage(category._id, 1, 500).subscribe(products => {
+                this.navigationService.loadBarFinish()
+                category.products = products
+                this.products = products
+            })
         }
     }
 

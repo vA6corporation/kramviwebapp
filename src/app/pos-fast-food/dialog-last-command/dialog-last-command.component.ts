@@ -45,7 +45,7 @@ export class DialogLastCommandComponent {
         })
     }
 
-    printBoard(boardId: string) {
+    onPrintBoard(boardId: string) {
         this.dialogRef.close()
         this.boardsService.getBoardById(boardId).subscribe(board => {
 

@@ -17,36 +17,65 @@ export class IncidentsService {
         private readonly httpService: HttpService,
     ) { }
 
-    private incidentItems: CreateIncidentItemModel[] = [];
-    private incidentItems$ = new BehaviorSubject<CreateIncidentItemModel[]>([]);
+    private incidentItems: CreateIncidentItemModel[] = []
+    private incidentItems$ = new BehaviorSubject<CreateIncidentItemModel[]>([])
 
-    getCountIncidentItems(
+    getCountIncidentOutItems(
         params: Params
     ): Observable<number> {
-        return this.httpService.get('incidents/countIncidentItems', params);
+        return this.httpService.get('incidents/countIncidentOutItems', params)
     }
 
-    getCountQuantityIncidentItemsByProduct(
+    getCountIncidentInItems(
+        params: Params
+    ): Observable<number> {
+        return this.httpService.get('incidents/countIncidentInItems', params)
+    }
+
+    getCountQuantityIncidentOutItemsByProduct(
         productId: string,
     ): Observable<number> {
-        return this.httpService.get(`incidents/countQuantityIncidentItemsByProduct/${productId}`);
+        return this.httpService.get(`incidents/countQuantityIncidentOutItemsByProduct/${productId}`)
     }
 
-    getIncidentItemsByPageProduct(
+    getCountQuantityIncidentInItemsByProduct(
+        productId: string,
+    ): Observable<number> {
+        return this.httpService.get(`incidents/countQuantityIncidentInItemsByProduct/${productId}`)
+    }
+
+    getIncidentOutItemsByPageProduct(
         pageIndex: number,
         pageSize: number,
         productId: string,
         params: Params,
     ): Observable<IncidentItemModel[]> {
-        return this.httpService.get(`incidents/incidentItemsByPageProduct/${pageIndex}/${pageSize}/${productId}`, params)
+        return this.httpService.get(`incidents/incidentOutItemsByPageProduct/${pageIndex}/${pageSize}/${productId}`, params)
     }
 
-    getIncidentItemsByPage(
+    getIncidentInItemsByPageProduct(
+        pageIndex: number,
+        pageSize: number,
+        productId: string,
+        params: Params,
+    ): Observable<IncidentItemModel[]> {
+        return this.httpService.get(`incidents/incidentInItemsByPageProduct/${pageIndex}/${pageSize}/${productId}`, params)
+    }
+
+    getIncidentInItemsByPage(
         pageIndex: number,
         pageSize: number,
         params: Params
     ): Observable<IncidentItemModel[]> {
-        return this.httpService.get(`incidents/incidentItemsByPage/${pageIndex}/${pageSize}`, params);
+        return this.httpService.get(`incidents/incidentInItemsByPage/${pageIndex}/${pageSize}`, params)
+    }
+
+    getIncidentOutItemsByPage(
+        pageIndex: number,
+        pageSize: number,
+        params: Params
+    ): Observable<IncidentItemModel[]> {
+        return this.httpService.get(`incidents/incidentOutItemsByPage/${pageIndex}/${pageSize}`, params)
     }
 
     getIncidentById(incidentId: string): Observable<IncidentModel> {
@@ -97,11 +126,18 @@ export class IncidentsService {
         this.incidentItems$.next(this.incidentItems)
     }
 
-    create(
+    createIn(
         incident: CreateIncidentModel,
-        incidentItems: CreateIncidentItemModel[]
+        incidentInItems: CreateIncidentItemModel[]
     ) {
-        return this.httpService.post('incidents', { incident, incidentItems })
+        return this.httpService.post('incidents/in', { incident, incidentInItems })
+    }
+
+    createOut(
+        incident: CreateIncidentModel,
+        incidentOutItems: CreateIncidentItemModel[]
+    ) {
+        return this.httpService.post('incidents/out', { incident, incidentOutItems })
     }
 
     deleteIncident(incidentId: string) {

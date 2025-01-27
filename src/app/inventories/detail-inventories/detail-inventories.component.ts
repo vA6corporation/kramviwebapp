@@ -30,6 +30,7 @@ import { DialogRemoveStockComponent } from '../dialog-remove-stock/dialog-remove
 import { DialogMoveStockComponent } from '../dialog-move-stock/dialog-move-stock.component';
 import { MaterialModule } from '../../material.module';
 import { CommonModule } from '@angular/common';
+import { DialogCreatePurchaseComponent } from '../dialog-create-purchase/dialog-create-purchase.component';
 
 @Component({
     selector: 'app-detail-inventories',
@@ -55,10 +56,11 @@ export class DetailInventoriesComponent {
     ) { }
 
     @ViewChild(MatSort) sort: MatSort = new MatSort()
-    displayedColumns: string[] = ['createdAt', 'quantity', 'type', 'actions']
+    displayedColumns: string[] = ['createdAt', 'quantity', 'actions']
     dataSourceSales: MatTableDataSource<any> = new MatTableDataSource()
     dataSourcePurchases: MatTableDataSource<any> = new MatTableDataSource()
-    dataSourceIncidents: MatTableDataSource<any> = new MatTableDataSource()
+    dataSourceOutIncidents: MatTableDataSource<any> = new MatTableDataSource()
+    dataSourceInIncidents: MatTableDataSource<any> = new MatTableDataSource()
     dataSourceCreditNotes: MatTableDataSource<any> = new MatTableDataSource()
     dataSourceMovesIn: MatTableDataSource<any> = new MatTableDataSource()
     dataSourceMovesOut: MatTableDataSource<any> = new MatTableDataSource()
@@ -67,20 +69,16 @@ export class DetailInventoriesComponent {
         endDate: ['', Validators.required],
     })
     saleCount: number = 0
-    saleCountInit: number = 0
     purchaseCount: number = 0
-    purchaseCountInit: number = 0
-    incidentCount: number = 0
-    incidentCountInit: number = 0
+    incidentOutCount: number = 0
+    incidentInCount: number = 0
     creditNoteCount: number = 0
-    creditNoteCountInit: number = 0
     moveInCount: number = 0
-    moveInCountInit: number = 0
     moveOutCount: number = 0
-    moveOutCountInit: number = 0
     saleItems: SaleItemModel[] = []
     purchaseItems: PurchaseItemModel[] = []
-    incidentItems: IncidentItemModel[] = []
+    incidentOutItems: IncidentItemModel[] = []
+    incidentInItems: IncidentItemModel[] = []
     creditNoteItems: CreditNoteItemModel[] = []
     moveInItems: MoveItemModel[] = []
     moveOutItems: MoveItemModel[] = []
@@ -128,7 +126,24 @@ export class DetailInventoriesComponent {
             this.fetchData()
         }
     }
+
+    onPurchaseStock() {
+        if (this.product) {
+            const dialogRef = this.matDialog.open(DialogCreatePurchaseComponent, {
+                width: '600px',
+                position: { top: '20px' },
+                data: this.product,
+            })
     
+            dialogRef.afterClosed().subscribe(ok => {
+                if (ok) {
+                    this.fetchData()
+                    this.fetchCount()
+                }
+            })
+        }
+    }
+
     onAddStock() {
         if (this.product) {
             const dialogRef = this.matDialog.open(DialogAddStockComponent, {
@@ -136,7 +151,7 @@ export class DetailInventoriesComponent {
                 position: { top: '20px' },
                 data: this.product,
             })
-    
+
             dialogRef.afterClosed().subscribe(ok => {
                 if (ok) {
                     this.fetchData()
@@ -154,7 +169,7 @@ export class DetailInventoriesComponent {
                     position: { top: '20px' },
                     data: this.product,
                 })
-    
+
                 dialogRef.afterClosed().subscribe(ok => {
                     if (ok) {
                         if (this.product) {
@@ -197,8 +212,13 @@ export class DetailInventoriesComponent {
             this.purchaseCount = countQuantity
         })
 
-        this.incidentsService.getCountQuantityIncidentItemsByProduct(this.productId).subscribe(countQuantity => {
-            this.incidentCount = countQuantity
+        this.incidentsService.getCountQuantityIncidentOutItemsByProduct(this.productId).subscribe(countQuantity => {
+            console.log(countQuantity)
+            this.incidentOutCount = countQuantity
+        })
+
+        this.incidentsService.getCountQuantityIncidentInItemsByProduct(this.productId).subscribe(countQuantity => {
+            this.incidentInCount = countQuantity
         })
 
         this.creditNotesService.getCountQuantityCreditNoteItemsByProduct(this.productId).subscribe(countQuantity => {
@@ -232,10 +252,16 @@ export class DetailInventoriesComponent {
             this.dataSourcePurchases.sort = this.sort
         })
 
-        this.incidentsService.getIncidentItemsByPageProduct(this.pageIndexIncident, this.pageSize, this.productId, this.params).subscribe(incidentItems => {
-            this.incidentItems = incidentItems
-            this.dataSourceIncidents = new MatTableDataSource(incidentItems)
-            this.dataSourceIncidents.sort = this.sort
+        this.incidentsService.getIncidentOutItemsByPageProduct(this.pageIndexIncident, this.pageSize, this.productId, this.params).subscribe(incidentOutItems => {
+            this.incidentOutItems = incidentOutItems
+            this.dataSourceOutIncidents = new MatTableDataSource(incidentOutItems)
+            this.dataSourceOutIncidents.sort = this.sort
+        })
+
+        this.incidentsService.getIncidentInItemsByPageProduct(this.pageIndexIncident, this.pageSize, this.productId, this.params).subscribe(incidentInItems => {
+            this.incidentInItems = incidentInItems
+            this.dataSourceInIncidents = new MatTableDataSource(incidentInItems)
+            this.dataSourceInIncidents.sort = this.sort
         })
 
         this.creditNotesService.getCreditNoteItemsByPageProduct(this.pageIndexCreditNote, this.pageSize, this.productId, this.params).subscribe(creditNoteItems => {
@@ -257,83 +283,83 @@ export class DetailInventoriesComponent {
         })
     }
 
-    onMorePurchases() {
-        this.pageIndexPurchase++
-        this.navigationService.loadBarStart()
-        this.purchasesService.getPurchaseItemsByPageProduct(this.pageIndexPurchase, this.pageSize, this.productId, this.params).subscribe(purchaseItems => {
-            this.navigationService.loadBarFinish()
-            if (purchaseItems.length === 0) {
-                this.navigationService.showMessage('No hay mas compras')
-            } else {
-                this.purchaseItems = [...this.purchaseItems, ...purchaseItems]
-            }
-        })
-    }
+    // onMorePurchases() {
+    //     this.pageIndexPurchase++
+    //     this.navigationService.loadBarStart()
+    //     this.purchasesService.getPurchaseItemsByPageProduct(this.pageIndexPurchase, this.pageSize, this.productId, this.params).subscribe(purchaseItems => {
+    //         this.navigationService.loadBarFinish()
+    //         if (purchaseItems.length === 0) {
+    //             this.navigationService.showMessage('No hay mas compras')
+    //         } else {
+    //             this.purchaseItems = [...this.purchaseItems, ...purchaseItems]
+    //         }
+    //     })
+    // }
 
-    onMoreSales() {
-        this.pageIndexSale++
-        this.navigationService.loadBarStart()
-        this.salesService.getSaleItemsByPageProduct(this.pageIndexSale, this.pageSize, this.productId, this.params).subscribe(saleItems => {
-            this.navigationService.loadBarFinish()
-            if (saleItems.length === 0) {
-                this.navigationService.showMessage('No hay mas ventas')
-            } else {
-                this.saleItems = [...this.saleItems, ...saleItems]
-            }
-        })
-    }
+    // onMoreSales() {
+    //     this.pageIndexSale++
+    //     this.navigationService.loadBarStart()
+    //     this.salesService.getSaleItemsByPageProduct(this.pageIndexSale, this.pageSize, this.productId, this.params).subscribe(saleItems => {
+    //         this.navigationService.loadBarFinish()
+    //         if (saleItems.length === 0) {
+    //             this.navigationService.showMessage('No hay mas ventas')
+    //         } else {
+    //             this.saleItems = [...this.saleItems, ...saleItems]
+    //         }
+    //     })
+    // }
 
-    onMoreIncidents() {
-        this.pageIndexIncident++
-        this.navigationService.loadBarStart()
-        this.incidentsService.getIncidentItemsByPageProduct(this.pageIndexIncident, this.pageSize, this.productId, this.params).subscribe(incidentItems => {
-            this.navigationService.loadBarFinish()
-            if (incidentItems.length === 0) {
-                this.navigationService.showMessage('No hay mas incidencias')
-            } else {
-                this.incidentItems = [...this.incidentItems, ...incidentItems]
-            }
-        })
-    }
+    // onMoreIncidents() {
+    //     this.pageIndexIncident++
+    //     this.navigationService.loadBarStart()
+    //     this.incidentsService.getIncidentItemsByPageProduct(this.pageIndexIncident, this.pageSize, this.productId, this.params).subscribe(incidentItems => {
+    //         this.navigationService.loadBarFinish()
+    //         if (incidentItems.length === 0) {
+    //             this.navigationService.showMessage('No hay mas incidencias')
+    //         } else {
+    //             this.incidentItems = [...this.incidentItems, ...incidentItems]
+    //         }
+    //     })
+    // }
 
-    onMoreCreditNotes() {
-        this.pageIndexCreditNote++
-        this.navigationService.loadBarStart()
-        this.creditNotesService.getCreditNoteItemsByPageProduct(this.pageIndexCreditNote, this.pageSize, this.productId, this.params).subscribe(creditNoteItems => {
-            this.navigationService.loadBarFinish()
-            if (creditNoteItems.length === 0) {
-                this.navigationService.showMessage('No hay mas notas de credito')
-            } else {
-                this.creditNoteItems = [...this.creditNoteItems, ...creditNoteItems]
-            }
-        })
-    }
+    // onMoreCreditNotes() {
+    //     this.pageIndexCreditNote++
+    //     this.navigationService.loadBarStart()
+    //     this.creditNotesService.getCreditNoteItemsByPageProduct(this.pageIndexCreditNote, this.pageSize, this.productId, this.params).subscribe(creditNoteItems => {
+    //         this.navigationService.loadBarFinish()
+    //         if (creditNoteItems.length === 0) {
+    //             this.navigationService.showMessage('No hay mas notas de credito')
+    //         } else {
+    //             this.creditNoteItems = [...this.creditNoteItems, ...creditNoteItems]
+    //         }
+    //     })
+    // }
 
-    onMoreMovesIn() {
-        this.pageIndexMoveIn++
-        this.navigationService.loadBarStart()
-        this.movesService.getMoveInItemsByPageProduct(this.pageIndexMoveIn, this.pageSize, this.productId, this.params).subscribe(moveInItems => {
-            this.navigationService.loadBarFinish()
-            if (moveInItems.length === 0) {
-                this.navigationService.showMessage('No hay mas movimientos')
-            } else {
-                this.moveInItems = [...this.moveInItems, ...moveInItems]
-            }
-        })
-    }
+    // onMoreMovesIn() {
+    //     this.pageIndexMoveIn++
+    //     this.navigationService.loadBarStart()
+    //     this.movesService.getMoveInItemsByPageProduct(this.pageIndexMoveIn, this.pageSize, this.productId, this.params).subscribe(moveInItems => {
+    //         this.navigationService.loadBarFinish()
+    //         if (moveInItems.length === 0) {
+    //             this.navigationService.showMessage('No hay mas movimientos')
+    //         } else {
+    //             this.moveInItems = [...this.moveInItems, ...moveInItems]
+    //         }
+    //     })
+    // }
 
-    onMoreMovesOut() {
-        this.pageIndexMoveOut++
-        this.navigationService.loadBarStart()
-        this.movesService.getMoveOutItemsByPageProduct(this.pageIndexMoveOut, this.pageSize, this.productId, this.params).subscribe(moveOutItems => {
-            this.navigationService.loadBarFinish()
-            if (moveOutItems.length === 0) {
-                this.navigationService.showMessage('No hay mas movimientos')
-            } else {
-                this.moveOutItems = [...this.moveOutItems, ...moveOutItems]
-            }
-        })
-    }
+    // onMoreMovesOut() {
+    //     this.pageIndexMoveOut++
+    //     this.navigationService.loadBarStart()
+    //     this.movesService.getMoveOutItemsByPageProduct(this.pageIndexMoveOut, this.pageSize, this.productId, this.params).subscribe(moveOutItems => {
+    //         this.navigationService.loadBarFinish()
+    //         if (moveOutItems.length === 0) {
+    //             this.navigationService.showMessage('No hay mas movimientos')
+    //         } else {
+    //             this.moveOutItems = [...this.moveOutItems, ...moveOutItems]
+    //         }
+    //     })
+    // }
 
     onDetailPurchases(purchaseId: string) {
         const dialogRef = this.matDialog.open(DialogDetailPurchasesComponent, {

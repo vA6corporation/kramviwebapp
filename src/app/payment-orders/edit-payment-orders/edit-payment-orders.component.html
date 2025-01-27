@@ -2,7 +2,7 @@
     <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
         @if (provider) {
         <button type="button" mat-button color="primary" (click)="onEditProvider()" class="w-100">
-            <span class="mat-h1">{{ provider.name | uppercase }}</span>
+            <span>{{ provider.name | uppercase }}</span>
         </button>
         <p class="text-center m-0">{{ provider.address }}</p>
         <p class="text-center mb-3">{{ provider.mobileNumber }}</p>

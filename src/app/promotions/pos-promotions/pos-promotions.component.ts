@@ -1,28 +1,27 @@
-import { HttpErrorResponse } from '@angular/common/http'
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
 import { SettingModel } from '../../auth/setting.model';
 import { FavoritesService } from '../../favorites/favorites.service';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategoriesService } from '../../products/categories.service';
 import { CategoryModel } from '../../products/category.model';
 import { DialogDetailProductsComponent } from '../../products/dialog-detail-products/dialog-detail-products.component';
 import { DialogSelectAnnotationData, DialogSelectAnnotationsComponent } from '../../products/dialog-select-annotations/dialog-select-annotations.component';
 import { PriceListModel } from '../../products/price-list.model';
-import { PriceType } from '../../products/price-type.enum';
 import { ProductModel } from '../../products/product.model';
 import { ProductsService } from '../../products/products.service';
 import { CreateSaleItemModel } from '../../sales/create-sale-item.model';
 import { DialogLastSalesComponent } from '../../sales/dialog-last-sales/dialog-last-sales.component';
 import { DialogSaleItemsComponent } from '../../sales/dialog-sale-items/dialog-sale-items.component';
 import { SalesService } from '../../sales/sales.service';
-import { environment } from '../../../environments/environment';
-import { MaterialModule } from '../../material.module';
-import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-pos-promotions',
@@ -96,32 +95,8 @@ export class PosPromotionsComponent {
             this.office = auth.office
 
             this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
-                switch (this.setting.defaultPrice) {
-                    case PriceType.GLOBAL:
-                        this.favorites = products
-                        break
-                    case PriceType.OFICINA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.favorites = products
-                        break
-                    case PriceType.LISTA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.priceListId === this.priceListId)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.favorites = products
-                        break
-                    case PriceType.LISTAOFICINA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.favorites = products
-                        break
-                }
+                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                this.favorites = products
             })
         })
 
@@ -154,33 +129,8 @@ export class PosPromotionsComponent {
                 next: products => {
                 this.navigationService.loadBarFinish()
                 this.selectedIndex = 2
-
-                switch (this.setting.defaultPrice) {
-                    case PriceType.GLOBAL:
-                        this.products = products
-                        break
-                    case PriceType.OFICINA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.products = products
-                        break
-                    case PriceType.LISTA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.priceListId === this.priceListId)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.products = products
-                        break
-                    case PriceType.LISTAOFICINA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.products = products
-                        break
-                }
+                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                this.products = products
 
                 const foundProduct = products.find(e => e.sku.match(new RegExp(`^${key}$`, 'i')) || e.upc.match(new RegExp(`^${key}$`, 'i')))
 
@@ -201,65 +151,15 @@ export class PosPromotionsComponent {
         this.products = []
         if (category.products) {
             const products = category.products
-
-            switch (this.setting.defaultPrice) {
-                case PriceType.GLOBAL:
-                    this.products = products
-                    break
-                case PriceType.OFICINA:
-                    for (const product of products) {
-                        const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                        product.price = price ? price.price : product.price
-                    }
-                    this.products = products
-                    break
-                case PriceType.LISTA:
-                    for (const product of products) {
-                        const price = product.prices.find(e => e.priceListId === this.priceListId)
-                        product.price = price ? price.price : product.price
-                    }
-                    this.products = products
-                    break
-                case PriceType.LISTAOFICINA:
-                    for (const product of products) {
-                        const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-                        product.price = price ? price.price : product.price
-                    }
-                    this.products = products
-                    break
-            }
+            ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+            this.products = products
         } else {
             this.navigationService.loadBarStart()
             this.productsService.getProductsByCategoryPage(category._id, 1, 500).subscribe(products => {
                 this.navigationService.loadBarFinish()
                 category.products = products
-
-                switch (this.setting.defaultPrice) {
-                    case PriceType.GLOBAL:
-                        this.products = products
-                        break
-                    case PriceType.OFICINA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.products = products
-                        break
-                    case PriceType.LISTA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.priceListId === this.priceListId)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.products = products
-                        break
-                    case PriceType.LISTAOFICINA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-                            product.price = price ? price.price : product.price
-                        }
-                        this.products = products
-                        break
-                }
+                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                this.products = products
             })
         }
     }
@@ -288,33 +188,8 @@ export class PosPromotionsComponent {
     }
 
     onChangePriceList() {
-        const products = this.products
-        switch (this.setting.defaultPrice) {
-            case PriceType.GLOBAL:
-                this.products = products
-                break
-            case PriceType.OFICINA:
-                for (const product of products) {
-                    const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                    product.price = price ? price.price : product.price
-                }
-                this.products = products
-                break
-            case PriceType.LISTA:
-                for (const product of products) {
-                    const price = product.prices.find(e => e.priceListId === this.priceListId)
-                    product.price = price ? price.price : product.price
-                }
-                this.products = products
-                break
-            case PriceType.LISTAOFICINA:
-                for (const product of products) {
-                    const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-                    product.price = price ? price.price : product.price
-                }
-                this.products = products
-                break
-        }
+        ProductsService.setPrices(this.products, this.priceListId, this.setting, this.office)
+        ProductsService.setPrices(this.favorites, this.priceListId, this.setting, this.office)
     }
 
     onCancel() {
@@ -331,7 +206,7 @@ export class PosPromotionsComponent {
                 priceListId: this.priceListId || '',
             }
 
-            const dialogRef = this.matDialog.open(DialogSelectAnnotationsComponent, {
+            this.matDialog.open(DialogSelectAnnotationsComponent, {
                 width: '600px',
                 position: { top: '20px' },
                 data

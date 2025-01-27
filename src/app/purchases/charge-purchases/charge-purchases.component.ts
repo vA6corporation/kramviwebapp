@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { SettingModel } from '../../auth/setting.model';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -207,21 +207,24 @@ export class ChargePurchasesComponent {
             this.isLoading = true
             this.navigationService.loadBarStart()
 
-            this.purchasesService.create(purchase, this.purchaseItems, this.purchaseOrderId).subscribe(purchase => {
-                for (const purchaseItem of this.purchaseItems) {
-                    if (purchaseItem.isTrackStock === false) {
-                        this.productsService.updateTrackStock(purchaseItem.productId)
+            this.purchasesService.create(purchase, this.purchaseItems, this.purchaseOrderId).subscribe({
+                next: () => {
+                    console.log(this.purchaseItems)
+                    for (const purchaseItem of this.purchaseItems) {
+                        if (purchaseItem.isTrackStock === false) {
+                            lastValueFrom(this.productsService.updateTrackStock(purchaseItem.productId))
+                        }
                     }
+                    this.purchasesService.setPurchaseItems([])
+                    this.router.navigate(['/purchases'])
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage('Registrado correctamente')
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
                 }
-                this.purchasesService.setPurchaseItems([])
-                this.router.navigate(['/purchases'])
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
-                this.navigationService.showMessage('Registrado correctamente')
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message)
-                this.isLoading = false
-                this.navigationService.loadBarFinish()
             })
         } catch (error) {
             if (error instanceof Error) {

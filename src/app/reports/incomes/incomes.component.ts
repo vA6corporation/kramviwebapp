@@ -4,12 +4,12 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Chart, registerables } from 'chart.js';
 import { Subscription, lastValueFrom } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
 import { buildExcel } from '../../buildExcel';
 import { DialogDetailSalesComponent } from '../../invoices/dialog-detail-sales/dialog-detail-sales.component';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
 import { PaymentMethodsService } from '../../payment-methods/payment-methods.service';
@@ -18,8 +18,6 @@ import { PaymentsService } from '../../payments/payments.service';
 import { SummaryPaymentModel } from '../../payments/summary-payment.model';
 import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
-import { MaterialModule } from '../../material.module';
-Chart.register(...registerables);
 
 @Component({
     selector: 'app-incomes',

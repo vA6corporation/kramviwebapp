@@ -16,6 +16,7 @@ import { SummarySaleItemModel } from './summary-sale-item.model';
 import { UpdateSaleModel } from './update-sale.model';
 import { LotModel } from '../lots/lot.model';
 import { CreateBoardItemModel } from '../boards/create-board-item.model';
+import { DetractionModel } from '../biller/detraction.model';
 
 @Injectable({
     providedIn: 'root'
@@ -121,6 +122,10 @@ export class SalesService {
         params: Params,
     ): Observable<SaleModel[]> {
         return this.httpService.get(`sales/byPage/${pageIndex}/${pageSize}`, params)
+    }
+
+    getSalesOfTheDay(): Observable<SaleModel[]> {
+        return this.httpService.get('sales/salesOfTheDay')
     }
 
     getCountSales(
@@ -302,14 +307,15 @@ export class SalesService {
         saleItems: CreateSaleItemModel[] | CreateBoardItemModel[],
         payments: CreatePaymentModel[],
         couponItems: any[],
+        detraction: DetractionModel | null,
         params: Params,
     ): Observable<SaleModel> {
-        console.log(couponItems)
         return this.httpService.post('sales', {
             sale,
             saleItems,
             payments,
             couponItems,
+            detraction,
         }, params)
     }
 
@@ -318,6 +324,7 @@ export class SalesService {
         saleItems: CreateSaleItemModel[],
         payments: CreatePaymentModel[],
         couponItems: any[],
+        detraction: DetractionModel | null,
         params: Params,
     ): Observable<{ sale: SaleModel | null, outStocks: OutStockModel[] }> {
         return this.httpService.post('sales/withStock', {
@@ -325,6 +332,7 @@ export class SalesService {
             saleItems,
             payments,
             couponItems,
+            detraction,
         }, params)
     }
 
@@ -334,14 +342,16 @@ export class SalesService {
         payments: CreatePaymentModel[],
         dues: CreateDueModel[],
         couponItems: any[],
+        detraction: DetractionModel | null,
         params: Params,
     ): Observable<SaleModel> {
         return this.httpService.post('credits', {
             credit,
             saleItems,
             payments,
+            dues,
             couponItems,
-            dues
+            detraction,
         }, params)
     }
 
@@ -351,14 +361,16 @@ export class SalesService {
         payments: CreatePaymentModel[],
         dues: CreateDueModel[],
         couponItems: any[],
+        detraction: DetractionModel | null,
         params: Params,
     ): Observable<{ sale: SaleModel | null, outStocks: OutStockModel[] }> {
-        return this.httpService.post('credits/withStock', { 
+        return this.httpService.post('credits/withStock', {
             credit, 
             saleItems, 
             payments,
+            dues,
             couponItems, 
-            dues 
+            detraction,
         }, params)
     }
 
@@ -366,8 +378,16 @@ export class SalesService {
         return this.httpService.put(`sales/withItems/${saleId}`, { sale, saleItems, payments })
     }
 
-    updateSale(sale: SaleModel, saleId: string): Observable<void> {
+    update(sale: SaleModel, saleId: string): Observable<void> {
         return this.httpService.put(`sales/${saleId}`, { sale })
+    }
+
+    updateDeliverySale(saleId: string) {
+        return this.httpService.get(`sales/deliverySale/${saleId}`)
+    }
+
+    updateDeliverySaleItem(saleId: string, saleItemId: string) {
+        return this.httpService.get(`sales/deliverySaleItem/${saleId}/${saleItemId}`)
     }
 
     updateDateSale(sale: SaleModel, saleId: string): Observable<void> {

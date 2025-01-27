@@ -199,6 +199,8 @@ export class EditCreditNotesComponent {
                     emitionAt: formData.emitionAt,
                     customerId: this.customer?._id || null,
                     workerId: formData.workerId,
+                    igvPercent: this.creditNote.igvPercent,
+                    rcPercent: this.creditNote.rcPercent
                 }
 
                 if (!this.creditNoteItems.length) {

@@ -6,13 +6,12 @@
             <p class="caption text-center text-muted mb-2">Total a cobrar</p>
             @if (customer) {
             <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
-                <span class="mat-h1">{{ customer.name | uppercase }}</span>
+                <span>{{ customer.name | uppercase }}</span>
             </button>
             @if (customer.mobileNumber) {
             <p class="text-center mb-3">Celular: {{ customer.formatMobileNumber }}</p>
             }
-            }
-            <mat-form-field appearance="fill" *ngIf="customer">
+            <mat-form-field appearance="fill">
                 <mat-label>Direccion</mat-label>
                 <mat-select formControlName="addressIndex">
                     @for (address of addresses; track $index; let i = $index) {
@@ -20,13 +19,14 @@
                     }
                 </mat-select>
             </mat-form-field>
+            }
             <mat-form-field appearance="fill">
                 <mat-label>Comprobante</mat-label>
                 <mat-select formControlName="invoiceType">
                     @for (invoiceType of invoiceTypes; track $index) {
-                        <mat-option [value]="invoiceType.code">
-                            {{ invoiceType.name }}
-                        </mat-option>
+                    <mat-option [value]="invoiceType.code">
+                        {{ invoiceType.name }}
+                    </mat-option>
                     }
                 </mat-select>
             </mat-form-field>
@@ -34,41 +34,44 @@
                 <mat-label>Medio de pago</mat-label>
                 <mat-select formControlName="paymentMethodId">
                     @for (paymentMethod of paymentMethods; track paymentMethod._id) {
-                        <mat-option [value]="paymentMethod._id">
-                            {{ paymentMethod.name }}
-                        </mat-option>
+                    <mat-option [value]="paymentMethod._id">
+                        {{ paymentMethod.name }}
+                    </mat-option>
                     }
                 </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="setting.showWorker">
+            @if (setting.showWorker) {
+            <mat-form-field appearance="fill">
                 <mat-label>Personal a cargo</mat-label>
                 <mat-select formControlName="workerId">
                     @for (worker of workers; track $index) {
-                        <mat-option [value]="worker._id">
-                            {{ worker.name }}
-                        </mat-option>
+                    <mat-option [value]="worker._id">
+                        {{ worker.name }}
+                    </mat-option>
                     }
                 </mat-select>
             </mat-form-field>
+            }
             @if (setting.showEmitionAt) {
-                <mat-form-field appearance="fill">
-                    <mat-label>Fecha de emision</mat-label>
-                    <input matInput [matDatepicker]="picker" formControlName="emitionAt">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Fecha de emision</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="emitionAt">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
             }
             @if (setting.showTotalDiscount) {
-                <mat-form-field appearance="fill">
-                    <mat-label>Descuento global</mat-label>
-                    <input type="number" matInput formControlName="discount" (input)="onChangeDiscount()">
-                </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Descuento global</mat-label>
+                <input type="number" matInput formControlName="discount" (input)="onChangeDiscount()">
+            </mat-form-field>
             }
             <mat-form-field appearance="fill">
                 <mat-label>Observaciones</mat-label>
                 <input type="text" matInput formControlName="observations">
             </mat-form-field>
-            <div class="d-flex" *ngIf="setting.showChange">
+            @if (setting.showChange) {
+            <div class="d-flex">
                 <mat-form-field appearance="fill">
                     <mat-label>Billete</mat-label>
                     <input type="number" class="text-center" #inputCash matInput formControlName="cash"
@@ -76,13 +79,14 @@
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Vuelto</mat-label>
-                    <input type="number" class="text-center" matInput *ngIf="cash; else elseBlock" [value]="cashChange">
-                    <ng-template #elseBlock>
+                    @if (cash) {
+                        <input type="number" class="text-center" matInput [value]="cashChange">
+                    } @else {
                         <input type="number" class="text-center" matInput>
-                    </ng-template>
+                    }
                 </mat-form-field>
             </div>
-            <div class="my-2 d-flex" *ngIf="setting.showChange">
+            <div class="my-2 d-flex">
                 <span class="spacer"></span>
                 <button type="button" mat-fab color="warn" class="mx-1" (click)="resetCash()">
                     <mat-icon>delete</mat-icon>
@@ -107,6 +111,7 @@
                 </button>
                 <span class="spacer"></span>
             </div>
+            }
             <div class="p-1"></div>
             <button type="submit" class="w-100" mat-flat-button [disabled]="isLoading" color="primary">
                 GUARDAR

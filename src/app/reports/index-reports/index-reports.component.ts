@@ -7,20 +7,18 @@ import { Subscription } from 'rxjs';
 import { BoardsComponent } from '../boards/boards.component';
 import { CategoriesComponent } from '../categories/categories.component';
 import { CustomersComponent } from '../customers/customers.component';
-import { CollectionsComponent } from '../collections/collections.component';
 import { IncomesComponent } from '../incomes/incomes.component';
 import { InoutComponent } from '../inout/inout.component';
 import { InvoicesComponent } from '../invoices/invoices.component';
 import { ProductsComponent } from '../products/products.component';
 import { ProformasComponent } from '../proformas/proformas.component';
-import { PurchasesComponent } from '../purchases/purchases.component';
-import { SummaryComponent } from '../summary/summary.component';
-import { SuppliesComponent } from '../supplies/supplies.component';
 import { SuppliesInComponent } from '../supplies-in/supplies-in.component';
 import { SuppliesOutComponent } from '../supplies-out/supplies-out.component';
 import { UtilitiesComponent } from '../utilities/utilities.component';
 import { WorkersComponent } from '../workers/workers.component';
 import { MaterialModule } from '../../material.module';
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables)
 
 @Component({
     selector: 'app-index-reports',
@@ -35,10 +33,6 @@ import { MaterialModule } from '../../material.module';
         InvoicesComponent,
         BoardsComponent,
         ProformasComponent,
-        // CollectionsComponent,
-        // PurchasesComponent,
-        // SummaryComponent,
-        // SuppliesComponent,
         SuppliesInComponent,
         SuppliesOutComponent,
         WorkersComponent

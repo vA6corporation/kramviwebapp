@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Params } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { CreatePaymentModel } from '../payments/create-payment.model';
 import { ProductModel } from '../products/product.model';
 import { CreateSaleModel } from '../sales/create-sale.model';
 import { SaleModel } from '../sales/sale.model';
 import { BoardItemModel } from './board-item.model';
 import { BoardModel } from './board.model';
-import { CreateBoardItemModel } from './create-board-item.model';
-import { SummaryBoardModel } from './summary-board.model';
 import { HttpService } from '../http.service';
+import { SummaryBoardModel } from './summary-board.model';
+import { CreateBoardItemModel } from './create-board-item.model';
+import { io } from "socket.io-client";
 
 @Injectable({
     providedIn: 'root'
@@ -18,12 +19,23 @@ export class BoardsService {
 
     constructor(
         private readonly httpService: HttpService,
-    ) { }
+    ) { 
+        this.socket.on('changeBoards', () => {
+            // this.fetchData()
+            this.handleChangeBoards$.next()
+        })
+    }
 
     private boardItems: CreateBoardItemModel[] = []
     private board: BoardModel | null = null
+    private socket = io('http://localhost:3000')
 
     private boardItems$ = new BehaviorSubject<CreateBoardItemModel[]>([])
+    private handleChangeBoards$: Subject<void> = new Subject()
+
+    handleChangeBoards() {
+        return this.handleChangeBoards$.asObservable()
+    }
 
     setBoard(board: BoardModel | null) {
         this.board = board
@@ -35,7 +47,6 @@ export class BoardsService {
 
     forceAddBoardItem(product: ProductModel, annotation: string = "") {
         const boardItem: CreateBoardItemModel = {
-            _id: '',
             printZone: product.printZone,
             fullName: product.fullName,
             onModel: product.onModel,
@@ -59,7 +70,6 @@ export class BoardsService {
         const index = this.boardItems.findIndex(e => e.productId === product._id && e.igvCode === product.igvCode && e.observations === annotation)
         if (index < 0) {
             const boardItem: CreateBoardItemModel = {
-                _id: '',
                 printZone: product.printZone,
                 fullName: product.fullName,
                 onModel: product.onModel,
@@ -167,8 +177,8 @@ export class BoardsService {
         return this.httpService.get(`boards/deletedBoards/${pageIndex}/${pageSize}`)
     }
 
-    delete(boardNumber: string, deletedObservations: string) {
-        return this.httpService.delete(`boards/${boardNumber}/${deletedObservations}`)
+    delete(boardNumber: string, observations: string) {
+        return this.httpService.delete(`boards/${boardNumber}/${observations}`)
     }
 
     deleteBoardItem(boardId: string, boardItemId: string, quantity: number) {
@@ -177,6 +187,16 @@ export class BoardsService {
 
     changeBoard(boardId: string, tableId: string) {
         return this.httpService.get(`boards/changeBoard/${boardId}/${tableId}`)
+    }
+
+    splitBoard(
+        boardItems: any[], 
+        preBoardItems: any[],
+        boardId: string,
+        tableId: string
+    ): Observable<any> {
+        console.log(tableId)
+        return this.httpService.post(`boards/splitBoards/${boardId}/${tableId}`, { boardItems, preBoardItems })
     }
 
     create(

@@ -41,7 +41,7 @@ export class ReportsService {
         return this.httpService.get('supplies/summarySuppliesIn', params);
     }
 
-    getSummaryInvoicesByRangeDateOfficeUser(params: Params): Observable<any[]> {
-        return this.httpService.get(`sales/summaryInvoicesByRangeDateOfficeUser`, params);
+    getSummaryInvoices(params: Params): Observable<any[]> {
+        return this.httpService.get(`sales/summaryInvoices`, params);
     }
 }

@@ -1,7 +1,7 @@
 import { IgvType } from "../products/igv-type.enum"
 
 export interface CreateBoardItemModel {
-    _id: string
+    _id?: string
     productId: string
     fullName: string
     onModel: string

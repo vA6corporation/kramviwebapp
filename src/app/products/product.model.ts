@@ -1,4 +1,5 @@
 import { LotModel } from "../lots/lot.model";
+import { PrintZoneType } from "../print/print-zone-type.enum";
 import { ProviderModel } from "../providers/provider.model";
 import { CategoryModel } from "./category.model";
 import { IgvType } from "./igv-type.enum";
@@ -28,7 +29,7 @@ export interface ProductModel {
     annotations: string[]
     prices: PriceModel[]
     category: CategoryModel
-    printZone: string
+    printZone: PrintZoneType
     recipes: any[]
     linkProducts: ProductModel[]
     providers: ProviderModel[]

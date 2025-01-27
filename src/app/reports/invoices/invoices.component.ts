@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Params } from '@angular/router';
-import { Chart, ChartOptions, ChartType } from 'chart.js';
+import { Chart, ChartOptions, ChartType, Colors } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -10,11 +10,11 @@ import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategoriesService } from '../../products/categories.service';
 import { CategoryModel } from '../../products/category.model';
-import { randomColor } from '../../randomColor';
 import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
 import { ReportsService } from '../reports.service';
 import { CommonModule } from '@angular/common';
+Chart.register(Colors)
 
 @Component({
     selector: 'app-invoices',
@@ -51,7 +51,6 @@ export class InvoicesComponent {
     users: UserModel[] = []
     userId: string = ''
     invoices: any[] = []
-    colors: string[] = []
     private params: Params = { officeId: this.officeId }
     @ViewChild('incomesChargeChart')
     private incomesChargeChart!: ElementRef<HTMLCanvasElement>
@@ -96,9 +95,8 @@ export class InvoicesComponent {
             const { startDate, endDate } = this.formGroup.value
             Object.assign(this.params, { startDate, endDate })
             this.navigationService.loadBarStart()
-            this.reportsService.getSummaryInvoicesByRangeDateOfficeUser(this.params).subscribe(summaryInvoices => {
+            this.reportsService.getSummaryInvoices(this.params).subscribe(summaryInvoices => {
                 this.navigationService.loadBarFinish()
-                this.colors = summaryInvoices.map(() => randomColor())
                 this.invoices = summaryInvoices
                 this.dataSource = summaryInvoices
                 const data = {
@@ -106,7 +104,6 @@ export class InvoicesComponent {
                         {
                             label: 'Dataset 1',
                             data: summaryInvoices.map((e: any) => e.charge),
-                            backgroundColor: this.colors,
                             fill: true
                         },
                     ]
@@ -122,7 +119,6 @@ export class InvoicesComponent {
                             datalabels: {
                                 backgroundColor: function (ctx) {
                                     return 'rgba(73, 79, 87, 0.5)'
-                                    // return context.dataset.backgroundColor
                                 },
                                 borderRadius: 4,
                                 color: 'white',

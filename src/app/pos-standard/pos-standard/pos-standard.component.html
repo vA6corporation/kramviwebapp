@@ -10,7 +10,8 @@
                     @for (product of favorites; track product._id) {
                     <mat-grid-tile (click)="onSelectProduct(product, $event)" (contextmenu)="onRightClick(product)"
                         [ngStyle]="urlImage(product)">
-                        <span [ngClass]="{ 'bg-danger': product.isTrackStock && product.stock < 1 }" class="bg-lightblue px-1">
+                        <span [ngClass]="{ 'bg-danger': product.isTrackStock && product.stock < 1 }"
+                            class="bg-lightblue px-1">
                             {{ product.fullName.slice(0, 60) }}
                         </span>
                         <small class="text-muted text-price">
@@ -42,7 +43,8 @@
                     @for (product of products; track product._id) {
                     <mat-grid-tile (click)="onSelectProduct(product, $event)" (contextmenu)="onRightClick(product)"
                         [ngStyle]="urlImage(product)">
-                        <span [ngClass]="{ 'bg-danger': product.isTrackStock && product.stock < 1 }" class="bg-lightblue px-1">
+                        <span [ngClass]="{ 'bg-danger': product.isTrackStock && product.stock < 1 }"
+                            class="bg-lightblue px-1">
                             {{ product.fullName.slice(0, 60) }}
                         </span>
                         <small class="text-muted text-price">
@@ -60,26 +62,28 @@
     <div class="fixed-bottom d-flex align-items-center footer-button">
         <div class="px-3">
             @if (setting.defaultPrice === 'LISTA' || setting.defaultPrice === 'LISTAOFICINA') {
-                <mat-form-field appearance="fill">
-                    <mat-select [(value)]="priceListId" (selectionChange)="onChangePriceList()">
-                        @for (priceList of priceLists; track $index) {
-                            <mat-option [value]="priceList._id">{{ priceList.name }}</mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-select [(value)]="priceListId" (selectionChange)="onChangePriceList()">
+                    @for (priceList of priceLists; track $index) {
+                    <mat-option [value]="priceList._id">{{ priceList.name }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
             }
         </div>
         @if (coupons.length) {
-            <div>
-                <button type="button" mat-raised-button color="primary" (click)="onDialogCoupons()">CUPONES {{ coupons.length }}</button>
-            </div>
+        <div>
+            <button type="button" mat-raised-button color="primary" (click)="onDialogCoupons()">CUPONES {{
+                coupons.length }}</button>
+        </div>
         }
         <span class="spacer"></span>
         <div class="p-3">
             <button type="button" mat-raised-button (click)="onCancel()" color="primary">CANCELAR</button>
-            <span class="divider" *ngIf="setting.allowCredit"></span>
-            <button type="button" mat-raised-button color="primary" routerLink="/charge/credit"
-                *ngIf="setting.allowCredit">CREDITO</button>
+            @if (setting.allowCredit) {
+            <span class="divider"></span>
+            <button type="button" mat-raised-button color="primary" routerLink="/charge/credit">CREDITO</button>
+            }
             <span class="divider"></span>
             <button type="button" mat-flat-button color="primary" routerLink="/charge">COBRAR</button>
         </div>

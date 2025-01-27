@@ -21,6 +21,7 @@ import { OfficeModel } from '../../auth/office.model';
 import { buildExcel } from '../../buildExcel';
 import { DialogProgressComponent } from '../../navigation/dialog-progress/dialog-progress.component';
 import { MaterialModule } from '../../material.module';
+import { DialogPasswordComponent } from '../../boards/dialog-password/dialog-password.component';
 
 @Component({
     selector: 'app-products',
@@ -54,9 +55,9 @@ export class ProductsComponent {
         'sku',
         'upc',
         'location',
-        'stock',
         'cost',
         'price',
+        'stock',
         'actions'
     ]
     dataSource: ProductModel[] = []
@@ -93,12 +94,12 @@ export class ProductsComponent {
         if (this.authService.isDebtorCancel()) {
             this.router.navigate(['/subscription'])
         }
-        
+
         this.navigationService.setTitle('Productos')
 
         this.navigationService.setMenu([
             { id: 'search', icon: 'search', show: true, label: '' },
-            { id: 'export_products', icon: 'download', show: false, label: 'Exportar productos' },
+            { id: 'export_products', icon: 'download', show: false, label: 'Exportar a excel' },
             { id: 'print_barcodes', icon: 'qr_code', show: false, label: 'Codigo de barras' }
         ])
 
@@ -147,7 +148,7 @@ export class ProductsComponent {
 
                 default:
                     const chunk = 500
-                    const products: ProductModel[] = []
+                    let products: ProductModel[] = []
 
                     const dialogRef = this.matDialog.open(DialogProgressComponent, {
                         width: '600px',
@@ -159,6 +160,10 @@ export class ProductsComponent {
                         const values = await lastValueFrom(this.productsService.getProductsByPage(index + 1, chunk, {}))
                         dialogRef.componentInstance.onComplete()
                         products.push(...values)
+                    }
+
+                    if (this.productsId.length) {
+                        products = products.filter(e => this.productsId.includes(e._id))
                     }
 
                     const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
@@ -401,35 +406,9 @@ export class ProductsComponent {
             this.productsService.getProductsByKeyPage(this.pageIndex + 1, this.pageSize, this.params).subscribe({
                 next: products => {
                     this.navigationService.loadBarFinish()
-                    switch (this.setting.defaultPrice) {
-                        case PriceType.OFICINA:
-                            for (const product of products) {
-                                product.price = product.prices.find(e => e.officeId === this.office._id)?.price || product.price
-                            }
-                            break
-                        case PriceType.LISTA:
-                            for (const product of products) {
-                                const price = product.prices.find(e => e.priceListId === this.priceListId)
-                                product.price = price ? price.price : product.price
-                            }
-                            break
-                        case PriceType.LISTAOFICINA:
-                            for (const product of products) {
-                                const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-
-                                if (price) {
-                                    product.price = price.price
-                                } else {
-                                    const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                                    product.price = price ? price.price : product.price
-                                }
-                            }
-                            break
-                        default:
-                            break
-                    }
-
+                    ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
                     this.dataSource = products
+
                     if (!products.find(e => e.feature)) {
                         const index = this.displayedColumns.findIndex(e => e === 'feature')
                         if (index >= 0) {
@@ -457,35 +436,9 @@ export class ProductsComponent {
             this.navigationService.loadBarStart()
             this.productsService.getProductsByPage(this.pageIndex + 1, this.pageSize, this.params).subscribe(products => {
                 this.navigationService.loadBarFinish()
-                switch (this.setting.defaultPrice) {
-                    case PriceType.OFICINA:
-                        for (const product of products) {
-                            product.price = product.prices.find(e => e.officeId === this.office._id)?.price || product.price
-                        }
-                        break
-                    case PriceType.LISTA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.priceListId === this.priceListId)
-                            product.price = price ? price.price : product.price
-                        }
-                        break
-                    case PriceType.LISTAOFICINA:
-                        for (const product of products) {
-                            const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-
-                            if (price) {
-                                product.price = price.price
-                            } else {
-                                const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                                product.price = price ? price.price : product.price
-                            }
-                        }
-                        break
-                    default:
-                        break
-                }
-
+                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
                 this.dataSource = products
+
                 if (!products.find(e => e.feature)) {
                     const index = this.displayedColumns.findIndex(e => e === 'feature')
                     if (index >= 0) {
@@ -514,12 +467,29 @@ export class ProductsComponent {
         }
     }
 
-    deleteProduct(productId: string) {
+    onDeleteProduct(productId: string) {
         const ok = confirm('Esta seguro de eliminar?...')
         if (ok) {
             this.productsService.delete(productId).subscribe(() => {
                 this.fetchData()
             })
+        }
+    }
+
+    onEditProduct(productId: string) {
+        if (this.setting.password && this.setting.isBlockEditProducts) {
+            const dialogRef = this.matDialog.open(DialogPasswordComponent, {
+                width: '600px',
+                position: { top: '20px' },
+            })
+
+            dialogRef.afterClosed().subscribe(ok => {
+                if (ok) {
+                    this.router.navigate(['/products', productId, 'edit'])
+                }
+            })
+        } else {
+            this.router.navigate(['/products', productId, 'edit'])
         }
     }
 
@@ -537,31 +507,7 @@ export class ProductsComponent {
     }
 
     onChangePriceList() {
-        switch (this.setting.defaultPrice) {
-            case PriceType.LISTA: {
-                for (const product of this.dataSource) {
-                    const price = product.prices.find(e => e.priceListId === this.priceListId)
-                    product.price = price ? price.price : product.price
-                }
-            }
-                break
-            case PriceType.LISTAOFICINA: {
-                for (const product of this.dataSource) {
-                    const price = product.prices.find(e => e.priceListId === this.priceListId && e.officeId === this.office._id)
-
-                    if (price) {
-                        product.price = price.price
-                    } else {
-                        const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId == null)
-                        product.price = price ? price.price : product.price
-                    }
-                }
-            }
-                break
-            default:
-                break
-        }
-
+        ProductsService.setPrices(this.dataSource, this.priceListId, this.setting, this.office)
     }
 
     onCategoryChange() {

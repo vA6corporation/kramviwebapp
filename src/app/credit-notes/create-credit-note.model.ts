@@ -6,4 +6,6 @@ export interface CreateCreditNoteModel {
     customerId: string | null
     workerId: string | null
     emitionAt: Date
+    igvPercent: number
+    rcPercent: number
 }

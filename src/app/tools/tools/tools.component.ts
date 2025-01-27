@@ -6,7 +6,6 @@ import { ImportCustomersComponent } from '../import-customers/import-customers.c
 import { UpdatePricesComponent } from '../update-prices/update-prices.component';
 import { AddStockComponent } from '../add-stock/add-stock.component';
 import { DeleteDataComponent } from '../delete-data/delete-data.component';
-import { CheckStockComponent } from '../check-stock/check-stock.component';
 
 @Component({
     selector: 'app-tools',
@@ -17,7 +16,6 @@ import { CheckStockComponent } from '../check-stock/check-stock.component';
         UpdatePricesComponent,
         AddStockComponent,
         DeleteDataComponent,
-        CheckStockComponent,
     ],
     templateUrl: './tools.component.html',
     styleUrls: ['./tools.component.sass']

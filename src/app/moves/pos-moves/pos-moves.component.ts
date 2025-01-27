@@ -13,10 +13,11 @@ import { ProductsService } from '../../products/products.service';
 import { MovesService } from '../moves.service';
 import { MaterialModule } from '../../material.module';
 import { MoveItemsComponent } from '../move-items/move-items.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-pos-moves',
-    imports: [MaterialModule, MoveItemsComponent],
+    imports: [MaterialModule, RouterModule, MoveItemsComponent],
     templateUrl: './pos-moves.component.html',
     styleUrls: ['./pos-moves.component.sass'],
 })

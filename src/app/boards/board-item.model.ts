@@ -10,13 +10,13 @@ export interface BoardItemModel {
     quantity: number
     preQuantity: number
     deletedQuantity: number
-    deletedAt: string
     boardId: string
     preIgvCode: IgvType
     igvCode: IgvType
     unitCode: string
     observations: string
     printZone: PrintZoneType
-    createdAt: string
     isTrackStock: boolean
+    deletedAt: string | null
+    createdAt: string
 }

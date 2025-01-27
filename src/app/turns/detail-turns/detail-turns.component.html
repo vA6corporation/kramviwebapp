@@ -5,42 +5,48 @@
             <mat-card-title>Resumen</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <table class="w-100 mb-3">
-                <tbody>
-                    <tr>
-                        <td>F/H de apertura</td>
-                        <td align="right">{{ turn.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</td>
-                    </tr>
-                    <tr>
-                        <td>Monto de apertura</td>
-                        <td align="right">{{ turn.openCash.toFixed(2) }}</td>
-                    </tr>
-                    <tr *ngIf="totalExpenses">
-                        <td>Total gastos</td>
-                        <td align="right">{{ totalExpenses.toFixed(2) }}</td>
-                    </tr>
-                    <tr>
-                        <td>Total recaudado</td>
-                        <td align="right">{{ (totalCollected).toFixed(2) }}</td>
-                    </tr>
-                    <tr class="text-success">
-                        <td class="text-success">Efectivo final</td>
-                        <td align="right">{{ (totalCash - totalExpenses + turn.openCash).toFixed(2) }}</td>
-                    </tr>
-                    <tr class="text-danger" *ngIf="totalCredit">
-                        <td>Total credito</td>
-                        <td align="right">{{ (totalCredit).toFixed(2) }}</td>
-                    </tr>
-                    <tr class="text-danger" *ngIf="totalDebt">
-                        <td>Total pendiente de pago</td>
-                        <td align="right">{{ (totalDebt).toFixed(2) }}</td>
-                    </tr>
-                    <tr>
-                        <td>Observaciones</td>
-                        <td align="right">{{ turn.observations || 'NINGUNO' }}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <mat-list role="list">
+                <mat-list-item>
+                    <span matListItemTitle>F/H de apertura</span>
+                    <span>{{ turn.createdAt | date: 'dd MMM yyyy, hh:mm a' }}</span>
+                </mat-list-item>
+                <mat-list-item>
+                    <span matListItemTitle>Monto de apertura</span>
+                    <span>{{ turn.openCash.toFixed(2) }}</span>
+                </mat-list-item>
+                @if (totalExpenses) {
+                <mat-list-item>
+                    <span matListItemTitle>Total gastos</span>
+                    <span>{{ totalExpenses.toFixed(2) }}</span>
+                </mat-list-item>
+                }
+                <mat-list-item>
+                    <span matListItemTitle>Total recaudado</span>
+                    <span>{{ (totalCollected).toFixed(2) }}</span>
+                </mat-list-item>
+                <mat-list-item>
+                    <span matListItemTitle class="text-success">Efectivo final (Monto de apertura + Efectivo - Gastos)</span>
+                    <span class="text-success">{{ (totalCash - totalExpenses + turn.openCash).toFixed(2) }}</span>
+                </mat-list-item>
+                @if (totalCredit) {
+                <mat-list-item>
+                    <span matListItemTitle>Total credito</span>
+                    <span>{{ (totalCredit).toFixed(2) }}</span>
+                </mat-list-item>
+                }
+                @if (totalDebt) {
+                <mat-list-item>
+                    <span matListItemTitle>Total pendiente de pago</span>
+                    <span>{{ (totalDebt).toFixed(2) }}</span>
+                </mat-list-item>
+                }
+                <mat-list-item>
+                    <span matListItemTitle>Observaciones</span>
+                    <span align="right" [ngClass]="{ 'text-muted': !turn.observations }">
+                        {{ turn.observations || 'NINGUNO' }}
+                    </span>
+                </mat-list-item>
+            </mat-list>
             <div class="pb-3">
                 <mat-divider></mat-divider>
             </div>
@@ -56,7 +62,7 @@
             </table>
         </mat-card-content>
     </mat-card>
-    <mat-card class="mb-3" *ngIf="expenses.length; else elseBlock">
+    <mat-card class="mb-3">
         <mat-card-header>
             <mat-card-title>Gastos</mat-card-title>
         </mat-card-header>
@@ -67,16 +73,11 @@
                 <span class="spacer"></span>
                 {{ expense.charge.toFixed(2) }}
             </button>
+            } @empty {
+            <mat-list-item>SIN GASTOS</mat-list-item>
             }
         </mat-action-list>
     </mat-card>
-    <ng-template #elseBlock>
-        <mat-card class="text-center text-muted mb-3">
-            <mat-card-content>
-                Sin gastos
-            </mat-card-content>
-        </mat-card>
-    </ng-template>
     <mat-card class="mb-3">
         <mat-card-header>
             <mat-card-title>Productos vendidos</mat-card-title>
@@ -103,9 +104,9 @@
     </mat-card>
     <button type="button" (click)="onGetSummarySales()" mat-flat-button color="primary" class="w-100 mb-3">MOSTRAR
         PRODUCTOS VENDIDOS</button>
-    <mat-card class="mb-3" *ngIf="credits.length">
+    <mat-card class="mb-3">
         <mat-card-header>
-            <mat-card-title>Creditos o pendientes de pago</mat-card-title>
+            <mat-card-title>Creditos</mat-card-title>
         </mat-card-header>
         <mat-card-content>
             <mat-action-list role="list">
@@ -124,11 +125,13 @@
                         }
                     </span>
                     }
-                    <span matListItemLine>
-                        {{ credit.user.name | uppercase }} - {{ credit.createdAt | date: 'dd/MM/yyyy' }} - PENDIENTE: {{
+                    <span matListItemLine>{{ credit.user.name | uppercase }} - {{ credit.createdAt | date: 'dd/MM/yyyy'
+                        }} - PENDIENTE: {{
                         (credit.debt).toFixed(2) }}
                     </span>
                 </button>
+                } @empty {
+                <mat-list-item>SIN CREDITOS</mat-list-item>
                 }
             </mat-action-list>
         </mat-card-content>
@@ -143,6 +146,7 @@
                 <button mat-list-item (click)="onShowSheet(sale._id)">
                     <span matListItemTitle>{{ sale.invoicePrefix }}{{ office.serialPrefix }}-{{ sale.invoiceNumber
                         }}</span>
+                    @if (sale.payments.length) {
                     <span matListItemLine>
                         @for (payment of sale.payments; track payment._id) {
                         @for (paymentMethod of paymentMethods; track paymentMethod._id) {
@@ -152,8 +156,9 @@
                         }
                         }
                     </span>
-                    <span matListItemLine>{{ sale.user.name | uppercase }} - {{ sale.createdAt | date: 'dd/MM/yyyy'
-                        }}</span>
+                    }
+                    <span matListItemLine>{{ sale.user.name | uppercase }} - {{ sale.createdAt | date: 'dd/MM/yyyy' }}
+                    </span>
                 </button>
                 }
             </mat-action-list>

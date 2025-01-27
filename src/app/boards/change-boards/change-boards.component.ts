@@ -37,17 +37,21 @@ export class ChangeBoardsComponent {
         this.navigationService.setTitle('Seleccione una mesa')
         this.boardId = this.activatedRoute.snapshot.params['boardId']
         this.handleTables$ = this.tablesService.handleTables().subscribe(tables => {
-            this.boardsService.getActiveBoards().subscribe(boards => {
-                for (const table of tables) {
-                    const foundBoard = boards.find(e => e.tableId === table._id)
-                    if (foundBoard) {
-                        table.board = foundBoard
-                    } else {
-                        table.board = null
-                    }
+            this.tables = tables
+            this.fetchData()
+        })
+    }
+
+    fetchData() {
+        this.boardsService.getActiveBoards().subscribe(boards => {
+            for (const table of this.tables) {
+                const foundBoard = boards.find(e => e.tableId === table._id)
+                if (foundBoard) {
+                    table.board = foundBoard
+                } else {
+                    table.board = null
                 }
-                this.tables = tables
-            })
+            }
         })
     }
 
@@ -64,8 +68,10 @@ export class ChangeBoardsComponent {
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage(error.error.message)
+                    this.fetchData()
                 }
             })
         }
     }
+    
 }

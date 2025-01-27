@@ -1,13 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Chart, ChartOptions, ChartType } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
-import { Chart, ChartOptions, ChartType, registerables } from 'chart.js';
-import { PurchaseSuppliesService } from '../../purchase-supplies/purchase-supplies.service';
-import { Subscription } from 'rxjs';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { MaterialModule } from '../../material.module';
-import { CommonModule } from '@angular/common';
-Chart.register(...registerables);
+import { PurchaseSuppliesService } from '../../purchase-supplies/purchase-supplies.service';
 
 @Component({
     selector: 'app-expenses',

@@ -3,8 +3,8 @@ import { IncidentItemModel } from "./incident-item.model"
 
 export interface IncidentModel {
     createdAt: string
-    incidentItems: IncidentItemModel[]
-    incidentType: string
+    incidentOutItems: IncidentItemModel[]
+    incidentInItems: IncidentItemModel[]
     observations: string
     user: UserModel
 }

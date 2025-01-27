@@ -4,7 +4,6 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Params } from '@angular/router';
 import { Chart, ChartOptions, ChartType } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Subscription } from 'rxjs';
@@ -13,7 +12,6 @@ import { SummaryBoardModel } from '../../boards/summary-board.model';
 import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategoryModel } from '../../products/category.model';
-import { randomColor } from '../../randomColor';
 import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
 
@@ -69,8 +67,7 @@ export class BoardsComponent {
         if (this.formGroup.valid) {
             this.navigationService.loadBarStart()
             this.chart?.destroy()
-            const { startDate, endDate, categoryId, userId } = this.formGroup.value
-            const params: Params = { categoryId, userId }
+            const { startDate, endDate } = this.formGroup.value
 
             this.boardsService.getSummaryBoardsByRangeDate(
                 startDate,
@@ -79,7 +76,6 @@ export class BoardsComponent {
                 next: summaryBoards => {
                     console.log(summaryBoards)
                     this.navigationService.loadBarFinish()
-                    const colors = summaryBoards.map(() => randomColor())
                     this.summaryBoards = summaryBoards
                     this.dataSource = new MatTableDataSource(summaryBoards)
                     this.dataSource.sort = this.sort
@@ -90,7 +86,6 @@ export class BoardsComponent {
                             {
                                 label: 'Dataset 1',
                                 data: summaryBoards.slice(0, 10).map(e => e.totalSale || 0),
-                                backgroundColor: colors,
                                 fill: true
                             },
                         ]

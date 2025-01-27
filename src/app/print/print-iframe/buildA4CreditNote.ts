@@ -142,14 +142,14 @@ export async function buildA4CreditNote(
     pdf.setFont('Helvetica', 'bold')
     pdf.text('OBSER.', 8, positionYCustomer)
     pdf.text(':', 30, positionYCustomer)
-    
+
     pdf.setFont('Helvetica', 'normal')
     text = creditNote?.observations || 'NINGUNO'
     strArr = pdf.splitTextToSize(text, 150)
     pdf.text(strArr, 35, positionYCustomer)
 
     positionYCustomer += 5
-    
+
     pdf.setFont('Helvetica', 'bold')
     pdf.text('FECHA EMISIÓN', 120, 50)
     pdf.text(':', 155, 50)
@@ -279,34 +279,48 @@ export async function buildA4CreditNote(
     positionYSummaryRight += 5
     pdf.setFont('Helvetica', 'bold')
 
-    text = 'DSCTO GLOBAL'
-    pdf.text(text, 170, positionYSummary, { align: 'right' })
-    positionYSummary += 5
-
-    if (creditNote.invoiceType !== 'NOTA DE VENTA') {
-        text = 'SUB TOTAL'
+    if (creditNote.discount) {
+        text = 'DSCTO GLOBAL'
         pdf.text(text, 170, positionYSummary, { align: 'right' })
         positionYSummary += 5
+    }
 
+    text = 'SUB TOTAL'
+    pdf.text(text, 170, positionYSummary, { align: 'right' })
+    positionYSummary += 4
+
+    if (creditNote.gravado) {
         text = 'OP. GRAVADO'
         pdf.text(text, 170, positionYSummary, { align: 'right' })
-        positionYSummary += 5
+        positionYSummary += 4
+    }
 
+    if (creditNote.exonerado) {
         text = 'OP. EXONERADO'
         pdf.text(text, 170, positionYSummary, { align: 'right' })
-        positionYSummary += 5
+        positionYSummary += 4
+    }
 
+    if (creditNote.inafecto) {
         text = 'OP. INAFECTO'
         pdf.text(text, 170, positionYSummary, { align: 'right' })
-        positionYSummary += 5
+        positionYSummary += 4
+    }
 
+    if (creditNote.gratuito) {
         text = 'OP. GRATUITO'
         pdf.text(text, 170, positionYSummary, { align: 'right' })
-        positionYSummary += 5
+        positionYSummary += 4
+    }
 
-        text = 'I.G.V. 18%'
+    text = `I.G.V. (${creditNote.igvPercent}%)`
+    pdf.text(text, 170, positionYSummary, { align: 'right' })
+    positionYSummary += 4
+
+    if (creditNote.rc) {
+        text = `R.C. (${creditNote.rcPercent}%)`
         pdf.text(text, 170, positionYSummary, { align: 'right' })
-        positionYSummary += 5
+        positionYSummary += 4
     }
 
     text = 'IMPORTE TOTAL'
@@ -317,48 +331,68 @@ export async function buildA4CreditNote(
 
     const currency = sale.currencyCode === 'PEN' ? 'S/' : '$'
 
-    text = '0.00'
-    pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
-    pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-    positionYSummaryRight += 5
-
-    if (creditNote.invoiceType !== 'NOTA DE VENTA') {
-        text = ((creditNote?.charge || 0) - (creditNote?.igv || 0)).toFixed(2)
+    // text = '0.00'
+    // pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+    // pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+    // positionYSummaryRight += 5
+    if (creditNote.discount) {
+        text = (sale.discount || 0).toFixed(2)
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-        positionYSummaryRight += 5
-
-        text = (creditNote?.gravado || 0).toFixed(2)
-        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
-        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-        positionYSummaryRight += 5
-
-        text = (creditNote?.exonerado || 0).toFixed(2)
-        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
-        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-        positionYSummaryRight += 5
-
-        text = (creditNote?.inafecto || 0).toFixed(2)
-        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
-        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-        positionYSummaryRight += 5
-
-        text = (creditNote?.gratuito || 0).toFixed(2)
-        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
-        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-        positionYSummaryRight += 5
-
-        text = (creditNote?.igv || 0).toFixed(2)
-        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
-        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-        positionYSummaryRight += 5
+        positionYSummaryRight += 4
     }
 
-    text = (creditNote?.charge || 0).toFixed(2)
+
+    text = (creditNote.charge - creditNote.igv).toFixed(2)
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-    positionYSummaryRight += 5
+    positionYSummaryRight += 4
 
+    if (creditNote.gravado) {
+        text = (creditNote.gravado || 0).toFixed(2)
+        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+        positionYSummaryRight += 4
+    }
+
+    if (creditNote.exonerado) {
+        text = (creditNote.exonerado || 0).toFixed(2)
+        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+        positionYSummaryRight += 4
+    }
+
+    if (creditNote.inafecto) {
+        text = (creditNote.inafecto || 0).toFixed(2)
+        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+        positionYSummaryRight += 4
+    }
+
+    if (creditNote.gratuito) {
+        text = (creditNote.gratuito || 0).toFixed(2)
+        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+        positionYSummaryRight += 4
+    }
+
+    text = creditNote.igv.toFixed(2)
+    pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+    pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+    positionYSummaryRight += 4
+
+    if (creditNote.rc) {
+        text = creditNote.rc.toFixed(2)
+        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+        positionYSummaryRight += 4
+    }
+
+    text = (creditNote.charge || 0).toFixed(2)
+    pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+    pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+    positionYSummaryRight += 4
+    
     return pdf
 }
 

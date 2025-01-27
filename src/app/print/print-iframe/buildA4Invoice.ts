@@ -552,7 +552,7 @@ export async function buildA4Invoice(
     }
 
     if (sale.invoiceType !== 'NOTA DE VENTA') {
-        text = ((sale.charge || 0) - (sale?.igv || 0)).toFixed(2)
+        text = (sale.charge - sale.igv).toFixed(2)
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4

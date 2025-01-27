@@ -11,7 +11,7 @@
                 <span matListItemTitle>{{ rememberUser.name }}</span>
                 <span matListItemLine>{{ rememberUser.email }}</span>
                 <div matListItemMeta class="h-100 d-flex align-items-center">
-                    <button mat-icon-button aria-label="trash" (click)="onDeleteUser(rememberUser._id, $event)">
+                    <button type="button" mat-icon-button aria-label="trash" (click)="onDeleteUser(rememberUser._id, $event)">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </div>
