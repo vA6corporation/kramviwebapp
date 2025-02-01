@@ -58,6 +58,8 @@ export class PrintService {
     private printCommand80mm$: EventEmitter<BoardModel> = new EventEmitter()
     private printPreaccount80mm$: EventEmitter<BoardModel> = new EventEmitter()
 
+    private printDeletedCommand80mm$: EventEmitter<BoardModel> = new EventEmitter()
+
     private printCommand58mm$: EventEmitter<BoardModel> = new EventEmitter()
     private printPreaccount58mm$: EventEmitter<BoardModel> = new EventEmitter()
 
@@ -438,6 +440,14 @@ export class PrintService {
 
     handlePrintCommand80mm() {
         return this.printCommand80mm$.asObservable()
+    }
+
+    printDeletedCommand80mm(board: BoardModel): void {
+        this.printDeletedCommand80mm$.emit(board)
+    }
+
+    handlePrintDeletedCommand80mm() {
+        return this.printDeletedCommand80mm$.asObservable()
     }
 
     printCommandFastFood80mm(sale: SaleModel): void {

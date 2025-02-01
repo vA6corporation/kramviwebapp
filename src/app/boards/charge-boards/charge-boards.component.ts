@@ -99,6 +99,7 @@ export class ChargeBoardsComponent {
     private handleOpenTurn$: Subscription = new Subscription()
     private handleBoardItems$: Subscription = new Subscription()
     private handlePaymentMethods$: Subscription = new Subscription()
+    private handleBoard$: Subscription = new Subscription()
     private handleWorkers$: Subscription = new Subscription()
     private handleAuth$: Subscription = new Subscription()
 
@@ -107,6 +108,7 @@ export class ChargeBoardsComponent {
         this.handleOpenTurn$.unsubscribe()
         this.handleBoardItems$.unsubscribe()
         this.handlePaymentMethods$.unsubscribe()
+        this.handleBoard$.unsubscribe()
         this.handleWorkers$.unsubscribe()
         this.handleAuth$.unsubscribe()
     }
@@ -214,7 +216,9 @@ export class ChargeBoardsComponent {
             this.workers = workers
         })
 
-        this.board = this.boardsService.getBoard()
+        this.handleBoard$ = this.boardsService.handleBoard().subscribe(board => {
+            this.board = board
+        })
 
         Object.assign(this.params, { boardId: this.board?._id })
 

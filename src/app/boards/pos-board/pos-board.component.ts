@@ -407,6 +407,9 @@ export class PosBoardComponent {
                                 this.boardsService.delete(board._id, observations).subscribe(() => {
                                     this.navigationService.loadBarFinish()
                                     this.navigationService.showMessage('Anulado correctamente')
+                                    if (this.board) {
+                                        this.printService.printDeletedCommand80mm(this.board)
+                                    }
                                     this.router.navigate(['/boards'])
                                 })
                             }
@@ -425,6 +428,9 @@ export class PosBoardComponent {
                         this.boardsService.delete(board._id, observations).subscribe(() => {
                             this.navigationService.loadBarFinish()
                             this.navigationService.showMessage('Anulado correctamente')
+                            if (this.board) {
+                                this.printService.printDeletedCommand80mm(this.board)
+                            }
                             this.router.navigate(['/boards'])
                         })
                     }

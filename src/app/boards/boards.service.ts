@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Params } from '@angular/router';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpService } from '../http.service';
 import { CreatePaymentModel } from '../payments/create-payment.model';
 import { ProductModel } from '../products/product.model';
 import { CreateSaleModel } from '../sales/create-sale.model';
 import { SaleModel } from '../sales/sale.model';
 import { BoardItemModel } from './board-item.model';
 import { BoardModel } from './board.model';
-import { HttpService } from '../http.service';
-import { SummaryBoardModel } from './summary-board.model';
 import { CreateBoardItemModel } from './create-board-item.model';
-import { io } from "socket.io-client";
+import { SummaryBoardModel } from './summary-board.model';
+// import { io } from "socket.io-client";
 
 @Injectable({
     providedIn: 'root'
@@ -20,30 +20,36 @@ export class BoardsService {
     constructor(
         private readonly httpService: HttpService,
     ) { 
-        this.socket.on('changeBoards', () => {
-            // this.fetchData()
-            this.handleChangeBoards$.next()
-        })
+        // this.socket.on('changeBoards', () => {
+        //     // this.fetchData()
+        //     this.handleChangeBoards$.next()
+        // })
     }
 
     private boardItems: CreateBoardItemModel[] = []
-    private board: BoardModel | null = null
-    private socket = io('http://localhost:3000')
+    // private board: BoardModel | null = null
+    // private socket = io('http://localhost:3000')
 
-    private boardItems$ = new BehaviorSubject<CreateBoardItemModel[]>([])
-    private handleChangeBoards$: Subject<void> = new Subject()
+    private handleBoardItems$ = new BehaviorSubject<CreateBoardItemModel[]>([])
+    private handleBoard$ = new BehaviorSubject<BoardModel|null>(null)
+    // private handleChangeBoards$: Subject<void> = new Subject()
 
-    handleChangeBoards() {
-        return this.handleChangeBoards$.asObservable()
+    // handleChangeBoards() {
+    //     return this.handleChangeBoards$.asObservable()
+    // }
+
+    handleBoard() {
+        return this.handleBoard$.asObservable()
     }
 
     setBoard(board: BoardModel | null) {
-        this.board = board
+        // this.board = board
+        this.handleBoard$.next(board)
     }
 
-    getBoard() {
-        return this.board
-    }
+    // getBoard() {
+    //     return this.board
+    // }
 
     forceAddBoardItem(product: ProductModel, annotation: string = "") {
         const boardItem: CreateBoardItemModel = {
@@ -63,7 +69,7 @@ export class BoardsService {
             observations: annotation,
         }
         this.boardItems.push(boardItem)
-        this.boardItems$.next(this.boardItems)
+        this.handleBoardItems$.next(this.boardItems)
     }
 
     addBoardItem(product: ProductModel, annotation: string = "") {
@@ -91,7 +97,7 @@ export class BoardsService {
             boardItem.quantity += 1
             this.boardItems.splice(index, 1, boardItem)
         }
-        this.boardItems$.next(this.boardItems)
+        this.handleBoardItems$.next(this.boardItems)
     }
 
     getBoards(): Observable<BoardModel[]> {
@@ -110,7 +116,7 @@ export class BoardsService {
 
     setBoardItems(boardItems: CreateBoardItemModel[]) {
         this.boardItems = boardItems
-        this.boardItems$.next(this.boardItems)
+        this.handleBoardItems$.next(this.boardItems)
     }
 
     getBaordItem(index: number): CreateBoardItemModel {
@@ -119,16 +125,16 @@ export class BoardsService {
 
     updateBoardItem(index: number, boardItem: CreateBoardItemModel) {
         this.boardItems.splice(index, 1, boardItem)
-        this.boardItems$.next(this.boardItems)
+        this.handleBoardItems$.next(this.boardItems)
     }
 
     removeBoardItem(index: number) {
         this.boardItems.splice(index, 1)
-        this.boardItems$.next(this.boardItems)
+        this.handleBoardItems$.next(this.boardItems)
     }
 
     handleBoardItems(): Observable<CreateBoardItemModel[]> {
-        return this.boardItems$.asObservable()
+        return this.handleBoardItems$.asObservable()
     }
 
     getCountBoards(

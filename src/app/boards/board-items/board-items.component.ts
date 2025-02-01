@@ -11,6 +11,8 @@ import { IgvType } from '../../products/igv-type.enum';
 import { SettingModel } from '../../auth/setting.model';
 import { MaterialModule } from '../../material.module';
 import { CreateBoardItemModel } from '../create-board-item.model';
+import { BoardModel } from '../board.model';
+import { PrintService } from '../../print/print.service';
 
 @Component({
     selector: 'app-board-items',
@@ -21,9 +23,10 @@ import { CreateBoardItemModel } from '../create-board-item.model';
 export class BoardItemsComponent {
 
     constructor(
-        private readonly boardsService: BoardsService,
-        private readonly authService: AuthService,
         private readonly navigationService: NavigationService,
+        private readonly boardsService: BoardsService,
+        private readonly printService: PrintService,
+        private readonly authService: AuthService,
         private readonly matDialog: MatDialog,
     ) { }
 
@@ -31,11 +34,14 @@ export class BoardItemsComponent {
     boardItems: CreateBoardItemModel[] = []
     charge: number = 0
     private setting: SettingModel = new SettingModel()
+    private board: BoardModel | null = null
 
+    private handleBoard$: Subscription = new Subscription()
     private handleBoardItems$: Subscription = new Subscription()
     private handleAuth$: Subscription = new Subscription()
 
     ngOnDestroy() {
+        this.handleBoard$.unsubscribe()
         this.handleBoardItems$.unsubscribe()
         this.handleAuth$.unsubscribe()
     }
@@ -53,6 +59,10 @@ export class BoardItemsComponent {
                     this.charge += boardItem.price * boardItem.quantity
                 }
             }
+        })
+
+        this.handleBoard$ = this.boardsService.handleBoard().subscribe(board => {
+            this.board = board
         })
     }
 
@@ -95,6 +105,9 @@ export class BoardItemsComponent {
                                     this.navigationService.showMessage('Anulado correctamente')
                                     boardItem.quantity = updateBoardItem.quantity
                                     boardItem.preQuantity = boardItem.quantity
+                                    const board = JSON.parse(JSON.stringify(this.board))
+                                    board.boardItems = [boardItem]
+                                    this.printService.printDeletedCommand80mm(board)
                                 }, error: (error: HttpErrorResponse) => {
                                     this.navigationService.loadBarFinish()
                                     this.navigationService.showMessage(error.error.message)
@@ -127,6 +140,9 @@ export class BoardItemsComponent {
                                 if (boardItem.quantity === 0) {
                                     this.boardsService.removeBoardItem(index)
                                 }
+                                const board = JSON.parse(JSON.stringify(this.board))
+                                board.boardItems = [boardItem]
+                                this.printService.printDeletedCommand80mm(board)
                             }, error: (error: HttpErrorResponse) => {
                                 this.navigationService.loadBarFinish()
                                 this.navigationService.showMessage(error.error.message)
@@ -163,6 +179,9 @@ export class BoardItemsComponent {
                                     this.navigationService.loadBarFinish()
                                     this.navigationService.showMessage('Anulado correctamente')
                                     this.boardsService.removeBoardItem(index)
+                                    const board = JSON.parse(JSON.stringify(this.board))
+                                    board.boardItems = [boardItem]
+                                    this.printService.printDeletedCommand80mm(board)
                                 }, error: (error: HttpErrorResponse) => {
                                     this.navigationService.loadBarFinish()
                                     this.navigationService.showMessage(error.error.message)
@@ -179,6 +198,9 @@ export class BoardItemsComponent {
                                 this.navigationService.loadBarFinish()
                                 this.navigationService.showMessage('Anulado correctamente')
                                 this.boardsService.removeBoardItem(index)
+                                const board = JSON.parse(JSON.stringify(this.board))
+                                board.boardItems = [boardItem]
+                                this.printService.printDeletedCommand80mm(board)
                             }, error: (error: HttpErrorResponse) => {
                                 this.navigationService.loadBarFinish()
                                 this.navigationService.showMessage(error.error.message)

@@ -7,7 +7,7 @@
 <div mat-dialog-content>
     <mat-list class="m-0">
         @for (saleItem of saleItems; track saleItem._id) {
-        <mat-list-item>
+        <mat-list-item class="px-0">
             <span matListItemTitle>{{ saleItem.fullName }} ({{ saleItem.quantity }})</span>
             <span matListItemLine>
                 <ng-container>{{ (saleItem.price * saleItem.quantity).toFixed(2) }}</ng-container>
