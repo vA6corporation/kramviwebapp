@@ -5,8 +5,8 @@ import { SaleModel } from "../../sales/sale.model";
 import { SettingModel } from "../../auth/setting.model";
 import { BusinessModel } from "../../auth/business.model";
 import { OfficeModel } from "../../auth/office.model";
-import { BankModel } from "../../providers/bank.model";
 import { PaymentMethodModel } from "../../payment-methods/payment-method.model";
+import { BankModel } from "../../banks/bank.model";
 
 export async function buildTicket80mm(
     sale: SaleModel,
@@ -62,7 +62,7 @@ export async function buildTicket80mm(
     let strArr: string[] = []
     let positionY: number = 3
     if (setting.logo) {
-        positionY += 40
+        positionY += 42
         pdf.addImage(setting.logo, "JPEG", 15 + marginLeft, 0, 40, 40)
     }
     text = (office.tradeName || '').toUpperCase()

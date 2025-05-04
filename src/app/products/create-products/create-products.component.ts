@@ -20,13 +20,14 @@ import { DialogSearchProvidersComponent } from '../../providers/dialog-search-pr
 import { ProviderModel } from '../../providers/provider.model';
 import { CategoriesService } from '../categories.service';
 import { CategoryModel } from '../category.model';
-import { DialogAnnotationsComponent } from '../dialog-annotations/dialog-annotations.component';
 import { DialogCreateCategoriesComponent } from '../dialog-create-categories/dialog-create-categories.component';
 import { DialogSearchProductsComponent } from '../dialog-search-products/dialog-search-products.component';
 import { PriceListModel } from '../price-list.model';
 import { PriceType } from '../price-type.enum';
 import { ProductModel } from '../product.model';
 import { IgvCodeModel, ProductsService, UnitCodeModel } from '../products.service';
+import Ean from 'ean-generator';
+import { DialogCreateAnnotationsComponent } from '../dialog-create-annotations/dialog-create-annotations.component';
 
 @Component({
     selector: 'app-create-products',
@@ -80,7 +81,7 @@ export class CreateProductsComponent {
     office: OfficeModel = new OfficeModel()
     isTrackStock = false
     imgUri: string = ''
-    linkProducts: ProductModel[] = []
+    products: ProductModel[] = []
     lots: LotModel[] = []
     providers: ProviderModel[] = []
     private file: File | null = null
@@ -166,22 +167,20 @@ export class CreateProductsComponent {
     }
 
     onGenerateEan13() {
+        let ean = new Ean(['030', '031', '039'])
+        const code = ean.create()
         let result = ''
-        let result2 = ''
         const characters = '0123456789'
         const charactersLength = characters.length
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 4; i++) {
             result += characters.charAt(Math.floor(Math.random() * charactersLength))
         }
-        for (let i = 0; i < 4; i++) {
-            result2 += characters.charAt(Math.floor(Math.random() * charactersLength))
-        }
-        this.formGroup.patchValue({ upc: `7${result}` })
-        this.formGroup.patchValue({ sku: result2 })
+        this.formGroup.patchValue({ upc: code })
+        this.formGroup.patchValue({ sku: result })
     }
 
-    onOpenDialogAnnotations() {
-        const dialogRef = this.matDialog.open(DialogAnnotationsComponent, {
+    onDialogCreateAnnotations() {
+        const dialogRef = this.matDialog.open(DialogCreateAnnotationsComponent, {
             width: '600px',
             position: { top: '20px' },
         })
@@ -241,7 +240,7 @@ export class CreateProductsComponent {
 
         dialogRef.afterClosed().subscribe(product => {
             if (product) {
-                this.linkProducts.push(product)
+                this.products.push(product)
             }
         })
     }
@@ -260,7 +259,7 @@ export class CreateProductsComponent {
     }
 
     onRemoveProduct(index: number) {
-        this.linkProducts.splice(index, 1)
+        this.products.splice(index, 1)
     }
 
     onRemoveLot(index: number) {
@@ -291,10 +290,10 @@ export class CreateProductsComponent {
         if (this.formGroup.valid) {
             this.isLoading = true
             const product = this.formGroup.value
-            const linkProductIds = this.linkProducts.map(e => e._id)
+            const productIds = this.products.map(e => e._id)
             const providerIds = this.providers.map(e => e._id)
             product.annotations = this.annotations
-            product.linkProductIds = linkProductIds
+            product.productIds = productIds
             product.providerIds = providerIds
             this.navigationService.loadBarStart()
             this.productsService.create(product, this.formArray.value, this.lots, this.paymentMethodId).subscribe({

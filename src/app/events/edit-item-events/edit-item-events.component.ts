@@ -47,7 +47,7 @@ export class EditItemEventsComponent {
     selectedIndex: number = 0
     eventItems: CreateEventItemModel[] = []
     setting: SettingModel = new SettingModel()
-    office: OfficeModel = new OfficeModel()
+    private office: OfficeModel = new OfficeModel()
     private sortByName: boolean = true
 
     private handleSearch$: Subscription = new Subscription()
@@ -189,13 +189,13 @@ export class EditItemEventsComponent {
     }
 
     onSelectProduct(product: ProductModel): void {
-        if (product.annotations.length || product.linkProductIds.length) {
+        if (product.annotations.length || product.productIds.length) {
             const data: DialogSelectAnnotationData = {
                 product,
                 priceListId: this.priceListId || '',
             }
 
-            const dialogRef = this.matDialog.open(DialogSelectAnnotationsComponent, {
+            this.matDialog.open(DialogSelectAnnotationsComponent, {
                 width: '600px',
                 position: { top: '20px' },
                 data

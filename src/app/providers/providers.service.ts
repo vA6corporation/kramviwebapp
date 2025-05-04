@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpService } from '../http.service';
-import { BankModel } from './bank.model';
 import { ProviderModel } from './provider.model';
 
 @Injectable({
@@ -13,8 +12,30 @@ export class ProvidersService {
         private readonly httpService: HttpService,
     ) { }
 
+    private providers$: BehaviorSubject<ProviderModel[]> | null = null
+
+    handleProviders(): Observable<ProviderModel[]> {
+        if (this.providers$ === null) {
+            this.providers$ = new BehaviorSubject<ProviderModel[]>([])
+            this.loadProviders()
+        }
+        return this.providers$.asObservable()
+    }
+
+    loadProviders(): void {
+        this.httpService.get('providers').subscribe(providers => {
+            if (this.providers$) {
+                this.providers$.next(providers)
+            }
+        })
+    }
+
     getProvidersByKey(key: string): Observable<ProviderModel[]> {
         return this.httpService.get(`providers/byKey/${key}`)
+    }
+
+    getProvidersByProduct(productId: string) {
+        return this.httpService.get(`providers/byProduct/${productId}`)
     }
 
     getProvidersByRuc(key: string): Observable<ProviderModel[]> {
@@ -42,14 +63,14 @@ export class ProvidersService {
     }
 
     update(
-        provider: ProviderModel, 
+        provider: ProviderModel,
         providerId: string
     ): Observable<void> {
         return this.httpService.put(`providers/${providerId}`, { provider })
     }
 
     create(
-        provider: ProviderModel, 
+        provider: ProviderModel,
     ): Observable<ProviderModel> {
         return this.httpService.post('providers', { provider })
     }

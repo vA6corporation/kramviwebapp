@@ -1,16 +1,13 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../auth/auth.service';
-import { OfficeModel } from '../../auth/office.model';
-import { SettingModel } from '../../auth/setting.model';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategorySuppliesService } from '../../supplies/category-supplies.service';
 import { CategorySupplyModel } from '../../supplies/category-supply.model';
 import { SuppliesService } from '../../supplies/supplies.service';
 import { SupplyModel } from '../../supplies/supply.model';
 import { PurchaseSuppliesService } from '../purchase-supplies.service';
-import { MaterialModule } from '../../material.module';
 import { PurchaseSupplyItemsComponent } from '../purchase-supply-items/purchase-supply-items.component';
 
 @Component({
@@ -26,7 +23,6 @@ export class EditPurchaseSuppliesComponent {
         private readonly suppliesService: SuppliesService,
         private readonly navigationService: NavigationService,
         private readonly purchaseSuppliesService: PurchaseSuppliesService,
-        private readonly authService: AuthService,
         private readonly activatedRoute: ActivatedRoute,
     ) { }
 
@@ -34,8 +30,6 @@ export class EditPurchaseSuppliesComponent {
     categorySupplies: CategorySupplyModel[] = []
     supplies: SupplyModel[] = []
     selectedIndex: number = 0
-    setting: SettingModel = new SettingModel()
-    office: OfficeModel = new OfficeModel()
 
     private handleCategorySupplies$: Subscription = new Subscription()
     private handleSupplies$: Subscription = new Subscription()
@@ -60,11 +54,6 @@ export class EditPurchaseSuppliesComponent {
 
         this.handleSupplies$ = this.suppliesService.handleSupplies().subscribe(supplies => {
             this.supplies = supplies
-        })
-
-        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.office = auth.office
-            this.setting = auth.setting
         })
 
         this.purchaseSuppliesService.getPurchaseSupplyById(this.activatedRoute.snapshot.params['purchaseSupplyId']).subscribe(purchaseSupply => {

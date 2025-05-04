@@ -200,10 +200,6 @@ export class ChargePurchasesComponent {
                 throw new Error('Agrega un provedor')
             }
 
-            if (purchase.invoiceType === 'FACTURA' && this.provider?.documentType !== 'RUC') {
-                throw new Error('El proveedor debe tener un RUC')
-            }
-
             this.isLoading = true
             this.navigationService.loadBarStart()
 

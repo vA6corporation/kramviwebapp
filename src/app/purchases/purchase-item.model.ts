@@ -20,4 +20,5 @@ export interface PurchaseItemModel {
     productId: string
     isTrackStock: boolean
     lot: LotModel | null
+    type?: string
 }

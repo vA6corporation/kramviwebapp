@@ -1,19 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../auth/auth.service';
-import { OfficeModel } from '../../auth/office.model';
-import { SettingModel } from '../../auth/setting.model';
 import { FavoritesService } from '../../favorites/favorites.service';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
+import { CategoriesService } from '../../products/categories.service';
 import { CategoryModel } from '../../products/category.model';
 import { ProductModel } from '../../products/product.model';
 import { ProductsService } from '../../products/products.service';
-import { IncidentsService } from '../incidents.service';
-import { MaterialModule } from '../../material.module';
 import { IncidentItemsComponent } from '../incident-items/incident-items.component';
-import { RouterModule } from '@angular/router';
-import { CategoriesService } from '../../products/categories.service';
+import { IncidentsService } from '../incidents.service';
 
 @Component({
     selector: 'app-create-incidents',
@@ -29,7 +26,6 @@ export class CreateIncidentsComponent {
         private readonly productsService: ProductsService,
         private readonly favoritesService: FavoritesService,
         private readonly incidentsService: IncidentsService,
-        private readonly authService: AuthService,
     ) { }
 
     categories: CategoryModel[] = []
@@ -37,9 +33,6 @@ export class CreateIncidentsComponent {
     favorites: ProductModel[] = []
     selectedIndex: number = 0
     gridListCols = 4
-    setting: SettingModel = new SettingModel()
-    office: OfficeModel = new OfficeModel()
-    private sortByName: boolean = true
 
     private handleSearch$: Subscription = new Subscription()
     private handleFavorites$: Subscription = new Subscription()
@@ -63,11 +56,6 @@ export class CreateIncidentsComponent {
 
         this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
             this.categories = categories
-        })
-
-        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
-            this.office = auth.office
         })
 
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {

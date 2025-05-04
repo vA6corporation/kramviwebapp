@@ -1,16 +1,13 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../auth/auth.service';
-import { OfficeModel } from '../../auth/office.model';
-import { SettingModel } from '../../auth/setting.model';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategorySuppliesService } from '../../supplies/category-supplies.service';
 import { CategorySupplyModel } from '../../supplies/category-supply.model';
 import { SuppliesService } from '../../supplies/supplies.service';
 import { SupplyModel } from '../../supplies/supply.model';
 import { PurchaseSuppliesService } from '../purchase-supplies.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { MaterialModule } from '../../material.module';
 import { PurchaseSupplyItemsComponent } from '../purchase-supply-items/purchase-supply-items.component';
 
 @Component({
@@ -26,7 +23,6 @@ export class CreatePurchaseSuppliesComponent {
         private readonly navigationService: NavigationService,
         private readonly suppliesService: SuppliesService,
         private readonly purchaseSuppliesService: PurchaseSuppliesService,
-        private readonly authService: AuthService,
     ) { }
 
     filterSupplies: SupplyModel[] = []
@@ -34,8 +30,6 @@ export class CreatePurchaseSuppliesComponent {
     supplies: SupplyModel[] = []
     selectedIndex: number = 0
     gridListCols = 4
-    setting: SettingModel = new SettingModel()
-    office: OfficeModel = new OfficeModel()
 
     private handleCategorySupplies$: Subscription = new Subscription()
     private handleSupplies$: Subscription = new Subscription()
@@ -52,11 +46,6 @@ export class CreatePurchaseSuppliesComponent {
     ngOnInit(): void {
         this.navigationService.setTitle('Nueva compra')
         this.navigationService.showSearch()
-
-        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.office = auth.office
-            this.setting = auth.setting
-        })
 
         this.navigationService.setMenu([
             { id: 'search', icon: 'search', show: true, label: '' }

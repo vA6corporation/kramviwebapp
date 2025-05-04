@@ -26,6 +26,7 @@ export class DialogEditCategoriesComponent {
 
     formGroup: FormGroup = this.formBuilder.group({
         name: [null, Validators.required],
+        color: '',
         deletedAt: null,
     })
     isLoading: boolean = false

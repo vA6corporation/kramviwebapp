@@ -1,11 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../auth/auth.service';
-import { OfficeModel } from '../../auth/office.model';
-import { SettingModel } from '../../auth/setting.model';
 import { FavoritesService } from '../../favorites/favorites.service';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategoriesService } from '../../products/categories.service';
 import { CategoryModel } from '../../products/category.model';
@@ -13,11 +13,8 @@ import { DialogDetailProductsComponent } from '../../products/dialog-detail-prod
 import { ProductModel } from '../../products/product.model';
 import { ProductsService } from '../../products/products.service';
 import { DialogPurchaseOrderItemsComponent } from '../dialog-purchase-order-items/dialog-purchase-order-items.component';
-import { PurchaseOrdersService } from '../purchase-orders.service';
-import { MaterialModule } from '../../material.module';
-import { CommonModule } from '@angular/common';
 import { PurchaseOrderItemsComponent } from '../purchase-order-items/purchase-order-items.component';
-import { RouterModule } from '@angular/router';
+import { PurchaseOrdersService } from '../purchase-orders.service';
 
 @Component({
     selector: 'app-create-purchase-orders',
@@ -33,7 +30,6 @@ export class CreatePurchaseOrdersComponent {
         private readonly favoritesService: FavoritesService,
         private readonly purchaseOrdersService: PurchaseOrdersService,
         private readonly categoriesService: CategoriesService,
-        private readonly authService: AuthService,
         private readonly matDialog: MatDialog
     ) { }
 
@@ -42,8 +38,6 @@ export class CreatePurchaseOrdersComponent {
     favorites: ProductModel[] = []
     selectedIndex: number = 0
     gridListCols = 4
-    setting: SettingModel = new SettingModel()
-    office: OfficeModel = new OfficeModel()
 
     private handleSearch$: Subscription = new Subscription()
     private handleFavorites$: Subscription = new Subscription()
@@ -64,11 +58,6 @@ export class CreatePurchaseOrdersComponent {
         this.navigationService.setMenu([
             { id: 'search', icon: 'search', show: true, label: '' }
         ])
-
-        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.office = auth.office
-            this.setting = auth.setting
-        })
 
         this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
             this.categories = categories

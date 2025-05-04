@@ -1,15 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
-import { AuthService } from '../../auth/auth.service';
-import { SettingModel } from '../../auth/setting.model';
 import { CarrierModel } from '../../carriers/carrier.model';
 import { CarriersService } from '../../carriers/carriers.service';
-import { NavigationService } from '../../navigation/navigation.service';
 import { MaterialModule } from '../../material.module';
-import { CommonModule } from '@angular/common';
+import { NavigationService } from '../../navigation/navigation.service';
 
 @Component({
     selector: 'app-dialog-carriers',
@@ -23,7 +20,6 @@ export class DialogCarriersComponent {
         private readonly formBuilder: FormBuilder,
         private readonly carriersService: CarriersService,
         private readonly navigationService: NavigationService,
-        private readonly authService: AuthService,
         private readonly dialogRef: MatDialogRef<DialogCarriersComponent>,
     ) { }
 
@@ -40,19 +36,8 @@ export class DialogCarriersComponent {
         { code: 'NAME', label: 'NOMBRES/TELEFONO' },
     ]
     onAdd = new EventEmitter()
-    setting: SettingModel = new SettingModel()
-
-    private handleAuth$: Subscription = new Subscription()
-
-    ngOnDestroy() {
-        this.handleAuth$.unsubscribe()
-    }
 
     ngOnInit(): void {
-        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
-        })
-
         this.formGroup.get('searchType')?.valueChanges.subscribe(value => {
             switch (value) {
                 case 'RUC':

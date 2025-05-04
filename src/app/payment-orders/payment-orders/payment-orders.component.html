@@ -10,6 +10,17 @@
             <mat-date-range-picker #picker></mat-date-range-picker>
         </mat-form-field>
     </form>
+    <mat-form-field appearance="fill">
+        <mat-label>Sucursal</mat-label>
+        <mat-select [(value)]="officeId" (selectionChange)="onOfficeChange()">
+            <mat-option value="">TODAS LAS SUCURSALES</mat-option>
+            @for (office of offices; track office._id) {
+                <mat-option [value]="office._id">
+                    {{ office.name | uppercase }}
+                </mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
     <div class="mat-elevation-z2">
         <table mat-table [dataSource]="dataSource" class="w-100">
             <ng-container matColumnDef="paymentOrderNumber">

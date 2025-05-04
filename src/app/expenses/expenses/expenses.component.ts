@@ -6,17 +6,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../auth/auth.service';
-import { SettingModel } from '../../auth/setting.model';
 import { buildExcel } from '../../buildExcel';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { DialogTurnsComponent } from '../../turns/dialog-turns/dialog-turns.component';
 import { TurnModel } from '../../turns/turn.model';
 import { TurnsService } from '../../turns/turns.service';
+import { DialogCreateExpensesComponent } from '../dialog-create-expenses/dialog-create-expenses.component';
 import { ExpenseModel } from '../expense.model';
 import { ExpensesService } from '../expenses.service';
-import { DialogCreateExpensesComponent } from '../dialog-create-expenses/dialog-create-expenses.component';
-import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-expenses',
@@ -33,7 +31,6 @@ export class ExpensesComponent {
         private readonly formBuilder: FormBuilder,
         private readonly matDialog: MatDialog,
         private readonly activatedRoute: ActivatedRoute,
-        private readonly authService: AuthService,
         private readonly router: Router,
     ) { }
 
@@ -48,7 +45,6 @@ export class ExpensesComponent {
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
     private turn: TurnModel | null = null
-    private setting: SettingModel = new SettingModel()
 
     private handleOpenTurn$: Subscription = new Subscription()
     private handleClickMenu$: Subscription = new Subscription()
@@ -63,12 +59,8 @@ export class ExpensesComponent {
     ngOnInit(): void {
         this.navigationService.setTitle('Gastos')
 
-        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
-
-            this.handleOpenTurn$ = this.turnsService.handleOpenTurn(this.setting.isOfficeTurn).subscribe(turn => {
-                this.turn = turn
-            })
+        this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
+            this.turn = turn
         })
 
         const { pageIndex, pageSize } = this.activatedRoute.snapshot.queryParams

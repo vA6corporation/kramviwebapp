@@ -482,28 +482,11 @@ export class InvoicesCheckComponent {
     }
 
     onClickOptions(event: MouseEvent, saleId: string) {
-        // if (event.ctrlKey && this.user.isAdmin) {
-        //   event.stopPropagation();
-        //   const dialogRef = this.matDialog.open(DialogAdminComponent, {
-        //     width: '600px',
-        //     position: { top: '20px' },
-        //     data: saleId,
-        //   });
-
-        //   dialogRef.componentInstance.onUpdate.subscribe(() => {
-        //     this.fetchData();
-        //   }); 
-        // }
+        
     }
 
     downloadFile(cdr: CdrModel) {
-        // const linkSource = cdr.base64Xml;
-        // const downloadLink = document.createElement("a");
-        // const fileName = `${this.business.ruc}-${cdr.sale?.invoiceCode}-${cdr.sale?.invoicePrefix}${this.office.serialPrefix}-${cdr?.sale?.invoiceNumber}.zip`;
-
-        // downloadLink.href = linkSource;
-        // downloadLink.download = fileName;
-        // downloadLink.click();
+        
     }
 
     onCreditNoteDialog(saleId: string) {

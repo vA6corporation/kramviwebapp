@@ -65,10 +65,10 @@ export class EditCreditNotesComponent {
     cash: number = 0
     creditNoteId: string | null = null
     creditNote: CreditNoteModel | null = null
-    office: OfficeModel = new OfficeModel()
     setting: SettingModel = new SettingModel()
     addresses: string[] = []
     workers: WorkerModel[] = []
+    private office: OfficeModel = new OfficeModel()
 
     reasons = [
         { code: '01', label: 'ANULACION DE LA OPERACION' },

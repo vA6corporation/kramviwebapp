@@ -20,7 +20,7 @@ export class HttpService {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.accessToken}`
-        });
+        })
         return this.http.get(`${this.baseUrl}${url}`, { headers, params })
     }
 

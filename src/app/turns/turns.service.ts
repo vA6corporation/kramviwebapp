@@ -27,13 +27,9 @@ export class TurnsService {
         }
     }
 
-    handleOpenTurn(isOfficeTurn: boolean): Observable<TurnModel | null> {
+    handleOpenTurn(): Observable<TurnModel | null> {
         if (this.turn === null) {
-            if (isOfficeTurn) {
-                this.loadTurnOffice()
-            } else {
-                this.loadTurnUser()
-            }
+            this.loadTurn()
         } else {
             setTimeout(() => {
                 this.turn$.next(this.turn)
@@ -74,8 +70,8 @@ export class TurnsService {
         return this.httpService.get(`turns/changeTurn/${saleId}/${turnId}`)
     }
 
-    loadTurnUser() {
-        this.httpService.get('turns/openTurnUser').subscribe({
+    loadTurn() {
+        this.httpService.get('turns/openTurn').subscribe({
             next: turn => {
                 this.turn = turn
                 this.turn$.next(turn)
@@ -86,26 +82,8 @@ export class TurnsService {
         })
     }
 
-    loadTurnOffice() {
-        this.httpService.get('turns/openTurnOffice').subscribe({
-            next: turn => {
-                this.turn = turn
-                this.turn$.next(turn)
-            }, error: (error: HttpErrorResponse) => {
-                console.log(error)
-                this.turn$.next(null)
-            }
-        })
-    }
-
-    createTurnOffice(openCash: number): void {
-        this.httpService.post('turns/openTurnOffice', { openCash }).subscribe(turn => {
-            this.turn$.next(turn)
-        })
-    }
-
-    createTurnUser(openCash: number): void {
-        this.httpService.post('turns/openTurnUser', { openCash }).subscribe(turn => {
+    createTurn(openCash: number): void {
+        this.httpService.post('turns/openTurn', { openCash }).subscribe(turn => {
             this.turn$.next(turn)
         })
     }

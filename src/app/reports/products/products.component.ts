@@ -17,6 +17,8 @@ import { SalesService } from '../../sales/sales.service';
 import { SummarySaleItemModel } from '../../sales/summary-sale-item.model';
 import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
     selector: 'app-products',
@@ -40,6 +42,7 @@ export class ProductsComponent {
     private chargeChart!: ElementRef<HTMLCanvasElement>
     @ViewChild('quantityChart')
     private quantityChart!: ElementRef<HTMLCanvasElement>
+    @ViewChild(MatSort) sort: MatSort = new MatSort()
 
     formGroup: FormGroup = this.formBuilder.group({
         categoryId: '',
@@ -48,8 +51,9 @@ export class ProductsComponent {
         startDate: [new Date(), Validators.required],
         endDate: [new Date(), Validators.required],
     })
-    displayedColumns: string[] = ['product', 'quantity', 'price', 'cost', 'charge', 'totalCost', 'utility', 'stock']
-    dataSource: SummarySaleItemModel[] = []
+    displayedColumns: string[] = ['product', 'quantity', 'price', 'cost', 'totalSale', 'totalPurchase', 'totalUtility', 'stock']
+    // dataSource: SummarySaleItemModel[] = []
+    dataSource: MatTableDataSource<SummarySaleItemModel> = new MatTableDataSource()
     categoryId: string = ''
     categories: CategoryModel[] = []
     summarySaleItems: SummarySaleItemModel[] = []
@@ -72,6 +76,10 @@ export class ProductsComponent {
         this.handleUsers$.unsubscribe()
         this.handleOffices$.unsubscribe()
         this.handleAuth$.unsubscribe()
+    }
+
+    ngAfterViewInit() {
+        this.dataSource.sort = this.sort
     }
 
     ngOnInit() {
@@ -110,7 +118,7 @@ export class ProductsComponent {
                 'UTILIDAD',
                 'STOCK',
             ])
-            
+
             this.summarySaleItems.forEach(summarySaleItem => {
                 body.push([
                     summarySaleItem.fullName.toUpperCase(),
@@ -153,7 +161,7 @@ export class ProductsComponent {
             this.quantityChartRef?.destroy()
 
             const { startDate, endDate, officeId, categoryId, userId } = this.formGroup.value
-            
+
             const params: Params = {
                 categoryId, userId, officeId
             }
@@ -165,7 +173,8 @@ export class ProductsComponent {
             ).subscribe(summarySaleItems => {
                 this.navigationService.loadBarFinish()
                 this.summarySaleItems = summarySaleItems
-                this.dataSource = summarySaleItems
+                this.dataSource = new MatTableDataSource(summarySaleItems)
+                this.dataSource.sort = this.sort
 
                 this.totalSale = summarySaleItems.map(e => e.totalSale).reduce((a, b) => a + b, 0)
                 this.totalQuantity = summarySaleItems.map(e => e.totalQuantity).reduce((a, b) => a + b, 0)

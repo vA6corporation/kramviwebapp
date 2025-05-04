@@ -148,7 +148,7 @@ export class PosBoardWaiterComponent {
                     this.onDeleteBoard()
                 }
             }
-        });
+        })
 
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {
             this.navigationService.loadBarStart()
@@ -165,18 +165,18 @@ export class PosBoardWaiterComponent {
                                 return 1
                             }
                             if (a.fullName < b.fullName) {
-                                return -1;
+                                return -1
                             }
-                            return 0;
-                        });
+                            return 0
+                        })
                     } else {
-                        this.products.sort((a, b) => b.price - a.price);
+                        this.products.sort((a, b) => b.price - a.price)
                     }
 
-                    const foundProduct = products.find(e => e.sku.match(new RegExp(`^${key}$`, 'i')) || e.upc.match(new RegExp(`^${key}$`, 'i')));
+                    const foundProduct = products.find(e => e.sku.match(new RegExp(`^${key}$`, 'i')) || e.upc.match(new RegExp(`^${key}$`, 'i')))
 
                     if (foundProduct) {
-                        this.onSelectProduct(foundProduct);
+                        this.onSelectProduct(foundProduct)
                     }
 
                 }, error: (error: HttpErrorResponse) => {
@@ -358,7 +358,7 @@ export class PosBoardWaiterComponent {
     }
 
     onSelectProduct(product: ProductModel): void {
-        if (product.annotations.length || product.linkProductIds.length) {
+        if (product.annotations.length || product.productIds.length) {
             const data: DialogSelectAnnotationData = {
                 product,
                 priceListId: this.priceListId || '',

@@ -13,6 +13,10 @@ export class ToolsService {
         private readonly httpService: HttpService,
     ) { }
 
+    getDuplicates() {
+        return this.httpService.get('tools/duplicates')
+    }
+
     exonerateProducts() {
         return this.httpService.get('tools/exonerateProducts')
     }

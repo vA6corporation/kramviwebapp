@@ -4,4 +4,5 @@ export interface BankModel {
     currencyName: string
     accountNumber: string
     cci: string
+    isDetraction: boolean
 }

@@ -107,14 +107,14 @@
             </tr>
             }
             @if (sale.createdAt !== sale.updatedAt) {
-            <tr class="text-danger">
-                <td>F/H ultima modificacion</td>
-                <td align="right">{{ sale.updatedAt | date: 'medium' }}</td>
-            </tr>
-            }
+                <tr class="text-danger">
+                    <td>F/H ultima modificacion</td>
+                    <td align="right">{{ sale.updatedAt | date: 'medium' }}</td>
+                </tr>
+                }
             <tr>
                 <td>F/H venta</td>
-                <td align="right">{{ sale.createdAt | date: 'medium' }}</td>
+                <td align="right">{{ sale.emitionAt | date: 'medium' }}</td>
             </tr>
             <tr>
                 <td>Observaciones</td>

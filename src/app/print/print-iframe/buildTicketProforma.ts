@@ -4,7 +4,7 @@ import { ProformaModel } from "../../proformas/proforma.model";
 import { SettingModel } from "../../auth/setting.model";
 import { BusinessModel } from "../../auth/business.model";
 import { OfficeModel } from "../../auth/office.model";
-import { BankModel } from "../../providers/bank.model";
+import { BankModel } from "../../banks/bank.model";
 
 export async function buildTicketProforma(
     proforma: ProformaModel,

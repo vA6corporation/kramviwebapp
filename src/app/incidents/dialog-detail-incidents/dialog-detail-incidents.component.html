@@ -1,11 +1,16 @@
 <h2 mat-dialog-title>Detalles incidencia</h2>
 <div mat-dialog-content>
     <mat-list class="m-0">
-        @for (incidentItem of incidentItems; track incidentItem._id) {
+        @for (incidentItem of incidentOutItems; track incidentItem._id) {
         <mat-list-item>
             <span matListItemTitle>{{ incidentItem.fullName }} ({{ incidentItem.quantity }})</span>
         </mat-list-item>
         }
+        @for (incidentItem of incidentInItems; track incidentItem._id) {
+            <mat-list-item>
+                <span matListItemTitle>{{ incidentItem.fullName }} ({{ incidentItem.quantity }})</span>
+            </mat-list-item>
+            }
     </mat-list>
     <table class="w-100">
         <tbody>

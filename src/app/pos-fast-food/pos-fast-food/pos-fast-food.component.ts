@@ -225,13 +225,13 @@ export class PosFastFoodComponent {
     }
 
     onSelectProduct(product: ProductModel): void {
-        if (product.annotations.length || product.linkProductIds.length) {
+        if (product.annotations.length || product.productIds.length) {
             const data: DialogSelectAnnotationData = {
                 product,
                 priceListId: this.priceListId || '',
             }
 
-            const dialogRef = this.matDialog.open(DialogSelectAnnotationsComponent, {
+            this.matDialog.open(DialogSelectAnnotationsComponent, {
                 width: '600px',
                 position: { top: '20px' },
                 data,

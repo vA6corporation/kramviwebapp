@@ -63,6 +63,7 @@ export class InventoriesComponent {
         'location',
         'cost',
         'price',
+        'minimumStock',
         'stock',
         'actions',
     ]

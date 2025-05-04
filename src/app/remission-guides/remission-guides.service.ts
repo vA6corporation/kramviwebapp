@@ -64,6 +64,25 @@ export class RemissionGuidesService {
         this.remissionGuideItems$.next(this.remissionGuideItems)
     }
 
+    addRemissionGuideItems(products: ProductModel[]) {
+        const remissionGuideItems: RemissionGuideItemModel[] = []
+        for (const product of products) {
+            const remissionGuideItem: RemissionGuideItemModel = {
+                productId: product._id,
+                sku: '',
+                upc: '',
+                fullName: product.fullName,
+                onModel: product.onModel,
+                quantity: product.stock,
+                unitCode: product.unitCode,
+                observations: '',
+            }
+            remissionGuideItems.push(remissionGuideItem)
+        }
+        this.remissionGuideItems = remissionGuideItems
+        this.remissionGuideItems$.next(this.remissionGuideItems)
+    }
+
     updateRemissionGuideItem(index: number, remissionGuideItem: RemissionGuideItemModel) {
         this.remissionGuideItems.splice(index, 1, remissionGuideItem)
         this.remissionGuideItems$.next(this.remissionGuideItems)

@@ -17,13 +17,14 @@ import { DialogSearchProvidersComponent } from '../../providers/dialog-search-pr
 import { ProviderModel } from '../../providers/provider.model';
 import { CategoriesService } from '../categories.service';
 import { CategoryModel } from '../category.model';
-import { DialogAnnotationsComponent } from '../dialog-annotations/dialog-annotations.component';
 import { DialogCreateCategoriesComponent } from '../dialog-create-categories/dialog-create-categories.component';
 import { DialogSearchProductsComponent } from '../dialog-search-products/dialog-search-products.component';
 import { PriceListModel } from '../price-list.model';
 import { PriceType } from '../price-type.enum';
 import { ProductModel } from '../product.model';
 import { IgvCodeModel, ProductsService, UnitCodeModel } from '../products.service';
+import Ean from 'ean-generator';
+import { DialogCreateAnnotationsComponent } from '../dialog-create-annotations/dialog-create-annotations.component';
 
 @Component({
     selector: 'app-edit-products',
@@ -60,6 +61,7 @@ export class EditProductsComponent {
         price: [null, Validators.required],
         cost: null,
         isTrackStock: false,
+        minimumStock: null,
         printZone: 'COCINA',
         prices: this.formArray
     })
@@ -78,9 +80,10 @@ export class EditProductsComponent {
     urlImage: string = ''
     setting: SettingModel = new SettingModel()
     office: OfficeModel = new OfficeModel()
-    linkProducts: ProductModel[] = []
+    products: ProductModel[] = []
     lots: LotModel[] = []
     providers: ProviderModel[] = []
+    isTrackStock = false
 
     private handleCategories$: Subscription = new Subscription()
     private handleAuth$: Subscription = new Subscription()
@@ -109,9 +112,10 @@ export class EditProductsComponent {
             this.navigationService.loadBarStart()
             this.productsService.getProductById(this.productId).subscribe(product => {
                 this.formGroup.patchValue(product)
-                this.linkProducts = product.linkProducts
                 this.lots = product.lots
+                this.products = product.products
                 this.providers = product.providers
+                this.isTrackStock = product.isTrackStock                // this.providers = product.providers
                 this.navigationService.loadBarFinish()
                 if (product.urlImage) {
                     this.urlImage = product.urlImage + `?ignoreCache=${Math.random()}`
@@ -184,18 +188,20 @@ export class EditProductsComponent {
     }
 
     onGenerateEan13() {
+        let ean = new Ean(['030', '031', '039'])
+        const code = ean.create()
         let result = ''
-        let result2 = ''
         const characters = '0123456789'
         const charactersLength = characters.length
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 4; i++) {
             result += characters.charAt(Math.floor(Math.random() * charactersLength))
         }
-        for (let i = 0; i < 4; i++) {
-            result2 += characters.charAt(Math.floor(Math.random() * charactersLength))
-        }
-        this.formGroup.patchValue({ upc: `7${result}` })
-        this.formGroup.patchValue({ sku: result2 })
+        this.formGroup.patchValue({ upc: code })
+        this.formGroup.patchValue({ sku: result })
+    }
+
+    onIsTrackStockChange() {
+        this.isTrackStock = this.formGroup.get('isTrackStock')?.value
     }
 
     onFileImageSelected(files: FileList | null, input: HTMLInputElement) {
@@ -256,8 +262,8 @@ export class EditProductsComponent {
         })
     }
 
-    onDialogAnnotations() {
-        const dialogRef = this.matDialog.open(DialogAnnotationsComponent, {
+    onDialogCreateAnnotations() {
+        const dialogRef = this.matDialog.open(DialogCreateAnnotationsComponent, {
             width: '600px',
             position: { top: '20px' },
         })
@@ -277,13 +283,13 @@ export class EditProductsComponent {
 
         dialogRef.afterClosed().subscribe(product => {
             if (product) {
-                this.linkProducts.push(product)
+                this.products.push(product)
             }
         })
     }
 
     onRemoveProduct(index: number) {
-        this.linkProducts.splice(index, 1)
+        this.products.splice(index, 1)
     }
 
     onRemoveAnnotation(index: number) {
@@ -307,15 +313,28 @@ export class EditProductsComponent {
         this.providers.splice(index, 1)
     }
 
+    onOpenDialogSearchProducts() {
+        const dialogRef = this.matDialog.open(DialogSearchProductsComponent, {
+            width: '600px',
+            position: { top: '20px' },
+        })
+
+        dialogRef.afterClosed().subscribe(product => {
+            if (product) {
+                this.products.push(product)
+            }
+        })
+    }
+
     onSubmit(): void {
         if (this.formGroup.valid) {
             this.isLoading = true
             const product = this.formGroup.value
-            const linkProductIds = this.linkProducts.map(e => e._id)
+            const productIds = this.products.map(e => e._id)
             const providerIds = this.providers.map(e => e._id)
             product.annotations = this.annotations
             product.excluded = this.excluded
-            product.linkProductIds = linkProductIds
+            product.productIds = productIds
             product.providerIds = providerIds
             this.navigationService.loadBarStart()
             this.productsService.updateWithPrices(product, this.formArray.value, this.productId, this.setting.defaultPrice).subscribe({

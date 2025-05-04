@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -5,11 +6,12 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
-import { SettingModel } from '../../auth/setting.model';
 import { CustomerModel } from '../../customers/customer.model';
 import { CreateDueModel } from '../../dues/create-due.model';
 import { DuesService } from '../../dues/dues.service';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
+import { DialogCreatePaymentData, DialogCreatePaymentsComponent } from '../../payments/dialog-create-payments/dialog-create-payments.component';
 import { DialogEditPaymentsComponent } from '../../payments/dialog-edit-payments/dialog-edit-payments.component';
 import { PaymentModel } from '../../payments/payment.model';
 import { PaymentsService } from '../../payments/payments.service';
@@ -21,9 +23,6 @@ import { TurnModel } from '../../turns/turn.model';
 import { TurnsService } from '../../turns/turns.service';
 import { CreditModel } from '../credit.model';
 import { CreditsService } from '../credits.service';
-import { MaterialModule } from '../../material.module';
-import { CommonModule } from '@angular/common';
-import { DialogCreatePaymentData, DialogCreatePaymentsComponent } from '../../payments/dialog-create-payments/dialog-create-payments.component';
 
 @Component({
     selector: 'app-detail-credits',
@@ -51,7 +50,6 @@ export class DetailCreditsComponent {
     turn: TurnModel | null = null
     saleItems: SaleItemModel[] = []
     office: OfficeModel = new OfficeModel()
-    setting: SettingModel = new SettingModel()
     dues: CreateDueModel[] = []
     private creditId: string = ''
 
@@ -67,19 +65,18 @@ export class DetailCreditsComponent {
     }
 
     ngOnInit(): void {
+        this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
+            this.turn = turn
+            if (turn === null) {
+                this.matDialog.open(DialogTurnsComponent, {
+                    width: '600px',
+                    position: { top: '20px' }
+                })
+            }
+        })
+
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.office = auth.office
-            this.setting = auth.setting
-
-            this.handleOpenTurn$ = this.turnsService.handleOpenTurn(this.setting.isOfficeTurn).subscribe(turn => {
-                this.turn = turn
-                if (turn === null) {
-                    this.matDialog.open(DialogTurnsComponent, {
-                        width: '600px',
-                        position: { top: '20px' }
-                    })
-                }
-            })
         })
 
         this.creditId = this.activatedRoute.snapshot.params['creditId']

@@ -21,25 +21,25 @@ export class CreditNoteItemsComponent {
     ) { }
 
     igvType = IgvType
-    creditNoteItems: CreateCreditNoteItemModel[] = [];
-    charge: number = 0;
+    creditNoteItems: CreateCreditNoteItemModel[] = []
+    charge: number = 0
 
-    private handleCreditNoteItems$: Subscription = new Subscription();
+    private handleCreditNoteItems$: Subscription = new Subscription()
 
     ngOnDestroy() {
-        this.handleCreditNoteItems$.unsubscribe();
+        this.handleCreditNoteItems$.unsubscribe()
     }
 
     ngOnInit(): void {
         this.handleCreditNoteItems$ = this.creditNotesService.handleCreditNoteItems().subscribe(creditNoteItems => {
-            this.creditNoteItems = creditNoteItems;
-            this.charge = 0;
+            this.creditNoteItems = creditNoteItems
+            this.charge = 0
             for (const creditNoteItem of this.creditNoteItems) {
                 if (creditNoteItem.igvCode !== '11') {
-                    this.charge += creditNoteItem.price * creditNoteItem.quantity;
+                    this.charge += creditNoteItem.price * creditNoteItem.quantity
                 }
             }
-        });
+        })
     }
 
     onSelectCreditNoteItem(index: number) {
@@ -47,7 +47,7 @@ export class CreditNoteItemsComponent {
             width: '600px',
             position: { top: '20px' },
             data: index,
-        });
+        })
     }
 
 }

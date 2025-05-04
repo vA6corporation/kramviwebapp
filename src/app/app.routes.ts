@@ -65,10 +65,10 @@ export const routes: Routes = [
         path: 'credits',
         loadChildren: () => import('./credits/credits.routes').then(m => m.routes)
     },
-    {
-        path: 'promotions',
-        loadChildren: () => import('./promotions/promotions.routes').then(m => m.routes)
-    },
+    // {
+    //     path: 'promotions',
+    //     loadChildren: () => import('./promotions/promotions.routes').then(m => m.routes)
+    // },
     {
         path: 'coupons',
         loadChildren: () => import('./coupons/coupons.routes').then(m => m.routes)

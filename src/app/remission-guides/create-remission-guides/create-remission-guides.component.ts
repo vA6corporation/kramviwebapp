@@ -3,12 +3,12 @@ import { Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterModule } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
-import { SettingModel } from '../../auth/setting.model';
 import { FavoritesService } from '../../favorites/favorites.service';
 import { MaterialModule } from '../../material.module';
+import { DialogProgressComponent } from '../../navigation/dialog-progress/dialog-progress.component';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategoriesService } from '../../products/categories.service';
 import { CategoryModel } from '../../products/category.model';
@@ -16,7 +16,6 @@ import { DialogSelectAnnotationData, DialogSelectAnnotationsComponent } from '..
 import { PriceListModel } from '../../products/price-list.model';
 import { ProductModel } from '../../products/product.model';
 import { ProductsService } from '../../products/products.service';
-import { DialogLastSalesComponent } from '../../sales/dialog-last-sales/dialog-last-sales.component';
 import { RemissionGuideItemModel } from '../remission-guide-item.model';
 import { RemissionGuideItemsComponent } from '../remission-guide-items/remission-guide-items.component';
 import { RemissionGuidesService } from '../remission-guides.service';
@@ -48,7 +47,6 @@ export class CreateRemissionGuidesComponent {
     selectedIndex: number = 0
     remissionGuideItems: RemissionGuideItemModel[] = []
     gridListCols = 4
-    setting: SettingModel = new SettingModel()
     office: OfficeModel = new OfficeModel()
 
     private handleSearch$: Subscription = new Subscription()
@@ -69,7 +67,6 @@ export class CreateRemissionGuidesComponent {
 
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
             this.office = auth.office
 
             this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
@@ -90,6 +87,7 @@ export class CreateRemissionGuidesComponent {
 
         this.navigationService.setMenu([
             { id: 'search', icon: 'search', show: true, label: '' },
+            { id: 'import_products', label: 'Importar todos los productos', icon: 'info', show: false },
         ])
 
         this.handleRemissionGuideItems$ = this.remissionGuidesService.handleRemissionGuideItems().subscribe(remissionGuideItems => {
@@ -98,11 +96,29 @@ export class CreateRemissionGuidesComponent {
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
             switch (id) {
-                case 'printer':
-                    this.matDialog.open(DialogLastSalesComponent, {
-                        width: '600px',
-                        position: { top: '20px' },
+                case 'import_products':
+                    this.productsService.getCountProducts({}).subscribe(async count => {
+                        const length = count
+                        const chunk = 500
+                        let products: ProductModel[] = []
+    
+                        const dialogRef = this.matDialog.open(DialogProgressComponent, {
+                            width: '600px',
+                            position: { top: '20px' },
+                            data: length / chunk
+                        })
+    
+                        for (let index = 0; index < length / chunk; index++) {
+                            const values = await lastValueFrom(this.productsService.getProductsByPage(index + 1, chunk, {}))
+                            dialogRef.componentInstance.onComplete()
+                            products.push(...values)
+                        }
+
+                        products = products.filter(e => e.stock > 0)
+    
+                        this.remissionGuidesService.addRemissionGuideItems(products)
                     })
+
                     break
 
                 default:
@@ -140,13 +156,13 @@ export class CreateRemissionGuidesComponent {
     }
 
     onSelectProduct(product: ProductModel): void {
-        if (product.annotations.length || product.linkProductIds.length) {
+        if (product.annotations.length || product.productIds.length) {
             const data: DialogSelectAnnotationData = {
                 product,
                 priceListId: this.priceListId || '',
             }
 
-            const dialogRef = this.matDialog.open(DialogSelectAnnotationsComponent, {
+            this.matDialog.open(DialogSelectAnnotationsComponent, {
                 width: '600px',
                 position: { top: '20px' },
                 data

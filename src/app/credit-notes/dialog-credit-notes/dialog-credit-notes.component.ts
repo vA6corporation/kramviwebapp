@@ -1,17 +1,16 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
-import { SettingModel } from '../../auth/setting.model';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { PrintService } from '../../print/print.service';
 import { SaleModel } from '../../sales/sale.model';
 import { SalesService } from '../../sales/sales.service';
 import { CreditNoteModel } from '../credit-note.model';
 import { CreditNotesService } from '../credit-notes.service';
-import { MaterialModule } from '../../material.module';
-import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-dialog-credit-notes',
@@ -33,9 +32,8 @@ export class DialogCreditNotesComponent {
     ) { }
 
     creditNotes: CreditNoteModel[] = []
-    office: OfficeModel = new OfficeModel()
-    setting: SettingModel = new SettingModel()
     isLoading: boolean = true
+    office: OfficeModel = new OfficeModel()
     private sale: SaleModel | null = null
 
     private handleAuth$: Subscription = new Subscription()
@@ -46,7 +44,6 @@ export class DialogCreditNotesComponent {
 
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
             this.office = auth.office
         })
 

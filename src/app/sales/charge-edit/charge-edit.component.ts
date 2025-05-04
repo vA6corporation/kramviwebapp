@@ -280,8 +280,8 @@ export class ChargeEditComponent {
                     this.isLoading = false
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Se han guardado los cambios')
-                    // this.salesService.setSaleItems([])
-                    // this.router.navigate(['/invoices'])
+                    this.salesService.setSaleItems([])
+                    this.router.navigate(['/invoices'])
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.showMessage(error.error.message)
                     this.isLoading = false

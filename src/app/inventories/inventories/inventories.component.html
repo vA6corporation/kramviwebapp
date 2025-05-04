@@ -6,9 +6,9 @@
                 <mat-select (selectionChange)="onOfficeChange()" formControlName="officeId">
                     <mat-option value="">TODAS LAS SUCURSALES</mat-option>
                     @for (office of offices; track office._id) {
-                        <mat-option class="text-uppercase" [value]="office._id">
-                            {{ office.name | uppercase }}
-                        </mat-option>
+                    <mat-option class="text-uppercase" [value]="office._id">
+                        {{ office.name | uppercase }}
+                    </mat-option>
                     }
                 </mat-select>
             </mat-form-field>
@@ -17,9 +17,9 @@
                 <mat-select (selectionChange)="onCategoryChange()" formControlName="categoryId">
                     <mat-option value="">TODAS LAS CATEGORIAS</mat-option>
                     @for (category of categories; track category._id) {
-                        <mat-option class="text-uppercase" [value]="category._id">
-                            {{ category.name | uppercase }}
-                        </mat-option>
+                    <mat-option class="text-uppercase" [value]="category._id">
+                        {{ category.name | uppercase }}
+                    </mat-option>
                     }
                 </mat-select>
             </mat-form-field>
@@ -77,6 +77,12 @@
                 <th mat-header-cell *matHeaderCellDef>Costo</th>
                 <td mat-cell *matCellDef="let element">{{ (element.cost || 0).toFixed(2) }}</td>
             </ng-container>
+            <ng-container matColumnDef="minimumStock">
+                <th mat-header-cell *matHeaderCellDef>Stock minimo</th>
+                <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.isTrackStock }">
+                    {{ element.isTrackStock ? (element.minimumStock || 0).toFixed(2) : 'Venta Libre' }}
+                </td>
+            </ng-container>
             <ng-container matColumnDef="stock">
                 <th mat-header-cell *matHeaderCellDef>Stock</th>
                 <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.isTrackStock }">
@@ -127,7 +133,8 @@
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                [ngClass]="{ 'bg-danger': row.isTrackStock && row.stock <= 0 }"></tr>
+                [ngClass]="{ 'bg-danger': row.isTrackStock && row.stock <= 0, 'bg-warning': row.stock < row.minimumStock}">
+            </tr>
         </table>
         <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex"
             [length]="length" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
@@ -136,13 +143,13 @@
         <div class="d-flex">
             <div class="px-3">
                 @if (setting.defaultPrice === 'LISTA' || setting.defaultPrice === 'LISTAOFICINA') {
-                    <mat-form-field appearance="fill">
-                        <mat-select [(value)]="priceListId" (selectionChange)="onChangePriceList()">
-                            @for (priceList of priceLists; track $index) {
-                                <mat-option [value]="priceList._id">{{ priceList.name }}</mat-option>
-                            }
-                        </mat-select>
-                    </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-select [(value)]="priceListId" (selectionChange)="onChangePriceList()">
+                        @for (priceList of priceLists; track $index) {
+                        <mat-option [value]="priceList._id">{{ priceList.name }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
                 }
             </div>
         </div>

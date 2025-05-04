@@ -23,7 +23,8 @@ export class DialogDetailIncidentsComponent {
     ) { }
 
     incident: IncidentModel | null = null
-    incidentItems: IncidentItemModel[] = []
+    incidentOutItems: IncidentItemModel[] = []
+    incidentInItems: IncidentItemModel[] = []
     user: UserModel | null = null
     isLoading = false
 
@@ -31,7 +32,8 @@ export class DialogDetailIncidentsComponent {
         this.incidentsService.getIncidentById(this.incidentId).subscribe(incident => {
             console.log(incident)
             this.incident = incident
-            this.incidentItems = incident.incidentOutItems || incident.incidentInItems
+            this.incidentOutItems = incident.incidentOutItems
+            this.incidentInItems = incident.incidentInItems
             this.user = incident.user
         })
     }

@@ -25,7 +25,8 @@ export class EditBanksComponent {
         bankName: 'BCP',
         currencyCode: 'PEN',
         accountNumber: ['', Validators.required],
-        cci: ['', Validators.required]
+        cci: ['', Validators.required],
+        isDetraction: false
     })
     isLoading: boolean = false
     private bankId: string = ''

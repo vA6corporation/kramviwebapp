@@ -4,17 +4,16 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
-import { SettingModel } from '../../auth/setting.model';
 import { FavoritesService } from '../../favorites/favorites.service';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategoryModel } from '../../products/category.model';
 import { ProductModel } from '../../products/product.model';
 import { ProductsService } from '../../products/products.service';
+import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component';
 import { SaleModel } from '../../sales/sale.model';
 import { SalesService } from '../../sales/sales.service';
 import { CreditNotesService } from '../credit-notes.service';
-import { MaterialModule } from '../../material.module';
-import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component';
 
 @Component({
     selector: 'app-create-credit-note-items',
@@ -39,10 +38,9 @@ export class CreateCreditNoteItemsComponent {
     favorites: ProductModel[] = []
     selectedIndex: number = 0
     gridListCols = 4
-    setting: SettingModel = new SettingModel()
-    office: OfficeModel = new OfficeModel()
     saleId: string = ''
     isLoading: boolean = true
+    private office: OfficeModel = new OfficeModel()
     private sale: SaleModel | null = null
 
     private handleSearch$: Subscription = new Subscription()
@@ -57,7 +55,6 @@ export class CreateCreditNoteItemsComponent {
 
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
             this.office = auth.office
         })
 

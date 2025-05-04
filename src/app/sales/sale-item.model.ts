@@ -31,4 +31,5 @@ export interface SaleItemModel {
     sale?: SaleModel
     recipes: RecipeModel[]
     prices: PriceModel[]
+    type?: string
 }

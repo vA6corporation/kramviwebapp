@@ -2,11 +2,9 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../auth/auth.service';
-import { SettingModel } from '../../auth/setting.model';
+import { MaterialModule } from '../../material.module';
 import { BillItemModel } from '../bill-item.model';
 import { BillsService } from '../bills.service';
-import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-edit-product',
@@ -21,7 +19,6 @@ export class DialogEditProductComponent {
         private readonly index: number,
         private readonly formBuilder: FormBuilder,
         private readonly billsService: BillsService,
-        private readonly authService: AuthService,
         private readonly dialogRef: MatDialogRef<DialogEditProductComponent>,
     ) { }
 
@@ -32,18 +29,11 @@ export class DialogEditProductComponent {
         quantity: [this.billItem.quantity, Validators.required],
         igvCode: this.billItem.igvCode,
     })
-    setting: SettingModel = new SettingModel()
 
     private handleAuth$: Subscription = new Subscription()
 
     ngOnDestroy() {
         this.handleAuth$.unsubscribe()
-    }
-
-    ngOnInit(): void {
-        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
-        })
     }
 
     onSubmit(): void {

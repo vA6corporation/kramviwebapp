@@ -107,6 +107,8 @@ export class ProvidersComponent {
             queryParams: queryParams,
             queryParamsHandling: 'merge', // remove to replace all query params by provided
         })
+
+        this.fetchData()
     }
 
     fetchCount() {

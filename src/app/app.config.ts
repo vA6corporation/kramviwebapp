@@ -6,9 +6,9 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@a
 import localePe from '@angular/common/locales/es-PE';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { AppInterceptor } from './app.interceptor';
 import { routes } from './app.routes';
 import { CanActivateTeam } from './auth/can-activate-team';
-import { AppInterceptor } from './app.interceptor';
 registerLocaleData(localePe, 'es-PE');
 
 export const appConfig: ApplicationConfig = {

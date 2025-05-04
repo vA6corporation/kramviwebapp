@@ -1,24 +1,26 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { MaterialModule } from './material.module';
-import { NavigationModule } from './navigation/navigation.module';
-import { PrintModule } from './print/print.module';
 import { NavigationService } from './navigation/navigation.service';
 import { AuthService } from './auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DialogMessageComponent } from './auth/dialog-message/dialog-message.component';
+import { PrintIframeComponent } from './print/print-iframe/print-iframe.component';
+import { SidenavComponent } from './navigation/sidenav/sidenav.component';
+import { ToolbarComponent } from './navigation/toolbar/toolbar.component';
 
 @Component({
     selector: 'app-root',
     imports: [
         RouterOutlet,
         MaterialModule,
-        NavigationModule,
-        PrintModule
+        PrintIframeComponent,
+        SidenavComponent,
+        ToolbarComponent,
     ],
     templateUrl: './app.component.html',
-    styleUrl: './app.component.sass'
+    styleUrl: './app.component.sass',
 })
 export class AppComponent {
 

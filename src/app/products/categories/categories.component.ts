@@ -90,7 +90,9 @@ export class CategoriesComponent {
     }
 
     fetchData() {
+        this.navigationService.loadBarStart()
         this.categoriesService.getCategoriesByPage(this.pageIndex + 1, this.pageSize).subscribe(categories => {
+            this.navigationService.loadBarFinish()
             this.dataSource = categories
         })
     }

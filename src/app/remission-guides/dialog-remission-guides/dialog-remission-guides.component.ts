@@ -1,16 +1,15 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
-import { SettingModel } from '../../auth/setting.model';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { PrintService } from '../../print/print.service';
 import { RemissionGuideModel } from '../remission-guide.model';
 import { RemissionGuidesService } from '../remission-guides.service';
-import { MaterialModule } from '../../material.module';
-import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-dialog-remission-guides',
@@ -32,7 +31,6 @@ export class DialogRemissionGuidesComponent {
 
     remissionGuides: RemissionGuideModel[] = []
     office: OfficeModel = new OfficeModel()
-    setting: SettingModel = new SettingModel()
 
     private handleAuth$eAuth$: Subscription = new Subscription()
 
@@ -43,7 +41,6 @@ export class DialogRemissionGuidesComponent {
     ngOnInit(): void {
         this.handleAuth$eAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.office = auth.office
-            this.setting = auth.setting
         })
 
         this.remissionGuidesService.getRemissionGuidesBySale(this.saleId).subscribe({

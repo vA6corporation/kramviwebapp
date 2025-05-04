@@ -1,13 +1,12 @@
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CustomersService } from '../customers.service';
-import { CustomerModel } from '../customer.model';
-import { HttpErrorResponse } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
-import { SettingModel } from '../../auth/setting.model';
+import { CustomerModel } from '../customer.model';
+import { CustomersService } from '../customers.service';
 
 @Component({
     selector: 'app-dialog-search-customers',
@@ -30,7 +29,6 @@ export class DialogSearchCustomersComponent {
         searchType: 'NAME',
         key: ['', Validators.required],
     })
-    setting: SettingModel = new SettingModel()
     customers: CustomerModel[] = []
     maxlength: number = 11
     searchTypes = [

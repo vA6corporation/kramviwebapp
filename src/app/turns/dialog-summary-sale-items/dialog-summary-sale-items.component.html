@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>
+    Ventas ({{ sales.length }})
+</h2>
+<div mat-dialog-content>
+    <mat-list role="list">
+        @for (sale of sales; track sale._id) {
+        <mat-list-item>
+            <span>{{ sale.invoicePrefix }}{{ office.serialPrefix }}-{{ sale.invoiceNumber }}</span>
+        </mat-list-item>
+        }
+    </mat-list>
+</div>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+    <button type="submit" mat-flat-button color="primary">GUARDAR</button>
+</mat-dialog-actions>

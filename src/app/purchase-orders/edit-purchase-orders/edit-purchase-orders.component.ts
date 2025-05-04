@@ -1,21 +1,18 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../auth/auth.service';
-import { OfficeModel } from '../../auth/office.model';
-import { SettingModel } from '../../auth/setting.model';
 import { FavoritesService } from '../../favorites/favorites.service';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategoriesService } from '../../products/categories.service';
 import { CategoryModel } from '../../products/category.model';
 import { ProductModel } from '../../products/product.model';
 import { ProductsService } from '../../products/products.service';
-import { PurchaseOrdersService } from '../purchase-orders.service';
-import { MatDialog } from '@angular/material/dialog';
 import { DialogPurchaseOrderItemsComponent } from '../dialog-purchase-order-items/dialog-purchase-order-items.component';
-import { MaterialModule } from '../../material.module';
 import { PurchaseOrderItemsComponent } from '../purchase-order-items/purchase-order-items.component';
+import { PurchaseOrdersService } from '../purchase-orders.service';
 
 @Component({
     selector: 'app-edit-purchase-orders',
@@ -32,7 +29,6 @@ export class EditPurchaseOrdersComponent {
         private readonly purchaseOrdersService: PurchaseOrdersService,
         private readonly categoriesService: CategoriesService,
         private readonly activatedRoute: ActivatedRoute,
-        private readonly authService: AuthService,
         private readonly matDialog: MatDialog,
     ) { }
 
@@ -41,8 +37,6 @@ export class EditPurchaseOrdersComponent {
     favorites: ProductModel[] = []
     selectedIndex: number = 0
     gridListCols = 4
-    setting: SettingModel = new SettingModel()
-    office: OfficeModel = new OfficeModel()
     private purchaseOrderId: string = ''
 
     private handleSearch$: Subscription = new Subscription()
@@ -63,11 +57,6 @@ export class EditPurchaseOrdersComponent {
         this.navigationService.setMenu([
             { id: 'search', icon: 'search', show: true, label: '' }
         ])
-
-        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
-            this.office = auth.office
-        })
 
         this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
             this.categories = categories

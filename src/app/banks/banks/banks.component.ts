@@ -4,9 +4,9 @@ import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
-import { BankModel } from '../../providers/bank.model';
 import { UserModel } from '../../users/user.model';
 import { BanksService } from '../banks.service';
+import { BankModel } from '../bank.model';
 
 @Component({
     selector: 'app-banks',

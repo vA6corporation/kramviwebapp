@@ -4,6 +4,11 @@
         <div class="px-3">
             <h2 class="text-center mat-display-small mb-0">{{ charge.toFixed(2) }}</h2>
             <p class="caption text-center text-muted mb-2">Total a cobrar</p>
+            @if (turn && isYesterdayTurn) {
+                <div class="bg-warning rounded">
+                    <p class="caption text-center text-muted mb-2">Estas usando una caja de una fecha anterior {{ turn.createdAt | date }}</p>
+                </div>
+            }
             @if (customer) {
             <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
                 <span>{{ customer.name | uppercase }}</span>

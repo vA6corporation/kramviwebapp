@@ -2,15 +2,13 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../auth/auth.service';
-import { SettingModel } from '../../auth/setting.model';
+import { MaterialModule } from '../../material.module';
 import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
 import { PaymentMethodsService } from '../../payment-methods/payment-methods.service';
 import { TurnModel } from '../../turns/turn.model';
 import { TurnsService } from '../../turns/turns.service';
-import { CreditsService } from '../credits.service';
 import { CreditModel } from '../credit.model';
-import { MaterialModule } from '../../material.module';
+import { CreditsService } from '../credits.service';
 
 @Component({
     selector: 'app-dialog-payment-credits',
@@ -27,7 +25,6 @@ export class DialogPaymentCreditsComponent {
         private readonly paymentMethodsService: PaymentMethodsService,
         private readonly turnsService: TurnsService,
         private readonly creditsService: CreditsService,
-        private readonly authService: AuthService,
         private readonly dialogRef: MatDialogRef<DialogPaymentCreditsComponent>,
     ) { }
 
@@ -39,7 +36,6 @@ export class DialogPaymentCreditsComponent {
     payed = this.credits.map(e => e.payed).reduce((a, b) => a + b, 0)
     charge = this.credits.map(e => e.charge).reduce((a, b) => a + b, 0)
     private turn: TurnModel | null = null
-    private setting: SettingModel = new SettingModel()
 
     private handlePaymentMethods$: Subscription = new Subscription()
     private handleTurn$: Subscription = new Subscription()
@@ -58,12 +54,8 @@ export class DialogPaymentCreditsComponent {
             this.paymentMethods = paymentMethods
         })
 
-        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
-
-            this.handleTurn$ = this.turnsService.handleOpenTurn(this.setting.isOfficeTurn).subscribe(turn => {
-                this.turn = turn
-            })
+        this.handleTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
+            this.turn = turn
         })
     }
 

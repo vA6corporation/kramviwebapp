@@ -45,7 +45,7 @@ export class CopyProformasComponent {
     proformaItems: ProformaItemModel[] = []
     gridListCols = 4
     setting: SettingModel = new SettingModel()
-    office: OfficeModel = new OfficeModel()
+    private office: OfficeModel = new OfficeModel()
     private proformaId: string = ''
 
     private handleSearch$: Subscription = new Subscription()

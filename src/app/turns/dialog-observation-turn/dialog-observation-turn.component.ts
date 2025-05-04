@@ -3,12 +3,10 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { TurnsService } from '../turns.service';
-import { TurnModel } from '../turn.model';
-import { AuthService } from '../../auth/auth.service';
-import { NavigationService } from '../../navigation/navigation.service';
-import { SettingModel } from '../../auth/setting.model';
 import { MaterialModule } from '../../material.module';
+import { NavigationService } from '../../navigation/navigation.service';
+import { TurnModel } from '../turn.model';
+import { TurnsService } from '../turns.service';
 
 @Component({
     selector: 'app-dialog-observation-turn',
@@ -23,7 +21,6 @@ export class DialogObservationTurnComponent {
         private readonly turn: TurnModel,
         private readonly formBuilder: FormBuilder,
         private readonly dialogRef: MatDialogRef<DialogObservationTurnComponent>,
-        private readonly authService: AuthService,
         private readonly turnsService: TurnsService,
         private readonly navigationService: NavigationService,
     ) { }
@@ -33,17 +30,10 @@ export class DialogObservationTurnComponent {
     })
     isLoading: boolean = false
 
-    private setting: SettingModel = new SettingModel()
     private handleAuth$: Subscription = new Subscription()
 
     ngOnDestroy() {
         this.handleAuth$.unsubscribe()
-    }
-
-    ngOnInit(): void {
-        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
-        })
     }
 
     onSubmit() {
@@ -54,11 +44,7 @@ export class DialogObservationTurnComponent {
             Object.assign(this.turn, { observations })
             this.turnsService.update(this.turn._id, this.turn).subscribe({
                 next: () => {
-                    if (this.setting.isOfficeTurn) {
-                        this.turnsService.loadTurnOffice()
-                    } else {
-                        this.turnsService.loadTurnUser()
-                    }
+                    this.turnsService.loadTurn()
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Se han guardado los cambios')
                 }, error: (error: HttpErrorResponse) => {

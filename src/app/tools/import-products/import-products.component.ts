@@ -35,10 +35,8 @@ export class ImportProductsComponent {
 
     displayedColumns: string[] = [
         'name',
-        // 'feature',
         'brand',
         'category',
-        // 'description',
         'stock',
         'unidad',
     ]

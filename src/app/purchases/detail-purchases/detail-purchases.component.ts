@@ -5,11 +5,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { OfficeModel } from '../../auth/office.model';
-import { SettingModel } from '../../auth/setting.model';
 import { CreateDueModel } from '../../dues/create-due.model';
 import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { DialogCreatePaymentPurchasesComponent } from '../../payment-purchases/dialog-create-payment-purchases/dialog-create-payment-purchases.component';
+import { DialogEditPaymentPurchasesComponent } from '../../payment-purchases/dialog-edit-payment-purchases/dialog-edit-payment-purchases.component';
 import { PaymentPurchaseModel } from '../../payment-purchases/payment-purchase.model';
 import { PaymentPurchasesService } from '../../payment-purchases/payment-purchases.service';
 import { ProviderModel } from '../../providers/provider.model';
@@ -17,7 +17,6 @@ import { TurnModel } from '../../turns/turn.model';
 import { PurchaseItemModel } from '../purchase-item.model';
 import { PurchaseModel } from '../purchase.model';
 import { PurchasesService } from '../purchases.service';
-import { DialogEditPaymentPurchasesComponent } from '../../payment-purchases/dialog-edit-payment-purchases/dialog-edit-payment-purchases.component';
 
 @Component({
     selector: 'app-detail-purchases',
@@ -41,7 +40,6 @@ export class DetailPurchasesComponent {
     turn: TurnModel | null = null
     purchaseItems: PurchaseItemModel[] = []
     office: OfficeModel = new OfficeModel()
-    setting: SettingModel = new SettingModel()
     dues: CreateDueModel[] = []
     private purchaseId: string = ''
 

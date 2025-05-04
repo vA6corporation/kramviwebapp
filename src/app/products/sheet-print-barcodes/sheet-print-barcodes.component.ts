@@ -59,4 +59,9 @@ export class SheetPrintBarcodesComponent {
         this.bottomSheetRef.dismiss()
     }
 
+    onPrintBarcodes30x20mm() {
+        this.printService.printBarcodes30x20mm(this.products)
+        this.bottomSheetRef.dismiss()
+    }
+
 }

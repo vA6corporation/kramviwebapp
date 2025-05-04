@@ -1,12 +1,13 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+import { MaterialModule } from '../../material.module';
 
 @Component({
     selector: 'app-dialog-progress',
+    imports: [MaterialModule],
     templateUrl: './dialog-progress.component.html',
     styleUrls: ['./dialog-progress.component.sass'],
-    standalone: false
 })
 export class DialogProgressComponent {
 

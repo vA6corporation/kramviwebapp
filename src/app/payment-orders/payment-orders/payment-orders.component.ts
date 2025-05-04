@@ -15,6 +15,7 @@ import { PaymentOrderModel } from '../payment-order.model';
 import { PaymentOrdersService } from '../payment-orders.service';
 import { DialogPdfComponent } from '../dialog-pdf/dialog-pdf.component';
 import { MaterialModule } from '../../material.module';
+import { OfficeModel } from '../../auth/office.model';
 
 @Component({
     selector: 'app-payment-orders',
@@ -45,24 +46,35 @@ export class PaymentOrdersComponent {
         startDate: ['', Validators.required],
         endDate: ['', Validators.required],
     })
+    offices: OfficeModel[] = []
+    officeId: string = ''
     private business: BusinessModel = new BusinessModel()
     private params: Params = {}
 
     private handleClickMenu$: Subscription = new Subscription()
     private handleSearch$: Subscription = new Subscription()
     private handleAuth$: Subscription = new Subscription()
+    private handleOffices$: Subscription = new Subscription()
 
     ngOnDestroy() {
         this.handleSearch$.unsubscribe()
         this.handleClickMenu$.unsubscribe()
         this.handleAuth$.unsubscribe()
+        this.handleOffices$.unsubscribe()
     }
 
     ngOnInit(): void {
         this.navigationService.setTitle('Ordenes de pago')
-
+        
+        this.handleOffices$ = this.authService.handleOffices().subscribe(offices => {
+            this.offices = offices
+        })
+        
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.business = auth.business
+            this.officeId = auth.office._id
+            Object.assign(this.params, { officeId: this.officeId })
+            this.fetchData()
         })
 
         this.navigationService.setMenu([
@@ -174,6 +186,14 @@ export class PaymentOrdersComponent {
             this.fetchData()
             this.fetchCount()
         }
+    }
+
+    onOfficeChange() {
+        Object.assign(this.params, {
+            officeId: this.officeId,
+        })
+        this.fetchData()
+        this.fetchCount()
     }
 
     handlePageEvent(event: PageEvent): void {

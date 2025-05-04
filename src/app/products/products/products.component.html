@@ -1,16 +1,29 @@
 <div class="container">
     <form [formGroup]="formGroup" autocomplete="off">
-        <mat-form-field appearance="fill">
-            <mat-label>Seleccione una categoria</mat-label>
-            <mat-select (selectionChange)="onCategoryChange()" formControlName="categoryId">
-                <mat-option value="">TODAS LAS CATEGORIAS</mat-option>
-                @for (category of categories; track category._id) {
-                <mat-option class="text-uppercase" [value]="category._id">
-                    {{ category.name }}
-                </mat-option>
-                }
-            </mat-select>
-        </mat-form-field>
+        <div class="d-flex">
+            <mat-form-field appearance="fill">
+                <mat-label>Seleccione una categoria</mat-label>
+                <mat-select (selectionChange)="onCategoryChange()" formControlName="categoryId">
+                    <mat-option value="">TODAS LAS CATEGORIAS</mat-option>
+                    @for (category of categories; track category._id) {
+                    <mat-option class="text-uppercase" [value]="category._id">
+                        {{ category.name }}
+                    </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Seleccione un proveedor</mat-label>
+                <mat-select (selectionChange)="onProviderChange()" formControlName="providerId">
+                    <mat-option value="">TODAS LOS PROVEEDORES</mat-option>
+                    @for (provider of providers; track provider._id) {
+                    <mat-option class="text-uppercase" [value]="provider._id">
+                        {{ provider.name }}
+                    </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
     </form>
     <div class="mat-elevation-z2">
         <table mat-table [dataSource]="dataSource" class="w-100">
@@ -66,6 +79,12 @@
                 <th mat-header-cell *matHeaderCellDef>Costo</th>
                 <td mat-cell *matCellDef="let element">{{ (element.cost || 0).toFixed(2) }}</td>
             </ng-container>
+            <ng-container matColumnDef="minimumStock">
+                <th mat-header-cell *matHeaderCellDef>Stock minimo</th>
+                <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.isTrackStock }">
+                    {{ element.isTrackStock ? (element.minimumStock || 0).toFixed(2) : 'Venta Libre' }}
+                </td>
+            </ng-container>
             <ng-container matColumnDef="stock">
                 <th mat-header-cell *matHeaderCellDef>Stock</th>
                 <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.isTrackStock }">
@@ -99,12 +118,17 @@
                             <mat-icon>delete</mat-icon>
                             <span>Eliminar</span>
                         </button>
+                        <button type="button" (click)="onProvidersProduct(element._id)" mat-menu-item>
+                            <mat-icon>face</mat-icon>
+                            <span>Proveedores</span>
+                        </button>
                     </mat-menu>
                 </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                [ngClass]="{ 'bg-danger': row.isTrackStock && row.stock <= 0, 'bg-warning': row.stock < row.minimumStock}"></tr>
         </table>
         <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex"
             [length]="length" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>

@@ -17,7 +17,8 @@ export class DialogCreateCategoriesComponent {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
-        name: [null, Validators.required]
+        name: [null, Validators.required],
+        color: ['#90EE90', Validators.required]
     })
 
     onSubmit() {

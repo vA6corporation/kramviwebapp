@@ -30,7 +30,7 @@ export class DialogLastSalesComponent {
 
     sales: SaleModel[] = []
     office: OfficeModel = new OfficeModel()
-    setting: SettingModel = new SettingModel()
+    private setting: SettingModel = new SettingModel()
 
     private handleAuth$: Subscription = new Subscription()
 

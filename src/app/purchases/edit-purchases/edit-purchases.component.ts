@@ -1,24 +1,23 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
-import { SettingModel } from '../../auth/setting.model';
 import { FavoritesService } from '../../favorites/favorites.service';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategoriesService } from '../../products/categories.service';
 import { CategoryModel } from '../../products/category.model';
+import { DialogDetailProductsComponent } from '../../products/dialog-detail-products/dialog-detail-products.component';
 import { ProductModel } from '../../products/product.model';
 import { ProductsService } from '../../products/products.service';
 import { CreatePurchaseItemModel } from '../create-purchase-item.model';
-import { PurchasesService } from '../purchases.service';
-import { MatDialog } from '@angular/material/dialog';
 import { DialogPurchaseItemsComponent } from '../dialog-purchase-items/dialog-purchase-items.component';
-import { DialogDetailProductsComponent } from '../../products/dialog-detail-products/dialog-detail-products.component';
-import { MaterialModule } from '../../material.module';
-import { CommonModule } from '@angular/common';
 import { PurchaseItemsComponent } from '../purchase-items/purchase-items.component';
+import { PurchasesService } from '../purchases.service';
 
 @Component({
     selector: 'app-edit-purchases',
@@ -44,7 +43,6 @@ export class EditPurchasesComponent {
     favorites: ProductModel[] = []
     selectedIndex: number = 0
     gridListCols = 4
-    setting: SettingModel = new SettingModel()
     office: OfficeModel = new OfficeModel()
 
     private handleSearch$: Subscription = new Subscription()
@@ -62,7 +60,6 @@ export class EditPurchasesComponent {
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.office = auth.office
-            this.setting = auth.setting
         })
 
         this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {

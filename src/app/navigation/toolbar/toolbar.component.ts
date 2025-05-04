@@ -1,14 +1,17 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { NavigationService } from '../navigation.service';
 import { AuthService } from '../../auth/auth.service';
+import { MaterialModule } from '../../material.module';
+import { TurnModel } from '../../turns/turn.model';
+import { NavigationService } from '../navigation.service';
 
 @Component({
     selector: 'app-toolbar',
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './toolbar.component.html',
     styleUrls: ['./toolbar.component.sass'],
-    standalone: false
 })
 export class ToolbarComponent {
 
@@ -28,6 +31,7 @@ export class ToolbarComponent {
     showInputSearch: boolean = false
     isLoadBar: boolean = true
     isMainScreen: boolean = false
+    turn: TurnModel | null = null
 
     @Output()
     sidenavToggle = new EventEmitter<void>()
@@ -36,6 +40,7 @@ export class ToolbarComponent {
     menus: any[] = []
     buttons: any[] = []
 
+    private handleOpenTurn$: Subscription = new Subscription()
     private handleChangeTitle$: Subscription = new Subscription()
     private handleIsMainScreen$: Subscription = new Subscription()
     private handleBackTo$: Subscription = new Subscription()
@@ -46,6 +51,7 @@ export class ToolbarComponent {
     private handleClearSearch$: Subscription = new Subscription()
 
     ngOnDestroy() {
+        this.handleOpenTurn$.unsubscribe()
         this.handleChangeTitle$.unsubscribe()
         this.handleIsMainScreen$.unsubscribe()
         this.handleBackTo$.unsubscribe()

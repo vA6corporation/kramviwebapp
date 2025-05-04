@@ -1,19 +1,16 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { FavoritesService } from '../../favorites/favorites.service';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
-import { ProductsService } from '../../products/products.service';
-import { MovesService } from '../moves.service';
 import { CategoriesService } from '../../products/categories.service';
-import { AuthService } from '../../auth/auth.service';
 import { CategoryModel } from '../../products/category.model';
 import { ProductModel } from '../../products/product.model';
-import { SettingModel } from '../../auth/setting.model';
-import { OfficeModel } from '../../auth/office.model';
-import { Subscription } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { MaterialModule } from '../../material.module';
+import { ProductsService } from '../../products/products.service';
 import { MoveItemsComponent } from '../move-items/move-items.component';
+import { MovesService } from '../moves.service';
 
 @Component({
     selector: 'app-pos-edit-moves',
@@ -29,7 +26,6 @@ export class PosEditMovesComponent {
         private readonly favoritesService: FavoritesService,
         private readonly movesService: MovesService,
         private readonly categoriesService: CategoriesService,
-        private readonly authService: AuthService,
         private readonly activatedRoute: ActivatedRoute,
     ) { }
 
@@ -38,8 +34,6 @@ export class PosEditMovesComponent {
     favorites: ProductModel[] = []
     selectedIndex: number = 0
     gridListCols = 4
-    setting: SettingModel = new SettingModel()
-    office: OfficeModel = new OfficeModel()
     private moveId: string = ''
 
     private handleSearch$: Subscription = new Subscription()
@@ -72,11 +66,6 @@ export class PosEditMovesComponent {
             this.navigationService.loadBarFinish()
             this.movesService.setMove(move)
             this.movesService.setMoveItems(move.moveItems)
-        })
-
-        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.office = auth.office
-            this.setting = auth.setting
         })
 
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {

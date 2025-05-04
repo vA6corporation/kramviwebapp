@@ -394,7 +394,20 @@ export class InvoicesComponent {
                 }
             })
         } else {
-            this.navigationService.showMessage('Seleccione un comprobante')
+            let ok = confirm('Solo se enviaran hasta maximo 500 boletas, esto puede demorar hasta 20 min')
+            if (ok) {
+                this.navigationService.loadBarStart()
+                this.invoicesService.sendInvoiceMassive(this.saleIds).subscribe({
+                    next: () => {
+                        this.navigationService.loadBarFinish()
+                        this.navigationService.showMessage('Enviando a sunat')
+                        this.fetchData()
+                    }, error: (error: HttpErrorResponse) => {
+                        this.navigationService.showMessage(error.error.message)
+                        this.navigationService.loadBarFinish()
+                    }
+                })  
+            }
         }
     }
 

@@ -4,16 +4,16 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MaterialModule } from '../../material.module';
 
 @Component({
-    selector: 'app-dialog-annotations',
+    selector: 'app-dialog-create-annotations',
     imports: [MaterialModule, ReactiveFormsModule],
-    templateUrl: './dialog-annotations.component.html',
-    styleUrls: ['./dialog-annotations.component.sass']
+    templateUrl: './dialog-create-annotations.component.html',
+    styleUrl: './dialog-create-annotations.component.sass'
 })
-export class DialogAnnotationsComponent {
+export class DialogCreateAnnotationsComponent {
 
     constructor(
         private readonly formBuilder: FormBuilder,
-        private readonly dialogRef: MatDialogRef<DialogAnnotationsComponent>,
+        private readonly dialogRef: MatDialogRef<DialogCreateAnnotationsComponent>,
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({

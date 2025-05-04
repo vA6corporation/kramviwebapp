@@ -7,6 +7,8 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { SettingModel } from '../../auth/setting.model';
+import { DetractionModel } from '../../biller/detraction.model';
+import { DialogDetractionComponent } from '../../biller/dialog-detraction/dialog-detraction.component';
 import { CouponItemModel } from '../../coupons/coupon-item.model';
 import { CouponsService } from '../../coupons/coupons.service';
 import { CustomerModel } from '../../customers/customer.model';
@@ -36,8 +38,6 @@ import { DialogOutStockComponent } from '../dialog-out-stock/dialog-out-stock.co
 import { SaleItemsComponent } from '../sale-items/sale-items.component';
 import { SaleForm } from '../sale.form';
 import { SalesService } from '../sales.service';
-import { DialogDetractionComponent } from '../../biller/dialog-detraction/dialog-detraction.component';
-import { DetractionModel } from '../../biller/detraction.model';
 
 @Component({
     selector: 'app-charge',
@@ -99,10 +99,10 @@ export class ChargeComponent {
     setting = new SettingModel()
     addresses: string[] = []
     paymentMethods: PaymentMethodModel[] = []
-    private backTo: string = ''
+    isYesterdayTurn: boolean = false
+    turn: TurnModel | null = null
     private detraction: DetractionModel | null = null
     private couponItems: CouponItemModel[] = []
-    private turn: TurnModel | null = null
     private user: UserModel = new UserModel()
     private params: Params = {}
 
@@ -151,19 +151,31 @@ export class ChargeComponent {
             this.couponItems = couponItems
         })
 
+        this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
+            this.turn = turn
+            if (this.turn === null) {
+                this.matDialog.open(DialogTurnsComponent, {
+                    width: '600px',
+                    position: { top: '20px' }
+                })
+            } else {
+                const today = new Date()
+                today.setHours(0, 0, 0, 0)
+                const turnDate = new Date(this.turn.createdAt)
+                turnDate.setHours(0, 0, 0, 0)
+                if (turnDate.getMonth() === today.getMonth() && turnDate.getDate() < today.getDate()) {
+                    this.isYesterdayTurn = true
+                } else {
+                    if (turnDate.getMonth() !== today.getMonth()) {
+                        this.isYesterdayTurn = true
+                    }
+                }
+            }
+        })
+
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.user = auth.user
             this.setting = auth.setting
-
-            this.handleOpenTurn$ = this.turnsService.handleOpenTurn(this.setting.isOfficeTurn).subscribe(turn => {
-                this.turn = turn
-                if (turn === null) {
-                    this.matDialog.open(DialogTurnsComponent, {
-                        width: '600px',
-                        position: { top: '20px' }
-                    })
-                }
-            })
 
             if (this.setting.showWorker) {
                 this.formGroup.get('workerId')?.setValidators([Validators.required])

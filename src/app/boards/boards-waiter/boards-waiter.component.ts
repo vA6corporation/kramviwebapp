@@ -25,15 +25,15 @@ export class BoardsWaiterComponent {
         private readonly router: Router,
     ) { }
 
-    tables: TableModel[] = [];
-    user: UserModel = new UserModel();
+    tables: TableModel[] = []
+    user: UserModel = new UserModel()
 
-    private handleAuth$: Subscription = new Subscription();
-    private handleTables$: Subscription = new Subscription();
+    private handleAuth$: Subscription = new Subscription()
+    private handleTables$: Subscription = new Subscription()
 
     ngOnDestroy() {
-        this.handleAuth$.unsubscribe();
-        this.handleTables$.unsubscribe();
+        this.handleAuth$.unsubscribe()
+        this.handleTables$.unsubscribe()
     }
 
     ngOnInit(): void {
@@ -46,21 +46,21 @@ export class BoardsWaiterComponent {
             this.tables = tables;
             this.boardsService.getActiveBoards().subscribe(boards => {
                 for (const table of this.tables) {
-                    const foundBoard = boards.find(e => e.tableId === table._id);
+                    const foundBoard = boards.find(e => e.tableId === table._id)
                     if (foundBoard) {
                         table.board = foundBoard;
                     } else {
                         table.board = null;
                     }
                 }
-            });
-        });
+            })
+        })
 
-        this.boardsService.setBoardItems([]);
+        this.boardsService.setBoardItems([])
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.navigationService.setTitle(`Atencion de mesas - ${auth.user.name}`);
-        });
+        })
     }
 
     onLogout() {

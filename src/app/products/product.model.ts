@@ -31,14 +31,16 @@ export interface ProductModel {
     category: CategoryModel
     printZone: PrintZoneType
     recipes: any[]
-    linkProducts: ProductModel[]
-    providers: ProviderModel[]
-    linkProductIds: string[]
     excluded: string[]
     stock: number
+    minimumStock: number
     urlImage: string
     fullName: string
     onModel: string
+    products: ProductModel[]
+    productIds: string[]
+    providers: ProviderModel[]
+    providerIds: string[]
     lots: LotModel[]
     lot?: LotModel
     officeStock: OfficeStock

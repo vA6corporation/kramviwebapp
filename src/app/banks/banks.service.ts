@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpService } from '../http.service';
-import { BankModel } from '../providers/bank.model';
+import { BankModel } from './bank.model';
 
 @Injectable({
     providedIn: 'root'

@@ -30,7 +30,7 @@ export class DialogAddProductComponent {
         observations: '',
         igvCode: '10'
     })
-    setting: SettingModel = new SettingModel()
+    private setting: SettingModel = new SettingModel()
 
     private handleAuth$: Subscription = new Subscription()
 

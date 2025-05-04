@@ -29,7 +29,7 @@ export class AuthService {
         { label: 'Recepcion', name: 'receptions', path: '/receptions', isActive: false, isAuthorized: false, icon: 'login', info: 'Hoteles' },
         { label: 'Habitaciones', name: 'rooms', path: '/rooms', isActive: false, isAuthorized: false, icon: 'sensor_door', info: 'Hoteles' },
         { label: 'Entregas', name: 'deliveries', path: '/deliveries', isActive: false, isAuthorized: false, icon: 'outbox', info: 'Casos especiales' },
-        { label: 'Dashboard', name: 'dashboard', path: '/dashboard', isActive: false, isAuthorized: false, icon: 'space_dashboard', info: 'Tiendas minimarkets' },
+        // { label: 'Dashboard', name: 'dashboard', path: '/dashboard', isActive: false, isAuthorized: false, icon: 'space_dashboard', info: 'Tiendas minimarkets' },
         { label: 'Proformar', name: 'proformar', path: '/proformas/create', isActive: false, isAuthorized: false, icon: 'desktop_windows', info: 'Tiendas minimarkets' },
         { label: 'Proformas', name: 'proformas', path: '/proformas', isActive: false, isAuthorized: false, icon: 'check_box', info: 'Tiendas minimarkets' },
         { label: 'Comandas', name: 'deletedBoards', path: '/boards/deletedBoards', isActive: false, isAuthorized: false, icon: 'delete_sweep', info: 'Restaurantes' },
@@ -70,7 +70,7 @@ export class AuthService {
 
     private objectModules = {
         openBox: false,
-        dashboard: false,
+        // dashboard: false,
         turns: false,
         expenses: false,
         posStandard: false,

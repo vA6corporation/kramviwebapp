@@ -22,6 +22,9 @@ import { buildExcel } from '../../buildExcel';
 import { DialogProgressComponent } from '../../navigation/dialog-progress/dialog-progress.component';
 import { MaterialModule } from '../../material.module';
 import { DialogPasswordComponent } from '../../boards/dialog-password/dialog-password.component';
+import { DialogProductProvidersComponent } from '../../providers/dialog-product-providers/dialog-product-providers.component';
+import { ProvidersService } from '../../providers/providers.service';
+import { ProviderModel } from '../../providers/provider.model';
 
 @Component({
     selector: 'app-products',
@@ -35,6 +38,7 @@ export class ProductsComponent {
         private readonly productsService: ProductsService,
         private readonly navigationService: NavigationService,
         private readonly categoriesService: CategoriesService,
+        private readonly providersService: ProvidersService,
         private readonly authService: AuthService,
         private readonly activatedRoute: ActivatedRoute,
         private readonly bottomSheet: MatBottomSheet,
@@ -45,8 +49,10 @@ export class ProductsComponent {
 
     formGroup: FormGroup = this.formBuilder.group({
         categoryId: '',
+        providerId: '',
     })
     categories: CategoryModel[] = []
+    providers: ProviderModel[] = []
     displayedColumns: string[] = [
         'checked',
         'name',
@@ -57,6 +63,7 @@ export class ProductsComponent {
         'location',
         'cost',
         'price',
+        'minimumStock',
         'stock',
         'actions'
     ]
@@ -80,6 +87,7 @@ export class ProductsComponent {
     private handleClickMenu$: Subscription = new Subscription()
     private handlePriceLists$: Subscription = new Subscription()
     private handleOffices$: Subscription = new Subscription()
+    private handleProviders$: Subscription = new Subscription()
 
     ngOnDestroy() {
         this.handleAuth$.unsubscribe()
@@ -88,6 +96,7 @@ export class ProductsComponent {
         this.handleClickMenu$.unsubscribe()
         this.handlePriceLists$.unsubscribe()
         this.handleOffices$.unsubscribe()
+        this.handleProviders$.unsubscribe()
     }
 
     ngOnInit(): void {
@@ -109,6 +118,10 @@ export class ProductsComponent {
 
         this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
             this.categories = categories
+        })
+
+        this.handleProviders$ = this.providersService.handleProviders().subscribe(providers => {
+            this.providers = providers
         })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
@@ -471,9 +484,18 @@ export class ProductsComponent {
         const ok = confirm('Esta seguro de eliminar?...')
         if (ok) {
             this.productsService.delete(productId).subscribe(() => {
+                this.navigationService.showMessage('Eliminado correctamente')
                 this.fetchData()
             })
         }
+    }
+
+    onProvidersProduct(productId: string) {
+        this.matDialog.open(DialogProductProvidersComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: productId
+        })
     }
 
     onEditProduct(productId: string) {
@@ -516,6 +538,21 @@ export class ProductsComponent {
         this.key = ''
         const queryParams: Params = { categoryId, pageIndex: this.pageIndex, key: null }
         Object.assign(this.params, { categoryId })
+        this.router.navigate([], {
+            relativeTo: this.activatedRoute,
+            queryParams: queryParams,
+            queryParamsHandling: 'merge', // remove to replace all query params by provided
+        })
+        this.fetchData()
+        this.fetchCount()
+    }
+
+    onProviderChange() {
+        const { providerId } = this.formGroup.value
+        this.pageIndex = 0
+        this.key = ''
+        const queryParams: Params = { providerId, pageIndex: this.pageIndex, key: null }
+        Object.assign(this.params, { providerId })
         this.router.navigate([], {
             relativeTo: this.activatedRoute,
             queryParams: queryParams,

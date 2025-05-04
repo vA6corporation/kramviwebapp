@@ -46,9 +46,9 @@ export class EditRemissionGuidesComponent {
     selectedIndex: number = 0
     remissionGuideItems: RemissionGuideItemModel[] = []
     gridListCols = 4
-    setting: SettingModel = new SettingModel()
     office: OfficeModel = new OfficeModel()
     isLoading: boolean = true
+    private setting: SettingModel = new SettingModel()
 
     private handleSearch$: Subscription = new Subscription()
     private handleClickMenu$: Subscription = new Subscription()
@@ -155,13 +155,13 @@ export class EditRemissionGuidesComponent {
     }
 
     onSelectProduct(product: ProductModel): void {
-        if (product.annotations.length || product.linkProductIds.length) {
+        if (product.annotations.length || product.productIds.length) {
             const data: DialogSelectAnnotationData = {
                 product,
                 priceListId: this.priceListId || '',
             }
 
-            const dialogRef = this.matDialog.open(DialogSelectAnnotationsComponent, {
+            this.matDialog.open(DialogSelectAnnotationsComponent, {
                 width: '600px',
                 position: { top: '20px' },
                 data

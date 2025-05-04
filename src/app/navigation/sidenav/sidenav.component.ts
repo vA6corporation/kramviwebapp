@@ -5,12 +5,14 @@ import { AuthService } from '../../auth/auth.service';
 import { BusinessModel } from '../../auth/business.model';
 import { OfficeModel } from '../../auth/office.model';
 import { UserModel } from '../../users/user.model';
+import { MaterialModule } from '../../material.module';
+import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-sidenav',
+    imports: [MaterialModule, RouterModule],
     templateUrl: './sidenav.component.html',
     styleUrl: './sidenav.component.sass',
-    standalone: false
 })
 export class SidenavComponent {
     

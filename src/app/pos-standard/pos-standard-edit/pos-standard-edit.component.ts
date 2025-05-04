@@ -183,7 +183,7 @@ export class PosStandardEditComponent {
     }
 
     onSelectProduct(product: ProductModel, event?: MouseEvent): void {
-        if (product.annotations.length || product.linkProductIds.length) {
+        if (product.annotations.length || product.productIds.length) {
             const data: DialogSelectAnnotationData = {
                 product,
                 priceListId: this.priceListId || '',

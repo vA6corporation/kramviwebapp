@@ -42,10 +42,11 @@ import { BusinessModel } from '../../auth/business.model';
 import { OfficeModel } from '../../auth/office.model';
 import { SettingModel } from '../../auth/setting.model';
 import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
-import { BankModel } from '../../providers/bank.model';
 import { buildBarcode50x25mmTwo } from './buildBarcode50x25mmTwo';
 import { buildCommandFastFood80mm } from './buildCommandFastFood80mm';
 import { buildDeletedCommand80mm } from './buildDeletedCommand80mm';
+import { buildBarcode30x20mm } from './buildBarcode30x20mm';
+import { BankModel } from '../../banks/bank.model';
 
 let main: any
 
@@ -57,7 +58,6 @@ if ((window as any).versions) {
     selector: 'app-print-iframe',
     templateUrl: './print-iframe.component.html',
     styleUrls: ['./print-iframe.component.sass'],
-    standalone: false
 })
 export class PrintIframeComponent {
 
@@ -239,6 +239,13 @@ export class PrintIframeComponent {
 
         this.printService.handlePrintBarcodes50x25mmTwo().subscribe(async products => {
             const pdf = await buildBarcode50x25mmTwo(products)
+            pdf.autoPrint({ variant: 'non-conform' })
+            const urlString = pdf.output('datauristring')
+            this.print(urlString)
+        })
+
+        this.printService.handlePrintBarcodes30x20mm().subscribe(async products => {
+            const pdf = await buildBarcode30x20mm(products)
             pdf.autoPrint({ variant: 'non-conform' })
             const urlString = pdf.output('datauristring')
             this.print(urlString)

@@ -110,9 +110,9 @@
         </div>
         <mat-list>
             <div mat-subheader>Productos vinculados</div>
-            @for (linkProduct of linkProducts; track linkProduct._id; let i = $index) {
+            @for (product of products; track $index; let i = $index) {
             <mat-list-item>
-                <span matListItemTitle>{{ linkProduct.fullName }}</span>
+                <span matListItemTitle>{{ product.fullName }}</span>
                 <div matListItemMeta>
                     <button type="button" mat-icon-button (click)="onRemoveProduct(i)">
                         <mat-icon>delete</mat-icon>
@@ -122,8 +122,8 @@
             }
         </mat-list>
         <div class="mb-3">
-            <button type="button" class="w-100" mat-flat-button color="primary" (click)="onDialogProducts()">VINCULAR
-                PRODUCTO</button>
+            <button type="button" class="w-100" mat-flat-button color="primary"
+                (click)="onOpenDialogSearchProducts()">VINCULAR PRODUCTO</button>
         </div>
         <mat-list>
             <div mat-subheader>Anotaciones</div>
@@ -139,7 +139,7 @@
             }
         </mat-list>
         <div class="mb-3">
-            <button type="button" class="w-100" mat-flat-button color="primary" (click)="onDialogAnnotations()">AGREGAR
+            <button type="button" class="w-100" mat-flat-button color="primary" (click)="onDialogCreateAnnotations()">AGREGAR
                 ANOTACION</button>
         </div>
         <mat-list>
@@ -161,12 +161,19 @@
                 PROVEEDOR</button>
         </div>
         <div class="py-3">
-            <mat-slide-toggle formControlName="isTrackStock">Trackear stock</mat-slide-toggle>
-        </div>
-        <div class="py-3">
             <mat-slide-toggle #excludeCheck [checked]="!isExcluded"
                 (change)="onExcludedChange()">Activo</mat-slide-toggle>
         </div>
+        <div class="py-3">
+            <mat-slide-toggle formControlName="isTrackStock" (change)="onIsTrackStockChange()">Trackear
+                stock</mat-slide-toggle>
+        </div>
+        @if (isTrackStock) {
+        <mat-form-field appearance="fill">
+            <mat-label>Stock minimo (Notificacion)</mat-label>
+            <input type="number" matInput formControlName="minimumStock">
+        </mat-form-field>
+        }
         <div class="d-flex">
             <span class="spacer"></span>
             <button type="button" mat-raised-button routerLink="/products" color="primary">CANCELAR</button>

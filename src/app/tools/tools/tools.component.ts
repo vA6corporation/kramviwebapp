@@ -6,6 +6,7 @@ import { ImportCustomersComponent } from '../import-customers/import-customers.c
 import { UpdatePricesComponent } from '../update-prices/update-prices.component';
 import { AddStockComponent } from '../add-stock/add-stock.component';
 import { DeleteDataComponent } from '../delete-data/delete-data.component';
+import { DuplicateInvoicesComponent } from '../duplicate-invoices/duplicate-invoices.component';
 
 @Component({
     selector: 'app-tools',
@@ -16,6 +17,7 @@ import { DeleteDataComponent } from '../delete-data/delete-data.component';
         UpdatePricesComponent,
         AddStockComponent,
         DeleteDataComponent,
+        DuplicateInvoicesComponent,
     ],
     templateUrl: './tools.component.html',
     styleUrls: ['./tools.component.sass']
@@ -27,7 +29,7 @@ export class ToolsComponent {
     ) { }
 
     ngOnInit(): void {
-        this.navigationService.setTitle('Herramientas');
+        this.navigationService.setTitle('Herramientas')
     }
 
 }

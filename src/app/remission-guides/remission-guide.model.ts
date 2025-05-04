@@ -11,7 +11,9 @@ export interface RemissionGuideModel {
     remissionGuideNumber: number
     reasonDescription: string
     originAddress: string
+    originLocationCode: string
     destinyAddress: string
+    destinyLocationCode: string
     createdAt: string
     transportAt: string
     shippingWeight: number

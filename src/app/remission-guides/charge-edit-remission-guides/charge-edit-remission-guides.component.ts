@@ -47,14 +47,14 @@ export class ChargeEditRemissionGuidesComponent {
         reasonDescription: ['', Validators.required],
         shippingWeight: ['', Validators.required],
         observations: '',
-        originDepartment: ['15', Validators.required],
-        originProvince: ['1501', Validators.required],
+        originDepartmentCode: ['15', Validators.required],
+        originProvinceCode: ['1501', Validators.required],
         originLocationCode: ['', Validators.required],
-        destinyDepartment: ['15', Validators.required],
-        destinyProvince: ['1501', Validators.required],
+        destinyDepartmentCode: ['15', Validators.required],
+        destinyProvinceCode: ['1501', Validators.required],
+        destinyLocationCode: ['', Validators.required],
         originAddress: ['', Validators.required],
         destinyAddress: ['', Validators.required],
-        destinyLocationCode: ['', Validators.required],
     })
 
     remissionGuideTypes: any[] = [
@@ -202,6 +202,22 @@ export class ChargeEditRemissionGuidesComponent {
             this.saleId = saleId
             this.remissionGuideId = _id
             this.formGroup.patchValue(remissionGuide)
+            const destinyDepartmentCode = remissionGuide.destinyLocationCode.substring(0, 2)
+            const destinyProvinceCode = remissionGuide.destinyLocationCode.substring(0, 4)
+            if (destinyDepartmentCode != '15') {
+                this.formGroup.patchValue({ destinyDepartmentCode })
+                this.formGroup.patchValue({ destinyProvinceCode })
+                this.onChangeDestinyDepartment(destinyDepartmentCode)
+                this.onChangeDestinyProvince(destinyProvinceCode)
+            }
+            const originDepartmentCode = remissionGuide.originLocationCode.substring(0, 2)
+            const originProvinceCode = remissionGuide.originLocationCode.substring(0, 4)
+            if (originDepartmentCode != '15') {
+                this.formGroup.patchValue({ originDepartmentCode })
+                this.formGroup.patchValue({ originProvinceCode })
+                this.onChangeOriginDepartment(originDepartmentCode)
+                this.onChangeOriginProvince(originProvinceCode)
+            }
         } else {
             this.router.navigate(['/remissionGuides'])
         }
@@ -294,6 +310,7 @@ export class ChargeEditRemissionGuidesComponent {
     }
 
     async onChangeDestinyDepartment(departmentCode: string) {
+        console.log(departmentCode)
         this.remissionGuidesService.getProvincesByDepartmentCode(departmentCode).subscribe(provinces => {
             this.destinyProvinces = provinces
         })

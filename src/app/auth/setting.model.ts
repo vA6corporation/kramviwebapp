@@ -15,6 +15,7 @@ export class SettingModel {
     showIsRetainer: boolean = false
     showDetraction: boolean = false
     showChange: boolean = false
+    showCost: boolean = false
     showCurrencyCode: boolean = false
     showObservationItems: boolean = false
     showSpecialty: boolean = false

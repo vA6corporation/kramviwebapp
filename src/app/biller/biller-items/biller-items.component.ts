@@ -23,10 +23,10 @@ export class BillerItemsComponent {
     igvType = IgvType
     billItems: BillItemModel[] = [];
     charge: number = 0;
-    private handleBillItems$: Subscription = new Subscription();
+    private handleBillItems$: Subscription = new Subscription()
 
     ngOnDestroy() {
-        this.handleBillItems$.unsubscribe();
+        this.handleBillItems$.unsubscribe()
     }
 
     ngOnInit(): void {
@@ -38,7 +38,7 @@ export class BillerItemsComponent {
                     this.charge += billItem.price * billItem.quantity;
                 }
             }
-        });
+        })
     }
 
     onSelectBillItem(index: number) {
@@ -46,7 +46,7 @@ export class BillerItemsComponent {
             width: '600px',
             position: { top: '20px' },
             data: index,
-        });
+        })
     }
 
 }

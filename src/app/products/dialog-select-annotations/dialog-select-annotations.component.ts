@@ -1,15 +1,14 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { BoardsService } from '../../boards/boards.service';
+import { MaterialModule } from '../../material.module';
 import { ProductModel } from '../product.model';
+import { SalesService } from '../../sales/sales.service';
 import { ProductsService } from '../products.service';
 import { AuthService } from '../../auth/auth.service';
-import { SalesService } from '../../sales/sales.service';
-import { BoardsService } from '../../boards/boards.service';
 import { SettingModel } from '../../auth/setting.model';
 import { OfficeModel } from '../../auth/office.model';
-import { PriceType } from '../price-type.enum';
-import { MaterialModule } from '../../material.module';
 
 export interface DialogSelectAnnotationData {
     product: ProductModel,
@@ -28,18 +27,18 @@ export class DialogSelectAnnotationsComponent {
         @Inject(MAT_DIALOG_DATA)
         private readonly data: DialogSelectAnnotationData,
         private readonly dialogRef: MatDialogRef<DialogSelectAnnotationsComponent>,
-        private readonly authService: AuthService,
-        private readonly productsService: ProductsService,
-        private readonly salesService: SalesService,
         private readonly boardsService: BoardsService,
+        private readonly productsService: ProductsService,
+        private readonly authService: AuthService,
+        private readonly salesService: SalesService,
     ) { }
 
     annotations: string[] = []
-    products: ProductModel[] = []
-    pickProducts: ProductModel[] = []
     selectedAnnotations: string[] = []
-    private setting: SettingModel = new SettingModel()
-    private office: OfficeModel = new OfficeModel()
+    products: ProductModel[] = []
+    selectedProducts: ProductModel[] = []
+    setting: SettingModel = new SettingModel()
+    office: OfficeModel = new OfficeModel()
 
     private handleAuth$: Subscription = new Subscription()
 
@@ -49,10 +48,17 @@ export class DialogSelectAnnotationsComponent {
 
     ngOnInit(): void {
         this.annotations = Array.from(this.data.product.annotations)
-        if (this.data.product.linkProductIds.length) {
-            this.productsService.getLinkProducts(this.data.product._id).subscribe(products => {
-                this.products = products
-            })
+
+        if (this.data.product.productIds.length) {
+            const foundProducts = this.productsService.getCacheLinkProducts(this.data.product._id)
+            if (foundProducts) {
+                this.products = foundProducts
+            } else {
+                this.productsService.getLinkProducts(this.data.product._id).subscribe(products => {
+                    this.productsService.setCacheLinkProducts(this.data.product._id, products)
+                    this.products = products
+                })
+            }
         }
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
@@ -61,7 +67,7 @@ export class DialogSelectAnnotationsComponent {
         })
     }
 
-    onSelect(annotation: string) {
+    onSelectAnnotation(annotation: string) {
         const index = this.selectedAnnotations.indexOf(annotation)
         if (index > -1) {
             this.selectedAnnotations.splice(index, 1)
@@ -71,52 +77,26 @@ export class DialogSelectAnnotationsComponent {
     }
 
     onSelectProduct(product: ProductModel) {
-        const findIndex = this.pickProducts.findIndex(e => e._id === product._id)
+        const findIndex = this.selectedProducts.findIndex(e => e._id === product._id)
         if (findIndex < 0) {
-            this.pickProducts.push(product)
+            this.selectedProducts.push(product)
         } else {
-            this.pickProducts.splice(findIndex, 1)
+            this.selectedProducts.splice(findIndex, 1)
         }
     }
 
-    isPickedProduct(product: ProductModel) {
-        return this.pickProducts.map(e => e._id).includes(product._id)
+    isSelectedProduct(product: ProductModel) {
+        return this.selectedProducts.map(e => e._id).includes(product._id)
     }
 
     onSubmit() {
-        switch (this.setting.defaultPrice) {
-            case PriceType.GLOBAL:
-                break
-            case PriceType.OFICINA:
-                for (const product of this.pickProducts) {
-                    const price = product.prices.find(e => e.officeId === this.office._id && e.priceListId === null)
-                    product.price = price ? price.price : product.price
-                }
-                break
-            case PriceType.LISTA:
-                for (const product of this.pickProducts) {
-                    const price = product.prices.find(e => e.priceListId === this.data.priceListId)
-                    product.price = price ? price.price : product.price
-                }
-                break
-            case PriceType.LISTAOFICINA:
-                for (const product of this.pickProducts) {
-                    const price = product.prices.find(e => e.priceListId === this.data.priceListId && e.officeId === this.office._id)
-                    product.price = price ? price.price : product.price
-                }
-                break
-        }
-        if (this.pickProducts.length === 0) {
-            this.salesService.addSaleItem(this.data.product, this.selectedAnnotations.join())
-            this.boardsService.addBoardItem(this.data.product, this.selectedAnnotations.join())
-        } else {
-            this.salesService.forceAddSaleItem(this.data.product, this.selectedAnnotations.join())
-            this.boardsService.forceAddBoardItem(this.data.product, this.selectedAnnotations.join())
-            if (this.pickProducts.length) {
-                for (const product of this.pickProducts) {
-                    this.salesService.forceAddSaleItem(product)
-                    this.boardsService.forceAddBoardItem(product)
-                }
+        ProductsService.setPrices(this.products, this.data.priceListId, this.setting, this.office)
+        this.salesService.addSaleItem(this.data.product, this.selectedAnnotations.join())
+        this.boardsService.addBoardItem(this.data.product, this.selectedAnnotations.join())
+        if (this.selectedProducts.length) {
+            for (const product of this.selectedProducts) {
+                this.salesService.addSaleItem(product)
+                this.boardsService.addBoardItem(product)
             }
         }
         this.dialogRef.close()

@@ -19,4 +19,5 @@ export interface IncidentItemModel {
     createdAt: string
     incident: IncidentModel
     user: UserModel
+    type?: string
 }

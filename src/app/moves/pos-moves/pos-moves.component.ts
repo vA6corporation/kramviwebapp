@@ -1,19 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../auth/auth.service';
-import { OfficeModel } from '../../auth/office.model';
-import { SettingModel } from '../../auth/setting.model';
 import { FavoritesService } from '../../favorites/favorites.service';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategoriesService } from '../../products/categories.service';
 import { CategoryModel } from '../../products/category.model';
 import { ProductModel } from '../../products/product.model';
 import { ProductsService } from '../../products/products.service';
-import { MovesService } from '../moves.service';
-import { MaterialModule } from '../../material.module';
 import { MoveItemsComponent } from '../move-items/move-items.component';
-import { RouterModule } from '@angular/router';
+import { MovesService } from '../moves.service';
 
 @Component({
     selector: 'app-pos-moves',
@@ -29,7 +26,6 @@ export class PosMovesComponent {
         private readonly favoritesService: FavoritesService,
         private readonly movesService: MovesService,
         private readonly categoriesService: CategoriesService,
-        private readonly authService: AuthService,
     ) { }
 
     categories: CategoryModel[] = []
@@ -37,8 +33,6 @@ export class PosMovesComponent {
     favorites: ProductModel[] = []
     selectedIndex: number = 0
     gridListCols = 4
-    setting: SettingModel = new SettingModel()
-    office: OfficeModel = new OfficeModel()
 
     private handleSearch$: Subscription = new Subscription()
     private handleFavorites$: Subscription = new Subscription()
@@ -62,11 +56,6 @@ export class PosMovesComponent {
 
         this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
             this.categories = categories
-        })
-
-        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.office = auth.office
-            this.setting = auth.setting
         })
 
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {

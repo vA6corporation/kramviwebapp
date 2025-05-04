@@ -31,7 +31,7 @@
                 </ng-template>
                 <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
                     @for (category of categories; track category._id) {
-                    <mat-grid-tile (click)="onSelectCategory(category)" [style.background]="'lightgreen'">
+                    <mat-grid-tile (click)="onSelectCategory(category)" [style.background]="category.color">
                         <span class="px-1">
                             {{ category.name.slice(0, 60) }}
                         </span>

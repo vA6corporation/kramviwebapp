@@ -32,6 +32,7 @@ import { ExpenseModel } from '../../expenses/expense.model';
 import { DialogCreateExpensesComponent } from '../../expenses/dialog-create-expenses/dialog-create-expenses.component';
 import { DialogEditExpensesComponent } from '../../expenses/dialog-edit-expenses/dialog-edit-expenses.component';
 import { MaterialModule } from '../../material.module';
+import { DialogSummarySaleItemsComponent } from '../dialog-summary-sale-items/dialog-summary-sale-items.component';
 
 @Component({
     selector: 'app-detail-turns',
@@ -131,6 +132,14 @@ export class DetailTurnsComponent {
                 default:
                     break
             }
+        })
+    }
+
+    onSelectSaleProduct(saleIds: string[]) {
+        this.matDialog.open(DialogSummarySaleItemsComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: saleIds,
         })
     }
 

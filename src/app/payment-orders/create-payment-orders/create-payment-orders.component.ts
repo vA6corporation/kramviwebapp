@@ -8,7 +8,6 @@ import { BanksService } from '../../banks/banks.service';
 import { NavigationService } from '../../navigation/navigation.service';
 import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
 import { PaymentMethodsService } from '../../payment-methods/payment-methods.service';
-import { BankModel } from '../../providers/bank.model';
 import { DialogCreateProvidersComponent } from '../../providers/dialog-create-providers/dialog-create-providers.component';
 import { DialogEditProvidersComponent } from '../../providers/dialog-edit-providers/dialog-edit-providers.component';
 import { ProviderModel } from '../../providers/provider.model';
@@ -17,6 +16,7 @@ import { DialogSearchProvidersComponent } from '../../providers/dialog-search-pr
 import { DialogAttachFileComponent } from '../dialog-attach-file/dialog-attach-file.component';
 import { MaterialModule } from '../../material.module';
 import { CommonModule } from '@angular/common';
+import { BankModel } from '../../banks/bank.model';
 
 @Component({
     selector: 'app-create-payment-orders',

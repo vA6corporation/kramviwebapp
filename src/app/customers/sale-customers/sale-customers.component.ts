@@ -61,7 +61,9 @@ export class SaleCustomersComponent {
 
     ngOnInit(): void {
         this.customerId = this.activatedRoute.snapshot.params['customerId']
+        Object.assign(this.params, { customerId: this.customerId })
         const { startDate, endDate } = this.activatedRoute.snapshot.queryParams
+
 
         if (startDate && endDate) {
             this.formGroup.patchValue({ 
@@ -172,7 +174,7 @@ export class SaleCustomersComponent {
     }
 
     fetchCount() {
-        this.salesService.countSaleItemsByCustomer(this.customerId, this.params).subscribe(count => {
+        this.salesService.getCountSaleItems(this.params).subscribe(count => {
             this.length = count
         })
     }

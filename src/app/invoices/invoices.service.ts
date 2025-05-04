@@ -45,8 +45,8 @@ export class InvoicesService {
         return this.httpService.get(`invoices/statusCdr/${saleId}`);
     }
 
-    cancelInvoice(saleId: string, reason: string): Observable<any> {
-        return this.httpService.delete(`tickets/invoice/${saleId}/${reason}`);
+    cancelInvoice(saleId: string, deletedReason: string): Observable<any> {
+        return this.httpService.delete(`tickets/invoice/${saleId}/${deletedReason}`);
     }
 
     softDeleteInvoice(saleId: string, deletedReason: string): Observable<any> {

@@ -1,18 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { MatTable } from '@angular/material/table';
 import { Subscription, lastValueFrom } from 'rxjs';
-import { AuthService } from '../../auth/auth.service';
-import { SettingModel } from '../../auth/setting.model';
 import { parseExcel } from '../../buildExcel';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { PaymentMethodsService } from '../../payment-methods/payment-methods.service';
 import { PriceListModel } from '../../products/price-list.model';
 import { SpecialtiesService } from '../../specialties/specialties.service';
 import { ToolsService } from '../tools.service';
-import { MaterialModule } from '../../material.module';
-import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-add-stock',
@@ -26,7 +24,6 @@ export class AddStockComponent {
         private readonly navigationService: NavigationService,
         private readonly specialtiesService: SpecialtiesService,
         private readonly paymentMethodsService: PaymentMethodsService,
-        private readonly authService: AuthService,
         private readonly toolsService: ToolsService,
     ) { }
 
@@ -48,7 +45,6 @@ export class AddStockComponent {
     pageIndex: number = 0
     isLoading: boolean = false
     priceLists: PriceListModel[] = []
-    setting: SettingModel = new SettingModel()
     private paymentMethodId: string = ''
 
     private handleAuth$: Subscription = new Subscription()
@@ -62,10 +58,6 @@ export class AddStockComponent {
     }
 
     ngOnInit(): void {
-        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
-        })
-
         this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
             this.paymentMethodId = (paymentMethods[0] || { _id: '' })._id
         })

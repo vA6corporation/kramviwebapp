@@ -51,8 +51,8 @@ export class DeletedBoardsComponent {
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
     tables: TableModel[] = []
-    setting: SettingModel = new SettingModel()
     office: OfficeModel = new OfficeModel()
+    private setting: SettingModel = new SettingModel()
 
     private handleAuth$: Subscription = new Subscription()
     private handleTables$: Subscription = new Subscription()

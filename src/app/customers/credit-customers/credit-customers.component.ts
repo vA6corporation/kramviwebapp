@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
@@ -5,11 +6,11 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
-import { SettingModel } from '../../auth/setting.model';
 import { CreditModel } from '../../credits/credit.model';
 import { CreditsService } from '../../credits/credits.service';
 import { DialogPaymentCreditsComponent } from '../../credits/dialog-payment-credits/dialog-payment-credits.component';
 import { DialogDetailSalesComponent } from '../../invoices/dialog-detail-sales/dialog-detail-sales.component';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { PrintService } from '../../print/print.service';
 import { DialogTurnsComponent } from '../../turns/dialog-turns/dialog-turns.component';
@@ -17,8 +18,6 @@ import { TurnModel } from '../../turns/turn.model';
 import { TurnsService } from '../../turns/turns.service';
 import { CustomerModel } from '../customer.model';
 import { CustomersService } from '../customers.service';
-import { MaterialModule } from '../../material.module';
-import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-credit-customers',
@@ -52,7 +51,6 @@ export class CreditCustomersComponent {
     customer: CustomerModel | null = null
     private customerId: string = ''
     private turn: TurnModel | null = null
-    private setting: SettingModel = new SettingModel()
 
     private handleAuth$: Subscription = new Subscription()
     private handleTurns$: Subscription = new Subscription()
@@ -71,13 +69,12 @@ export class CreditCustomersComponent {
             { id: 'export_customer_credits', label: 'Exportar cuenta PDF', icon: 'file_download', show: false },
         ])
 
+        this.handleTurns$ = this.turnsService.handleOpenTurn().subscribe(turn => {
+            this.turn = turn
+        })
+
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.office = auth.office
-            this.setting = auth.setting
-
-            this.handleTurns$ = this.turnsService.handleOpenTurn(this.setting.isOfficeTurn).subscribe(turn => {
-                this.turn = turn
-            })
         })
 
         this.customerId = this.activatedRoute.snapshot.params['customerId']

@@ -29,6 +29,20 @@
                 Stock: Venta libre
             </mat-list-item>
         }
+        @if (setting.showCost) {
+            <mat-list-item role="listitem">
+                Costo: {{ product.cost.toFixed(2) }}
+            </mat-list-item>
+        }
+        @for (price of product.prices; track price._id) {
+            @for (priceList of priceLists; track $index) {
+                @if (price.priceListId === priceList._id) {
+                    <mat-list-item>
+                        {{ priceList.name }}: {{ price.price }}
+                    </mat-list-item>
+                }
+            }
+        }
         @if (product.urlImage) {
             <img [src]="product.urlImage" class="w-100" alt="Product image">
         }

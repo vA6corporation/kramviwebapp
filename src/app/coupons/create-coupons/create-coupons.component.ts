@@ -35,7 +35,7 @@ export class CreateCouponsComponent {
     onSubmit(): void {
         if (this.formGroup.valid) {
             this.isLoading = true;
-            this.navigationService.loadBarStart();
+            this.navigationService.loadBarStart()
             this.couponsService.create(this.formGroup.value).subscribe({
                 next: () => {
                     this.isLoading = false

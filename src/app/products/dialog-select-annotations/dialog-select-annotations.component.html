@@ -1,15 +1,21 @@
 <div mat-dialog-content>
     @if (annotations.length) {
     <mat-selection-list>
-        @for (annotation of annotations; track annotation) {
-        <mat-list-option (click)="onSelect(annotation)">{{ annotation }}</mat-list-option>
+        @if (annotations.length) {
+        <div mat-subheader>Anotaciones rapidas</div>
         }
-    </mat-selection-list>
-    }
-    @if (products.length) {
-    <mat-selection-list>
-        @for (product of products; track product._id) {
-        <mat-list-option (click)="onSelectProduct(product)">{{ product.fullName }}</mat-list-option>
+        @for (annotation of annotations; track annotation) {
+        <mat-list-option (click)="onSelectAnnotation(annotation)">{{ annotation }}</mat-list-option>
+        }
+        @if (products.length) {
+        <div mat-subheader>Productos vinculados</div>
+        }
+        @if (products.length) {
+        <mat-selection-list>
+            @for (product of products; track product._id) {
+            <mat-list-option (click)="onSelectProduct(product)">{{ product.fullName }}</mat-list-option>
+            }
+        </mat-selection-list>
         }
     </mat-selection-list>
     }

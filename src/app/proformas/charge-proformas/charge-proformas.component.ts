@@ -12,7 +12,6 @@ import { DialogEditCustomersComponent } from '../../customers/dialog-edit-custom
 import { DialogSearchCustomersComponent } from '../../customers/dialog-search-customers/dialog-search-customers.component';
 import { NavigationService } from '../../navigation/navigation.service';
 import { PrintService } from '../../print/print.service';
-import { DialogOutStockComponent } from '../../sales/dialog-out-stock/dialog-out-stock.component';
 import { UserModel } from '../../users/user.model';
 import { CreateProformaModel } from '../create-proforma.model';
 import { ProformaItemModel } from '../proforma-item.model';
@@ -184,8 +183,8 @@ export class ChargeProformasComponent {
                 customerId: this.customer?._id || null,
             }
 
-            if (this.setting.allowFreeStock) {
-                this.proformasService.create(createdProforma, this.proformaItems).subscribe(proforma => {
+            this.proformasService.create(createdProforma, this.proformaItems).subscribe({
+                next: proforma => {
                     proforma.user = this.user
                     proforma.proformaItems = this.proformaItems
                     proforma.customer = this.customer
@@ -198,43 +197,12 @@ export class ChargeProformasComponent {
                     this.isLoading = false
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Registrado correctamente')
-                }, (error: HttpErrorResponse) => {
+                }, error: (error: HttpErrorResponse) => {
                     this.navigationService.showMessage(error.error.message)
                     this.isLoading = false
                     this.navigationService.loadBarFinish()
-                })
-            } else {
-                this.proformasService.createWithStock(createdProforma, this.proformaItems).subscribe(res => {
-                    const { proforma, outStocks } = res
-                    if (proforma) {
-                        proforma.user = this.user
-                        proforma.proformaItems = this.proformaItems
-                        proforma.customer = this.customer
-
-                        this.printService.printA4Proforma(proforma)
-                        this.proformasService.setProformaItems([])
-
-                        this.router.navigate(['/proformas'])
-
-                        this.isLoading = false
-                        this.navigationService.loadBarFinish()
-                        this.navigationService.showMessage('Registrado correctamente')
-                    } else {
-                        this.navigationService.loadBarFinish()
-                        this.isLoading = false
-                        this.matDialog.open(DialogOutStockComponent, {
-                            width: '600px',
-                            position: { top: '20px' },
-                            data: outStocks,
-                        })
-                    }
-                }, (error: HttpErrorResponse) => {
-                    this.navigationService.showMessage(error.error.message)
-                    this.isLoading = false
-                    this.navigationService.loadBarFinish()
-                })
-            }
-
+                }
+            })
         } catch (error) {
             if (error instanceof Error) {
                 this.navigationService.showMessage(error.message)

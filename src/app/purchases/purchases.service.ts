@@ -26,10 +26,6 @@ export class PurchasesService {
         return this.httpService.get(`purchases/summaryByYearOfficeUser/${year}`, params)
     }
 
-    // getCreditPurchasesByProvider(providerId: string): Observable<PurchaseModel[]> {
-    //     return this.httpService.get(`purchases/creditPurchasesByProvider/${providerId}`)
-    // }
-
     getPurchaseById(purchaseId: string): Observable<PurchaseModel> {
         return this.httpService.get(`purchases/byId/${purchaseId}`)
     }
@@ -46,6 +42,10 @@ export class PurchasesService {
 
     getCountPurchases(params: Params): Observable<number> {
         return this.httpService.get(`purchases/countPurchases`, params)
+    }
+
+    getCountPurchaseItems(params: Params): Observable<number> {
+        return this.httpService.get(`purchases/countPurchaseItems`, params)
     }
 
     getCountQuantityPurchaseItemsByProduct(

@@ -74,13 +74,6 @@ export class LotsComponent {
 
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {
             this.navigationService.loadBarStart()
-            // this.usersService.getUsersByKey(key).subscribe(users => {
-            //     this.navigationService.loadBarFinish()
-            //     this.dataSource = users
-            // }, (error: HttpErrorResponse) => {
-            //     this.navigationService.loadBarFinish()
-            //     this.navigationService.showMessage(error.error.message)
-            // })
         })
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(async id => {

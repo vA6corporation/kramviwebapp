@@ -5,9 +5,9 @@ import { SaleModel } from "../../sales/sale.model";
 import { SettingModel } from "../../auth/setting.model";
 import { BusinessModel } from "../../auth/business.model";
 import { OfficeModel } from "../../auth/office.model";
-import { BankModel } from "../../providers/bank.model";
 import { PaymentMethodModel } from "../../payment-methods/payment-method.model";
 import { InvoiceType } from "../../sales/invoice-type.enum";
+import { BankModel } from "../../banks/bank.model";
 
 export async function buildA4Invoice(
     sale: SaleModel,
@@ -393,7 +393,7 @@ export async function buildA4Invoice(
         pdf.roundedRect(5, positionYitems, 200, (4 * banks.length) + 4, 1, 1, 'FD')
         pdf.setFont('Helvetica', 'bold')
         text = 'BANCO'
-        pdf.text(text, 20, positionYitems + 3, { align: 'center' })
+        pdf.text(text, 31, positionYitems + 3, { align: 'center' })
         text = 'MONEDA'
         pdf.text(text, 70, positionYitems + 3, { align: 'center' })
         text = 'CUENTA'
@@ -407,7 +407,10 @@ export async function buildA4Invoice(
 
         for (const bank of banks) {
             text = bank.bankName
-            pdf.text(text, 20, positionYitems + 3, { align: 'center' })
+            if (bank.isDetraction) {
+                text += ' (Detracciones)'
+            }
+            pdf.text(text, 31, positionYitems + 3, { align: 'center' })
             text = bank.currencyName
             pdf.text(text, 70, positionYitems + 3, { align: 'center' })
             text = bank.accountNumber

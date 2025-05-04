@@ -197,7 +197,7 @@ export class InoutComponent {
                                 if (value === 0) {
                                     return null
                                 } else {
-                                    return Math.round(value)
+                                    return Math.round(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                                 }
                             },
                             padding: 6

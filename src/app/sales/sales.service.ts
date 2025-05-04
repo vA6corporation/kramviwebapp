@@ -32,7 +32,7 @@ export class SalesService {
     private saleItems$ = new BehaviorSubject<CreateSaleItemModel[]>([])
 
     setSale(sale: SaleModel) {
-        this.sale = sale;
+        this.sale = sale
     }
 
     updateTicket(ticket: any, ticketId: string) {
@@ -68,11 +68,10 @@ export class SalesService {
         return this.httpService.get(`sales/saleItemsByCustomerPage/${customerId}/${pageIndex}/${pageSize}`, params)
     }
 
-    countSaleItemsByCustomer(
-        customerId: string,
+    getCountSaleItems(
         params: Params,
     ): Observable<number> {
-        return this.httpService.get(`sales/countSaleItemsByCustomer/${customerId}`, params)
+        return this.httpService.get(`sales/countSaleItems`, params)
     }
 
     getSalesByKey(key: string): Observable<SaleModel[]> {
@@ -89,13 +88,13 @@ export class SalesService {
         return this.httpService.get(`sales/countQuantitySaleItemsByProduct/${productId}`)
     }
 
-    getSaleItemsByPageProduct(
+    getSaleItemsByProductPage(
+        productId: string,
         pageIndex: number,
         pageSize: number,
-        productId: string,
         params: Params,
     ): Observable<SaleItemModel[]> {
-        return this.httpService.get(`sales/saleItemsByPageProduct/${pageIndex}/${pageSize}/${productId}`, params)
+        return this.httpService.get(`sales/saleItemsByProductPage/${productId}/${pageIndex}/${pageSize}`, params)
     }
 
     getCharge(): number {
@@ -110,6 +109,10 @@ export class SalesService {
 
     getSaleById(saleId: string): Observable<SaleModel> {
         return this.httpService.get(`sales/byId/${saleId}`)
+    }
+
+    getSalesByIds(saleIds: string[]): Observable<SaleModel[]> {
+        return this.httpService.post(`sales/byIds`, { saleIds })
     }
 
     getInvoicesByPage(pageIndex: number, pageSize: number): Observable<SaleModel[]> {

@@ -1,12 +1,14 @@
+import { CommonModule, formatDate } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
+import { buildExcel } from '../../buildExcel';
 import { CreditNoteItemModel } from '../../credit-notes/credit-note-item.model';
 import { CreditNotesService } from '../../credit-notes/credit-notes.service';
 import { DialogDetailCreditNotesComponent } from '../../credit-notes/dialog-detail-credit-notes/dialog-detail-credit-notes.component';
@@ -14,6 +16,7 @@ import { DialogDetailIncidentsComponent } from '../../incidents/dialog-detail-in
 import { IncidentItemModel } from '../../incidents/incident-item.model';
 import { IncidentsService } from '../../incidents/incidents.service';
 import { DialogDetailSalesComponent } from '../../invoices/dialog-detail-sales/dialog-detail-sales.component';
+import { MaterialModule } from '../../material.module';
 import { DialogDetailMovesComponent } from '../../moves/dialog-detail-moves/dialog-detail-moves.component';
 import { MoveItemModel } from '../../moves/move-item.model';
 import { MovesService } from '../../moves/moves.service';
@@ -26,17 +29,15 @@ import { PurchasesService } from '../../purchases/purchases.service';
 import { SaleItemModel } from '../../sales/sale-item.model';
 import { SalesService } from '../../sales/sales.service';
 import { DialogAddStockComponent } from '../dialog-add-stock/dialog-add-stock.component';
-import { DialogRemoveStockComponent } from '../dialog-remove-stock/dialog-remove-stock.component';
-import { DialogMoveStockComponent } from '../dialog-move-stock/dialog-move-stock.component';
-import { MaterialModule } from '../../material.module';
-import { CommonModule } from '@angular/common';
 import { DialogCreatePurchaseComponent } from '../dialog-create-purchase/dialog-create-purchase.component';
+import { DialogMoveStockComponent } from '../dialog-move-stock/dialog-move-stock.component';
+import { DialogRemoveStockComponent } from '../dialog-remove-stock/dialog-remove-stock.component';
 
 @Component({
     selector: 'app-detail-inventories',
     imports: [MaterialModule, ReactiveFormsModule, CommonModule],
     templateUrl: './detail-inventories.component.html',
-    styleUrls: ['./detail-inventories.component.sass']
+    styleUrls: ['./detail-inventories.component.sass'],
 })
 export class DetailInventoriesComponent {
 
@@ -97,9 +98,11 @@ export class DetailInventoriesComponent {
     private params: Params = {}
 
     private handleAuth$: Subscription = new Subscription()
+    private handleClickMenu$: Subscription = new Subscription()
 
     ngOnDestroy() {
         this.handleAuth$.unsubscribe()
+        this.handleClickMenu$.unsubscribe()
     }
 
     ngOnInit(): void {
@@ -107,7 +110,140 @@ export class DetailInventoriesComponent {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.office = auth.office
             this.fetchData()
-            this.fetchCount()
+            this.fetchCountQuantity()
+        })
+
+        this.navigationService.setMenu([
+            { id: 'export_excel', label: 'Exportar Kardex', icon: 'file_download', show: false },
+        ])
+
+        this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(async id => {
+            // const { startDate, endDate } = this.formGroup.value
+            this.navigationService.loadBarStart()
+            
+            const params = { isIncludeParent: true, productId: this.productId }
+            const countSaleItems = await lastValueFrom(this.salesService.getCountSaleItems(params))
+            const countPurchaseItems = await lastValueFrom(this.purchasesService.getCountPurchaseItems(params))
+            const countIncidentInItems = await lastValueFrom(this.incidentsService.getCountIncidentInItems(params))
+            const countIncidentOutItems = await lastValueFrom(this.incidentsService.getCountIncidentOutItems(params))
+
+            const promises: Promise<any>[] = [] 
+            const chunk = 500
+            
+            for (let index = 0; index < countSaleItems / chunk; index++) {
+                const promise = lastValueFrom(this.salesService.getSaleItemsByProductPage(this.productId, index + 1, chunk, params))
+                promises.push(promise)
+            }
+
+            for (let index = 0; index < countPurchaseItems / chunk; index++) {
+                const promise = lastValueFrom(this.purchasesService.getPurchaseItemsByPageProduct(index + 1, chunk, this.productId, params))
+                promises.push(promise)
+            }
+
+            for (let index = 0; index < countIncidentInItems / chunk; index++) {
+                const promise = lastValueFrom(this.incidentsService.getIncidentInItemsByPageProduct(index + 1, chunk, this.productId, params))
+                promises.push(promise)
+            }
+            
+            for (let index = 0; index < countIncidentOutItems / chunk; index++) {
+                const promise = lastValueFrom(this.incidentsService.getIncidentOutItemsByPageProduct(index + 1, chunk, this.productId, params))
+                promises.push(promise)
+            }
+
+            const values = await Promise.all(promises)
+            this.navigationService.loadBarFinish()
+            const items: any[] = values.flat()
+
+            items.sort((a: any, b: any) => {
+                if (new Date(a.createdAt).getTime() > new Date(b.createdAt).getTime()) {
+                    return 1
+                }
+                if (new Date(a.createdAt).getTime() < new Date(b.createdAt).getTime()) {
+                    return -1
+                }
+                return 0
+            })
+
+            const wscols = [10, 10, 10, 30, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+            let body = []
+            body.push([
+                'TIPO',
+                'F. REGISTRO',
+                'H. REGISTRO',
+                'CLIENTE/PROVEEDOR',
+                'N° DOCUMENTO',
+                'INGRESO CANTIDAD',
+                'INGRESO PRECIO',
+                'INGRESO VALOR',
+                'SALIDA CANTIDAD',
+                'SALIDA PRECIO',
+                'SALIDA VALOR',
+                'STOCK ACTUAL',
+                'PRECIO PROMEDIO',
+                'STOCK VALORIZADO',
+            ])
+
+            let stock = 0
+
+            for (const item of items) {
+                let providercustomer: any = {}
+                let serie = ''
+                
+                let inQuantity = 0
+                let inPrice = 0
+                let inCharge = 0
+
+                let outQuantity = 0
+                let outPrice = 0
+                let outCharge = 0
+
+                if (item.deletedAt) {
+                    continue
+                }
+
+                if (item.type === 'VENTA') {
+                    providercustomer = item.sale?.customer || {}
+                    serie = `${item.sale.invoicePrefix}${this.office.serialPrefix}-${item.sale.invoiceNumber}`
+                    outQuantity = item.quantity
+                    outPrice = item.price
+                    outCharge = item.price * item.quantity
+                    stock -= item.quantity
+                }
+                if (item.type === 'COMPRA') {
+                    providercustomer = item.purchase?.provider || {}
+                    serie = item.purchase.serie
+                    inQuantity = item.quantity
+                    inPrice = item.cost
+                    inCharge = item.cost * item.quantity
+                    stock += item.quantity
+                }
+                if (item.type === 'AUMENTO') {
+                    stock += item.quantity
+                }
+                if (item.type === 'REDUCCION') {
+                    stock -= item.quantity
+                }
+                body.push([
+                    item.type,
+                    formatDate(new Date(item.createdAt), 'dd/MM/yyyy', 'en-US'),
+                    formatDate(new Date(item.createdAt), 'hh:mm a', 'en-US'),
+                    providercustomer.name,
+                    serie,
+                    inQuantity,
+                    inPrice,
+                    inCharge,
+                    outQuantity,
+                    outPrice,
+                    outCharge,
+                    stock,
+                    this.product?.price,
+                    (this.product?.price || 0) * stock,
+                ])
+            }
+            if (this.product) {
+                const name = `KARDEX_${formatDate(new Date(), 'dd/MM/yyyy', 'en-US')}_${this.product.fullName.replace(/ /g, '_').toUpperCase()}`
+                buildExcel(body, name, wscols, [])
+            }
         })
     }
 
@@ -134,11 +270,11 @@ export class DetailInventoriesComponent {
                 position: { top: '20px' },
                 data: this.product,
             })
-    
+
             dialogRef.afterClosed().subscribe(ok => {
                 if (ok) {
                     this.fetchData()
-                    this.fetchCount()
+                    this.fetchCountQuantity()
                 }
             })
         }
@@ -155,7 +291,7 @@ export class DetailInventoriesComponent {
             dialogRef.afterClosed().subscribe(ok => {
                 if (ok) {
                     this.fetchData()
-                    this.fetchCount()
+                    this.fetchCountQuantity()
                 }
             })
         }
@@ -174,7 +310,7 @@ export class DetailInventoriesComponent {
                     if (ok) {
                         if (this.product) {
                             this.fetchData()
-                            this.fetchCount()
+                            this.fetchCountQuantity()
                         }
                     }
                 })
@@ -195,7 +331,7 @@ export class DetailInventoriesComponent {
             dialogRef.afterClosed().subscribe(ok => {
                 if (ok) {
                     this.fetchData()
-                    this.fetchCount()
+                    this.fetchCountQuantity()
                 }
             })
         } else {
@@ -203,7 +339,7 @@ export class DetailInventoriesComponent {
         }
     }
 
-    fetchCount() {
+    fetchCountQuantity() {
         this.salesService.getCountQuantitySaleItemsByProduct(this.productId).subscribe(countQuantity => {
             this.saleCount = countQuantity
         })
@@ -213,7 +349,6 @@ export class DetailInventoriesComponent {
         })
 
         this.incidentsService.getCountQuantityIncidentOutItemsByProduct(this.productId).subscribe(countQuantity => {
-            console.log(countQuantity)
             this.incidentOutCount = countQuantity
         })
 
@@ -240,7 +375,7 @@ export class DetailInventoriesComponent {
             this.navigationService.setTitle(`Detalles ${product.fullName}`)
         })
 
-        this.salesService.getSaleItemsByPageProduct(this.pageIndexSale, this.pageSize, this.productId, this.params).subscribe(saleItems => {
+        this.salesService.getSaleItemsByProductPage(this.productId, this.pageIndexSale, this.pageSize, this.params).subscribe(saleItems => {
             this.saleItems = saleItems
             this.dataSourceSales = new MatTableDataSource(saleItems)
             this.dataSourceSales.sort = this.sort
@@ -283,84 +418,6 @@ export class DetailInventoriesComponent {
         })
     }
 
-    // onMorePurchases() {
-    //     this.pageIndexPurchase++
-    //     this.navigationService.loadBarStart()
-    //     this.purchasesService.getPurchaseItemsByPageProduct(this.pageIndexPurchase, this.pageSize, this.productId, this.params).subscribe(purchaseItems => {
-    //         this.navigationService.loadBarFinish()
-    //         if (purchaseItems.length === 0) {
-    //             this.navigationService.showMessage('No hay mas compras')
-    //         } else {
-    //             this.purchaseItems = [...this.purchaseItems, ...purchaseItems]
-    //         }
-    //     })
-    // }
-
-    // onMoreSales() {
-    //     this.pageIndexSale++
-    //     this.navigationService.loadBarStart()
-    //     this.salesService.getSaleItemsByPageProduct(this.pageIndexSale, this.pageSize, this.productId, this.params).subscribe(saleItems => {
-    //         this.navigationService.loadBarFinish()
-    //         if (saleItems.length === 0) {
-    //             this.navigationService.showMessage('No hay mas ventas')
-    //         } else {
-    //             this.saleItems = [...this.saleItems, ...saleItems]
-    //         }
-    //     })
-    // }
-
-    // onMoreIncidents() {
-    //     this.pageIndexIncident++
-    //     this.navigationService.loadBarStart()
-    //     this.incidentsService.getIncidentItemsByPageProduct(this.pageIndexIncident, this.pageSize, this.productId, this.params).subscribe(incidentItems => {
-    //         this.navigationService.loadBarFinish()
-    //         if (incidentItems.length === 0) {
-    //             this.navigationService.showMessage('No hay mas incidencias')
-    //         } else {
-    //             this.incidentItems = [...this.incidentItems, ...incidentItems]
-    //         }
-    //     })
-    // }
-
-    // onMoreCreditNotes() {
-    //     this.pageIndexCreditNote++
-    //     this.navigationService.loadBarStart()
-    //     this.creditNotesService.getCreditNoteItemsByPageProduct(this.pageIndexCreditNote, this.pageSize, this.productId, this.params).subscribe(creditNoteItems => {
-    //         this.navigationService.loadBarFinish()
-    //         if (creditNoteItems.length === 0) {
-    //             this.navigationService.showMessage('No hay mas notas de credito')
-    //         } else {
-    //             this.creditNoteItems = [...this.creditNoteItems, ...creditNoteItems]
-    //         }
-    //     })
-    // }
-
-    // onMoreMovesIn() {
-    //     this.pageIndexMoveIn++
-    //     this.navigationService.loadBarStart()
-    //     this.movesService.getMoveInItemsByPageProduct(this.pageIndexMoveIn, this.pageSize, this.productId, this.params).subscribe(moveInItems => {
-    //         this.navigationService.loadBarFinish()
-    //         if (moveInItems.length === 0) {
-    //             this.navigationService.showMessage('No hay mas movimientos')
-    //         } else {
-    //             this.moveInItems = [...this.moveInItems, ...moveInItems]
-    //         }
-    //     })
-    // }
-
-    // onMoreMovesOut() {
-    //     this.pageIndexMoveOut++
-    //     this.navigationService.loadBarStart()
-    //     this.movesService.getMoveOutItemsByPageProduct(this.pageIndexMoveOut, this.pageSize, this.productId, this.params).subscribe(moveOutItems => {
-    //         this.navigationService.loadBarFinish()
-    //         if (moveOutItems.length === 0) {
-    //             this.navigationService.showMessage('No hay mas movimientos')
-    //         } else {
-    //             this.moveOutItems = [...this.moveOutItems, ...moveOutItems]
-    //         }
-    //     })
-    // }
-
     onDetailPurchases(purchaseId: string) {
         const dialogRef = this.matDialog.open(DialogDetailPurchasesComponent, {
             width: '600px',
@@ -371,7 +428,7 @@ export class DetailInventoriesComponent {
         dialogRef.afterClosed().subscribe(ok => {
             if (ok) {
                 this.fetchData()
-                this.fetchCount()
+                this.fetchCountQuantity()
             }
         })
     }
@@ -386,7 +443,7 @@ export class DetailInventoriesComponent {
         dialogRef.afterClosed().subscribe(ok => {
             if (ok) {
                 this.fetchData()
-                this.fetchCount()
+                this.fetchCountQuantity()
             }
         })
     }
@@ -409,7 +466,7 @@ export class DetailInventoriesComponent {
         dialogRef.afterClosed().subscribe(ok => {
             if (ok) {
                 this.fetchData()
-                this.fetchCount()
+                this.fetchCountQuantity()
             }
         })
     }
@@ -424,7 +481,7 @@ export class DetailInventoriesComponent {
         dialogRef.afterClosed().subscribe(ok => {
             if (ok) {
                 this.fetchData()
-                this.fetchCount()
+                this.fetchCountQuantity()
             }
         })
     }

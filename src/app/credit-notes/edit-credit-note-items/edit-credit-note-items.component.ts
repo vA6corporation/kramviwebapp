@@ -4,15 +4,14 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { OfficeModel } from '../../auth/office.model';
-import { SettingModel } from '../../auth/setting.model';
+import { FavoritesService } from '../../favorites/favorites.service';
+import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategoryModel } from '../../products/category.model';
-import { FavoritesService } from '../../favorites/favorites.service';
 import { ProductModel } from '../../products/product.model';
 import { ProductsService } from '../../products/products.service';
-import { CreditNotesService } from '../credit-notes.service';
-import { MaterialModule } from '../../material.module';
 import { CreditNoteItemsComponent } from '../credit-note-items/credit-note-items.component';
+import { CreditNotesService } from '../credit-notes.service';
 
 @Component({
     selector: 'app-edit-credit-note-items',
@@ -36,8 +35,7 @@ export class EditCreditNoteItemsComponent {
     favorites: ProductModel[] = []
     selectedIndex: number = 0
     gridListCols = 4
-    setting: SettingModel = new SettingModel()
-    office: OfficeModel = new OfficeModel()
+    private office: OfficeModel = new OfficeModel()
 
     private handleSearch$: Subscription = new Subscription()
     private handleFavorites$: Subscription = new Subscription()
@@ -51,7 +49,6 @@ export class EditCreditNoteItemsComponent {
 
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
             this.office = auth.office
         })
 

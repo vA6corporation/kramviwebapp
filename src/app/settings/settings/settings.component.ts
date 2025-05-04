@@ -54,6 +54,7 @@ export class SettingsComponent {
             defaultCurrencyCode: 'PEN',
             papelImpresion: 'ticket80mm',
             showChange: false,
+            showCost: false,
             printOrder: true,
             showCurrencyCode: false,
             showTotalDiscount: false,
@@ -318,7 +319,7 @@ export class SettingsComponent {
         const blobCdr = await this.settingsService.getCertificate(certificateId)
         const urlCertificate = window.URL.createObjectURL(blobCdr)
         this.navigationService.loadBarFinish()
-        this.downloadFile(urlCertificate, 'certificato.pem')
+        this.downloadFile(urlCertificate, 'certificado.pem')
     }
 
     onFileSelected(files: FileList | null, input: HTMLInputElement) {

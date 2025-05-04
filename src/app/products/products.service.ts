@@ -61,6 +61,15 @@ export class ProductsService {
     ]
 
     private priceLists$: BehaviorSubject<PriceListModel[]> | null = null
+    private linkProducts: Map<string, ProductModel[]> = new Map()
+
+    setCacheLinkProducts(productId: string, products: ProductModel[]) {
+        this.linkProducts.set(productId, products)
+    }
+
+    getCacheLinkProducts(productId: string): ProductModel[] | undefined {
+        return this.linkProducts.get(productId)
+    }
 
     static setPrices(
         products: ProductModel[],

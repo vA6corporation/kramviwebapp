@@ -1,0 +1,22 @@
+<div class="container">
+    <div class="d-flex">
+        <mat-action-list class="w-100">
+            @for (duplicate of duplicates; track $index) {
+            @for (sale of duplicate.items; track $index) {
+            <button mat-list-item (click)="onSelectSale(sale._id)">
+                {{ sale.invoiceNumber }}
+                <span> - </span>
+                {{ sale.charge.toFixed(2) }}
+            </button>
+            }
+            }
+        </mat-action-list>
+        <mat-action-list class="w-100">
+            @for (missing of missings; track $index) {
+                <button mat-list-item>
+                    {{ missing }}
+                </button>
+            }
+        </mat-action-list>
+    </div>
+</div>
