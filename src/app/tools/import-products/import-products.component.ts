@@ -15,6 +15,7 @@ import { SpecialtiesService } from '../../specialties/specialties.service';
 import { ToolsService } from '../tools.service';
 import { MaterialModule } from '../../material.module';
 import { CommonModule } from '@angular/common';
+import { OfficeModel } from '../../auth/office.model';
 
 @Component({
     selector: 'app-import-products',
@@ -47,17 +48,21 @@ export class ImportProductsComponent {
     pageIndex: number = 0
     isLoading: boolean = false
     priceLists: PriceListModel[] = []
+    offices: OfficeModel[] = []
     setting: SettingModel = new SettingModel()
     private paymentMethodId: string = ''
 
     private handleAuth$: Subscription = new Subscription()
     private handlePriceLists$: Subscription = new Subscription()
     private handlePaymentMethods$: Subscription = new Subscription()
+    private handleOffices$: Subscription = new Subscription()
+
 
     ngOnDestroy() {
         this.handleAuth$.unsubscribe()
         this.handlePriceLists$.unsubscribe()
         this.handlePaymentMethods$.unsubscribe()
+        this.handleOffices$.unsubscribe()
     }
 
     ngOnInit(): void {
@@ -66,7 +71,15 @@ export class ImportProductsComponent {
 
             if (this.setting.defaultPrice === PriceType.GLOBAL) {
                 this.displayedColumns.push('price')
-            } else {
+            }
+
+            if (this.setting.defaultPrice === PriceType.OFICINA) {
+                this.handleOffices$ = this.authService.handleOffices().subscribe(offices => {
+                    this.offices = offices
+                    for (const office of this.offices) {
+                        this.displayedColumns.push(office.name)
+                    }
+                })
             }
 
             this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
@@ -118,6 +131,10 @@ export class ImportProductsComponent {
                         importProduct[priceList.name.toLowerCase()] = Number(product[priceList.name] || product[priceList.name.toLowerCase()] || importProduct.price || 0)
                     }
 
+                    for (const office of this.offices) {
+                        importProduct[office.name.toLowerCase()] = Number(product[office.name])
+                    }
+
                     this.dataSource.push(importProduct)
                 }
             }
@@ -131,7 +148,7 @@ export class ImportProductsComponent {
             }
             if (products.find(e => e.costo)) {
                 this.displayedColumns.push('cost')
-                
+
             }
             if (products.find(e => e.fechaVencimiento)) {
                 this.displayedColumns.push('expirationAt')

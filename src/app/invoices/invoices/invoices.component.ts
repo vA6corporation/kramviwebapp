@@ -663,7 +663,7 @@ export class InvoicesComponent {
                     sale.deletedAt ? 'SI' : 'NO'
                 ])
             }
-            const name = `VENTAS`
+            const name = `VENTAS_${this.office.name.toUpperCase().replace(/ /g, '_')}`
             buildExcel(body, name, wscols, [], [])
         } else {
             this.navigationService.showMessage('Seleccione un rango de fechas')

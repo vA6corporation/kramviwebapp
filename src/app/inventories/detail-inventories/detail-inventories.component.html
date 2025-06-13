@@ -126,6 +126,11 @@
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td mat-cell *matCellDef="let element" class="text-right">
+                        @if (element.deletedAt) {
+                        <button mat-icon-button>
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                        }
                         <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
                             <mat-icon>more_vert</mat-icon>
                         </button>
@@ -211,8 +216,7 @@
                     </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                    class="bg-danger"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="bg-danger"></tr>
             </table>
         </div>
         }

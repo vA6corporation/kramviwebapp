@@ -1,22 +1,65 @@
 <div class="container">
+    @if (duplicatesFacturas.length) {
+    <h2 class="mat-title-medium">Facturas</h2>
+    }
     <div class="d-flex">
         <mat-action-list class="w-100">
-            @for (duplicate of duplicates; track $index) {
+            @for (duplicate of duplicatesFacturas; track $index) {
             @for (sale of duplicate.items; track $index) {
             <button mat-list-item (click)="onSelectSale(sale._id)">
-                {{ sale.invoiceNumber }}
-                <span> - </span>
-                {{ sale.charge.toFixed(2) }}
+                <span matListItemTitle>{{ sale.invoiceNumber }}</span>
+                <span matListItemLine>{{ sale.charge.toFixed(2) }}</span>
+                <span>{{ sale.createdAt | date }}</span>
             </button>
             }
             }
         </mat-action-list>
+        <mat-list class="w-100" role="list">
+            @for (missing of missingsFacturas; track $index) {
+            <mat-list-item role="listitem">{{ missing }}</mat-list-item>
+            }
+        </mat-list>
+    </div>
+    @if (duplicatesBoletas.length) {
+    <h2 class="mat-title-medium">Boletas</h2>
+    }
+    <div class="d-flex">
         <mat-action-list class="w-100">
-            @for (missing of missings; track $index) {
-                <button mat-list-item>
-                    {{ missing }}
-                </button>
+            @for (duplicate of duplicatesBoletas; track $index) {
+            @for (sale of duplicate.items; track $index) {
+            <button mat-list-item (click)="onSelectSale(sale._id)">
+                <span matListItemTitle>{{ sale.invoiceNumber }}</span>
+                <span matListItemLine>{{ sale.charge.toFixed(2) }}</span>
+                <span>{{ sale.createdAt | date }}</span>
+            </button>
+            }
             }
         </mat-action-list>
+        <mat-list class="w-100" role="list">
+            @for (missing of missingsBoletas; track $index) {
+            <mat-list-item role="listitem">{{ missing }}</mat-list-item>
+            }
+        </mat-list>
+    </div>
+    @if (duplicatesNotas.length) {
+    <h2 class="mat-title-medium">Notas de venta</h2>
+    }
+    <div class="d-flex">
+        <mat-action-list class="w-100">
+            @for (duplicate of duplicatesNotas; track $index) {
+            @for (sale of duplicate.items; track $index) {
+            <button mat-list-item (click)="onSelectSale(sale._id)">
+                <span matListItemTitle>{{ sale.invoiceNumber }}</span>
+                <span matListItemLine>{{ sale.charge.toFixed(2) }}</span>
+                <span>{{ sale.createdAt | date }}</span>
+            </button>
+            }
+            }
+        </mat-action-list>
+        <mat-list class="w-100" role="list">
+            @for (missing of missingsNotas; track $index) {
+            <mat-list-item role="listitem">{{ missing }}</mat-list-item>
+            }
+        </mat-list>
     </div>
 </div>

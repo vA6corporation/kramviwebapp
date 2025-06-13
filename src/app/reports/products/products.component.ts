@@ -52,7 +52,6 @@ export class ProductsComponent {
         endDate: [new Date(), Validators.required],
     })
     displayedColumns: string[] = ['product', 'quantity', 'price', 'cost', 'totalSale', 'totalPurchase', 'totalUtility', 'stock']
-    // dataSource: SummarySaleItemModel[] = []
     dataSource: MatTableDataSource<SummarySaleItemModel> = new MatTableDataSource()
     categoryId: string = ''
     categories: CategoryModel[] = []
@@ -84,7 +83,6 @@ export class ProductsComponent {
 
     ngOnInit() {
         this.navigationService.setMenu([
-            // { id: 'search', label: 'Buscar', icon: 'search', show: true },
             { id: 'excel_simple', label: 'Exportar Excel', icon: 'file_download', show: false },
         ])
 

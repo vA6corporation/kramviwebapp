@@ -43,10 +43,10 @@ import { OfficeModel } from '../../auth/office.model';
 import { SettingModel } from '../../auth/setting.model';
 import { PaymentMethodModel } from '../../payment-methods/payment-method.model';
 import { buildBarcode50x25mmTwo } from './buildBarcode50x25mmTwo';
-import { buildCommandFastFood80mm } from './buildCommandFastFood80mm';
 import { buildDeletedCommand80mm } from './buildDeletedCommand80mm';
 import { buildBarcode30x20mm } from './buildBarcode30x20mm';
 import { BankModel } from '../../banks/bank.model';
+import { buildCommandFastFood80mm } from './buildCommandFastFood80mm';
 
 let main: any
 

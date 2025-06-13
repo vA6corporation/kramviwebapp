@@ -107,11 +107,11 @@
                 <mat-label>Observaciones</mat-label>
                 <input type="text" matInput formControlName="observations" [autofocus]>
             </mat-form-field>
-            <!-- @if (setting.showIsRetainer) {
+            @if (setting.showIsRetainer) {
             <div class="py-3">
                 <mat-slide-toggle formControlName="isRetainer">Es agente retenedor</mat-slide-toggle>
             </div>
-            } -->
+            }
             @if (setting.showDetraction) {
             <button type="button" class="w-100 mb-3" mat-flat-button [disabled]="isLoading" color="primary"
                 (click)="onDialogDetraction()">

@@ -9,7 +9,6 @@ import { OfficeModel } from '../../auth/office.model';
 import { SettingModel } from '../../auth/setting.model';
 import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
-import { DialogLastCommandComponent } from '../../pos-fast-food/dialog-last-command/dialog-last-command.component';
 import { CategoriesService } from '../../products/categories.service';
 import { CategoryModel } from '../../products/category.model';
 import { DialogSelectAnnotationData, DialogSelectAnnotationsComponent } from '../../products/dialog-select-annotations/dialog-select-annotations.component';
@@ -76,7 +75,6 @@ export class PrePosFastFoodComponent {
 
         this.navigationService.setMenu([
             { id: 'search', icon: 'search', show: true, label: '' },
-            { id: 'print_command', icon: 'printer', show: false, label: 'Imprimir comanda' },
             { id: 'printer', icon: 'printer', show: false, label: 'Imprimir comprobante' },
         ])
 
@@ -93,14 +91,6 @@ export class PrePosFastFoodComponent {
                         position: { top: '20px' },
                     })
                     break
-
-                case 'print_command':
-                    this.matDialog.open(DialogLastCommandComponent, {
-                        width: '600px',
-                        position: { top: '20px' },
-                    })
-                    break
-
                 default:
                     break
             }
@@ -225,6 +215,7 @@ export class PrePosFastFoodComponent {
     }
 
     onSelectProduct(product: ProductModel): void {
+        console.log(product)
         if (product.annotations.length || product.productIds.length) {
             const data: DialogSelectAnnotationData = {
                 product,

@@ -18,7 +18,6 @@ import { ProductsService } from '../../products/products.service';
 import { DialogLastSalesComponent } from '../../sales/dialog-last-sales/dialog-last-sales.component';
 import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component';
 import { SalesService } from '../../sales/sales.service';
-import { DialogLastCommandComponent } from '../dialog-last-command/dialog-last-command.component';
 
 @Component({
     selector: 'app-pos-fast-food',
@@ -76,7 +75,6 @@ export class PosFastFoodComponent {
 
         this.navigationService.setMenu([
             { id: 'search', icon: 'search', show: true, label: '' },
-            { id: 'print_command', icon: 'printer', show: false, label: 'Imprimir comanda' },
             { id: 'printer', icon: 'printer', show: false, label: 'Imprimir comprobante' },
         ])
 
@@ -93,14 +91,6 @@ export class PosFastFoodComponent {
                         position: { top: '20px' },
                     })
                     break
-
-                case 'print_command':
-                    this.matDialog.open(DialogLastCommandComponent, {
-                        width: '600px',
-                        position: { top: '20px' },
-                    })
-                    break
-
                 default:
                     break
             }

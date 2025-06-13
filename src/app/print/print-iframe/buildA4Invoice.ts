@@ -451,9 +451,14 @@ export async function buildA4Invoice(
     }
 
     if (sale.isCredit) {
+        const sumDues = sale.dues.map(e => e.charge).reduce((a, b) => a + b, 0)
+        let retainer = 0
+        if (sale.isRetainer) {
+            retainer = sumDues * 0.03
+        }
         for (let index = 0; index < dues.length; index++) {
             const due = dues[index]
-            text = `Cuota ${index + 1} - Fecha de pago: ${formatDate(due.dueDate, 'dd/MM/yyyy', 'en-US')} - Monto: ${due.charge.toFixed(2)}`
+            text = `Cuota ${index + 1} - Fecha de pago: ${formatDate(due.dueDate, 'dd/MM/yyyy', 'en-US')} - Monto: ${(due.charge - (retainer / sale.dues.length)).toFixed(2)}`
             pdf.text(text, 5, positionYitems)
             positionYitems += 5
         }

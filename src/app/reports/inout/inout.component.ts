@@ -12,6 +12,7 @@ import { NavigationService } from '../../navigation/navigation.service';
 import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
 import { ReportsService } from '../reports.service';
+import { buildExcel } from '../../buildExcel';
 
 @Component({
     selector: 'app-inout',
@@ -57,11 +58,13 @@ export class InoutComponent {
     private handleAuth$: Subscription = new Subscription()
     private handleUsers$: Subscription = new Subscription()
     private handleOffices$: Subscription = new Subscription()
+    private handleClickMenu$: Subscription = new Subscription()
 
     ngOnDestroy() {
         this.handleAuth$.unsubscribe()
         this.handleUsers$.unsubscribe()
         this.handleOffices$.unsubscribe()
+        this.handleClickMenu$.unsubscribe()
     }
 
     ngOnInit() {
@@ -72,7 +75,9 @@ export class InoutComponent {
             this.years.push(index)
         }
 
-        this.navigationService.setMenu([])
+        this.navigationService.setMenu([
+            { id: 'excel_simple', label: 'Exportar Excel', icon: 'file_download', show: false },
+        ])
 
         this.handleUsers$ = this.usersService.handleUsers().subscribe(users => {
             this.users = users
@@ -87,139 +92,166 @@ export class InoutComponent {
             Object.assign(this.params, { officeId: this.officeId })
             this.fetchData()
         })
+
+        this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
+            let wscols = [20, 20, 20, 20, 20]
+            let body = []
+            body.push([
+                'MES',
+                'TOTAL VENTAS',
+                'TOTAL COMPRAS',
+                'TOTAL ORDEN DE PAGO',
+                'FINAL'
+            ])
+
+            for (const month of this.dataSource) {
+                body.push([
+                    month.month,
+                    Number(month.sale.toFixed(2)),
+                    Number(month.purchase.toFixed(2)),
+                    Number(month.paymentOrder.toFixed(2)),
+                    Number((month.sale - month.purchase - month.paymentOrder).toFixed(2))
+                ])
+            }
+
+            const name = `RESUMEN_${this.year}`
+            buildExcel(body, name, wscols, [])
+        })
     }
 
     fetchData() {
         this.navigationService.loadBarStart()
-        this.reportsService.getInOutByYearOfficeUser(this.year, this.params).subscribe(res => {
-            this.navigationService.loadBarFinish()
-            this.chart?.destroy()
-            const { sales, purchases, purchaseSupplies, paymentOrders } = res
-            const dataSource = []
+        this.reportsService.getInOutByYearOfficeUser(this.year, this.params).subscribe({
+            next: res => {
+                this.navigationService.loadBarFinish()
+                this.chart?.destroy()
+                const { sales, purchases, purchaseSupplies, paymentOrders } = res
+                const dataSource = []
 
-            for (let index = 0; index < 12; index++) {
-                const sale = sales[index]
-                const purchase = purchases[index]
-                const purchaseSupply = purchaseSupplies[index]
-                const paymentOrder = paymentOrders[index]
+                for (let index = 0; index < 12; index++) {
+                    const sale = sales[index]
+                    const purchase = purchases[index]
+                    const purchaseSupply = purchaseSupplies[index]
+                    const paymentOrder = paymentOrders[index]
 
-                const data: any = {}
+                    const data: any = {}
 
-                data.month = this.months[index]
+                    data.month = this.months[index]
 
-                if (sale.mes === index + 1) {
-                    data.sale = sale.total
+                    if (sale.mes === index + 1) {
+                        data.sale = sale.total
+                    }
+
+                    if (purchase.mes === index + 1) {
+                        data.purchase = purchase.total
+                    }
+
+                    if (purchaseSupply.mes === index + 1) {
+                        data.purchaseSupply = purchaseSupply.total
+                    }
+
+                    if (paymentOrder.mes === index + 1) {
+                        data.paymentOrder = paymentOrder.total
+                    }
+
+                    dataSource.push(data)
                 }
 
-                if (purchase.mes === index + 1) {
-                    data.purchase = purchase.total
+                if (purchaseSupplies.map((e: any) => e.total).reduce((a: any, b: any) => a + b, 0)) {
+                    this.displayedColumns.splice(3, 0, 'purchaseSupplies')
                 }
 
-                if (purchaseSupply.mes === index + 1) {
-                    data.purchaseSupply = purchaseSupply.total
+                if (paymentOrders.map((e: any) => e.total).reduce((a: any, b: any) => a + b, 0)) {
+                    this.displayedColumns.splice(3, 0, 'paymentOrders')
                 }
 
-                if (paymentOrder.mes === index + 1) {
-                    data.paymentOrder = paymentOrder.total
+                this.dataSource = dataSource
+
+                const data = {
+                    labels: this.months,
+                    datasets: [
+                        {
+                            label: 'Ventas',
+                            data: sales.map((e: any) => e.total),
+                            fill: true,
+                            datalabels: {
+                                align: 'end',
+                                anchor: 'end'
+                            } as any
+                        },
+                        {
+                            label: 'Compras',
+                            data: purchases.map((e: any) => e.total),
+                            fill: true,
+                            datalabels: {
+                                align: 'start',
+                                anchor: 'start'
+                            } as any
+                        },
+                        {
+                            label: 'Insumos',
+                            data: purchaseSupplies.map((e: any) => e.total),
+                            fill: true,
+                            datalabels: {
+                                align: 'start',
+                                anchor: 'start'
+                            } as any
+                        },
+                        {
+                            label: 'Ordenes de pago',
+                            data: paymentOrders.map((e: any) => e.total),
+                            fill: true,
+                            datalabels: {
+                                align: 'start',
+                                anchor: 'start'
+                            } as any
+                        },
+                    ]
                 }
 
-                dataSource.push(data)
-            }
-            
-            if (purchaseSupplies.map((e: any) => e.total).reduce((a: any, b: any) => a + b, 0)) {
-                this.displayedColumns.splice(3, 0, 'purchaseSupplies')
-            }
+                const config = {
+                    type: 'line' as ChartType,
+                    data: data,
+                    plugins: [ChartDataLabels],
+                    options: {
+                        plugins: {
+                            datalabels: {
+                                backgroundColor: function (context) {
+                                    return 'rgba(73, 79, 87, 0.5)'
+                                },
+                                borderRadius: 4,
+                                color: 'white',
+                                font: {
+                                    weight: 'bold'
+                                },
+                                formatter: function (value) {
+                                    if (value === 0) {
+                                        return null
+                                    } else {
+                                        return Math.round(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                                    }
+                                },
+                                padding: 6
+                            }
+                        },
+                        aspectRatio: 5 / 3,
+                        layout: {
+                            padding: {
+                                top: 32,
+                                right: 16,
+                                bottom: 16,
+                                left: 8
+                            }
+                        },
+                        maintainAspectRatio: false,
+                    } as ChartOptions,
+                }
 
-            if (paymentOrders.map((e: any) => e.total).reduce((a: any, b: any) => a + b, 0)) {
-                this.displayedColumns.splice(3, 0, 'paymentOrders')
+                const canvas = this.incomesChart.nativeElement
+                this.chart = new Chart(canvas, config)
+            }, error: (error: HttpErrorResponse) => {
+                this.navigationService.showMessage(error.error.message)
             }
-
-            this.dataSource = dataSource
-
-            const data = {
-                labels: this.months,
-                datasets: [
-                    {
-                        label: 'Ventas',
-                        data: sales.map((e: any) => e.total),
-                        fill: true,
-                        datalabels: {
-                            align: 'end',
-                            anchor: 'end'
-                        } as any
-                    },
-                    {
-                        label: 'Compras',
-                        data: purchases.map((e: any) => e.total),
-                        fill: true,
-                        datalabels: {
-                            align: 'start',
-                            anchor: 'start'
-                        } as any
-                    },
-                    {
-                        label: 'Insumos',
-                        data: purchaseSupplies.map((e: any) => e.total),
-                        fill: true,
-                        datalabels: {
-                            align: 'start',
-                            anchor: 'start'
-                        } as any
-                    },
-                    {
-                        label: 'Ordenes de pago',
-                        data: paymentOrders.map((e: any) => e.total),
-                        fill: true,
-                        datalabels: {
-                            align: 'start',
-                            anchor: 'start'
-                        } as any
-                    },
-                ]
-            }
-
-            const config = {
-                type: 'line' as ChartType,
-                data: data,
-                plugins: [ChartDataLabels],
-                options: {
-                    plugins: {
-                        datalabels: {
-                            backgroundColor: function (context) {
-                                return 'rgba(73, 79, 87, 0.5)'
-                            },
-                            borderRadius: 4,
-                            color: 'white',
-                            font: {
-                                weight: 'bold'
-                            },
-                            formatter: function (value) {
-                                if (value === 0) {
-                                    return null
-                                } else {
-                                    return Math.round(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-                                }
-                            },
-                            padding: 6
-                        }
-                    },
-                    aspectRatio: 5 / 3,
-                    layout: {
-                        padding: {
-                            top: 32,
-                            right: 16,
-                            bottom: 16,
-                            left: 8
-                        }
-                    },
-                    maintainAspectRatio: false,
-                } as ChartOptions,
-            }
-
-            const canvas = this.incomesChart.nativeElement
-            this.chart = new Chart(canvas, config)
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.showMessage(error.error.message)
         })
     }
 
