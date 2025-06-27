@@ -69,12 +69,12 @@ export class CreditCustomersComponent {
             { id: 'export_customer_credits', label: 'Exportar cuenta PDF', icon: 'file_download', show: false },
         ])
 
-        this.handleTurns$ = this.turnsService.handleOpenTurn().subscribe(turn => {
-            this.turn = turn
-        })
-
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.office = auth.office
+
+            this.handleTurns$ = this.turnsService.handleOpenTurn(auth.setting.isOfficeTurn).subscribe(turn => {
+                this.turn = turn
+            })
         })
 
         this.customerId = this.activatedRoute.snapshot.params['customerId']

@@ -16,7 +16,7 @@ export async function buildBarcode110x30mm(
         const product = products[index]
         let positionY = 10
 
-        JsBarcode("#barcode", product.upc || '0000000000000', {
+        JsBarcode("#barcode", product.upc || product.sku || 'sin codigo', {
             width: 2,
             height: 30,
             displayValue: false
@@ -46,7 +46,7 @@ export async function buildBarcode110x30mm(
         pdf.text(text, 93, positionY + 13, { align: 'right' })
 
         pdf.setFontSize(small)
-        text = product.upc || '0000000000000'
+        text = product.upc || product.sku || '0000000000000'
         pdf.text(text, 18, positionY + 11)
 
         text = formatDate(new Date(), 'dd.MM.yy', 'en-US')

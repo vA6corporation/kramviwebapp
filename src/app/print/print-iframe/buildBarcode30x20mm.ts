@@ -1,6 +1,5 @@
-import jsPDF from "jspdf";
-import { formatDate } from "@angular/common";
 import JsBarcode from "jsbarcode";
+import jsPDF from "jspdf";
 import { ProductModel } from "../../products/product.model";
 
 export async function buildBarcode30x20mm(
@@ -8,14 +7,13 @@ export async function buildBarcode30x20mm(
 ): Promise<jsPDF> {
     const pdf = new jsPDF('l', 'mm', [20, 90])
     const small = 7
-    // const title = 14
     let text: string = ''
 
     for (let index = 0; index < products.length; index++) {
         const product = products[index]
         let positionY = 2
 
-        JsBarcode("#barcode", product.upc || '0000000000000', {
+        JsBarcode("#barcode", product.upc || product.sku || 'sin codigo', {
             width: 2,
             height: 36,
             displayValue: false
@@ -38,7 +36,7 @@ export async function buildBarcode30x20mm(
 
         pdf.setFontSize(small)
 
-        text = product.upc || '0000000000000'
+        text = product.upc || product.sku || 'sin codigo'
         pdf.text(text, 15, positionY + 15, { align: 'center' })
         pdf.text(text, 45, positionY + 15, { align: 'center' })
         pdf.text(text, 75, positionY + 15, { align: 'center' })

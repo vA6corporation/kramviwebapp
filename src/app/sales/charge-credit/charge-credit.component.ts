@@ -133,19 +133,19 @@ export class ChargeCreditComponent {
     ngOnInit(): void {
         this.navigationService.setTitle('Credito')
 
-        this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
-            this.turn = turn
-            if (turn === null) {
-                this.matDialog.open(DialogTurnsComponent, {
-                    width: '600px',
-                    position: { top: '20px' },
-                })
-            }
-        })
-
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.user = auth.user
             this.setting = auth.setting
+
+            this.handleOpenTurn$ = this.turnsService.handleOpenTurn(this.setting.isOfficeTurn).subscribe(turn => {
+                this.turn = turn
+                if (turn === null) {
+                    this.matDialog.open(DialogTurnsComponent, {
+                        width: '600px',
+                        position: { top: '20px' },
+                    })
+                }
+            })
 
             this.handleWorkers$ = this.workersService.handleWorkers().subscribe(workers => {
                 this.workers = workers
@@ -401,11 +401,11 @@ export class ChargeCreditComponent {
 
             if (this.setting.allowFreeStock) {
                 this.salesService.createCredit(
-                    createdCredit, this.saleItems, 
-                    this.payments, 
-                    this.dues, 
+                    createdCredit, this.saleItems,
+                    this.payments,
+                    this.dues,
                     this.couponItems,
-                    this.detraction, 
+                    this.detraction,
                     this.params
                 ).subscribe({
                     next: sale => {
@@ -449,10 +449,10 @@ export class ChargeCreditComponent {
                 })
             } else {
                 this.salesService.createCreditStock(
-                    createdCredit, 
-                    this.saleItems, 
-                    this.payments, 
-                    this.dues, 
+                    createdCredit,
+                    this.saleItems,
+                    this.payments,
+                    this.dues,
                     this.couponItems,
                     this.detraction,
                     this.params

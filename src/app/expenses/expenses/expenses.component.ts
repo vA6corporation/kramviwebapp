@@ -15,6 +15,7 @@ import { TurnsService } from '../../turns/turns.service';
 import { DialogCreateExpensesComponent } from '../dialog-create-expenses/dialog-create-expenses.component';
 import { ExpenseModel } from '../expense.model';
 import { ExpensesService } from '../expenses.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
     selector: 'app-expenses',
@@ -28,6 +29,7 @@ export class ExpensesComponent {
         private readonly navigationService: NavigationService,
         private readonly expensesService: ExpensesService,
         private readonly turnsService: TurnsService,
+        private readonly authService: AuthService,
         private readonly formBuilder: FormBuilder,
         private readonly matDialog: MatDialog,
         private readonly activatedRoute: ActivatedRoute,
@@ -59,8 +61,10 @@ export class ExpensesComponent {
     ngOnInit(): void {
         this.navigationService.setTitle('Gastos')
 
-        this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
-            this.turn = turn
+        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
+            this.handleOpenTurn$ = this.turnsService.handleOpenTurn(auth.setting.isOfficeTurn).subscribe(turn => {
+                this.turn = turn
+            })
         })
 
         const { pageIndex, pageSize } = this.activatedRoute.snapshot.queryParams

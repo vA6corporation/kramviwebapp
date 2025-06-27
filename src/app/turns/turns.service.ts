@@ -27,13 +27,23 @@ export class TurnsService {
         }
     }
 
-    handleOpenTurn(): Observable<TurnModel | null> {
-        if (this.turn === null) {
-            this.loadTurn()
+    handleOpenTurn(isOfficeTurn: boolean): Observable<TurnModel | null> {
+        if (isOfficeTurn) {
+            if (this.turn === null) {
+                this.loadOfficeTurn()
+            } else {
+                setTimeout(() => {
+                    this.turn$.next(this.turn)
+                })
+            }
         } else {
-            setTimeout(() => {
-                this.turn$.next(this.turn)
-            })
+            if (this.turn === null) {
+                this.loadTurn()
+            } else {
+                setTimeout(() => {
+                    this.turn$.next(this.turn)
+                })
+            }
         }
         return this.turn$.asObservable()
     }
@@ -79,6 +89,24 @@ export class TurnsService {
                 console.log(error)
                 this.turn$.next(null)
             }
+        })
+    }
+
+    loadOfficeTurn() {
+        this.httpService.get('turns/openOfficeTurn').subscribe({
+            next: turn => {
+                this.turn = turn
+                this.turn$.next(turn)
+            }, error: (error: HttpErrorResponse) => {
+                console.log(error)
+                this.turn$.next(null)
+            }
+        })
+    }
+
+    createOfficeTurn(openCash: number): void {
+        this.httpService.post('turns/openOfficeTurn', { openCash }).subscribe(turn => {
+            this.turn$.next(turn)
         })
     }
 

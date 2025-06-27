@@ -117,19 +117,20 @@ export class ChargeEventsComponent {
             { id: 'add_customer', label: 'Agregar cliente', icon: 'person_add', show: true },
         ])
 
-        this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
-            this.turn = turn
-            if (turn === null) {
-                this.matDialog.open(DialogTurnsComponent, {
-                    width: '600px',
-                    position: { top: '20px' }
-                })
-            }
-        })
-
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.user = auth.user
             this.setting = auth.setting
+
+            this.handleOpenTurn$ = this.turnsService.handleOpenTurn(this.setting.isOfficeTurn).subscribe(turn => {
+                this.turn = turn
+                if (turn === null) {
+                    this.matDialog.open(DialogTurnsComponent, {
+                        width: '600px',
+                        position: { top: '20px' }
+                    })
+                }
+            })
+
         })
 
         this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
@@ -316,11 +317,11 @@ export class ChargeEventsComponent {
 
             if (this.setting.allowFreeStock) {
                 this.salesService.createSale(
-                    createdSale, 
-                    this.saleItems, 
-                    this.payments, 
+                    createdSale,
+                    this.saleItems,
+                    this.payments,
                     [],
-                    null, 
+                    null,
                     this.params
                 ).subscribe({
                     next: sale => {
@@ -373,11 +374,11 @@ export class ChargeEventsComponent {
                 })
             } else {
                 this.salesService.createSaleStock(
-                    createdSale, 
-                    this.saleItems, 
-                    this.payments, 
+                    createdSale,
+                    this.saleItems,
+                    this.payments,
                     [],
-                    null, 
+                    null,
                     this.params
                 ).subscribe({
                     next: res => {

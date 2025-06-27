@@ -9,6 +9,7 @@ import { TurnModel } from '../../turns/turn.model';
 import { TurnsService } from '../../turns/turns.service';
 import { CreditModel } from '../credit.model';
 import { CreditsService } from '../credits.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
     selector: 'app-dialog-payment-credits',
@@ -22,9 +23,10 @@ export class DialogPaymentCreditsComponent {
         @Inject(MAT_DIALOG_DATA)
         private readonly credits: CreditModel[],
         private readonly formBuilder: FormBuilder,
-        private readonly paymentMethodsService: PaymentMethodsService,
         private readonly turnsService: TurnsService,
         private readonly creditsService: CreditsService,
+        private readonly paymentMethodsService: PaymentMethodsService,
+        private readonly authService: AuthService,
         private readonly dialogRef: MatDialogRef<DialogPaymentCreditsComponent>,
     ) { }
 
@@ -54,9 +56,12 @@ export class DialogPaymentCreditsComponent {
             this.paymentMethods = paymentMethods
         })
 
-        this.handleTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
-            this.turn = turn
+        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
+            this.handleTurn$ = this.turnsService.handleOpenTurn(auth.setting.isOfficeTurn).subscribe(turn => {
+                this.turn = turn
+            })
         })
+
     }
 
     onSubmit() {

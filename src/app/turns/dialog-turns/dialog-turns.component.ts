@@ -5,6 +5,8 @@ import { Subscription } from 'rxjs';
 import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { TurnsService } from '../turns.service';
+import { AuthService } from '../../auth/auth.service';
+import { SettingModel } from '../../auth/setting.model';
 
 @Component({
     selector: 'app-dialog-turns',
@@ -18,6 +20,7 @@ export class DialogTurnsComponent {
         private readonly formBuilder: FormBuilder,
         private readonly dialogRef: MatDialogRef<DialogTurnsComponent>,
         private readonly turnsService: TurnsService,
+        private readonly authService: AuthService,
         private readonly navigationService: NavigationService,
     ) { }
 
@@ -25,6 +28,7 @@ export class DialogTurnsComponent {
         openCash: ['', Validators.required]
     })
 
+    private setting = new SettingModel()
     private handleAuth$: Subscription = new Subscription()
 
     ngOnDestroy() {
@@ -33,13 +37,20 @@ export class DialogTurnsComponent {
 
     ngOnInit(): void {
         this.dialogRef.disableClose = true
+        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
+            this.setting = auth.setting
+        })
     }
 
     onSubmit() {
         if (this.formGroup.valid) {
             this.dialogRef.close()
             const { openCash } = this.formGroup.value
-            this.turnsService.createTurn(openCash)
+            if (this.setting.isOfficeTurn) {
+                this.turnsService.createOfficeTurn(openCash)
+            } else {
+                this.turnsService.createTurn(openCash)
+            }
             this.navigationService.showMessage('Caja aperturada')
         }
     }

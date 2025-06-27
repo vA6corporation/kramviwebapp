@@ -16,6 +16,8 @@ import { DialogDetailIncidentsComponent } from '../dialog-detail-incidents/dialo
 import { PageEvent } from '@angular/material/paginator';
 import { DialogDetailSalesComponent } from '../../invoices/dialog-detail-sales/dialog-detail-sales.component';
 import { MaterialModule } from '../../material.module';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { SheetIncidentsComponent } from '../sheet-incidents/sheet-incidents.component';
 
 @Component({
     selector: 'app-out-incidents',
@@ -30,6 +32,7 @@ export class OutIncidentsComponent {
         private readonly navigationService: NavigationService,
         private readonly formBuilder: FormBuilder,
         private readonly activatedRoute: ActivatedRoute,
+        private readonly bottomSheet: MatBottomSheet,
         private readonly usersService: UsersService,
         private readonly authService: AuthService,
         private readonly matDialog: MatDialog,
@@ -140,6 +143,10 @@ export class OutIncidentsComponent {
 
         this.fetchCount()
         this.fetchData()
+    }
+
+    onCreateIncident() {
+        this.bottomSheet.open(SheetIncidentsComponent)
     }
 
     onDetailIncident(incidentItemId: string) {

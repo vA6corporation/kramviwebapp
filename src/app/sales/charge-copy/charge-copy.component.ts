@@ -124,19 +124,19 @@ export class ChargeCopyComponent {
             this.formGroup.patchValue({ paymentMethodId: this.paymentMethods[0]?._id || null })
         })
 
-        this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
-            this.turn = turn
-            if (turn === null) {
-                this.matDialog.open(DialogTurnsComponent, {
-                    width: '600px',
-                    position: { top: '20px' }
-                })
-            }
-        })
-
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.user = auth.user
             this.setting = auth.setting
+
+            this.handleOpenTurn$ = this.turnsService.handleOpenTurn(this.setting.isOfficeTurn).subscribe(turn => {
+                this.turn = turn
+                if (turn === null) {
+                    this.matDialog.open(DialogTurnsComponent, {
+                        width: '600px',
+                        position: { top: '20px' }
+                    })
+                }
+            })
 
             if (this.setting.showWorker) {
                 this.formGroup.get('workerId')?.setValidators([Validators.required])
@@ -344,9 +344,9 @@ export class ChargeCopyComponent {
 
             if (this.setting.allowFreeStock) {
                 this.salesService.createSale(
-                    createdSale, 
-                    this.saleItems, 
-                    this.payments, 
+                    createdSale,
+                    this.saleItems,
+                    this.payments,
                     [],
                     null,
                     this.params
@@ -402,11 +402,11 @@ export class ChargeCopyComponent {
                 })
             } else {
                 this.salesService.createSaleStock(
-                    createdSale, 
-                    this.saleItems, 
-                    this.payments, 
+                    createdSale,
+                    this.saleItems,
+                    this.payments,
                     [],
-                    null, 
+                    null,
                     this.params
                 ).subscribe({
                     next: res => {

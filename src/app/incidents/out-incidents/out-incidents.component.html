@@ -76,7 +76,7 @@
             [length]="length" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
     </div>
     <div class="fixed-bottom p-3" style="right: 0; left: unset; width: auto;">
-        <button mat-fab color="primary" class="float-right" routerLink="/incidents/create">
+        <button type="button" mat-fab color="primary" class="float-right" (click)="onCreateIncident()">
             <mat-icon>add</mat-icon>
         </button>
     </div>

@@ -3,14 +3,6 @@
         [formGroup]="formGroup">
         <div class="px-3">
             <mat-form-field appearance="fill">
-                <mat-label>Seleccione un motivo</mat-label>
-                <mat-select formControlName="incidentType">
-                    @for (incidentType of incidentTypes; track $index) {
-                    <mat-option [value]="incidentType">{{ incidentType }}</mat-option>
-                    }
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="fill">
                 <mat-label>Observaciones</mat-label>
                 <input type="text" matInput formControlName="observations">
             </mat-form-field>

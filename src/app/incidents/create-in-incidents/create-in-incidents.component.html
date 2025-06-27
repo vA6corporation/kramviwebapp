@@ -1,0 +1,63 @@
+<div class="d-flex" style="margin-bottom: 60px;">
+    <div class="flex-70">
+        <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndex = $event"
+            animationDuration="0ms">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    Favoritos
+                </ng-template>
+                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                    @for (product of favorites; track product._id) {
+                    <mat-grid-tile (click)="onSelectProduct(product)">
+                        {{ product.fullName }}
+                        <small class="text-muted text-price">
+                            {{ product.cost.toFixed(2) }}
+                        </small>
+                    </mat-grid-tile>
+                    }
+                </mat-grid-list>
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    Categorias
+                </ng-template>
+                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                    @for (category of categories; track category._id) {
+                    <mat-grid-tile (click)="onSelectCategory(category)" [style.background]="category.color">
+                        <span class="px-1">
+                            {{ category.name.slice(0, 60) }}
+                        </span>
+                    </mat-grid-tile>
+                    }
+                </mat-grid-list>
+            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    Busqueda
+                </ng-template>
+                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                    @for (product of products; track product._id) {
+                    <mat-grid-tile (click)="onSelectProduct(product)">
+                        {{ product.fullName }}
+                        <small class="text-muted text-price">
+                            {{ product.cost.toFixed(2) }}
+                        </small>
+                    </mat-grid-tile>
+                    }
+                </mat-grid-list>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+    <div class="flex-30 bg-white list-items">
+        <app-incident-items></app-incident-items>
+    </div>
+    <div class="fixed-bottom d-flex align-items-center footer-button">
+        <span class="spacer"></span>
+        <div class="p-3">
+            <button type="button" mat-raised-button (click)="onCancel()" color="primary">CANCELAR</button>
+            <span class="divider"></span>
+            <button type="button" mat-flat-button color="primary"
+                routerLink="/incidents/chargeInIncidents">GUARDAR</button>
+        </div>
+    </div>
+</div>

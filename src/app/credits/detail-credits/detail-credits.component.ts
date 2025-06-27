@@ -65,18 +65,18 @@ export class DetailCreditsComponent {
     }
 
     ngOnInit(): void {
-        this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
-            this.turn = turn
-            if (turn === null) {
-                this.matDialog.open(DialogTurnsComponent, {
-                    width: '600px',
-                    position: { top: '20px' }
-                })
-            }
-        })
-
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.office = auth.office
+
+            this.handleOpenTurn$ = this.turnsService.handleOpenTurn(auth.setting.isOfficeTurn).subscribe(turn => {
+                this.turn = turn
+                if (turn === null) {
+                    this.matDialog.open(DialogTurnsComponent, {
+                        width: '600px',
+                        position: { top: '20px' }
+                    })
+                }
+            })
         })
 
         this.creditId = this.activatedRoute.snapshot.params['creditId']

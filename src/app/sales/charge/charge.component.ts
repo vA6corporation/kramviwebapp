@@ -151,7 +151,11 @@ export class ChargeComponent {
             this.couponItems = couponItems
         })
 
-        this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
+        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
+            this.user = auth.user
+            this.setting = auth.setting
+
+            this.handleOpenTurn$ = this.turnsService.handleOpenTurn(this.setting.isOfficeTurn).subscribe(turn => {
             this.turn = turn
             if (this.turn === null) {
                 this.matDialog.open(DialogTurnsComponent, {
@@ -172,10 +176,6 @@ export class ChargeComponent {
                 }
             }
         })
-
-        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.user = auth.user
-            this.setting = auth.setting
 
             if (this.setting.showWorker) {
                 this.formGroup.get('workerId')?.setValidators([Validators.required])

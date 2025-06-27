@@ -94,26 +94,27 @@ export class OpenTurnComponent {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.office = auth.office
             this.setting = auth.setting
+
+            this.handleOpenTurn$ = this.turnsService.handleOpenTurn(this.setting.isOfficeTurn).subscribe(turn => {
+                this.navigationService.loadBarFinish()
+                if (turn) {
+                    this.turn = turn
+                    this.turnId = turn._id
+                    this.fetchData()
+                    this.navigationService.setMenu([
+                        { id: 'print_turn', label: 'Imprimir caja', icon: 'printer', show: false },
+                        { id: 'change_open_charge', label: 'Modificar apertura', icon: 'info', show: false },
+                        { id: 'add_observations', label: 'Agregar observaciones', icon: 'info', show: false },
+                    ])
+                } else {
+                    this.turn = null
+                    this.summaryPayments = []
+                    this.payments = []
+                    this.expenses = []
+                }
+            })
         })
 
-        this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
-            this.navigationService.loadBarFinish()
-            if (turn) {
-                this.turn = turn
-                this.turnId = turn._id
-                this.fetchData()
-                this.navigationService.setMenu([
-                    { id: 'print_turn', label: 'Imprimir caja', icon: 'printer', show: false },
-                    { id: 'change_open_charge', label: 'Modificar apertura', icon: 'info', show: false },
-                    { id: 'add_observations', label: 'Agregar observaciones', icon: 'info', show: false },
-                ])
-            } else {
-                this.turn = null
-                this.summaryPayments = []
-                this.payments = []
-                this.expenses = []
-            }
-        })
 
         this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
             this.paymentMethods = paymentMethods

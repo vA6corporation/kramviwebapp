@@ -119,20 +119,20 @@ export class CreateCreditBillerComponent {
 
         this.navigationService.setTitle('Emitir al credito')
         this.billsService.setBillItems([])
-        
-        this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
-            this.turn = turn
-            if (turn === null) {
-                this.matDialog.open(DialogTurnsComponent, {
-                    width: '600px',
-                    position: { top: '20px' }
-                })
-            }
-        })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.user = auth.user
             this.setting = auth.setting
+
+            this.handleOpenTurn$ = this.turnsService.handleOpenTurn(this.setting.isOfficeTurn).subscribe(turn => {
+                this.turn = turn
+                if (turn === null) {
+                    this.matDialog.open(DialogTurnsComponent, {
+                        width: '600px',
+                        position: { top: '20px' }
+                    })
+                }
+            })
 
             this.formGroup.get('invoiceType')?.patchValue(this.setting.defaultInvoice)
             this.formGroup.get('currencyCode')?.patchValue(this.setting.defaultCurrencyCode)
@@ -370,9 +370,9 @@ export class CreateCreditBillerComponent {
             this.navigationService.loadBarStart()
 
             this.billsService.saveBillCredit(
-                createdCredit, 
-                this.billItems, 
-                this.payments, 
+                createdCredit,
+                this.billItems,
+                this.payments,
                 this.dues,
                 this.detraction
             ).subscribe({

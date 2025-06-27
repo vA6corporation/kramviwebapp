@@ -16,6 +16,8 @@ import { DialogDetailIncidentsComponent } from '../dialog-detail-incidents/dialo
 import { DialogDetailSalesComponent } from '../../invoices/dialog-detail-sales/dialog-detail-sales.component';
 import { MaterialModule } from '../../material.module';
 import { PageEvent } from '@angular/material/paginator';
+import { SheetIncidentsComponent } from '../sheet-incidents/sheet-incidents.component';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 
 @Component({
     selector: 'app-in-incidents',
@@ -29,6 +31,7 @@ export class InIncidentsComponent {
         private readonly incidentsService: IncidentsService,
         private readonly navigationService: NavigationService,
         private readonly activatedRoute: ActivatedRoute,
+        private readonly bottomSheet: MatBottomSheet,
         private readonly usersService: UsersService,
         private readonly formBuilder: FormBuilder,
         private readonly authService: AuthService,
@@ -148,6 +151,10 @@ export class InIncidentsComponent {
             position: { top: '20px' },
             data: incidentItemId,
         })
+    }
+
+    onCreateIncident() {
+        this.bottomSheet.open(SheetIncidentsComponent)
     }
 
     onUserChange() {

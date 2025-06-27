@@ -17,7 +17,7 @@ export async function buildBarcode105x25mm(
         const product = products[index]
         let positionY = 3
 
-        JsBarcode("#barcode", product.upc || '0000000000000', {
+        JsBarcode("#barcode", product.upc || product.sku || 'sin codigo', {
             width: 2,
             height: 30,
             displayValue: false
@@ -56,7 +56,7 @@ export async function buildBarcode105x25mm(
         pdf.addImage(jpegUrl, "JPEG", sideRight + 17, positionY + 13, 35, 5)
 
         pdf.setFontSize(small)
-        text = product.upc || '0000000000000'
+        text = product.upc || product.sku || 'sin codigo'
         pdf.text(text, 18, positionY + 20)
         pdf.text(text, sideRight + 18, positionY + 20)
 

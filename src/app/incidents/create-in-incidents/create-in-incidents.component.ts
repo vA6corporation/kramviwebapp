@@ -1,24 +1,24 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { FavoritesService } from '../../favorites/favorites.service';
-import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
 import { CategoriesService } from '../../products/categories.service';
+import { ProductsService } from '../../products/products.service';
+import { FavoritesService } from '../../favorites/favorites.service';
+import { IncidentsService } from '../incidents.service';
 import { CategoryModel } from '../../products/category.model';
 import { ProductModel } from '../../products/product.model';
-import { ProductsService } from '../../products/products.service';
+import { Subscription } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MaterialModule } from '../../material.module';
 import { IncidentItemsComponent } from '../incident-items/incident-items.component';
-import { IncidentsService } from '../incidents.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
-    selector: 'app-create-incidents',
+    selector: 'app-create-in-incidents',
     imports: [MaterialModule, RouterModule, IncidentItemsComponent],
-    templateUrl: './create-incidents.component.html',
-    styleUrls: ['./create-incidents.component.sass'],
+    templateUrl: './create-in-incidents.component.html',
+    styleUrl: './create-in-incidents.component.sass'
 })
-export class CreateIncidentsComponent {
+export class CreateInIncidentsComponent {
 
     constructor(
         private readonly navigationService: NavigationService,
@@ -47,7 +47,7 @@ export class CreateIncidentsComponent {
     }
 
     ngOnInit(): void {
-        this.navigationService.setTitle('Nueva incidencia')
+        this.navigationService.setTitle('Nuevo aumento de stock')
         this.navigationService.showSearch()
 
         this.navigationService.setMenu([

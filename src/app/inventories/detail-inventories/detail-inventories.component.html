@@ -102,9 +102,9 @@
                     [ngClass]="{ 'bg-danger': row.isOutput, 'bg-success': !row.isOutput }"></tr>
             </table>
         </div>
+        <span class="divider px-2"></span>
         }
         @if (this.saleItems.length) {
-        <span class="divider px-2"></span>
         <div class="w-100">
             <h2 class="mat-title-large">Ventas</h2>
             <table mat-table [dataSource]="dataSourceSales" class="w-100" matSort matSortActive="createdAt"
