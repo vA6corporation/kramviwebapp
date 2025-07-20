@@ -34,8 +34,8 @@ export class ProvidersService {
         return this.httpService.get(`providers/byKey/${key}`)
     }
 
-    getProvidersByProduct(productId: string) {
-        return this.httpService.get(`providers/byProduct/${productId}`)
+    getProvidersByProviderIds(providerIds: string[]) {
+        return this.httpService.post(`providers/byProviderIds`, { providerIds })
     }
 
     getProvidersByRuc(key: string): Observable<ProviderModel[]> {

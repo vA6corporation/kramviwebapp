@@ -14,14 +14,14 @@ export class DialogProductProvidersComponent {
 
     constructor(
         @Inject(MAT_DIALOG_DATA)
-        private readonly productId: string,
+        private readonly providerIds: string[],
         private readonly providersService: ProvidersService,
     ) { }
 
     providers: ProviderModel[] = []
 
     ngOnInit() {
-        this.providersService.getProvidersByProduct(this.productId).subscribe(providers => {
+        this.providersService.getProvidersByProviderIds(this.providerIds).subscribe(providers => {
             this.providers = providers
         })
     }

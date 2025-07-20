@@ -241,7 +241,7 @@ export class OutIncidentsComponent {
         const ok = confirm('Esta seguro de eliminar?...')
         if (ok) {
             this.navigationService.loadBarStart()
-            this.incidentsService.deleteIncidentItem(incidentId, incidentItemId).subscribe(() => {
+            this.incidentsService.deleteIncidentOutItem(incidentId, incidentItemId).subscribe(() => {
                 this.navigationService.loadBarFinish()
                 this.navigationService.showMessage('Eliminado correctamente')
                 this.fetchData()

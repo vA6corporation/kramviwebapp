@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FavoritesService } from '../../favorites/favorites.service';
 import { MaterialModule } from '../../material.module';
@@ -16,7 +16,7 @@ import { PurchaseOrdersService } from '../purchase-orders.service';
 
 @Component({
     selector: 'app-edit-purchase-orders',
-    imports: [MaterialModule, PurchaseOrderItemsComponent],
+    imports: [MaterialModule, PurchaseOrderItemsComponent, RouterModule],
     templateUrl: './edit-purchase-orders.component.html',
     styleUrls: ['./edit-purchase-orders.component.sass']
 })

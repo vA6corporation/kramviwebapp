@@ -61,7 +61,6 @@ export class EditProductsComponent {
         price: [null, Validators.required],
         cost: null,
         isTrackStock: false,
-        minimumStock: null,
         printZone: 'COCINA',
         prices: this.formArray
     })
@@ -335,7 +334,7 @@ export class EditProductsComponent {
             product.annotations = this.annotations
             product.excluded = this.excluded
             product.productIds = productIds
-            product.providerIds = providerIds
+            product.providerIds = [...new Set(providerIds)]
             this.navigationService.loadBarStart()
             this.productsService.updateWithPrices(product, this.formArray.value, this.productId, this.setting.defaultPrice).subscribe({
                 next: () => {

@@ -17,6 +17,7 @@ import { UpdateSaleModel } from './update-sale.model';
 import { LotModel } from '../lots/lot.model';
 import { CreateBoardItemModel } from '../boards/create-board-item.model';
 import { DetractionModel } from '../biller/detraction.model';
+import { SummarySaleModel } from '../invoices/summary-sale.model';
 
 @Injectable({
     providedIn: 'root'
@@ -175,6 +176,12 @@ export class SalesService {
         params: Params
     ): Observable<SummarySaleItemModel[]> {
         return this.httpService.get(`sales/summarySaleItemsByRangeDate/${startDate}/${endDate}`, params)
+    }
+
+    getSummarySales(
+        params: Params,
+    ): Observable<SummarySaleModel[]> {
+        return this.httpService.get('sales/summarySales', params)
     }
 
     getSaleSupplyItemsByPageSupply(

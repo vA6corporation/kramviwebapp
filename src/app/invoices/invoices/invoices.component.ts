@@ -38,6 +38,7 @@ import { SheetExportPdfComponent } from '../sheet-export-pdf/sheet-export-pdf.co
 import { SheetInvoicesComponent } from '../sheet-invoices/sheet-invoices.component';
 import { SheetPrintComponent } from '../sheet-print/sheet-print.component';
 import { MaterialModule } from '../../material.module';
+import { SummarySaleModel } from '../summary-sale.model';
 
 @Component({
     selector: 'app-invoices',
@@ -65,6 +66,7 @@ export class InvoicesComponent {
     ) { }
 
     formGroup: FormGroup = this.formBuilder.group({
+        officeId: '',
         invoiceType: '',
         stateType: '',
         userId: '',
@@ -81,6 +83,30 @@ export class InvoicesComponent {
     saleIds: string[] = []
     business: BusinessModel = new BusinessModel()
     office: OfficeModel = new OfficeModel()
+    offices: OfficeModel[] = []
+    officeId: string = ''
+    year: number = new Date().getFullYear()
+    monthIndex: number = new Date().getMonth()
+    years: number[] = []
+    totalQuantity: number = 0
+    totalCharge: number = 0
+    totalIgv: number = 0
+    summarySales: SummarySaleModel[] = []
+    months: any[] = [
+        { index: 0, label: 'ENERO' },
+        { index: 1, label: 'FEBRERO' },
+        { index: 2, label: 'MARZO' },
+        { index: 3, label: 'ABRIL' },
+        { index: 4, label: 'MAYO' },
+        { index: 5, label: 'JUNIO' },
+        { index: 6, label: 'JULIO' },
+        { index: 7, label: 'AGOSTO' },
+        { index: 8, label: 'SEPTIEMBRE' },
+        { index: 9, label: 'OCTUBRE' },
+        { index: 10, label: 'NOVIEMBRE' },
+        { index: 11, label: 'DICIEMBRE' },
+    ]
+
     private setting: SettingModel = new SettingModel()
 
     private categories: CategoryModel[] = []
@@ -88,6 +114,7 @@ export class InvoicesComponent {
     private key: string = ''
     private paymentMethods: PaymentMethodModel[] = []
 
+    private handleOfficesByActivity$: Subscription = new Subscription()
     private handleClickMenu$: Subscription = new Subscription()
     private handleSearch$: Subscription = new Subscription()
     private handleCategories$: Subscription = new Subscription()
@@ -97,6 +124,7 @@ export class InvoicesComponent {
     private handleAuth$: Subscription = new Subscription()
 
     ngOnDestroy() {
+        this.handleOfficesByActivity$.unsubscribe()
         this.handleClickMenu$.unsubscribe()
         this.handleSearch$.unsubscribe()
         this.handleCategories$.unsubscribe()
@@ -108,6 +136,13 @@ export class InvoicesComponent {
 
     ngOnInit(): void {
         this.navigationService.setTitle('Comprobantes')
+
+        const startYear = 2020
+        const currentYear = new Date().getFullYear()
+
+        for (let index = startYear; index <= currentYear; index++) {
+            this.years.push(index)
+        }
 
         this.invoicesService.getBadCdrs().subscribe(badCdrs => {
             if (badCdrs.length) {
@@ -123,6 +158,40 @@ export class InvoicesComponent {
             this.business = auth.business
             this.office = auth.office
             this.setting = auth.setting
+
+            Object.assign(this.params, { officeId: this.office._id })
+            this.formGroup.patchValue({ officeId: this.office._id })
+
+            const queryParams = this.activatedRoute.snapshot.queryParams
+            const { year, monthIndex, pageIndex, pageSize, invoiceType, stateType, userId, key, officeId } = queryParams
+            
+            this.saleIds = []
+            this.pageIndex = Number(pageIndex || 0)
+            this.pageSize = Number(pageSize || 10)
+            this.key = key
+            
+            this.year = Number(year || this.year)
+            this.monthIndex = Number(monthIndex || this.monthIndex)
+            const startDate = new Date(this.year, this.monthIndex, 1)
+            const endDate = new Date(this.year, this.monthIndex + 1, 0)
+            
+            Object.assign(this.params, { startDate, endDate, officeId: officeId || this.office._id })
+
+            this.formGroup.patchValue({
+                invoiceType: invoiceType || '',
+                stateType: stateType || '',
+                userId: userId || '',
+                officeId: officeId || this.office._id,
+                startDate: new Date(startDate),
+                endDate: new Date(endDate)
+            })
+
+            this.fetchData()
+            this.fetchCount()
+        })
+
+        this.handleOfficesByActivity$ = this.officesService.handleOfficesByActivity().subscribe(offices => {
+            this.offices = offices
         })
 
         this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
@@ -136,28 +205,6 @@ export class InvoicesComponent {
         this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
             this.categories = categories
         })
-
-        const queryParams = this.activatedRoute.snapshot.queryParams
-        const { startDate, endDate, pageIndex, pageSize, invoiceType, stateType, userId, key } = queryParams
-        Object.assign(this.params, queryParams)
-        
-        this.saleIds = []
-        this.pageIndex = Number(pageIndex || 0)
-        this.pageSize = Number(pageSize || 10)
-        this.key = key
-        this.formGroup.get('invoiceType')?.patchValue(invoiceType || '')
-        this.formGroup.get('stateType')?.patchValue(stateType || '')
-        this.formGroup.get('userId')?.patchValue(userId || '')
-
-        if (startDate && endDate) {
-            this.formGroup.patchValue({ 
-                startDate: new Date(startDate),
-                endDate: new Date(endDate) 
-            })
-        }
-
-        this.fetchData()
-        this.fetchCount()
 
         this.navigationService.setMenu([
             { id: 'search', label: 'Buscar', icon: 'search', show: true },
@@ -173,20 +220,20 @@ export class InvoicesComponent {
         ])
 
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {
-            this.navigationService.loadBarStart()
             this.saleIds = []
             this.pageIndex = 0
             this.length = 0
-
+            
             this.key = key
             const queryParams: Params = { key, tabIndex: 0, startDate: null, endDate: null }
-
+            
             this.router.navigate([], {
                 relativeTo: this.activatedRoute,
                 queryParams: queryParams,
                 queryParamsHandling: 'merge', // remove to replace all query params by provided
             })
-
+            
+            this.navigationService.loadBarStart()
             this.salesService.getSalesByKey(key).subscribe({
                 next: sales => {
                     this.navigationService.loadBarFinish()
@@ -240,6 +287,52 @@ export class InvoicesComponent {
                     break
             }
         })
+    }
+
+    onYearChange() {
+        const queryParams: Params = { year: this.year }
+
+        this.router.navigate([], {
+            relativeTo: this.activatedRoute,
+            queryParams: queryParams,
+            queryParamsHandling: 'merge', // remove to replace all query params by provided
+        })
+
+        const startDate = new Date(this.year, this.monthIndex, 1)
+        const endDate = new Date(this.year, this.monthIndex + 1, 0)
+
+        Object.assign(this.params, { startDate, endDate })
+
+        this.formGroup.patchValue({
+            startDate: new Date(startDate),
+            endDate: new Date(endDate)
+        })
+
+        this.fetchData()
+        this.fetchCount()
+    }
+
+    onMonthChange() {
+        const queryParams: Params = { monthIndex: this.monthIndex }
+
+        this.router.navigate([], {
+            relativeTo: this.activatedRoute,
+            queryParams: queryParams,
+            queryParamsHandling: 'merge', // remove to replace all query params by provided
+        })
+
+        const startDate = new Date(this.year, this.monthIndex, 1)
+        const endDate = new Date(this.year, this.monthIndex + 1, 0)
+
+        Object.assign(this.params, { startDate, endDate })
+
+        this.formGroup.patchValue({
+            startDate: new Date(startDate),
+            endDate: new Date(endDate)
+        })
+
+        this.fetchData()
+        this.fetchCount()
     }
 
     checkCdrs() {
@@ -321,7 +414,7 @@ export class InvoicesComponent {
         const { startDate, endDate } = this.formGroup.value
         if (startDate && endDate) {
             const offices: OfficeModel[] = await lastValueFrom(this.officesService.getOffices())
-    
+
             offices.sort((a, b) => {
                 if (a.serialPrefix > b.serialPrefix) {
                     return 1
@@ -331,9 +424,9 @@ export class InvoicesComponent {
                 }
                 return 0
             })
-    
+
             const excelConcar = new ExcelConcar(startDate, endDate, offices, this.business)
-    
+
             for (const office of offices) {
                 const sales: SaleModel[] = []
                 const length = await lastValueFrom(this.salesService.getCountSalesByRangeDateTax(startDate, endDate, { officeId: office._id }))
@@ -344,7 +437,7 @@ export class InvoicesComponent {
                         position: { top: '20px' },
                         data: length / chunk
                     })
-    
+
                     for (let index = 0; index < length / chunk; index++) {
                         const values = await lastValueFrom(this.salesService.getSalesByRangeDatePageTax(startDate, endDate, index + 1, chunk, { officeId: office._id }))
                         dialogRef.componentInstance.onComplete()
@@ -353,7 +446,7 @@ export class InvoicesComponent {
                     excelConcar.addSales(sales, office)
                 }
             }
-    
+
             excelConcar.builExcel()
         } else {
             this.navigationService.showMessage('Seleccione un rango de fechas')
@@ -406,7 +499,7 @@ export class InvoicesComponent {
                         this.navigationService.showMessage(error.error.message)
                         this.navigationService.loadBarFinish()
                     }
-                })  
+                })
             }
         }
     }
@@ -442,7 +535,7 @@ export class InvoicesComponent {
         const { startDate, endDate } = this.formGroup.value
         if (startDate && endDate) {
             const offices: OfficeModel[] = await lastValueFrom(this.officesService.getOffices())
-    
+
             offices.sort((a, b) => {
                 if (a.serialPrefix > b.serialPrefix) {
                     return 1
@@ -452,9 +545,9 @@ export class InvoicesComponent {
                 }
                 return 0
             })
-    
+
             const excelKramvi = new ExcelKramvi(startDate, endDate, this.business)
-    
+
             for (const office of offices) {
                 const sales: SaleModel[] = []
                 const length = await lastValueFrom(this.salesService.getCountSalesByRangeDateTax(startDate, endDate, { officeId: office._id }))
@@ -465,7 +558,7 @@ export class InvoicesComponent {
                         position: { top: '20px' },
                         data: length / chunk
                     })
-    
+
                     for (let index = 0; index < length / chunk; index++) {
                         const values = await lastValueFrom(this.salesService.getSalesByRangeDatePageTax(startDate, endDate, index + 1, chunk, { officeId: office._id }))
                         dialogRef.componentInstance.onComplete()
@@ -474,7 +567,7 @@ export class InvoicesComponent {
                     excelKramvi.addSales(sales, office)
                 }
             }
-    
+
             excelKramvi.builExcel()
         } else {
             this.navigationService.showMessage('Seleccione un rango de fechas')
@@ -486,19 +579,19 @@ export class InvoicesComponent {
         if (startDate && endDate) {
             const chunk = 500
             const sales: SaleModel[] = []
-    
+
             const dialogRef = this.matDialog.open(DialogProgressComponent, {
                 width: '600px',
                 position: { top: '20px' },
                 data: this.length / chunk
             })
-    
+
             for (let index = 0; index < this.length / chunk; index++) {
                 const values = await lastValueFrom(this.salesService.getSalesWithDetailsByRangeDatePage(startDate, endDate, index + 1, chunk, {}))
                 dialogRef.componentInstance.onComplete()
                 sales.push(...values)
             }
-    
+
             this.navigationService.loadBarFinish()
             const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
             let body = []
@@ -527,7 +620,7 @@ export class InvoicesComponent {
                 'ANULADO',
                 'OBSERVACIONES'
             ])
-    
+
             for (const sale of sales) {
                 const { customer, saleItems } = sale
                 for (const saleItem of saleItems) {
@@ -612,19 +705,19 @@ export class InvoicesComponent {
         if (startDate && endDate) {
             const chunk = 500
             const sales: SaleModel[] = []
-    
+
             const dialogRef = this.matDialog.open(DialogProgressComponent, {
                 width: '600px',
                 position: { top: '20px' },
                 data: this.length / chunk
             })
-    
+
             for (let index = 0; index < this.length / chunk; index++) {
                 const values = await lastValueFrom(this.salesService.getSalesByPage(index + 1, chunk, this.params))
                 dialogRef.componentInstance.onComplete()
                 sales.push(...values)
             }
-    
+
             const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
             let body = [];
             body.push([
@@ -724,6 +817,23 @@ export class InvoicesComponent {
         this.fetchData()
     }
 
+    onOfficeChange(officeId: string) {
+        this.key = ''
+        this.pageIndex = 0
+        const queryParams: Params = { officeId, key: null }
+
+        Object.assign(this.params, queryParams)
+
+        this.router.navigate([], {
+            relativeTo: this.activatedRoute,
+            queryParams: queryParams,
+            queryParamsHandling: 'merge', // remove to replace all query params by provided
+        })
+
+        this.fetchCount()
+        this.fetchData()
+    }
+
     onUserChange(userId: string) {
         this.key = ''
         this.pageIndex = 0
@@ -809,6 +919,14 @@ export class InvoicesComponent {
                 this.navigationService.loadBarFinish()
             })
         }
+
+        this.salesService.getSummarySales(this.params).subscribe(summarySales => {
+            console.log(summarySales)
+            this.summarySales = summarySales
+            this.totalQuantity = summarySales.map(e => e.quantity).reduce((a, b) => a + b, 0)
+            this.totalIgv = summarySales.map(e => e.igv).reduce((a, b) => a + b, 0)
+            this.totalCharge = summarySales.map(e => e.charge).reduce((a, b) => a + b, 0)
+        })
     }
 
     onOpenDetails(saleId: string) {
@@ -980,7 +1098,7 @@ export class InvoicesComponent {
                 width: '600px',
                 position: { top: '20px' },
             })
-            
+
             dialogRef.afterClosed().subscribe(deletedReason => {
                 if (deletedReason) {
                     this.navigationService.loadBarStart()

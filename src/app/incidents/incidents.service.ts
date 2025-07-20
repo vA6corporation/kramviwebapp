@@ -144,7 +144,11 @@ export class IncidentsService {
         return this.httpService.delete(`incidents/deleteIncident/${incidentId}`)
     }
 
-    deleteIncidentItem(incidentId: string, incidentItemId: string) {
-        return this.httpService.delete(`incidents/deleteIncidentItem/${incidentId}/${incidentItemId}`)
+    deleteIncidentOutItem(incidentId: string, incidentItemId: string) {
+        return this.httpService.delete(`incidents/deleteIncidentOutItem/${incidentId}/${incidentItemId}`)
+    }
+
+    deleteIncidentInItem(incidentId: string, incidentItemId: string) {
+        return this.httpService.delete(`incidents/deleteIncidentInItem/${incidentId}/${incidentItemId}`)
     }
 }

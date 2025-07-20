@@ -294,7 +294,7 @@ export class CreateProductsComponent {
             const providerIds = this.providers.map(e => e._id)
             product.annotations = this.annotations
             product.productIds = productIds
-            product.providerIds = providerIds
+            product.providerIds = [...new Set(providerIds)]
             this.navigationService.loadBarStart()
             this.productsService.create(product, this.formArray.value, this.lots, this.paymentMethodId).subscribe({
                 next: product => {

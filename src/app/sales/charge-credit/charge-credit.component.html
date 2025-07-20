@@ -4,6 +4,9 @@
         <div class="px-3">
             <h2 class="text-center mat-display-small mb-0">{{ charge.toFixed(2) }}</h2>
             <p class="caption text-center text-muted mb-2">Total a cobrar</p>
+            @if (payments.length) {
+            <p class="text-center mb-3">Monto a cuenta: {{ payments[0].charge.toFixed(2) }}</p>
+            }
             @if (customer) {
             <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
                 <span>{{ customer.name | uppercase }}</span>

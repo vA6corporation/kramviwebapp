@@ -1,7 +1,7 @@
 import { CommonModule, formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
@@ -19,6 +19,7 @@ import { OfficeModel } from '../../auth/office.model';
 import { buildExcel } from '../../buildExcel';
 import { UserModel } from '../../users/user.model';
 import { MaterialModule } from '../../material.module';
+import { DialogProgressComponent } from '../../navigation/dialog-progress/dialog-progress.component';
 
 @Component({
     selector: 'app-turns',
@@ -43,6 +44,8 @@ export class TurnsComponent {
 
     formGroup: FormGroup = this.formBuilder.group({
         userId: '',
+        startDate: ['', Validators.required],
+        endDate: ['', Validators.required],
     })
     displayedColumns: string[] = ['open', 'close', 'user', 'actions']
     dataSource: TurnModel[] = []
@@ -72,6 +75,11 @@ export class TurnsComponent {
             this.users = users
         })
 
+        this.navigationService.setMenu([
+            { id: 'export_excel', label: 'Exportar excel', icon: 'file_download', show: false },
+        ])
+
+
         const { pageIndex, pageSize } = this.activatedRoute.snapshot.queryParams
         this.pageIndex = Number(pageIndex || 0)
         this.pageSize = Number(pageSize || 10)
@@ -82,6 +90,69 @@ export class TurnsComponent {
             this.business = auth.business
             this.office = auth.office
         })
+
+        this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(async id => {
+            const { startDate, endDate } = this.formGroup.value
+            if (startDate && endDate) {
+                const chunk = 500
+                const turns: TurnModel[] = []
+
+                const dialogRef = this.matDialog.open(DialogProgressComponent, {
+                    width: '600px',
+                    position: { top: '20px' },
+                    data: this.length / chunk
+                })
+
+                for (let index = 0; index < this.length / chunk; index++) {
+                    const values = await lastValueFrom(this.turnsService.getTurnsByPage(index + 1, chunk, this.params))
+                    dialogRef.componentInstance.onComplete()
+                    turns.push(...values)
+                }
+
+                            const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+            let body = [];
+            body.push([
+                'F. APERTURA',
+                'H. APERTURA',
+                'F. CIERRE',
+                'H. CIERRE',
+                'USUARIO',
+            ])
+            for (const turn of turns) {
+                const { user } = turn
+                body.push([
+                    formatDate(turn.createdAt, 'dd/MM/yyyy', 'en-US'),
+                    formatDate(turn.createdAt, 'h:mm a', 'en-US'),
+                    formatDate(turn.closedAt, 'dd/MM/yyyy', 'en-US'),
+                    formatDate(turn.closedAt, 'h:mm a', 'en-US'),
+                    user.name,
+                ])
+            }
+            const name = `CAJAS_${this.office.name.toUpperCase().replace(/ /g, '_')}`
+            buildExcel(body, name, wscols, [], [])
+            } else {
+                this.navigationService.showMessage('Seleccione un rango de fechas')
+            }
+        })
+    }
+
+    onRangeChange() {
+        if (this.formGroup.valid) {
+            this.pageIndex = 0
+
+            const { startDate, endDate } = this.formGroup.value
+            Object.assign(this.params, { startDate, endDate })
+            const queryParams: Params = { startDate, endDate, pageIndex: 0, key: null }
+
+            this.router.navigate([], {
+                relativeTo: this.activatedRoute,
+                queryParams: queryParams,
+                queryParamsHandling: 'merge', // remove to replace all query params by provided
+            })
+
+            this.fetchCount()
+            this.fetchData()
+        }
     }
 
     onUserChange(userId: string) {
@@ -330,12 +401,14 @@ export class TurnsComponent {
 
     fetchData() {
         this.navigationService.loadBarStart()
-        this.turnsService.getTurnsByPage(this.pageIndex + 1, this.pageSize, this.params).subscribe(turns => {
-            this.navigationService.loadBarFinish()
-            this.dataSource = turns
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.loadBarFinish()
-            this.navigationService.showMessage(error.error.message)
+        this.turnsService.getTurnsByPage(this.pageIndex + 1, this.pageSize, this.params).subscribe({
+            next: turns => {
+                this.navigationService.loadBarFinish()
+                this.dataSource = turns
+            }, error: (error: HttpErrorResponse) => {
+                this.navigationService.loadBarFinish()
+                this.navigationService.showMessage(error.error.message)
+            }
         })
     }
 }

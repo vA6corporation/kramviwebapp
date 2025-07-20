@@ -168,12 +168,6 @@
             <mat-slide-toggle formControlName="isTrackStock" (change)="onIsTrackStockChange()">Trackear
                 stock</mat-slide-toggle>
         </div>
-        @if (isTrackStock) {
-        <mat-form-field appearance="fill">
-            <mat-label>Stock minimo (Notificacion)</mat-label>
-            <input type="number" matInput formControlName="minimumStock">
-        </mat-form-field>
-        }
         <div class="d-flex">
             <span class="spacer"></span>
             <button type="button" mat-raised-button routerLink="/products" color="primary">CANCELAR</button>

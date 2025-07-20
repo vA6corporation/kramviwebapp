@@ -1,6 +1,6 @@
 <div class="container">
     <form [formGroup]="formGroup" autocomplete="off">
-        <mat-form-field appearance="fill">
+        <!-- <mat-form-field appearance="fill">
             <mat-label>Seleccione un rango de fechas</mat-label>
             <mat-date-range-input [rangePicker]="picker">
                 <input matStartDate placeholder="Desde" formControlName="startDate">
@@ -8,7 +8,25 @@
             </mat-date-range-input>
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-date-range-picker #picker></mat-date-range-picker>
-        </mat-form-field>
+        </mat-form-field> -->
+        <div class="d-flex">
+            <mat-form-field appearance="fill">
+                <mat-label>Año</mat-label>
+                <mat-select [(value)]="year" (selectionChange)="onYearChange()">
+                    @for (year of years; track year) {
+                    <mat-option [value]="year">{{ year }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Mes</mat-label>
+                <mat-select [(value)]="monthIndex" (selectionChange)="onMonthChange()">
+                    @for (month of months; track month.index) {
+                    <mat-option [value]="month.index">{{ month.label }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
         <div class="d-flex">
             <mat-form-field appearance="fill">
                 <mat-label>Tipo de comprobante</mat-label>
@@ -42,8 +60,51 @@
                     }
                 </mat-select>
             </mat-form-field>
+            <mat-form-field appearance="fill" class="text-uppercase my-form-field">
+                <mat-label>Sucursal</mat-label>
+                <mat-select formControlName="officeId" (selectionChange)="onOfficeChange($event.value)">
+                    <mat-option value="">TODAS LAS SUCURSALES</mat-option>
+                    @for (office of offices; track office._id) {
+                    <mat-option [value]="office._id">
+                        {{ office.name | uppercase }}
+                    </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
         </div>
     </form>
+    <mat-card class="mb-3">
+        <mat-card-content>
+            <table class="w-100">
+                <thead align="left">
+                    <th>Comprobante</th>
+                    <th>Cantidad</th>
+                    <th>Base imponible</th>
+                    <th>IGV total</th>
+                    <th>Importe total</th>
+                </thead>
+                <tbody>
+                    @for (summarySale of summarySales; track $index) {
+                        <tr>
+                            <td>{{ summarySale._id }}</td>
+                            <td>{{ summarySale.quantity }}</td>
+                            <td>{{ (summarySale.charge - summarySale.igv).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
+                            <td>{{ summarySale.igv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
+                            <td>{{ summarySale.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
+                        </tr>
+                    }
+                    <tr align="left">
+                        <th>TOTAL</th>
+                        <th>{{ totalQuantity }}</th>
+                        <th>{{ (totalCharge - totalIgv).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</th>
+                        <th>{{ totalIgv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</th>
+                        <th>{{ totalCharge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</th>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <mat-card-subtitle>Factura</mat-card-subtitle> -->
+        </mat-card-content>
+    </mat-card>
     <div class="mat-elevation-z2">
         <table mat-table [dataSource]="dataSource" class="w-100">
             <ng-container matColumnDef="checked">
@@ -65,7 +126,7 @@
             <ng-container matColumnDef="serial">
                 <th mat-header-cell *matHeaderCellDef>Serie</th>
                 <td mat-cell *matCellDef="let element">
-                    {{ element.invoicePrefix }}{{ office.serialPrefix }}-{{ element.invoiceNumber }}
+                    {{ element.invoicePrefix }}{{ element.office.serialPrefix }}-{{ element.invoiceNumber }}
                 </td>
             </ng-container>
             <ng-container matColumnDef="customer">

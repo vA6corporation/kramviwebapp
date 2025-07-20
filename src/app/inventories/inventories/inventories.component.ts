@@ -27,6 +27,7 @@ import { DialogRemoveStockComponent } from '../dialog-remove-stock/dialog-remove
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { SheetAddStockComponent } from '../sheet-add-stock/sheet-add-stock.component';
 import { DialogCreatePurchaseComponent } from '../dialog-create-purchase/dialog-create-purchase.component';
+import { DialogProductProvidersComponent } from '../../providers/dialog-product-providers/dialog-product-providers.component';
 
 @Component({
     selector: 'app-inventories',
@@ -54,6 +55,19 @@ export class InventoriesComponent {
         categoryId: '',
         stockState: '01',
     })
+    preDisplayedColumns: string[] = [
+        'name',
+        'feature',
+        'brand',
+        'sku',
+        'upc',
+        'location',
+        'cost',
+        'price',
+        'stock',
+        'provider',
+        'actions',
+    ]
     displayedColumns: string[] = [
         'name',
         'feature',
@@ -63,8 +77,8 @@ export class InventoriesComponent {
         'location',
         'cost',
         'price',
-        'minimumStock',
         'stock',
+        'provider',
         'actions',
     ]
     dataSource: ProductModel[] = []
@@ -399,6 +413,14 @@ export class InventoriesComponent {
         })
     }
 
+    onProvidersProduct(providerIds: string[]) {
+        this.matDialog.open(DialogProductProvidersComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: providerIds
+        })
+    }
+
     onChangePriceList() {
         ProductsService.setPrices(this.dataSource, this.priceListId, this.setting, this.office)
     }
@@ -501,6 +523,7 @@ export class InventoriesComponent {
     }
 
     fetchData(): void {
+        this.displayedColumns = Array.from(this.preDisplayedColumns)
         this.navigationService.loadBarStart()
         if (this.key) {
             this.navigationService.loadBarStart()
@@ -517,20 +540,30 @@ export class InventoriesComponent {
                             this.displayedColumns.splice(index, 1)
                         }
                     }
+              
                     if (!products.find(e => e.brand)) {
                         const index = this.displayedColumns.findIndex(e => e === 'brand')
                         if (index >= 0) {
                             this.displayedColumns.splice(index, 1)
                         }
                     }
+                 
                     if (!products.find(e => e.location)) {
                         const index = this.displayedColumns.findIndex(e => e === 'location')
                         if (index >= 0) {
                             this.displayedColumns.splice(index, 1)
                         }
                     }
+                 
                     if (!products.find(e => e.upc)) {
                         const index = this.displayedColumns.findIndex(e => e === 'upc')
+                        if (index >= 0) {
+                            this.displayedColumns.splice(index, 1)
+                        }
+                    }
+                 
+                    if (!products.find(e => e.providers.length)) {
+                        const index = this.displayedColumns.findIndex(e => e === 'provider')
                         if (index >= 0) {
                             this.displayedColumns.splice(index, 1)
                         }
@@ -553,20 +586,30 @@ export class InventoriesComponent {
                         this.displayedColumns.splice(index, 1)
                     }
                 }
+
                 if (!products.find(e => e.brand)) {
                     const index = this.displayedColumns.findIndex(e => e === 'brand')
                     if (index >= 0) {
                         this.displayedColumns.splice(index, 1)
                     }
                 }
+
                 if (!products.find(e => e.location)) {
                     const index = this.displayedColumns.findIndex(e => e === 'location')
                     if (index >= 0) {
                         this.displayedColumns.splice(index, 1)
                     }
                 }
+
                 if (!products.find(e => e.upc)) {
                     const index = this.displayedColumns.findIndex(e => e === 'upc')
+                    if (index >= 0) {
+                        this.displayedColumns.splice(index, 1)
+                    }
+                }
+
+                if (!products.find(e => e.providers.length)) {
+                    const index = this.displayedColumns.findIndex(e => e === 'provider')
                     if (index >= 0) {
                         this.displayedColumns.splice(index, 1)
                     }

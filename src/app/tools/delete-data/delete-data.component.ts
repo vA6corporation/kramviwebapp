@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { HttpService } from '../../http.service';
 import { MaterialModule } from '../../material.module';
 import { NavigationService } from '../../navigation/navigation.service';
+import { formatDate } from '@angular/common';
+import { buildExcel } from '../../buildExcel';
 
 @Component({
     selector: 'app-delete-data',
@@ -55,6 +57,35 @@ export class DeleteDataComponent {
                 this.navigationService.showMessage('Stock reiniciado')
             })
         }
+    }
+
+    onLastThreeYears() {
+        this.navigationService.loadBarStart()
+        this.httpService.get('customers/lastThreeYears').subscribe(customers => {
+            this.navigationService.loadBarFinish()
+            const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+            let body = []
+            body.push([
+                'T. DOCUMENTO',
+                'DOCUMENTO',
+                'NOMBRES/R. SOCIAL',
+                'DIRECCION',
+                'EMAIL',
+                'CELULAR',
+            ])
+            for (const customer of customers) {
+                body.push([
+                    customer.documentType,
+                    customer.document,
+                    customer.name.toUpperCase(),
+                    customer.addresses[0],
+                    customer.email,
+                    customer.mobileNumber,
+                ])
+            }
+            const name = `CLIENTES`
+            buildExcel(body, name, wscols, [])
+        })
     }
 
 }

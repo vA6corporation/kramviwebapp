@@ -53,6 +53,20 @@ export class ProductsComponent {
     })
     categories: CategoryModel[] = []
     providers: ProviderModel[] = []
+    preDisplayedColumns: string[] = [
+        'checked',
+        'name',
+        'feature',
+        'brand',
+        'sku',
+        'upc',
+        'location',
+        'cost',
+        'price',
+        'stock',
+        'provider',
+        'actions'
+    ]
     displayedColumns: string[] = [
         'checked',
         'name',
@@ -63,8 +77,8 @@ export class ProductsComponent {
         'location',
         'cost',
         'price',
-        'minimumStock',
         'stock',
+        'provider',
         'actions'
     ]
     dataSource: ProductModel[] = []
@@ -412,6 +426,7 @@ export class ProductsComponent {
     }
 
     fetchData(): void {
+        this.displayedColumns = Array.from(this.preDisplayedColumns)
         this.productsId = []
         if (this.key) {
             this.navigationService.loadBarStart()
@@ -428,14 +443,23 @@ export class ProductsComponent {
                             this.displayedColumns.splice(index, 1)
                         }
                     }
+
                     if (!products.find(e => e.brand)) {
                         const index = this.displayedColumns.findIndex(e => e === 'brand')
                         if (index >= 0) {
                             this.displayedColumns.splice(index, 1)
                         }
                     }
+
                     if (!products.find(e => e.sku)) {
                         const index = this.displayedColumns.findIndex(e => e === 'sku')
+                        if (index >= 0) {
+                            this.displayedColumns.splice(index, 1)
+                        }
+                    }
+
+                    if (!products.find(e => e.providers.length)) {
+                        const index = this.displayedColumns.findIndex(e => e === 'provider')
                         if (index >= 0) {
                             this.displayedColumns.splice(index, 1)
                         }
@@ -458,20 +482,30 @@ export class ProductsComponent {
                         this.displayedColumns.splice(index, 1)
                     }
                 }
+
                 if (!products.find(e => e.brand)) {
                     const index = this.displayedColumns.findIndex(e => e === 'brand')
                     if (index >= 0) {
                         this.displayedColumns.splice(index, 1)
                     }
                 }
+
                 if (!products.find(e => e.location)) {
                     const index = this.displayedColumns.findIndex(e => e === 'location')
                     if (index >= 0) {
                         this.displayedColumns.splice(index, 1)
                     }
                 }
+
                 if (!products.find(e => e.sku)) {
                     const index = this.displayedColumns.findIndex(e => e === 'sku')
+                    if (index >= 0) {
+                        this.displayedColumns.splice(index, 1)
+                    }
+                }
+
+                if (!products.find(e => e.providers.length)) {
+                    const index = this.displayedColumns.findIndex(e => e === 'provider')
                     if (index >= 0) {
                         this.displayedColumns.splice(index, 1)
                     }
@@ -490,11 +524,11 @@ export class ProductsComponent {
         }
     }
 
-    onProvidersProduct(productId: string) {
+    onProvidersProduct(providerIds: string[]) {
         this.matDialog.open(DialogProductProvidersComponent, {
             width: '600px',
             position: { top: '20px' },
-            data: productId
+            data: providerIds
         })
     }
 

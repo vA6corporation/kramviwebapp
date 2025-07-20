@@ -14,6 +14,8 @@ import { UserModel } from '../../users/user.model';
 import { UsersService } from '../../users/users.service';
 import { ReportsService } from '../reports.service';
 import { CommonModule } from '@angular/common';
+import { SalesService } from '../../sales/sales.service';
+import { SummarySaleModel } from '../../invoices/summary-sale.model';
 Chart.register(Colors)
 
 @Component({
@@ -25,7 +27,8 @@ Chart.register(Colors)
 export class InvoicesComponent {
 
     constructor(
-        private readonly reportsService: ReportsService,
+        // private readonly reportsService: ReportsService,
+        private readonly salesService: SalesService,
         private readonly formBuilder: FormBuilder,
         private readonly categoriesService: CategoriesService,
         private readonly navigationService: NavigationService,
@@ -33,8 +36,8 @@ export class InvoicesComponent {
         private readonly usersService: UsersService,
     ) { }
 
-    displayedColumns: string[] = ['_id', 'quantity', 'charge']
-    dataSource: UserModel[] = []
+    displayedColumns: string[] = ['_id', 'quantity', 'base', 'igv', 'charge']
+    dataSource: SummarySaleModel[] = []
     length: number = 0
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
@@ -51,6 +54,10 @@ export class InvoicesComponent {
     users: UserModel[] = []
     userId: string = ''
     invoices: any[] = []
+    totalQuantity: number = 0
+    totalBase: number = 0
+    totalIgv: number = 0
+    totalCharge: number = 0
     private params: Params = { officeId: this.officeId }
     @ViewChild('incomesChargeChart')
     private incomesChargeChart!: ElementRef<HTMLCanvasElement>
@@ -95,10 +102,14 @@ export class InvoicesComponent {
             const { startDate, endDate } = this.formGroup.value
             Object.assign(this.params, { startDate, endDate })
             this.navigationService.loadBarStart()
-            this.reportsService.getSummaryInvoices(this.params).subscribe(summaryInvoices => {
+            this.salesService.getSummarySales(this.params).subscribe(summaryInvoices => {
                 this.navigationService.loadBarFinish()
                 this.invoices = summaryInvoices
                 this.dataSource = summaryInvoices
+                this.totalQuantity = summaryInvoices.map(e => e.quantity).reduce((a, b) => a + b, 0)
+                this.totalCharge = summaryInvoices.map(e => e.charge).reduce((a, b) => a + b, 0)
+                this.totalIgv = summaryInvoices.map(e => e.igv).reduce((a, b) => a + b, 0)
+                this.totalBase = this.totalCharge - this.totalIgv
                 const data = {
                     datasets: [
                         {

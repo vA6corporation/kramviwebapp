@@ -51,19 +51,27 @@ export class ImportCustomersComponent {
             this.dataSource = []
             for (let index = 0; index < customers.length; index++) {
                 const customer = customers[index]
-                if (customer.documento) {
-                    if (String(customer.documento || '').length === 8 || String(customer.documento || '').length === 11) {
+                // if (customer.documento) {
+                // }
+                if (String(customer.documento || '').length === 8 || String(customer.documento || '').length === 11) {
+                    this.dataSource.push({
+                        documentType: String(customer.documento || '').length === 11 ? 'RUC' : 'DNI',
+                        document: String(customer.documento || ''),
+                        name: customer.nombres,
+                        address: customer.direccion,
+                        email: customer.email,
+                        mobileNumber: String(customer.celular || ''),
+                    })
+                } else {
+                    if (customer.nombres.length > 4) {
                         this.dataSource.push({
-                            documentType: String(customer.documento || '').length === 11 ? 'RUC' : 'DNI',
-                            document: String(customer.documento || ''),
+                            documentType: 'DNI',
+                            document: '',
                             name: customer.nombres,
                             address: customer.direccion,
                             email: customer.email,
                             mobileNumber: String(customer.celular || ''),
                         })
-                    } else {
-                        alert('El Numero de documento debe contener 8 o 11 caracteres: ' + `linea: ${index + 1}`)
-                        break
                     }
                 }
             }

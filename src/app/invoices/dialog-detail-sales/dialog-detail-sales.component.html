@@ -113,8 +113,12 @@
                 </tr>
                 }
             <tr>
-                <td>F/H venta</td>
+                <td width="100">F/H de emision</td>
                 <td align="right">{{ sale.emitionAt | date: 'medium' }}</td>
+            </tr>
+            <tr>
+                <td>F/H de registro</td>
+                <td align="right">{{ sale.createdAt | date: 'medium' }}</td>
             </tr>
             <tr>
                 <td>Observaciones</td>
