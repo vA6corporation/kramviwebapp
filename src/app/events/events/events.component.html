@@ -92,7 +92,7 @@
                             @if (eventItem.igvCode === igvType.INAFECTO) {
                             <span class="text-primary mr-2">Inafecto</span>
                             }
-                            <span matListItemLine>{{ eventItem.price.toFixed(2) }}</span>
+                            <span matListItemLine>{{ eventItem.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
                         </mat-list-item>
                         }
                     </mat-list>

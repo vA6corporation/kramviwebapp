@@ -8,7 +8,7 @@
             @for (sale of duplicate.items; track $index) {
             <button mat-list-item (click)="onSelectSale(sale._id)">
                 <span matListItemTitle>{{ sale.invoiceNumber }}</span>
-                <span matListItemLine>{{ sale.charge.toFixed(2) }}</span>
+                <span matListItemLine>{{ sale.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
                 <span>{{ sale.createdAt | date }}</span>
             </button>
             }
@@ -29,7 +29,7 @@
             @for (sale of duplicate.items; track $index) {
             <button mat-list-item (click)="onSelectSale(sale._id)">
                 <span matListItemTitle>{{ sale.invoiceNumber }}</span>
-                <span matListItemLine>{{ sale.charge.toFixed(2) }}</span>
+                <span matListItemLine>{{ sale.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
                 <span>{{ sale.createdAt | date }}</span>
             </button>
             }
@@ -50,7 +50,7 @@
             @for (sale of duplicate.items; track $index) {
             <button mat-list-item (click)="onSelectSale(sale._id)">
                 <span matListItemTitle>{{ sale.invoiceNumber }}</span>
-                <span matListItemLine>{{ sale.charge.toFixed(2) }}</span>
+                <span matListItemLine>{{ sale.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
                 <span>{{ sale.createdAt | date }}</span>
             </button>
             }

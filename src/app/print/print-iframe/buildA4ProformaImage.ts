@@ -178,17 +178,17 @@ export async function buildA4ProformaImage(
 
         subPositionYItems += 4 * strArr.length
 
-        text = `Cantidad: ${proformaItem.quantity.toFixed(2)}`
+        text = `Cantidad: ${proformaItem.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
         pdf.text(text, 7, subPositionYItems)
 
         subPositionYItems += 4
 
-        text = `Precio Unt: ${proformaItem.price.toFixed(2)}`
+        text = `Precio Unt: ${proformaItem.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
         pdf.text(text, 7, subPositionYItems)
 
         subPositionYItems += 4
 
-        text = `Sub Total: ${(proformaItem.price * proformaItem.quantity).toFixed(2)}`
+        text = `Sub Total: ${(proformaItem.price * proformaItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
         pdf.text(text, 7, subPositionYItems)
 
         subPositionYItems += 4
@@ -312,51 +312,51 @@ export async function buildA4ProformaImage(
     pdf.setFont('Helvetica', 'normal')
 
     if (proforma.discount) {
-        text = (proforma.discount || 0).toFixed(2)
+        text = (proforma.discount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
 
-    text = ((proforma.charge || 0) - (proforma?.igv || 0)).toFixed(2)
+    text = ((proforma.charge || 0) - (proforma?.igv || 0)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 4
 
     if (proforma.gravado) {
-        text = (proforma.gravado || 0).toFixed(2)
+        text = (proforma.gravado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
 
     if (proforma.exonerado) {
-        text = (proforma.exonerado || 0).toFixed(2)
+        text = (proforma.exonerado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
 
     if (proforma.inafecto) {
-        text = (proforma.inafecto || 0).toFixed(2)
+        text = (proforma.inafecto || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
 
     if (proforma.gratuito) {
-        text = (proforma.gratuito || 0).toFixed(2)
+        text = (proforma.gratuito || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
 
-    text = proforma.igv.toFixed(2)
+    text = proforma.igv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 4
 
-    text = (proforma.charge || 0).toFixed(2)
+    text = (proforma.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 4

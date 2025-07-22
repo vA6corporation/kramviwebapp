@@ -14,7 +14,7 @@
                             {{ product.fullName.slice(0, 60) }}
                         </span>
                         <small class="text-muted text-price">
-                            {{ product.price.toFixed(2) }}
+                            {{ product.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                         </small>
                     </mat-grid-tile>
                     }
@@ -46,7 +46,7 @@
                             {{ product.fullName.slice(0, 60) }}
                         </span>
                         <small class="text-muted text-price">
-                            {{ product.price.toFixed(2) }}
+                            {{ product.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                         </small>
                     </mat-grid-tile>
                     }

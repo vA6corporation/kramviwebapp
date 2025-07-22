@@ -216,7 +216,7 @@ export async function buildA4PurchaseOrder(
     positionYitems += 10
 
     for (const purchaseOrderItem of purchaseOrderItems || []) {
-        text = purchaseOrderItem.quantity.toFixed(2)
+        text = purchaseOrderItem.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 7, positionYitems)
 
         text = (purchaseOrderItem.sku || '').toString()
@@ -229,10 +229,10 @@ export async function buildA4PurchaseOrder(
         text = purchaseOrderItem.unitCode
         pdf.text(text, 142, positionYitems)
 
-        text = purchaseOrderItem.cost.toFixed(2)
+        text = purchaseOrderItem.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 163, positionYitems)
 
-        text = (purchaseOrderItem.cost * purchaseOrderItem.quantity).toFixed(2)
+        text = (purchaseOrderItem.cost * purchaseOrderItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 183, positionYitems)
 
         positionYitems += 5 * strArr.length
@@ -305,42 +305,42 @@ export async function buildA4PurchaseOrder(
 
     const currency = purchaseOrder.currencyCode === 'PEN' ? 'S/' : '$'
 
-    text = (0).toFixed(2)
+    text = (0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 5
 
-    text = ((purchaseOrder?.charge || 0) - (purchaseOrder?.igv || 0)).toFixed(2)
+    text = ((purchaseOrder?.charge || 0) - (purchaseOrder?.igv || 0)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 5
 
-    text = (purchaseOrder?.gravado || 0).toFixed(2)
+    text = (purchaseOrder?.gravado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 5
 
-    text = (purchaseOrder?.exonerado || 0).toFixed(2)
+    text = (purchaseOrder?.exonerado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 5
 
-    text = (purchaseOrder?.inafecto || 0).toFixed(2)
+    text = (purchaseOrder?.inafecto || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 5
 
-    text = (purchaseOrder?.gratuito || 0).toFixed(2)
+    text = (purchaseOrder?.gratuito || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 5
 
-    text = (purchaseOrder?.igv || 0).toFixed(2)
+    text = (purchaseOrder?.igv || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 5
 
-    text = (purchaseOrder?.charge || 0).toFixed(2)
+    text = (purchaseOrder?.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 5
@@ -349,5 +349,5 @@ export async function buildA4PurchaseOrder(
 }
 
 async function getQRDataUrl(purchaseOrder: PurchaseOrderModel, business: BusinessModel, office: OfficeModel): Promise<string> {
-    return await QRCode.toDataURL(`${business.ruc}|OC${office.serialPrefix}|${purchaseOrder.purchaseOrderNumber}|${purchaseOrder.igv.toFixed(2)}|${purchaseOrder.charge.toFixed(2)}|${purchaseOrder.createdAt}`, { margin: 0 });
+    return await QRCode.toDataURL(`${business.ruc}|OC${office.serialPrefix}|${purchaseOrder.purchaseOrderNumber}|${purchaseOrder.igv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}|${purchaseOrder.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}|${purchaseOrder.createdAt}`, { margin: 0 });
 }

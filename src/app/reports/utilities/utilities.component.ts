@@ -120,12 +120,12 @@ export class UtilitiesComponent {
                             summarySaleItem.upc,
                             summarySaleItem.fullName,
                             (category?.name || 'SIN CATEGORIA').toUpperCase(),
-                            Number((summarySaleItem.totalSale / summarySaleItem.totalQuantity).toFixed(2)),
-                            Number((summarySaleItem.cost || 0).toFixed(2)),
-                            Number(summarySaleItem.totalQuantity.toFixed(2)),
-                            Number((summarySaleItem.totalSale).toFixed(2)),
-                            Number((summarySaleItem.totalPurchase).toFixed(2)),
-                            Number((summarySaleItem.totalSale - summarySaleItem.totalPurchase)).toFixed(2)
+                            Number((summarySaleItem.totalSale / summarySaleItem.totalQuantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                            Number((summarySaleItem.cost || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                            Number(summarySaleItem.totalQuantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                            Number((summarySaleItem.totalSale).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                            Number((summarySaleItem.totalPurchase).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                            Number((summarySaleItem.totalSale - summarySaleItem.totalPurchase)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                         ])
                     }
                     const name = `UTILIDADES_${formatDate(new Date(), 'dd/MM/yyyy', 'en-US')}`

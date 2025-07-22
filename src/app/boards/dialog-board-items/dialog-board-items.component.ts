@@ -47,7 +47,7 @@ export class DialogBoardItemsComponent {
 
     subTotal(): number {
         const { quantity } = this.formGroup.value
-        return Number((this.boardItem.price * quantity).toFixed(2))
+        return Number((this.boardItem.price * quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
     }
 
     onChangeSubTotal(value: string) {

@@ -268,14 +268,14 @@ export class ChargePreSalesComponent {
         this.cash = Number(this.cash)
         this.cash += cash
         const diff = Number(this.cash) - Number(this.charge)
-        this.cashChange = Number(diff.toFixed(2))
+        this.cashChange = Number(diff.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
         this.formGroup.get('cash')?.patchValue(this.cash)
     }
 
     setCash(cash: any) {
         this.cash = cash
         const diff = Number(this.cash) - Number(this.charge)
-        this.cashChange = Number(diff.toFixed(2))
+        this.cashChange = Number(diff.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
     }
 
     onChangeDiscount() {

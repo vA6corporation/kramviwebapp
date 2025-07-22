@@ -268,7 +268,7 @@ export async function buildA4RemissionGuide(
     positionYitems += 10
 
     for (const element of remissionGuideItems) {
-        text = element.quantity.toFixed(2)
+        text = element.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 7, positionYitems)
 
         text = (element.upc || '').toString()

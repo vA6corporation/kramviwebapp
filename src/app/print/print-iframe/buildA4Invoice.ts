@@ -323,7 +323,7 @@ export async function buildA4Invoice(
     positionYitems += 10
 
     for (const saleItem of saleItems || []) {
-        text = saleItem.quantity.toFixed(2)
+        text = saleItem.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 7, positionYitems)
 
         text = (saleItem.upc || '').toString()
@@ -337,10 +337,10 @@ export async function buildA4Invoice(
         text = saleItem.unitName || 'UNIDADES'
         pdf.text(text, 142, positionYitems)
 
-        text = saleItem.price.toFixed(2)
+        text = saleItem.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 163, positionYitems)
 
-        text = (saleItem.price * saleItem.quantity).toFixed(2)
+        text = (saleItem.price * saleItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 183, positionYitems)
 
         if (saleItem.lot) {
@@ -433,17 +433,17 @@ export async function buildA4Invoice(
 
         positionYitems += 5
 
-        text = `Base imponible: ${currency} ${sale.charge.toFixed(2)}`
+        text = `Base imponible: ${currency} ${sale.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
         pdf.text(text, 5, positionYitems)
 
         text = 'Porcentaje: 3.00%'
         pdf.text(text, 55, positionYitems)
 
-        text = `Monto: ${currency} ${(sale.charge * 0.03).toFixed(2)}`
+        text = `Monto: ${currency} ${(sale.charge * 0.03).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
         pdf.text(text, 100, positionYitems)
 
         pdf.setFont('Helvetica', 'bold')
-        text = `Monto neto pendiente de pago: ${currency} ${(sale.charge - (sale.charge * 0.03)).toFixed(2)}`
+        text = `Monto neto pendiente de pago: ${currency} ${(sale.charge - (sale.charge * 0.03)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
         pdf.text(text, 205, positionYitems, { align: 'right' })
         pdf.setFont('Helvetica', 'normal')
 
@@ -458,7 +458,7 @@ export async function buildA4Invoice(
         }
         for (let index = 0; index < dues.length; index++) {
             const due = dues[index]
-            text = `Cuota ${index + 1} - Fecha de pago: ${formatDate(due.dueDate, 'dd/MM/yyyy', 'en-US')} - Monto: ${(due.charge - (retainer / sale.dues.length)).toFixed(2)}`
+            text = `Cuota ${index + 1} - Fecha de pago: ${formatDate(due.dueDate, 'dd/MM/yyyy', 'en-US')} - Monto: ${(due.charge - (retainer / sale.dues.length)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
             pdf.text(text, 5, positionYitems)
             positionYitems += 5
         }
@@ -468,7 +468,7 @@ export async function buildA4Invoice(
         const payment = payments[index]
         const foundPaymentMethod = paymentMethods.find(e => e._id === payment.paymentMethodId)
         if (foundPaymentMethod) {
-            text = `${foundPaymentMethod.name}: ${payment.charge.toFixed(2)} - ${formatDate(payment.createdAt, 'dd/MM/yyyy', 'en-US')}`
+            text = `${foundPaymentMethod.name}: ${payment.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} - ${formatDate(payment.createdAt, 'dd/MM/yyyy', 'en-US')}`
             pdf.text(text, 5, positionYitems)
             positionYitems += 3
         }
@@ -553,60 +553,60 @@ export async function buildA4Invoice(
     pdf.setFont('Helvetica', 'normal')
 
     if (sale.discount) {
-        text = (sale.discount || 0).toFixed(2)
+        text = (sale.discount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
 
     if (sale.invoiceType !== 'NOTA DE VENTA') {
-        text = (sale.charge - sale.igv).toFixed(2)
+        text = (sale.charge - sale.igv).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
 
         if (sale.gravado) {
-            text = (sale.gravado || 0).toFixed(2)
+            text = (sale.gravado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
             pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
             pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
             positionYSummaryRight += 4
         }
 
         if (sale.exonerado) {
-            text = (sale.exonerado || 0).toFixed(2)
+            text = (sale.exonerado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
             pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
             pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
             positionYSummaryRight += 4
         }
 
         if (sale.inafecto) {
-            text = (sale.inafecto || 0).toFixed(2)
+            text = (sale.inafecto || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
             pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
             pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
             positionYSummaryRight += 4
         }
 
         if (sale.gratuito) {
-            text = (sale.gratuito || 0).toFixed(2)
+            text = (sale.gratuito || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
             pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
             pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
             positionYSummaryRight += 4
         }
 
-        text = sale.igv.toFixed(2)
+        text = sale.igv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
 
         if (sale.rc) {
-            text = sale.rc.toFixed(2)
+            text = sale.rc.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
             pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
             pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
             positionYSummaryRight += 4
         }
     }
 
-    text = (sale.charge || 0).toFixed(2)
+    text = (sale.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 4
@@ -624,5 +624,5 @@ export async function buildA4Invoice(
 }
 
 async function getQRDataUrl(sale: SaleModel, business: BusinessModel, office: OfficeModel): Promise<string> {
-    return await QRCode.toDataURL(`${business.ruc}|${sale.invoiceType.toUpperCase()}|${sale.invoicePrefix}${office.serialPrefix}|${sale.invoiceNumber}|${sale.igv.toFixed(2)}|${sale.charge.toFixed(2)}|${sale.emitionAt}`, { margin: 0 })
+    return await QRCode.toDataURL(`${business.ruc}|${sale.invoiceType.toUpperCase()}|${sale.invoicePrefix}${office.serialPrefix}|${sale.invoiceNumber}|${sale.igv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}|${sale.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}|${sale.emitionAt}`, { margin: 0 })
 }

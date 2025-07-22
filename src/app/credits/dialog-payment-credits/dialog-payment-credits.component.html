@@ -1,7 +1,7 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
     <h2 mat-dialog-title>Pagar deuda</h2>
     <div mat-dialog-content>
-        <p>importe a pagar: {{ (charge - payed).toFixed(2) }}</p>
+        <p>importe a pagar: {{ (charge - payed).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</p>
         <mat-form-field appearance="fill">
             <mat-label>Medio de pago</mat-label>
             <mat-select formControlName="paymentMethodId">

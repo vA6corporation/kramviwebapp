@@ -150,9 +150,9 @@ export async function buildTicket80mmCreditNote(
         strArr = pdf.splitTextToSize(`${creditNoteItem.fullName.toUpperCase()}${creditNoteItem.observations ? ' - ' + creditNoteItem.observations : ''}`, 65)
         pdf.text(strArr, 0 + marginLeft, positionY)
         positionY += 3 * strArr.length
-        pdf.text(`${creditNoteItem.quantity.toFixed(2)}`, 0 + marginLeft, positionY)
-        pdf.text((creditNoteItem.price).toFixed(2), pageCenter, positionY, { align: 'center' })
-        pdf.text((creditNoteItem.price * creditNoteItem.quantity).toFixed(2), 70 - marginRight, positionY, { align: 'right' })
+        pdf.text(`${creditNoteItem.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 0 + marginLeft, positionY)
+        pdf.text((creditNoteItem.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), pageCenter, positionY, { align: 'center' })
+        pdf.text((creditNoteItem.price * creditNoteItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), 70 - marginRight, positionY, { align: 'right' })
         positionY += 4
     }
 
@@ -163,7 +163,7 @@ export async function buildTicket80mmCreditNote(
     if (creditNote.gravado) {
         text = `OP. GRAVADAS ${currency}`
         pdf.text(text, 45, positionY, { align: 'right' })
-        text = (creditNote.gravado || 0).toFixed(2)
+        text = (creditNote.gravado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 60, positionY, { align: 'right' })
         positionY += 4
     }
@@ -171,7 +171,7 @@ export async function buildTicket80mmCreditNote(
     if (creditNote.gratuito) {
         text = `OP. GRATUITAS ${currency}`
         pdf.text(text, 45, positionY, { align: 'right' })
-        text = (creditNote.gratuito || 0).toFixed(2)
+        text = (creditNote.gratuito || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 60, positionY, { align: 'right' })
         positionY += 4
     }
@@ -179,7 +179,7 @@ export async function buildTicket80mmCreditNote(
     if (creditNote.exonerado) {
         text = `OP. EXONERADAS ${currency}`
         pdf.text(text, 45, positionY, { align: 'right' })
-        text = (creditNote.exonerado || 0).toFixed(2)
+        text = (creditNote.exonerado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 60, positionY, { align: 'right' })
         positionY += 4
     }
@@ -187,20 +187,20 @@ export async function buildTicket80mmCreditNote(
     if (creditNote.inafecto) {
         text = `OP. INAFECTAS ${currency}`
         pdf.text(text, 45, positionY, { align: 'right' })
-        text = (creditNote.inafecto || 0).toFixed(2)
+        text = (creditNote.inafecto || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 60, positionY, { align: 'right' })
         positionY += 4
     }
 
     text = `IGV(18%) ${currency}`
     pdf.text(text, 45, positionY, { align: 'right' })
-    text = (creditNote.igv || 0).toFixed(2)
+    text = (creditNote.igv || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 60, positionY, { align: 'right' })
     positionY += 4
 
     text = `IMPORTE TOTAL ${currency}`
     pdf.text(text, 45, positionY, { align: 'right' })
-    text = (creditNote.charge || 0).toFixed(2)
+    text = (creditNote.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 60, positionY, { align: 'right' })
     positionY += 4
 
@@ -223,5 +223,5 @@ export async function buildTicket80mmCreditNote(
 }
 
 async function getQRDataUrl(creditNote: CreditNoteModel, business: BusinessModel, office: OfficeModel): Promise<string> {
-    return await QRCode.toDataURL(`${business.ruc}|${creditNote.invoiceType}|${creditNote.invoicePrefix}${office.serialPrefix}|${creditNote.invoiceNumber}|${creditNote.igv.toFixed(2)}|${creditNote.charge.toFixed(2)}|${creditNote.createdAt}`, { margin: 0 })
+    return await QRCode.toDataURL(`${business.ruc}|${creditNote.invoiceType}|${creditNote.invoicePrefix}${office.serialPrefix}|${creditNote.invoiceNumber}|${creditNote.igv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}|${creditNote.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}|${creditNote.createdAt}`, { margin: 0 })
 }

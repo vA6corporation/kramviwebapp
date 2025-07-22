@@ -38,7 +38,6 @@ import { SheetExportPdfComponent } from '../sheet-export-pdf/sheet-export-pdf.co
 import { SheetInvoicesComponent } from '../sheet-invoices/sheet-invoices.component';
 import { SheetPrintComponent } from '../sheet-print/sheet-print.component';
 import { MaterialModule } from '../../material.module';
-import { SummarySaleModel } from '../summary-sale.model';
 
 @Component({
     selector: 'app-invoices',
@@ -88,10 +87,6 @@ export class InvoicesComponent {
     year: number = new Date().getFullYear()
     monthIndex: number = new Date().getMonth()
     years: number[] = []
-    totalQuantity: number = 0
-    totalCharge: number = 0
-    totalIgv: number = 0
-    summarySales: SummarySaleModel[] = []
     months: any[] = [
         { index: 0, label: 'ENERO' },
         { index: 1, label: 'FEBRERO' },
@@ -114,7 +109,6 @@ export class InvoicesComponent {
     private key: string = ''
     private paymentMethods: PaymentMethodModel[] = []
 
-    private handleOfficesByActivity$: Subscription = new Subscription()
     private handleClickMenu$: Subscription = new Subscription()
     private handleSearch$: Subscription = new Subscription()
     private handleCategories$: Subscription = new Subscription()
@@ -124,7 +118,6 @@ export class InvoicesComponent {
     private handleAuth$: Subscription = new Subscription()
 
     ngOnDestroy() {
-        this.handleOfficesByActivity$.unsubscribe()
         this.handleClickMenu$.unsubscribe()
         this.handleSearch$.unsubscribe()
         this.handleCategories$.unsubscribe()
@@ -163,19 +156,25 @@ export class InvoicesComponent {
             this.formGroup.patchValue({ officeId: this.office._id })
 
             const queryParams = this.activatedRoute.snapshot.queryParams
-            const { year, monthIndex, pageIndex, pageSize, invoiceType, stateType, userId, key, officeId } = queryParams
-            
+            const { startDate, endDate, pageIndex, pageSize, invoiceType, stateType, userId, key, officeId } = queryParams
+
             this.saleIds = []
             this.pageIndex = Number(pageIndex || 0)
             this.pageSize = Number(pageSize || 10)
             this.key = key
-            
-            this.year = Number(year || this.year)
-            this.monthIndex = Number(monthIndex || this.monthIndex)
-            const startDate = new Date(this.year, this.monthIndex, 1)
-            const endDate = new Date(this.year, this.monthIndex + 1, 0)
-            
-            Object.assign(this.params, { startDate, endDate, officeId: officeId || this.office._id })
+
+            if (startDate && endDate) {
+                this.formGroup.patchValue({ 
+                    startDate: new Date(startDate), 
+                    endDate: new Date(endDate) 
+                })
+                Object.assign(this.params, { 
+                    startDate: new Date(startDate), 
+                    endDate: new Date(endDate)
+                })
+            }
+
+            Object.assign(this.params, { officeId: officeId || this.office._id })
 
             this.formGroup.patchValue({
                 invoiceType: invoiceType || '',
@@ -188,10 +187,6 @@ export class InvoicesComponent {
 
             this.fetchData()
             this.fetchCount()
-        })
-
-        this.handleOfficesByActivity$ = this.officesService.handleOfficesByActivity().subscribe(offices => {
-            this.offices = offices
         })
 
         this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
@@ -223,16 +218,16 @@ export class InvoicesComponent {
             this.saleIds = []
             this.pageIndex = 0
             this.length = 0
-            
+
             this.key = key
             const queryParams: Params = { key, tabIndex: 0, startDate: null, endDate: null }
-            
+
             this.router.navigate([], {
                 relativeTo: this.activatedRoute,
                 queryParams: queryParams,
                 queryParamsHandling: 'merge', // remove to replace all query params by provided
             })
-            
+
             this.navigationService.loadBarStart()
             this.salesService.getSalesByKey(key).subscribe({
                 next: sales => {
@@ -640,11 +635,11 @@ export class InvoicesComponent {
                         `${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}`,
                         saleItem.fullName.toUpperCase(),
                         this.categories.find(e => e._id === saleItem.categoryId)?.name.toUpperCase(),
-                        Number(saleItem.quantity.toFixed(2)),
+                        Number(saleItem.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
                         saleItem.price,
-                        Number((saleItem.price * saleItem.quantity).toFixed(2)),
+                        Number((saleItem.price * saleItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
                         saleItem.cost || 0,
-                        Number(((saleItem.price * saleItem.quantity) - (saleItem.cost || 0 * saleItem.quantity)).toFixed(2)),
+                        Number(((saleItem.price * saleItem.quantity) - (saleItem.cost || 0 * saleItem.quantity)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
                         sale.currencyCode,
                         paymentNames,
                         saleItem.igvCode === '11' ? 'SI' : 'NO',
@@ -919,14 +914,6 @@ export class InvoicesComponent {
                 this.navigationService.loadBarFinish()
             })
         }
-
-        this.salesService.getSummarySales(this.params).subscribe(summarySales => {
-            console.log(summarySales)
-            this.summarySales = summarySales
-            this.totalQuantity = summarySales.map(e => e.quantity).reduce((a, b) => a + b, 0)
-            this.totalIgv = summarySales.map(e => e.igv).reduce((a, b) => a + b, 0)
-            this.totalCharge = summarySales.map(e => e.charge).reduce((a, b) => a + b, 0)
-        })
     }
 
     onOpenDetails(saleId: string) {

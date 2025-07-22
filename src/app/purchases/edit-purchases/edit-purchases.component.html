@@ -15,11 +15,11 @@
                             {{ product.fullName.slice(0, 60) }}
                         </span>
                         <small class="text-muted text-price">
-                            {{ product.cost.toFixed(2) }}
+                            {{ product.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                         </small>
                         @if (product.isTrackStock) {
                         <small class="text-muted text-stock">
-                            stock: {{ product.stock.toFixed(2) }}
+                            stock: {{ product.stock.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                         </small>
                         }
                     </mat-grid-tile>
@@ -53,11 +53,11 @@
                             {{ product.fullName.slice(0, 60) }}
                         </span>
                         <small class="text-muted text-price">
-                            {{ product.cost.toFixed(2) }}
+                            {{ product.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                         </small>
                         @if (product.isTrackStock) {
                         <small class="text-muted text-stock">
-                            stock: {{ product.stock.toFixed(2) }}
+                            stock: {{ product.stock.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                         </small>
                         }
                     </mat-grid-tile>

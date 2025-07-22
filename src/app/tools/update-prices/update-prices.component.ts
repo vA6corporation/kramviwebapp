@@ -44,8 +44,8 @@ export class UpdatePricesComponent {
                         brand: product.marca,
                         category: product.categoria,
                         stock: product.stock,
-                        price: isNaN(product.precioVenta) ? 0 : Number(product.precioVenta.toFixed(2)),
-                        cost: isNaN(product.precioCompra) ? 0 : Number(product.precioCompra.toFixed(2)),
+                        price: isNaN(product.precioVenta) ? 0 : Number(product.precioVenta.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                        cost: isNaN(product.precioCompra) ? 0 : Number(product.precioCompra.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
                         sku: product.codigoInterno,
                         upc: product.codigo
                     });

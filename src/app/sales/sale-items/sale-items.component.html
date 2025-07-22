@@ -2,7 +2,7 @@
     @for (couponItem of couponItems; track $index) {
     <mat-list-item class="bg-info" role="listitem">
         <span matListItemTitle>{{ couponItem.name }}</span>
-        <span matListItemLine>Monto minimo: {{ couponItem.charge.toFixed(2) }}</span>
+        <span matListItemLine>Monto minimo: {{ couponItem.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
         <span>Cantidad: {{ couponItem.quantity }}</span>
     </mat-list-item>
     }
@@ -25,7 +25,7 @@
             }
             <span class="text-muted">{{ saleItem.observations }}</span>
             <span class="spacer"></span>
-            <span>{{ (saleItem.price * saleItem.quantity).toFixed(2) }}</span>
+            <span>{{ (saleItem.price * saleItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
         </div>
     </button>
     }
@@ -36,7 +36,7 @@
             </span>
             <span class="spacer"></span>
             <span>
-                {{ charge.toFixed(2) }}
+                {{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
             </span>
         </div>
     </button>

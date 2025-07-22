@@ -49,7 +49,7 @@ export async function buildBarcode60x30mm(
 
         pdf.setFontSize(title)
 
-        text = product.price.toFixed(2)
+        text = product.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 46, positionY + 15, { align: 'center' })
 
         if (index + 1 < products.length) {

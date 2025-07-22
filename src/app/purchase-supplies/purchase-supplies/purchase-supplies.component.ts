@@ -118,7 +118,7 @@ export class PurchaseSuppliesComponent {
                     //     //       this.categorySupplies.find(e => e._id === purchaseSupplyItem.categoryId)?.name.toUpperCase(),
                     //     //       purchaseSupplyItem.quantity,
                     //     //       purchaseSupplyItem.cost,
-                    //     //       Number((purchaseSupplyItem.cost * purchaseSupplyItem.quantity).toFixed(2)),
+                    //     //       Number((purchaseSupplyItem.cost * purchaseSupplyItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
                     //     //       (purchaseSupply.provider?.name || '')?.toUpperCase(),
                     //     //       purchaseSupply.user.name.toUpperCase(),
                     //     //       (purchaseSupply.observations || '').toUpperCase()

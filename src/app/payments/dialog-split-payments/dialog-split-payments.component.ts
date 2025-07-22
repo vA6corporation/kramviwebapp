@@ -86,7 +86,7 @@ export class DialogSplitPaymentsComponent {
         if (this.formGroup.valid) {
             const payments = this.formArray.value
             const payed = payments.map((e: PaymentModel) => e.charge).reduce((a: number, b: number) => a + b, 0)
-            if (Number(payed.toFixed(2)) === Number(this.data.charge.toFixed(2))) {
+            if (Number(payed.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })) === Number(this.data.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))) {
                 this.dialogRef.close(payments)
             } else {
                 this.navigationService.showMessage('Los montos no coinciden')

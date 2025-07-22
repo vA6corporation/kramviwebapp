@@ -30,9 +30,9 @@
             <span class="spacer"></span>
             <div>
                 <span class="mr-3">
-                    {{ (supplyItem.totalOut * supplyItem.cost || 0).toFixed(2) }}
+                    {{ (supplyItem.totalOut * supplyItem.cost || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                 </span>
-                {{ (supplyItem.totalOut || 0).toFixed(2) }}
+                {{ (supplyItem.totalOut || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
             </div>
         </mat-list-item>
         }

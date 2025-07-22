@@ -203,7 +203,7 @@ export async function buildA4Purchase(
     positionYitems += 10
 
     for (const purchaseItem of purchaseItems || []) {
-        text = purchaseItem.quantity.toFixed(2)
+        text = purchaseItem.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 7, positionYitems)
 
         text = (purchaseItem.sku || '').toString()
@@ -213,10 +213,10 @@ export async function buildA4Purchase(
         strArr = pdf.splitTextToSize(text, 85)
         pdf.text(strArr, 47, positionYitems)
 
-        text = purchaseItem.cost.toFixed(2)
+        text = purchaseItem.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 163, positionYitems)
 
-        text = (purchaseItem.cost * purchaseItem.quantity).toFixed(2)
+        text = (purchaseItem.cost * purchaseItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 183, positionYitems)
 
         positionYitems += 5 * strArr.length
@@ -277,37 +277,37 @@ export async function buildA4Purchase(
 
     const currency = purchase.currencyCode === 'PEN' ? 'S/' : '$'
 
-    text = ((purchase?.charge || 0) - (purchase?.igv || 0)).toFixed(2)
+    text = ((purchase?.charge || 0) - (purchase?.igv || 0)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 5
 
-    text = (purchase?.gravado || 0).toFixed(2)
+    text = (purchase?.gravado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 5
 
-    text = (purchase?.exonerado || 0).toFixed(2)
+    text = (purchase?.exonerado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 5
 
-    text = (purchase?.inafecto || 0).toFixed(2)
+    text = (purchase?.inafecto || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 5
 
-    text = (purchase?.gratuito || 0).toFixed(2)
+    text = (purchase?.gratuito || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 5
 
-    text = (purchase?.igv || 0).toFixed(2)
+    text = (purchase?.igv || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 5
 
-    text = (purchase?.charge || 0).toFixed(2)
+    text = (purchase?.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 5

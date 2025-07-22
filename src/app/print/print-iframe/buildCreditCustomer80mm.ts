@@ -46,16 +46,16 @@ export async function buildCreditCustomer80mm(
         for (const saleItem of credit.saleItems) {
             strArr = pdf.splitTextToSize(`${saleItem.fullName}`, 60)
             pdf.text(strArr, 0 + marginLeft, positionY)
-            pdf.text(`x${saleItem.quantity.toFixed(2)}`, 70, positionY, { align: 'right' })
+            pdf.text(`x${saleItem.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 70, positionY, { align: 'right' })
             positionY += 3.5 * strArr.length
             pdf.text(formatDate(saleItem.createdAt || new Date(), 'dd/MM/yyyy', 'en-US'), 0 + marginLeft, positionY)
-            pdf.text((saleItem.price * saleItem.quantity).toFixed(2), 70, positionY, { align: 'right' })
+            pdf.text((saleItem.price * saleItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), 70, positionY, { align: 'right' })
             positionY += 4
         }
     }
 
     positionY += 4
 
-    pdf.text(`TOTAL PENDIENTE: ${credits.map(e => e.charge - e.payed).reduce((a, b) => a + b, 0).toFixed(2)}`, 0 + marginLeft, positionY)
+    pdf.text(`TOTAL PENDIENTE: ${credits.map(e => e.charge - e.payed).reduce((a, b) => a + b, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 0 + marginLeft, positionY)
     return pdf
 }

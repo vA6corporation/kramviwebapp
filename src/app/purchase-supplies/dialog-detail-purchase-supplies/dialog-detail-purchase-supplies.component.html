@@ -20,7 +20,7 @@
             </tr>
             <tr>
                 <td>Total</td>
-                <td align="right">{{ (purchaseSupply?.charge || 0).toFixed(2) }}</td>
+                <td align="right">{{ (purchaseSupply?.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </tr>
         </tbody>
     </table>
@@ -40,7 +40,7 @@
             <span class="text-primary ml-2">Ina</span>
             }
             <span class="spacer"></span>
-            {{ (purchaseSupplyItem.cost * purchaseSupplyItem.quantity).toFixed(2) }}
+            {{ (purchaseSupplyItem.cost * purchaseSupplyItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
         </mat-list-item>
         }
     </mat-list>

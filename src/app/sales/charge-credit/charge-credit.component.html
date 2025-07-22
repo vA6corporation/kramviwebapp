@@ -2,16 +2,16 @@
     <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()"
         [formGroup]="formGroup" autocomplete="off">
         <div class="px-3">
-            <h2 class="text-center mat-display-small mb-0">{{ charge.toFixed(2) }}</h2>
+            <h2 class="text-center mat-display-small mb-0">{{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</h2>
             <p class="caption text-center text-muted mb-2">Total a cobrar</p>
             @if (payments.length) {
-            <p class="text-center mb-3">Monto a cuenta: {{ payments[0].charge.toFixed(2) }}</p>
+            <p class="text-center mb-3">Monto a cuenta: {{ payments[0].charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</p>
             }
             @if (customer) {
             <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
                 <span>{{ customer.name | uppercase }}</span>
             </button>
-            <p class="text-center mb-3">Limite de credito: {{ customer.creditLimit ? customer.creditLimit.toFixed(2) :
+            <p class="text-center mb-3">Limite de credito: {{ customer.creditLimit ? customer.creditLimit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) :
                 'SIN LIMITE' }}</p>
             @if (customer.mobileNumber) {
             <p class="text-center mb-3">Celular: {{ customer.formatMobileNumber }}</p>

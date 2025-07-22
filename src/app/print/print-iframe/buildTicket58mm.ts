@@ -173,9 +173,9 @@ export async function buildTicket58mm(
         strArr = pdf.splitTextToSize(saleItem.fullName.toUpperCase(), 47)
         pdf.text(strArr, 0 + marginLeft, positionY)
         positionY += 3 * strArr.length
-        pdf.text(`${saleItem.quantity.toFixed(2)}`, 0 + marginLeft, positionY)
-        pdf.text(`${saleItem.price.toFixed(2)}`, 23, positionY, { align: 'center' })
-        pdf.text((saleItem.price * saleItem.quantity).toFixed(2), 45, positionY, { align: 'right' })
+        pdf.text(`${saleItem.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 0 + marginLeft, positionY)
+        pdf.text(`${saleItem.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 23, positionY, { align: 'center' })
+        pdf.text((saleItem.price * saleItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), 45, positionY, { align: 'right' })
         positionY += 3
     }
 
@@ -188,7 +188,7 @@ export async function buildTicket58mm(
         if (sale.gravado) {
             text = `OP. GRAVADAS ${currency}`
             pdf.text(text, 35, positionY, { align: 'right' })
-            text = (sale.gravado || 0).toFixed(2)
+            text = (sale.gravado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
             pdf.text(text, 45, positionY, { align: 'right' })
             positionY += 3
         }
@@ -196,7 +196,7 @@ export async function buildTicket58mm(
         if (sale.gratuito) {
             text = `OP. GRATUITAS ${currency}`
             pdf.text(text, 35, positionY, { align: 'right' })
-            text = (sale.gratuito || 0).toFixed(2)
+            text = (sale.gratuito || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
             pdf.text(text, 45, positionY, { align: 'right' })
             positionY += 3
         }
@@ -204,7 +204,7 @@ export async function buildTicket58mm(
         if (sale.exonerado) {
             text = `OP. EXONERADAS ${currency}`
             pdf.text(text, 35, positionY, { align: 'right' })
-            text = (sale.exonerado || 0).toFixed(2)
+            text = (sale.exonerado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
             pdf.text(text, 45, positionY, { align: 'right' })
             positionY += 3
         }
@@ -212,21 +212,21 @@ export async function buildTicket58mm(
         if (sale.inafecto) {
             text = `OP. INAFECTAS ${currency}`
             pdf.text(text, 35, positionY, { align: 'right' })
-            text = (sale.inafecto || 0).toFixed(2)
+            text = (sale.inafecto || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
             pdf.text(text, 45, positionY, { align: 'right' })
             positionY += 3
         }
 
         text = `IGV(${sale.igvPercent}%) ${currency}`
         pdf.text(text, 35, positionY, { align: 'right' })
-        text = (sale.igv || 0).toFixed(2)
+        text = (sale.igv || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 45, positionY, { align: 'right' })
         positionY += 3
 
         if (sale.rcPercent) {
             text = `RC(${sale.rcPercent}%) ${currency}`
             pdf.text(text, 35, positionY, { align: 'right' })
-            text = (sale.rc || 0).toFixed(2)
+            text = (sale.rc || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
             pdf.text(text, 45, positionY, { align: 'right' })
             positionY += 3
         }
@@ -234,12 +234,12 @@ export async function buildTicket58mm(
 
     text = `TOTAL DCTO ${currency}`
     pdf.text(text, 35, positionY, { align: 'right' })
-    text = (sale.discount || 0).toFixed(2)
+    text = (sale.discount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 45, positionY, { align: 'right' })
     positionY += 3
     text = `IMPORTE TOTAL ${currency}`
     pdf.text(text, 35, positionY, { align: 'right' })
-    text = (sale.charge || 0).toFixed(2)
+    text = (sale.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 45, positionY, { align: 'right' })
     positionY += 3
 
@@ -248,7 +248,7 @@ export async function buildTicket58mm(
         if (foundPaymentMethod) {
             text = `${foundPaymentMethod.name} ${currency}`
             pdf.text(text, 35, positionY, { align: 'right' })
-            text = payment.charge.toFixed(2)
+            text = payment.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
             pdf.text(text, 45, positionY, { align: 'right' })
             positionY += 3
         }
@@ -257,7 +257,7 @@ export async function buildTicket58mm(
     if (sale.cash) {
         text = `BILLETE ${currency}`
         pdf.text(text, 35, positionY, { align: 'right' })
-        text = (sale.cash || 0).toFixed(2)
+        text = (sale.cash || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 45, positionY, { align: 'right' })
         positionY += 3
     }
@@ -265,7 +265,7 @@ export async function buildTicket58mm(
     if (sale.cash) {
         text = `VUELTO ${currency}`
         pdf.text(text, 35, positionY, { align: 'right' })
-        text = ((sale.cash || 0) - payments.map(e => e.charge).reduce((a, b) => a + b, 0)).toFixed(2)
+        text = ((sale.cash || 0) - payments.map(e => e.charge).reduce((a, b) => a + b, 0)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 45, positionY, { align: 'right' })
         positionY += 3
     }
@@ -273,7 +273,7 @@ export async function buildTicket58mm(
     if (sale.isCredit) {
         text = `SALDO ${currency}`
         pdf.text(text, 25, positionY, { align: 'right' })
-        text = (sale.charge - payments.map(e => e.charge).reduce((a, b) => a + b, 0)).toFixed(2)
+        text = (sale.charge - payments.map(e => e.charge).reduce((a, b) => a + b, 0)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 45, positionY, { align: 'right' })
         positionY += 3
     }
@@ -323,5 +323,5 @@ export async function buildTicket58mm(
 }
 
 async function getQRDataUrl(sale: SaleModel, business: BusinessModel, office: OfficeModel): Promise<string> {
-    return await QRCode.toDataURL(`${business.ruc}|${sale.invoiceType.toUpperCase()}|${sale.invoicePrefix}${office.serialPrefix}|${sale.invoiceNumber}|${sale.igv.toFixed(2)}|${sale.charge.toFixed(2)}|${sale.createdAt}`, { margin: 0 })
+    return await QRCode.toDataURL(`${business.ruc}|${sale.invoiceType.toUpperCase()}|${sale.invoicePrefix}${office.serialPrefix}|${sale.invoiceNumber}|${sale.igv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}|${sale.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}|${sale.createdAt}`, { margin: 0 })
 }

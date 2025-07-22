@@ -124,7 +124,7 @@ export class ProductsComponent {
                     summarySaleItem.upc,
                     this.categories.find(e => e._id === summarySaleItem.categoryId)?.name.toUpperCase(),
                     summarySaleItem.totalQuantity,
-                    Number((summarySaleItem.totalSale / summarySaleItem.totalQuantity).toFixed(2)),
+                    Number((summarySaleItem.totalSale / summarySaleItem.totalQuantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
                     summarySaleItem.cost,
                     summarySaleItem.totalSale,
                     summarySaleItem.totalQuantity * (summarySaleItem.cost || 0),
@@ -147,7 +147,7 @@ export class ProductsComponent {
         if (Number.isInteger(charge)) {
             return charge.toString()
         } else {
-            return charge.toFixed(2)
+            return charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         }
     }
 

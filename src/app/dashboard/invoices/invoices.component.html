@@ -26,7 +26,7 @@
                         <mat-list-item role="listitem">
                             {{ summaryInvoice._id }}
                             <span class="spacer"></span>
-                            {{ summaryInvoice.charge.toFixed(2) }}
+                            {{ summaryInvoice.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                         </mat-list-item>
                     }
                 </mat-list>

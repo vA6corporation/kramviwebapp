@@ -177,7 +177,7 @@ export async function buildA4PaymentOrder(
     text = paymentOrder.isPaid ? 'PAGADO' : 'PENDIENTE'
     pdf.text(text, 170, 60)
 
-    text = paymentOrder.charge.toFixed(2)
+    text = paymentOrder.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 170, 65)
 
     let positionYColumns = positionYCustomer

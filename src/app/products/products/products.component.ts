@@ -221,10 +221,10 @@ export class ProductsComponent {
                                     product.sku,
                                     product.upc,
                                     product.stock,
-                                    Number(product.cost.toFixed(2)),
-                                    Number((product.cost * product.stock).toFixed(2)),
-                                    Number((product.price * product.stock).toFixed(2)),
-                                    Number(product.price.toFixed(2)),
+                                    Number(product.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                                    Number((product.cost * product.stock).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                                    Number((product.price * product.stock).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                                    Number(product.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
                                 ])
                             }
                             break
@@ -259,9 +259,9 @@ export class ProductsComponent {
                                     product.sku,
                                     product.upc,
                                     product.stock,
-                                    Number(product.cost.toFixed(2)),
-                                    Number((product.cost * product.stock).toFixed(2)),
-                                    Number((product.price * product.stock).toFixed(2)),
+                                    Number(product.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                                    Number((product.cost * product.stock).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                                    Number((product.price * product.stock).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
                                 ]
 
                                 for (const office of this.offices) {
@@ -303,9 +303,9 @@ export class ProductsComponent {
                                     product.sku,
                                     product.upc,
                                     product.stock,
-                                    Number(product.cost.toFixed(2)),
-                                    Number((product.cost * product.stock).toFixed(2)),
-                                    Number((product.price * product.stock).toFixed(2)),
+                                    Number(product.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                                    Number((product.cost * product.stock).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                                    Number((product.price * product.stock).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
                                 ]
 
                                 for (const priceList of this.priceLists) {
@@ -348,9 +348,9 @@ export class ProductsComponent {
                                     product.sku,
                                     product.upc,
                                     product.stock,
-                                    Number(product.cost.toFixed(2)),
-                                    Number((product.cost * product.stock).toFixed(2)),
-                                    Number((product.price * product.stock).toFixed(2)),
+                                    Number(product.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                                    Number((product.cost * product.stock).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                                    Number((product.price * product.stock).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
                                 ]
 
                                 for (const priceList of this.priceLists) {

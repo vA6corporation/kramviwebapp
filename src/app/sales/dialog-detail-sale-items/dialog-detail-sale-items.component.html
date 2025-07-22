@@ -6,7 +6,7 @@
                 <span matListItemTitle>{{ saleItem.sale.invoicePrefix }}{{ office.serialPrefix }}-{{ saleItem.sale.invoiceNumber }}</span>
                 <div matListItemLine>
                     <span class="mr-3">x{{ saleItem.quantity }}</span>
-                    <span class="mr-3">{{ saleItem.price.toFixed(2) }}</span>
+                    <span class="mr-3">{{ saleItem.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
                     <span class="mr-3">{{ saleItem.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</span>
                     @if (saleItem.igvCode === igvType.BONIFICACION) {
                         <span class="mr-3" [style.color]="'green'">Bonificacion</span>

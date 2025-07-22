@@ -8,7 +8,7 @@
             <button type="button" class="m-1" mat-list-item>
                 Total deuda:
                 <span class="spacer"></span>
-                {{ charge.toFixed(2) }}
+                {{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
             </button>
         </mat-action-list>
     </mat-card>
@@ -30,11 +30,11 @@
             </ng-container>
             <ng-container matColumnDef="charge">
                 <th mat-header-cell *matHeaderCellDef>Importe T.</th>
-                <td mat-cell *matCellDef="let element">{{ element.charge.toFixed(2) }}</td>
+                <td mat-cell *matCellDef="let element">{{ element.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </ng-container>
             <ng-container matColumnDef="remaining">
                 <th mat-header-cell *matHeaderCellDef>M. pendiente</th>
-                <td mat-cell *matCellDef="let element">{{ (element.charge - element.payed).toFixed(2) }}</td>
+                <td mat-cell *matCellDef="let element">{{ (element.charge - element.payed).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </ng-container>
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef></th>

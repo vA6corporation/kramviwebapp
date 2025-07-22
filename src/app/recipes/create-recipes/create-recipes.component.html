@@ -21,7 +21,7 @@
                 <span class="text-muted">x{{ recipe.quantity }}</span>
                 <span class="spacer"></span>
                 <div class="d-flex flex-column">
-                    {{ (recipe.cost * recipe.quantity).toFixed(2) }}
+                    {{ (recipe.cost * recipe.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                 </div>
             </button>
             }
@@ -29,7 +29,7 @@
                 <div class="d-flex font-weight-bold">
                     Total
                     <span class="spacer"></span>
-                    {{ charge.toFixed(2) }}
+                    {{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                 </div>
             </mat-list-item>
         </mat-action-list>

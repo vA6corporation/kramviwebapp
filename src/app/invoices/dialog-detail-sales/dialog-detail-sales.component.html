@@ -10,7 +10,7 @@
         <mat-list-item class="px-0">
             <span matListItemTitle>{{ saleItem.fullName }} ({{ saleItem.quantity }})</span>
             <span matListItemLine>
-                <ng-container>{{ (saleItem.price * saleItem.quantity).toFixed(2) }}</ng-container>
+                <ng-container>{{ (saleItem.price * saleItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</ng-container>
                 @if (saleItem.igvCode === '11') {
                 <span class="divider"></span>
                 <span class="text-success">Bon</span>
@@ -44,7 +44,7 @@
             </tr>
             <tr>
                 <td>Monto</td>
-                <td align="right">{{ (sale?.detraction?.amount || 0).toFixed(2) }}</td>
+                <td align="right">{{ (sale?.detraction?.amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </tr>
         </tbody>
     </table>
@@ -53,41 +53,41 @@
         <tbody>
             <tr>
                 <td>Imp. Total</td>
-                <td align="right">{{ (sale?.charge || 0).toFixed(2) }}</td>
+                <td align="right">{{ (sale?.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </tr>
             <tr>
                 <td>Gravado</td>
-                <td align="right">{{ (sale?.gravado || 0).toFixed(2) }}</td>
+                <td align="right">{{ (sale?.gravado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </tr>
             <tr>
                 <td>Gratuito</td>
-                <td align="right">{{ (sale?.gratuito || 0).toFixed(2) }}</td>
+                <td align="right">{{ (sale?.gratuito || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </tr>
             <tr>
                 <td>Exonerado</td>
-                <td align="right">{{ (sale?.exonerado || 0).toFixed(2) }}</td>
+                <td align="right">{{ (sale?.exonerado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </tr>
             <tr>
                 <td>Inafecto</td>
-                <td align="right">{{ (sale?.inafecto || 0).toFixed(2) }}</td>
+                <td align="right">{{ (sale?.inafecto || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </tr>
             <tr>
                 <td>
                     R.C.
                     <span class="font-weight-bold">({{ sale?.rcPercent }}%)</span>
                 </td>
-                <td align="right">{{ (sale?.rc || 0).toFixed(2) }}</td>
+                <td align="right">{{ (sale?.rc || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </tr>
             <tr>
                 <td>
                     I.G.V.
                     <span class="font-weight-bold">({{ sale?.igvPercent }}%)</span>
                 </td>
-                <td align="right">{{ (sale?.igv || 0).toFixed(2) }}</td>
+                <td align="right">{{ (sale?.igv || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </tr>
             <tr>
                 <td>Descuento Global</td>
-                <td align="right">{{ (sale?.discount || 0).toFixed(2) }}</td>
+                <td align="right">{{ (sale?.discount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </tr>
         </tbody>
     </table>
@@ -217,7 +217,7 @@
             @if (payment.observations) {
             <span matListItemLine>{{ payment.observations }}</span>
             }
-            <span matListItemLine>{{ payment.charge.toFixed(2) }}</span>
+            <span matListItemLine>{{ payment.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
             <div matListItemMeta>
                 <button mat-icon-button mat-dialog-close class="ml-2 text-muted"
                     [routerLink]="['/turns', payment.turnId, 'details']">

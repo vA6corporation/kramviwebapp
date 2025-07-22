@@ -14,11 +14,11 @@
                             </tr>
                             <tr>
                                 <td>Monto total</td>
-                                <td align="right">{{ (credit?.charge || 0).toFixed(2) }}</td>
+                                <td align="right">{{ (credit?.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
                             </tr>
                             <tr class="text-primary">
                                 <td>Monto pendiente</td>
-                                <td align="right">{{ ((credit?.charge || 0) - (credit?.payed || 0)).toFixed(2) }}</td>
+                                <td align="right">{{ ((credit?.charge || 0) - (credit?.payed || 0)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
                             </tr>
                             <tr class="text-primary">
                                 <td>Forma de pago</td>
@@ -77,7 +77,7 @@
                             @if (saleItem.igvCode === '30') {
                             <span class="text-primary ml-2">Ina</span>
                             }
-                            <span>{{ (saleItem.price * saleItem.quantity).toFixed(2) }}</span>
+                            <span>{{ (saleItem.price * saleItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
                         </mat-list-item>
                         }
                     </mat-list>
@@ -95,7 +95,7 @@
                         <span matListItemTitle>{{ payment.paymentMethod.name }}</span>
                         <span matListItemLine>{{ payment.createdAt | date }}<span class="divider"></span>{{
                             payment.observations }}</span>
-                        <span matListItemLine>{{ payment.charge.toFixed(2) }}</span>
+                        <span matListItemLine>{{ payment.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
                         <div matListItemMeta class="h-100 d-flex align-items-center">
                             <button mat-icon-button aria-label="edit" (click)="onEditPayment(payment)">
                                 <mat-icon>edit</mat-icon>
@@ -121,7 +121,7 @@
                     @for (due of dues; track $index) {
                     <mat-list-item>
                         <span matListItemTitle>{{ due.dueDate | date }}</span>
-                        <span>{{ due.charge.toFixed(2) }}</span>
+                        <span>{{ due.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
                     </mat-list-item>
                     }
                 </mat-list>

@@ -136,9 +136,9 @@ export async function buildTicket80mmPurchaseOrder(
         strArr = pdf.splitTextToSize(`${purchaseOrderItem.fullName.toUpperCase()}${purchaseOrderItem.observations ? ' - ' + purchaseOrderItem.observations : ''}`, 70)
         pdf.text(strArr, 0 + marginLeft, positionY)
         positionY += 3 * strArr.length
-        pdf.text(`${purchaseOrderItem.quantity.toFixed(2)}`, 0 + marginLeft, positionY)
-        pdf.text((purchaseOrderItem.cost).toFixed(2), pageCenter, positionY, { align: 'center' })
-        pdf.text((purchaseOrderItem.cost * purchaseOrderItem.quantity).toFixed(2), 70 - marginRight, positionY, { align: 'right' })
+        pdf.text(`${purchaseOrderItem.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 0 + marginLeft, positionY)
+        pdf.text((purchaseOrderItem.cost).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), pageCenter, positionY, { align: 'center' })
+        pdf.text((purchaseOrderItem.cost * purchaseOrderItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), 70 - marginRight, positionY, { align: 'right' })
         positionY += 4
     }
 
@@ -149,7 +149,7 @@ export async function buildTicket80mmPurchaseOrder(
     if (purchaseOrder.gravado) {
         text = `OP. GRAVADAS ${currency}`
         pdf.text(text, 45, positionY, { align: 'right' })
-        text = (purchaseOrder.gravado || 0).toFixed(2)
+        text = (purchaseOrder.gravado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 60, positionY, { align: 'right' })
         positionY += 4
     }
@@ -157,7 +157,7 @@ export async function buildTicket80mmPurchaseOrder(
     if (purchaseOrder.gratuito) {
         text = `OP. GRATUITAS ${currency}`
         pdf.text(text, 45, positionY, { align: 'right' })
-        text = (purchaseOrder.gratuito || 0).toFixed(2)
+        text = (purchaseOrder.gratuito || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 60, positionY, { align: 'right' })
         positionY += 4
     }
@@ -165,7 +165,7 @@ export async function buildTicket80mmPurchaseOrder(
     if (purchaseOrder.exonerado) {
         text = `OP. EXONERADAS ${currency}`
         pdf.text(text, 45, positionY, { align: 'right' })
-        text = (purchaseOrder.exonerado || 0).toFixed(2)
+        text = (purchaseOrder.exonerado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 60, positionY, { align: 'right' })
         positionY += 4
     }
@@ -173,20 +173,20 @@ export async function buildTicket80mmPurchaseOrder(
     if (purchaseOrder.inafecto) {
         text = `OP. INAFECTAS ${currency}`
         pdf.text(text, 45, positionY, { align: 'right' })
-        text = (purchaseOrder.inafecto || 0).toFixed(2)
+        text = (purchaseOrder.inafecto || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 60, positionY, { align: 'right' })
         positionY += 4
     }
 
     text = `IGV(18%) ${currency}`
     pdf.text(text, 45, positionY, { align: 'right' })
-    text = (purchaseOrder.igv || 0).toFixed(2)
+    text = (purchaseOrder.igv || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 60, positionY, { align: 'right' })
     positionY += 4
 
     text = `IMPORTE TOTAL ${currency}`
     pdf.text(text, 45, positionY, { align: 'right' })
-    text = (purchaseOrder.charge || 0).toFixed(2)
+    text = (purchaseOrder.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 60, positionY, { align: 'right' })
     positionY += 4
 

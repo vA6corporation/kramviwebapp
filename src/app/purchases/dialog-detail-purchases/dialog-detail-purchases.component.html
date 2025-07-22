@@ -10,7 +10,7 @@
                 <span>Vence: {{ purchaseItem.lot.expirationAt | date: 'dd/MM/yyyy' }}</span>
             </span>
             }
-            <span>{{ (purchaseItem.cost * purchaseItem.quantity).toFixed(2) }}</span>
+            <span>{{ (purchaseItem.cost * purchaseItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
             @if (purchaseItem.igvCode === '11') {
             <span class="divider"></span>
             <span class="text-success">Bon</span>
@@ -55,7 +55,7 @@
         <mat-list-item>
             <span matListItemTitle>{{ paymentPurchase.paymentMethod.name }}</span>
             <span matListItemLine>{{ paymentPurchase.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</span>
-            <span>{{ paymentPurchase.charge.toFixed(2) }}</span>
+            <span>{{ paymentPurchase.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
         </mat-list-item>
         } @empty {
         <mat-list-item>

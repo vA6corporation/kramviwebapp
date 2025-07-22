@@ -20,7 +20,7 @@
                     <span class="text-primary mr-3">Inafecto</span>
                 }
                 <span class="spacer"></span>
-                <span>{{ (purchaseItem.cost * purchaseItem.quantity).toFixed(2) }}</span>
+                <span>{{ (purchaseItem.cost * purchaseItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
             </div>
         </button>
     }
@@ -28,7 +28,7 @@
         <div matListItemTitle class="d-flex font-weight-bold">
             <span>Total</span>
             <span class="spacer"></span>
-            <span>{{ charge.toFixed(2) }}</span>
+            <span>{{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
         </div>
     </button>
 </mat-action-list>

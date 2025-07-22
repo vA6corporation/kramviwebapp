@@ -383,7 +383,7 @@ export class TurnsComponent {
                     sale.invoiceType,
                     `${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}`,
                     sale.currencyCode,
-                    sale.charge.toFixed(2),
+                    sale.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
                     sale.deletedAt ? 'SI' : 'NO',
                     sale.isPaid ? 'CONTADO' : 'CREDITO'
                 ])

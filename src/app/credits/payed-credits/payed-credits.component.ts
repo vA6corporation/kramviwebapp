@@ -108,8 +108,8 @@ export class PayedCreditsComponent {
                     // formatDate(credit.expirationAt, 'dd/MM/yyyy', 'en-US'),
                     `${credit.invoicePrefix}${this.office.serialPrefix}-${credit.invoiceNumber}`,
                     customer?.name.toUpperCase(),
-                    Number(credit.charge.toFixed(2)),
-                    Number((credit.charge - credit.payed).toFixed(2))
+                    Number(credit.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                    Number((credit.charge - credit.payed).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
                 ])
             }
             const name = `CREDITOS_${this.office.name}`

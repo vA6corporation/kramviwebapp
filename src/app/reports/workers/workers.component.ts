@@ -103,7 +103,7 @@ export class WorkersComponent {
                                 summaryWorker.product.sku,
                                 summaryWorker.product.upc,
                                 summaryWorker.totalQuantity,
-                                Number(summaryWorker.totalSale.toFixed(2))
+                                Number(summaryWorker.totalSale.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
                             ])
                         }
                         const name = `RESUMEN_DE_PERSONAL`

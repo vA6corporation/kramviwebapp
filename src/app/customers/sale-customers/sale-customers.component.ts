@@ -111,8 +111,8 @@ export class SaleCustomersComponent {
                     formatDate(new Date(saleItem.createdAt), 'dd/MM/yyyy', 'en-US'),
                     saleItem.fullName.toUpperCase(),
                     saleItem.quantity,
-                    Number(saleItem.price.toFixed(2)),
-                    Number((saleItem.price * saleItem.quantity).toFixed(2)),
+                    Number(saleItem.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                    Number((saleItem.price * saleItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
                     `${saleItem.sale?.invoicePrefix}${this.office.serialPrefix}-${saleItem.sale?.invoiceNumber}`
                 ])
             }

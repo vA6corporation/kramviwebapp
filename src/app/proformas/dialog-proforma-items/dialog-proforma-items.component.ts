@@ -89,7 +89,7 @@ export class DialogProformaItemsComponent {
 
     subTotal(): number {
         const { quantity } = this.formGroup.value
-        return Number((this.proformaItem.price * quantity).toFixed(2))
+        return Number((this.proformaItem.price * quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
     }
 
     onChangeSubTotal(value: string) {

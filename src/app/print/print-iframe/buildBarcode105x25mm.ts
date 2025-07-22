@@ -43,7 +43,7 @@ export async function buildBarcode105x25mm(
             pdf.text(text, sideRight + 10, positionY + 11.5)
         }
 
-        text = product.price.toFixed(2)
+        text = product.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         if (product.price > 99) {
             pdf.text(text, 45, positionY + 11.5, { align: 'right' })
             pdf.text(text, sideRight + 45, positionY + 11.5, { align: 'right' })

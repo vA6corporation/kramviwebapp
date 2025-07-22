@@ -123,7 +123,7 @@ export class ProformasComponent {
                             customer?.documentType,
                             sale ? sale.invoiceType : '',
                             sale ? `${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}` : '',
-                            Number(proforma.charge.toFixed(2)),
+                            Number(proforma.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
                             proforma.user.name.toUpperCase(),
                             proforma.deletedAt ? 'SI' : 'NO',
                             proforma.observations

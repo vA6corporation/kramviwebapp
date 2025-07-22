@@ -49,7 +49,7 @@ export function buildTurn80mm(
     for (const expense of expenses) {
         strArr = pdf.splitTextToSize(expense.concept.toUpperCase(), 60)
         pdf.text(strArr, 0 + marginLeft, positionY)
-        text = expense.charge.toFixed(2)
+        text = expense.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 70 - marginRight, positionY, { align: 'right' })
         positionY += 4 * strArr.length
     }
@@ -62,7 +62,7 @@ export function buildTurn80mm(
     for (const summaryPayment of summaryPayments) {
         text = `${summaryPayment.paymentMethod.name}(${summaryPayment.totalQuantity})`
         pdf.text(text, 10, positionY, { align: 'left' })
-        text = summaryPayment.totalCharge.toFixed(2)
+        text = summaryPayment.totalCharge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 65, positionY, { align: 'right' })
         positionY += 4
     }
@@ -71,25 +71,25 @@ export function buildTurn80mm(
 
     text = `T. RECAUDADO`
     pdf.text(text, 10, positionY, { align: 'left' })
-    text = totalCollected.toFixed(2)
+    text = totalCollected.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 65, positionY, { align: 'right' })
     positionY += 4
 
     text = `T. GASTOS`
     pdf.text(text, 10, positionY, { align: 'left' })
-    text = totalExpenses.toFixed(2)
+    text = totalExpenses.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 65, positionY, { align: 'right' })
     positionY += 4
 
     text = `M. APERTURA`
     pdf.text(text, 10, positionY, { align: 'left' })
-    text = turn.openCash.toFixed(2)
+    text = turn.openCash.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 65, positionY, { align: 'right' })
     positionY += 4
 
     text = `E. RESTANTE`
     pdf.text(text, 10, positionY, { align: 'left' })
-    text = (turn.openCash + totalCash - totalExpenses).toFixed(2)
+    text = (turn.openCash + totalCash - totalExpenses).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 65, positionY, { align: 'right' })
     positionY += 4
 
@@ -110,9 +110,9 @@ export function buildTurn80mm(
         strArr = pdf.splitTextToSize(`${summarySaleItem.fullName.toUpperCase()}`, 70)
         pdf.text(strArr, 0 + marginLeft, positionY)
         positionY += 3.5 * strArr.length
-        pdf.text(`${Number(summarySaleItem.totalQuantity.toFixed(2))}`, 0 + marginLeft, positionY)
-        pdf.text((summarySaleItem.totalSale / summarySaleItem.totalQuantity).toFixed(2), 35, positionY, { align: 'center' })
-        pdf.text(summarySaleItem.totalSale.toFixed(2), 70 - marginRight, positionY, { align: 'right' })
+        pdf.text(`${Number(summarySaleItem.totalQuantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}`, 0 + marginLeft, positionY)
+        pdf.text((summarySaleItem.totalSale / summarySaleItem.totalQuantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), 35, positionY, { align: 'center' })
+        pdf.text(summarySaleItem.totalSale.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), 70 - marginRight, positionY, { align: 'right' })
         positionY += 4
     }
 

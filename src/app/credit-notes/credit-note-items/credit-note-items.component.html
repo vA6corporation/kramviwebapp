@@ -15,7 +15,7 @@
                 }
                 <span class="text-muted">{{ creditNoteItem.observations }}</span>
                 <span class="spacer"></span>
-                <span>{{ (creditNoteItem.price * creditNoteItem.quantity).toFixed(2) }}</span>
+                <span>{{ (creditNoteItem.price * creditNoteItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
             </div>
         </button>
     }
@@ -26,7 +26,7 @@
             </span>
             <span class="spacer"></span>
             <span>
-                {{ charge.toFixed(2) }}
+                {{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
             </span>
         </div>
     </button>

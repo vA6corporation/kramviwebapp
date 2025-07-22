@@ -17,7 +17,7 @@
                     <span class="text-muted ">{{ eventItem.observations }}</span>
                     <span class="spacer"></span>
                     <span class="text-muted">
-                        {{ (eventItem.price * eventItem.quantity).toFixed(2) }}
+                        {{ (eventItem.price * eventItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                     </span>
                 </div>
             </div>
@@ -27,7 +27,7 @@
         <div class="d-flex font-weight-bold">
             Total
             <span class="spacer"></span>
-            {{ charge.toFixed(2) }}
+            {{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
         </div>
     </mat-list-item>
 </mat-action-list>

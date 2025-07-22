@@ -32,9 +32,9 @@
             <span class="spacer"></span>
             <div>
                 <span class="mr-3">
-                    {{ (supplyItem.totalCost || 0).toFixed(2) }}
+                    {{ (supplyItem.totalCost || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                 </span>
-                {{ (supplyItem.totalIn || 0).toFixed(2) }}
+                {{ (supplyItem.totalIn || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
             </div>
         </mat-list-item>
         }

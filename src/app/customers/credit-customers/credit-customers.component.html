@@ -6,18 +6,18 @@
         <mat-list>
             <mat-list-item role="listitem">Total deuda:
                 <span class="spacer"></span>
-                {{ charge.toFixed(2) }}
+                {{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
             </mat-list-item>
             @if (customer) {
                 <mat-list-item role="listitem">Limite de credito:
                     <span class="spacer"></span>
-                    {{ customer.creditLimit ? customer.creditLimit.toFixed(2) : 'SIN LIMITE' }}
+                    {{ customer.creditLimit ? customer.creditLimit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 'SIN LIMITE' }}
                 </mat-list-item>
                 }
         </mat-list>
     </mat-card>
     <button type="button" class="mb-3 w-100" mat-flat-button color="primary" (click)="onPayment()"
-        [disabled]="!selectedCredits.length">PAGAR LA DEUDA {{ forPaid.toFixed(2) }}</button>
+        [disabled]="!selectedCredits.length">PAGAR LA DEUDA {{ forPaid.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</button>
     <div class="mat-elevation-z2">
         <table mat-table [dataSource]="dataSource" class="w-100">
             <ng-container matColumnDef="checked">
@@ -47,11 +47,11 @@
             </ng-container>
             <ng-container matColumnDef="charge">
                 <th mat-header-cell *matHeaderCellDef>Importe T.</th>
-                <td mat-cell *matCellDef="let element">{{ element.charge.toFixed(2) }}</td>
+                <td mat-cell *matCellDef="let element">{{ element.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </ng-container>
             <ng-container matColumnDef="remaining">
                 <th mat-header-cell *matHeaderCellDef>M. pendiente</th>
-                <td mat-cell *matCellDef="let element">{{ (element.charge - element.payed).toFixed(2) }}</td>
+                <td mat-cell *matCellDef="let element">{{ (element.charge - element.payed).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </ng-container>
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef></th>

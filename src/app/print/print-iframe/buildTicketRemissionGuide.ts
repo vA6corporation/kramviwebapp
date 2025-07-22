@@ -156,7 +156,7 @@ export async function buildTicketRemissionGuide(
     text = `Peso`
     pdf.text(text, 0 + marginLeft, positionY)
     positionY += 4
-    text = `${remissionGuide.shippingWeight.toFixed(2)} Kg`
+    text = `${remissionGuide.shippingWeight.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Kg`
     pdf.text(text, 0 + marginLeft, positionY)
     positionY += 4
 
@@ -223,7 +223,7 @@ export async function buildTicketRemissionGuide(
         strArr = pdf.splitTextToSize(`${remissionGuideItem.fullName.toUpperCase()}${remissionGuideItem.observations ? ' - ' + remissionGuideItem.observations : ''}`, 65)
         pdf.text(strArr, 0 + marginLeft, positionY)
         positionY += 4 * strArr.length
-        pdf.text(`${remissionGuideItem.quantity.toFixed(2)}`, 0 + marginLeft, positionY)
+        pdf.text(`${remissionGuideItem.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 0 + marginLeft, positionY)
         positionY += 4
     }
     return pdf

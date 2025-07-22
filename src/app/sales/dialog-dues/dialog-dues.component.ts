@@ -108,7 +108,7 @@ export class DialogDuesComponent {
 
             const sumDues = dues.map(e => e.charge).reduce((a: number, b: number) => a + b, 0)
 
-            if (Number(sumDues.toFixed(2)) > Number(this.data.charge.toFixed(2))) {
+            if (Number(sumDues.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })) > Number(this.data.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))) {
                 throw new Error('La suma de cuotas no puede ser mayor al monto total')
             }
 

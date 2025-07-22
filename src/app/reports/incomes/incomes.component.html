@@ -55,13 +55,13 @@
                             @if (summaryPayment.totalCharge) {
                                 <tr>
                                     <td>{{ summaryPayment.paymentMethod.name }} ({{ summaryPayment.totalQuantity }})</td>
-                                    <td align="right">{{ summaryPayment.totalCharge.toFixed(2) }}</td>
+                                    <td align="right">{{ summaryPayment.totalCharge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
                                 </tr>
                             }
                         }
                         <tr class="text-primary">
                             <td>TOTAL RECAUDADO</td>
-                            <td align="right">{{ totalCollected.toFixed(2) }}</td>
+                            <td align="right">{{ totalCollected.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -80,7 +80,7 @@
                                 }
                             </span>
                             <span matListItemLine>{{ payment.createdAt | date: 'dd MMM yyyy, hh:mm a' }}</span>
-                            <span>{{ payment.charge.toFixed(2) }}</span>
+                            <span>{{ payment.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
                         </button>
                     }
                 </mat-action-list>

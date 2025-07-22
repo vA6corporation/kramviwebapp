@@ -6,7 +6,7 @@
         @for (boardItem of version.boardItems; track boardItem._id) {
         <mat-list-item [ngClass]="{ 'bg-danger': boardItem.deletedAt }">
             <span matListItemTitle>{{ boardItem.fullName }} ({{ boardItem.quantity }})</span>
-            <span matListItemLine>{{ boardItem.price.toFixed(2) }}</span>
+            <span matListItemLine>{{ boardItem.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
             @if (boardItem.deletedAt) {
             <span matListItemLine>Anulados: {{ boardItem.deletedQuantity }}</span>
             }

@@ -36,7 +36,7 @@
             <span class="mr-2 text-muted">x{{ creditNoteItem.quantity }}</span>
             {{ creditNoteItem.fullName }}
             <span class="spacer"></span>
-            {{ (creditNoteItem.price * creditNoteItem.quantity).toFixed(2) }}
+            {{ (creditNoteItem.price * creditNoteItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
         </mat-list-item>
         }
     </mat-list>

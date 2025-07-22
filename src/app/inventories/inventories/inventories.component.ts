@@ -230,10 +230,10 @@ export class InventoriesComponent {
                                     product.sku,
                                     product.upc,
                                     product.stock,
-                                    Number(product.cost.toFixed(2)),
-                                    Number((product.cost * product.stock).toFixed(2)),
-                                    Number((product.price * product.stock).toFixed(2)),
-                                    Number(product.price.toFixed(2)),
+                                    Number(product.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                                    Number((product.cost * product.stock).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                                    Number((product.price * product.stock).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                                    Number(product.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
                                     product.lot ? product.lot.lotNumber : null,
                                     product.lot ? formatDate(product.lot.expirationAt, 'dd/MM/yyyy', 'en-US') : null
                                 ])
@@ -275,9 +275,9 @@ export class InventoriesComponent {
                                     product.sku,
                                     product.upc,
                                     product.stock,
-                                    Number(product.cost.toFixed(2)),
-                                    Number((product.cost * product.stock).toFixed(2)),
-                                    Number((product.price * product.stock).toFixed(2)),
+                                    Number(product.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                                    Number((product.cost * product.stock).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                                    Number((product.price * product.stock).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
                                 ]
 
                                 for (const office of this.offices) {
@@ -329,9 +329,9 @@ export class InventoriesComponent {
                                     product.sku,
                                     product.upc,
                                     product.stock,
-                                    Number(product.cost.toFixed(2)),
-                                    Number((product.cost * product.stock).toFixed(2)),
-                                    Number((product.price * product.stock).toFixed(2)),
+                                    Number(product.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                                    Number((product.cost * product.stock).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                                    Number((product.price * product.stock).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
                                 ]
 
                                 for (const priceList of this.priceLists) {
@@ -383,9 +383,9 @@ export class InventoriesComponent {
                                     product.sku,
                                     product.upc,
                                     product.stock,
-                                    Number(product.cost.toFixed(2)),
-                                    Number((product.cost * product.stock).toFixed(2)),
-                                    Number((product.price * product.stock).toFixed(2)),
+                                    Number(product.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                                    Number((product.cost * product.stock).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                                    Number((product.price * product.stock).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
                                 ]
 
                                 for (const priceList of this.priceLists) {

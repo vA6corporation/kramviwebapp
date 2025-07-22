@@ -4,14 +4,14 @@
         @for (board of boards; track board._id; let i = $index) {
             <mat-list-item>
                 <span matListItemTitle>N° {{ board.table.name }}</span>
-                <span>{{ chargeBoards[i].toFixed(2) }}</span>
+                <span>{{ chargeBoards[i].toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
             </mat-list-item>
         }
         <mat-list-item role="listitem">
             <div class="d-flex font-weight-bold">
                 Total
                 <span class="spacer"></span>
-                {{ charge.toFixed(2) }}
+                {{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
             </div>
         </mat-list-item>
     </mat-list>

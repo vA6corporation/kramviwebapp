@@ -107,10 +107,10 @@ export class InoutComponent {
             for (const month of this.dataSource) {
                 body.push([
                     month.month,
-                    Number(month.sale.toFixed(2)),
-                    Number(month.purchase.toFixed(2)),
-                    Number(month.paymentOrder.toFixed(2)),
-                    Number((month.sale - month.purchase - month.paymentOrder).toFixed(2))
+                    Number(month.sale.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                    Number(month.purchase.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                    Number(month.paymentOrder.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                    Number((month.sale - month.purchase - month.paymentOrder).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
                 ])
             }
 

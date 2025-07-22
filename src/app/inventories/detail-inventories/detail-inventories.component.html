@@ -22,42 +22,42 @@
                     @if (purchaseCount) {
                     <tr>
                         <td width="300">Total compras</td>
-                        <td class="text-right">+{{ (purchaseCount).toFixed(2) }}</td>
+                        <td class="text-right">+{{ (purchaseCount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
                     </tr>
                     }
                     @if (moveInCount) {
                     <tr>
                         <td width="300">Total traspasos a esta sucursal</td>
-                        <td class="text-right">+{{ (moveInCount).toFixed(2) }}</td>
+                        <td class="text-right">+{{ (moveInCount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
                     </tr>
                     }
                     @if (incidentInCount) {
                     <tr>
                         <td width="300">Total aumentos</td>
-                        <td class="text-right">+{{ (incidentInCount).toFixed(2) }}</td>
+                        <td class="text-right">+{{ (incidentInCount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
                     </tr>
                     }
                     @if (saleCount) {
                     <tr>
                         <td width="300">Total ventas</td>
-                        <td class="text-right">-{{ (saleCount).toFixed(2) }}</td>
+                        <td class="text-right">-{{ (saleCount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
                     </tr>
                     }
                     @if (incidentOutCount) {
                     <tr>
                         <td width="300">Total reducciones</td>
-                        <td class="text-right">-{{ (incidentOutCount).toFixed(2) }}</td>
+                        <td class="text-right">-{{ (incidentOutCount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
                     </tr>
                     }
                     @if (moveOutCount) {
                     <tr>
                         <td width="300">Total traspasos a otras sucursales</td>
-                        <td class="text-right">-{{ (moveOutCount).toFixed(2) }}</td>
+                        <td class="text-right">-{{ (moveOutCount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
                     </tr>
                     }
                     <tr>
                         <td width="300">Stock Actual</td>
-                        <td class="text-right">{{ (product?.stock || 0).toFixed(2) }}</td>
+                        <td class="text-right">{{ (product?.stock || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
                     </tr>
                 </tbody>
             </table>

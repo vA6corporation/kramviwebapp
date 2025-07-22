@@ -11,11 +11,11 @@
                     <mat-grid-tile (click)="onSelectProduct(product, $event)">
                         {{ product.fullName }}
                         <small class="text-muted text-price">
-                            {{ product.cost.toFixed(2) }}
+                            {{ product.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                         </small>
                         @if (product.isTrackStock) {
                         <small class="text-muted text-stock">
-                            stock: {{ product.stock.toFixed(2) }}
+                            stock: {{ product.stock.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                         </small>
                         }
                     </mat-grid-tile>
@@ -45,11 +45,11 @@
                     <mat-grid-tile (click)="onSelectProduct(product, $event)">
                         {{ product.fullName }}
                         <small class="text-muted text-price">
-                            {{ product.cost.toFixed(2) }}
+                            {{ product.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                         </small>
                         @if (product.isTrackStock) {
                         <small class="text-muted text-stock">
-                            stock: {{ product.stock.toFixed(2) }}
+                            stock: {{ product.stock.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                         </small>
                         }
                     </mat-grid-tile>

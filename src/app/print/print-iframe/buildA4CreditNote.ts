@@ -207,7 +207,7 @@ export async function buildA4CreditNote(
     positionYitems += 10
 
     for (const creditNoteItem of creditNoteItems || []) {
-        text = creditNoteItem.quantity.toFixed(2)
+        text = creditNoteItem.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 7, positionYitems)
 
         text = (creditNoteItem.sku || '').toString()
@@ -220,10 +220,10 @@ export async function buildA4CreditNote(
         text = creditNoteItem.unitCode
         pdf.text(text, 142, positionYitems)
 
-        text = creditNoteItem.price.toFixed(2)
+        text = creditNoteItem.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 163, positionYitems)
 
-        text = (creditNoteItem.price * creditNoteItem.quantity).toFixed(2)
+        text = (creditNoteItem.price * creditNoteItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 183, positionYitems)
 
         positionYitems += 5 * strArr.length
@@ -336,59 +336,59 @@ export async function buildA4CreditNote(
     // pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     // positionYSummaryRight += 5
     if (creditNote.discount) {
-        text = (sale.discount || 0).toFixed(2)
+        text = (sale.discount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
 
 
-    text = (creditNote.charge - creditNote.igv).toFixed(2)
+    text = (creditNote.charge - creditNote.igv).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 4
 
     if (creditNote.gravado) {
-        text = (creditNote.gravado || 0).toFixed(2)
+        text = (creditNote.gravado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
 
     if (creditNote.exonerado) {
-        text = (creditNote.exonerado || 0).toFixed(2)
+        text = (creditNote.exonerado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
 
     if (creditNote.inafecto) {
-        text = (creditNote.inafecto || 0).toFixed(2)
+        text = (creditNote.inafecto || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
 
     if (creditNote.gratuito) {
-        text = (creditNote.gratuito || 0).toFixed(2)
+        text = (creditNote.gratuito || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
 
-    text = creditNote.igv.toFixed(2)
+    text = creditNote.igv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 4
 
     if (creditNote.rc) {
-        text = creditNote.rc.toFixed(2)
+        text = creditNote.rc.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
 
-    text = (creditNote.charge || 0).toFixed(2)
+    text = (creditNote.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 4
@@ -397,5 +397,5 @@ export async function buildA4CreditNote(
 }
 
 async function getQRDataUrl(creditNote: CreditNoteModel, business: BusinessModel, office: OfficeModel): Promise<string> {
-    return await QRCode.toDataURL(`${business.ruc}|${creditNote.invoiceType.toUpperCase()}|${creditNote.invoicePrefix}${office.serialPrefix}|${creditNote.invoiceNumber}|${creditNote.igv.toFixed(2)}|${creditNote.charge.toFixed(2)}|${creditNote.createdAt}`, { margin: 0 })
+    return await QRCode.toDataURL(`${business.ruc}|${creditNote.invoiceType.toUpperCase()}|${creditNote.invoicePrefix}${office.serialPrefix}|${creditNote.invoiceNumber}|${creditNote.igv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}|${creditNote.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}|${creditNote.createdAt}`, { margin: 0 })
 }

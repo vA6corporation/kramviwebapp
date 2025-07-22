@@ -22,14 +22,14 @@
                             @for (preSaleItem of preSale.preSaleItems; track preSaleItem._id) {
                                 <mat-list-item role="listitem">
                                     <span matListItemTitle>{{ preSaleItem.fullName }} ({{ preSaleItem.quantity }})</span>
-                                    <span matListItemLine>{{ (preSaleItem.price * preSaleItem.quantity).toFixed(2) }}</span>
+                                    <span matListItemLine>{{ (preSaleItem.price * preSaleItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
                                 </mat-list-item>
                             }
                             <mat-list-item>
                                 <div class="d-flex font-weight-bold">
                                     Total
                                     <span class="spacer"></span>
-                                    {{ preSale.charge.toFixed(2) }}
+                                    {{ preSale.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                                 </div>
                             </mat-list-item>
                         </mat-list>

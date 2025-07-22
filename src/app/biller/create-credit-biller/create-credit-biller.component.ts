@@ -283,7 +283,7 @@ export class CreateCreditBillerComponent {
 
     cashChange(): number {
         const diff = this.cash - this.charge
-        return Number(diff.toFixed(2))
+        return Number(diff.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
     }
 
     addCash(cash: number) {

@@ -47,7 +47,7 @@ export class DialogPurchaseSupplyItemsComponent {
 
     subTotal(): number {
         const { quantity } = this.formGroup.value
-        return Number((this.purchaseItem.cost * quantity).toFixed(2))
+        return Number((this.purchaseItem.cost * quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
     }
 
     onChangeSubTotal(value: string) {

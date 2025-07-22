@@ -121,7 +121,7 @@ export class InvoicesComponent {
                                     dataArr.map((data: any) => {
                                         sum += data
                                     })
-                                    let percentage = (value * 100 / sum).toFixed(2) + "%"
+                                    let percentage = (value * 100 / sum).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%"
                                     return `${this.summaryInvoices[ctx.dataIndex]._id}: ${percentage}`
                                 }
                             },

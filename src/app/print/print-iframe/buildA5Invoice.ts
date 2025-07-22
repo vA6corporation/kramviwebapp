@@ -225,17 +225,17 @@ export async function buildA5Invoice(
     positionYitems += 7
 
     for (const saleItem of saleItems || []) {
-        text = saleItem.quantity.toFixed(2)
+        text = saleItem.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 7, positionYitems)
 
         text = saleItem.fullName.toUpperCase()
         strArr = pdf.splitTextToSize(text, 75)
         pdf.text(strArr, 23, positionYitems)
 
-        text = saleItem.price.toFixed(2)
+        text = saleItem.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 105, positionYitems)
 
-        text = (saleItem.price * saleItem.quantity).toFixed(2)
+        text = (saleItem.price * saleItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 125, positionYitems)
 
         positionYitems += 4 * strArr.length
@@ -303,44 +303,44 @@ export async function buildA5Invoice(
 
     const currency = sale.currencyCode === 'PEN' ? 'S/' : '$'
 
-    text = (sale?.discount || 0).toFixed(2)
+    text = (sale?.discount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 120, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 105, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 5
 
     if (sale.invoiceType !== 'NOTA DE VENTA') {
-        text = ((sale?.charge || 0) - (sale?.igv || 0)).toFixed(2)
+        text = ((sale?.charge || 0) - (sale?.igv || 0)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 120, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 105, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
 
-        text = (sale?.gravado || 0).toFixed(2)
+        text = (sale?.gravado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 120, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 105, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
 
-        text = (sale?.exonerado || 0).toFixed(2)
+        text = (sale?.exonerado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 120, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 105, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
 
-        text = (sale?.inafecto || 0).toFixed(2)
+        text = (sale?.inafecto || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 120, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 105, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
 
-        text = (sale?.gratuito || 0).toFixed(2)
+        text = (sale?.gratuito || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 120, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 105, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
 
-        text = (sale?.igv || 0).toFixed(2)
+        text = (sale?.igv || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 120, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 105, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
 
-    text = (sale?.charge || 0).toFixed(2)
+    text = (sale?.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 120, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 105, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 4
@@ -349,5 +349,5 @@ export async function buildA5Invoice(
 }
 
 async function getQRDataUrl(sale: SaleModel, business: BusinessModel, office: OfficeModel): Promise<string> {
-    return await QRCode.toDataURL(`${business.ruc}|${sale.invoiceType.toUpperCase()}|${sale.invoicePrefix}${office.serialPrefix}|${sale.invoiceNumber}|${sale.igv.toFixed(2)}|${sale.charge.toFixed(2)}|${sale.createdAt}`, { margin: 0 })
+    return await QRCode.toDataURL(`${business.ruc}|${sale.invoiceType.toUpperCase()}|${sale.invoicePrefix}${office.serialPrefix}|${sale.invoiceNumber}|${sale.igv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}|${sale.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}|${sale.createdAt}`, { margin: 0 })
 }

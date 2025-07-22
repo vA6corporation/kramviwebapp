@@ -9,7 +9,7 @@
                 <p class="text-center m-0">{{ provider.address }}</p>
                 <p class="text-center mb-3">{{ provider.mobileNumber }}</p>
             }
-            <h2 class="text-center mat-display-small mb-0">{{ charge.toFixed(2) }}</h2>
+            <h2 class="text-center mat-display-small mb-0">{{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</h2>
             <p class="caption text-center text-muted mb-2">Total a comprar</p>
             <mat-form-field appearance="fill">
                 <mat-label>Comprobante</mat-label>

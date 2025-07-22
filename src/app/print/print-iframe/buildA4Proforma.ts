@@ -225,7 +225,7 @@ export async function buildA4Proforma(
         text = (proformaItem.upc || '').toString()
         pdf.text(text, 6, positionYItems)
 
-        text = proformaItem.quantity.toFixed(2)
+        text = proformaItem.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 31, positionYItems)
 
         text = proformaItem.unitName
@@ -240,10 +240,10 @@ export async function buildA4Proforma(
         strArr = pdf.splitTextToSize(text, 95)
         pdf.text(strArr, 66, positionYItems)
 
-        text = proformaItem.price.toFixed(2)
+        text = proformaItem.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 180, positionYItems, { align: 'right' })
 
-        text = (proformaItem.price * proformaItem.quantity).toFixed(2)
+        text = (proformaItem.price * proformaItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYItems, { align: 'right' })
 
         positionYItems += 5 * strArr.length
@@ -358,51 +358,51 @@ export async function buildA4Proforma(
     pdf.setFont('Helvetica', 'normal')
 
     if (proforma.discount) {
-        text = (proforma.discount || 0).toFixed(2)
+        text = (proforma.discount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
 
-    text = ((proforma.charge || 0) - (proforma?.igv || 0)).toFixed(2)
+    text = ((proforma.charge || 0) - (proforma?.igv || 0)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 4
 
     if (proforma.gravado) {
-        text = (proforma.gravado || 0).toFixed(2)
+        text = (proforma.gravado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
 
     if (proforma.exonerado) {
-        text = (proforma.exonerado || 0).toFixed(2)
+        text = (proforma.exonerado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
 
     if (proforma.inafecto) {
-        text = (proforma.inafecto || 0).toFixed(2)
+        text = (proforma.inafecto || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
 
     if (proforma.gratuito) {
-        text = (proforma.gratuito || 0).toFixed(2)
+        text = (proforma.gratuito || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
 
-    text = proforma.igv.toFixed(2)
+    text = proforma.igv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 4
 
-    text = (proforma.charge || 0).toFixed(2)
+    text = (proforma.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 4

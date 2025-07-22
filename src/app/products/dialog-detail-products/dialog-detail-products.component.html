@@ -15,7 +15,7 @@
             <mat-list-item role="listitem">
                 @if (product.stock > 0) {
                     <span>
-                        Stock: {{ product.stock.toFixed(2) }}
+                        Stock: {{ product.stock.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                     </span>
                 }
                 @if (product.stock <= 0) {
@@ -31,7 +31,7 @@
         }
         @if (setting.showCost) {
             <mat-list-item role="listitem">
-                Costo: {{ product.cost.toFixed(2) }}
+                Costo: {{ product.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
             </mat-list-item>
         }
         @for (price of product.prices; track price._id) {

@@ -2,7 +2,7 @@
     <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()"
         [formGroup]="formGroup">
         <div class="px-3">
-            <h2 class="text-center mat-display-small mb-0">{{ charge.toFixed(2) }}</h2>
+            <h2 class="text-center mat-display-small mb-0">{{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</h2>
             <p class="caption text-center text-muted mb-2">Total a cobrar</p>
             @if (customer) {
             <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
@@ -54,7 +54,7 @@
                     }
                     <span class="text-muted">{{ saleItem.observations }}</span>
                     <span class="spacer"></span>
-                    <span>{{ (saleItem.price * saleItem.quantity).toFixed(2) }}</span>
+                    <span>{{ (saleItem.price * saleItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
                 </div>
             </button>
             }
@@ -65,7 +65,7 @@
                     </span>
                     <span class="spacer"></span>
                     <span>
-                        {{ charge.toFixed(2) }}
+                        {{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                     </span>
                 </div>
             </button>

@@ -142,9 +142,9 @@ export async function buildTicketProforma(
         strArr = pdf.splitTextToSize(`${proformaItem.fullName.toUpperCase()}${proformaItem.observations ? ' - ' + proformaItem.observations : ''}`, 65)
         pdf.text(strArr, 0 + marginLeft, positionY)
         positionY += 4 * strArr.length
-        pdf.text(`${proformaItem.quantity.toFixed(2)}`, 0 + marginLeft, positionY)
-        pdf.text((proformaItem.price).toFixed(2), pageCenter, positionY, { align: 'center' })
-        pdf.text((proformaItem.price * proformaItem.quantity).toFixed(2), 70 - marginRight, positionY, { align: 'right' })
+        pdf.text(`${proformaItem.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 0 + marginLeft, positionY)
+        pdf.text((proformaItem.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), pageCenter, positionY, { align: 'center' })
+        pdf.text((proformaItem.price * proformaItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), 70 - marginRight, positionY, { align: 'right' })
         positionY += 4
     }
 
@@ -158,13 +158,13 @@ export async function buildTicketProforma(
 
     text = `TOTAL DCTO`
     pdf.text(text, 45, positionY, { align: 'right' })
-    text = (proforma?.discount || 0).toFixed(2)
+    text = (proforma?.discount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 50, positionY)
     positionY += 4
 
     text = `IMPORTE TOTAL`
     pdf.text(text, 45, positionY, { align: 'right' })
-    text = (proforma?.charge || 0).toFixed(2)
+    text = (proforma?.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     pdf.text(text, 50, positionY)
     positionY += 4
 

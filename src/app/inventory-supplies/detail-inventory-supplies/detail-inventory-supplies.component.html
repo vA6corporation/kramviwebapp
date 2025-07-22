@@ -7,7 +7,7 @@
             <tbody>
                 <tr class="text-primary">
                     <td width="300">Stock Actual</td>
-                    <td>{{ (supply?.stock || 0).toFixed(2) }}</td>
+                    <td>{{ (supply?.stock || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
                 </tr>
             </tbody>
         </table>
@@ -26,7 +26,7 @@
                     (click)="onPurchaseSupplyDetail(purchaseSupplyItem.purchaseSupplyId)">
                     {{ purchaseSupplyItem.createdAt | date }}
                     <span class="spacer"></span>
-                    {{ purchaseSupplyItem.quantity.toFixed(2) }}
+                    {{ purchaseSupplyItem.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                 </button>
                 }
             </mat-action-list>
@@ -44,7 +44,7 @@
                 <button type="button" class="m-1" mat-list-item (click)="onSaleSupplyDetail(saleSupplyItem.saleId)">
                     {{ saleSupplyItem.createdAt | date }}
                     <span class="spacer"></span>
-                    {{ saleSupplyItem.quantity.toFixed(2) }}
+                    {{ saleSupplyItem.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                 </button>
                 }
             </mat-action-list>
@@ -63,7 +63,7 @@
                     (click)="onIncidentSupplyDetail(incidentSupplyItem.incidentSupplyId)">
                     {{ incidentSupplyItem.createdAt | date }}
                     <span class="spacer"></span>
-                    {{ incidentSupplyItem.quantity.toFixed(2) }}
+                    {{ incidentSupplyItem.quantity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                 </button>
                 }
             </mat-action-list>

@@ -9,34 +9,34 @@
         <tbody>
             <tr>
                 <td>Imp. Total</td>
-                <td align="right">{{ (proforma?.charge || 0).toFixed(2) }}</td>
+                <td align="right">{{ (proforma?.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </tr>
             <tr>
                 <td>Gravado</td>
-                <td align="right">{{ (proforma?.gravado || 0).toFixed(2) }}</td>
+                <td align="right">{{ (proforma?.gravado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </tr>
             <tr>
                 <td>Gratuito</td>
-                <td align="right">{{ (proforma?.gratuito || 0).toFixed(2) }}</td>
+                <td align="right">{{ (proforma?.gratuito || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </tr>
             <tr>
                 <td>Exonerado</td>
-                <td align="right">{{ (proforma?.exonerado || 0).toFixed(2) }}</td>
+                <td align="right">{{ (proforma?.exonerado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </tr>
             <tr>
                 <td>Inafecto</td>
-                <td align="right">{{ (proforma?.inafecto || 0).toFixed(2) }}</td>
+                <td align="right">{{ (proforma?.inafecto || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </tr>
             <tr>
                 <td>
                     I.G.V.
                     <span class="font-weight-bold">({{ proforma?.igvPercent }}%)</span>
                 </td>
-                <td align="right">{{ (proforma?.igv || 0).toFixed(2) }}</td>
+                <td align="right">{{ (proforma?.igv || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </tr>
             <tr>
                 <td>Descuento Global</td>
-                <td align="right">{{ (proforma?.discount || 0).toFixed(2) }}</td>
+                <td align="right">{{ (proforma?.discount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
             </tr>
         </tbody>
     </table>
@@ -85,7 +85,7 @@
         @for (proformaItem of proformaItems; track $index) {
         <mat-list-item>
             <span matListItemTitle>{{ proformaItem.fullName }} ({{ proformaItem.quantity }})</span>
-            <span matListItemLine>{{ (proformaItem.price * proformaItem.quantity).toFixed(2) }}</span>
+            <span matListItemLine>{{ (proformaItem.price * proformaItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
             @if (proformaItem.igvCode === '11') {
             <span class="divider"></span>
             <span class="text-success">Bon</span>

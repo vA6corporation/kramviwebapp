@@ -49,7 +49,7 @@
                 {{ category.name }}
             </span>
             <span matListItemLine>
-                {{ (category.totalCharge || 0).toFixed(2) }}
+                {{ (category.totalCharge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
             </span>
         </mat-list-item>
         }

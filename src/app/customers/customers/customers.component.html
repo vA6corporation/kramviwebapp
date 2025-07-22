@@ -41,7 +41,7 @@
                     <ng-container matColumnDef="creditLimit">
                         <th mat-header-cell *matHeaderCellDef>Limite de credito</th>
                         <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.creditLimit}">
-                            {{ element.creditLimit ? element.creditLimit.toFixed(2) : 'SIN LIMITE' }}
+                            {{ element.creditLimit ? element.creditLimit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 'SIN LIMITE' }}
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="mobileNumber">

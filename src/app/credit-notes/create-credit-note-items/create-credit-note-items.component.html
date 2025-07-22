@@ -9,7 +9,7 @@
                     <mat-grid-tile (click)="onSelectProduct(product)">
                         {{ product.fullName }}
                         <small class="text-muted text-price">
-                            {{ product.price.toFixed(2) }}
+                            {{ product.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                         </small>
                     </mat-grid-tile>
                     }
@@ -23,7 +23,7 @@
                     <mat-grid-tile (click)="onSelectProduct(product)">
                         {{ product.fullName }}
                         <small class="text-muted text-price">
-                            {{ product.price.toFixed(2) }}
+                            {{ product.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                         </small>
                     </mat-grid-tile>
                     }

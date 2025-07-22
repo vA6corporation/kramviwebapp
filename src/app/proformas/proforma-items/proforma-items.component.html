@@ -17,7 +17,7 @@
                     <span class="text-muted">{{ proformaItem.observations }}</span>
                     <span class="spacer"></span>
                     <span class="text-muted">
-                        {{ (proformaItem.price * proformaItem.quantity).toFixed(2) }}
+                        {{ (proformaItem.price * proformaItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                     </span>
                 </div>
             </div>
@@ -27,7 +27,7 @@
         <div class="d-flex font-weight-bold">
             Total
             <span class="spacer"></span>
-            {{ charge.toFixed(2) }}
+            {{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
         </div>
     </mat-list-item>
 </mat-action-list>

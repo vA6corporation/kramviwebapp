@@ -100,7 +100,7 @@ export class ExpensesComponent {
                             body.push([
                                 formatDate(expense.createdAt, 'dd/MM/yyyy', 'en-US'),
                                 expense.concept.toUpperCase(),
-                                Number((expense.charge || 0).toFixed(2)),
+                                Number((expense.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
                                 expense.user.name
                             ])
                         }

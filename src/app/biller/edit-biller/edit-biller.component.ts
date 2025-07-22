@@ -239,7 +239,7 @@ export class EditBillerComponent {
 
     cashChange(): number {
         const diff = this.cash - this.cash
-        return Number(diff.toFixed(2))
+        return Number(diff.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
     }
 
     addCash(cash: number) {

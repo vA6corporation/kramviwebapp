@@ -18,12 +18,12 @@ export function buildPreaccount58mm(
     positionY += 5
     for (const boardItem of board.boardItems) {
         const strArr = pdf.splitTextToSize(`${boardItem.quantity} ${boardItem.fullName.toUpperCase()}`, 40)
-        pdf.text((boardItem.price * boardItem.quantity).toFixed(2), 47 - marginRight, positionY, { align: 'right' })
+        pdf.text((boardItem.price * boardItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), 47 - marginRight, positionY, { align: 'right' })
         pdf.text(strArr, 0, positionY)
         positionY += 4 * strArr.length
     }
     positionY += 3
-    pdf.text(`IMPORTE TOTAL: ${board.boardItems.filter(e => e.igvCode !== '11').map(e => e.price * e.quantity).reduce((a, b) => a + b, 0).toFixed(2)}`, 1, positionY)
+    pdf.text(`IMPORTE TOTAL: ${board.boardItems.filter(e => e.igvCode !== '11').map(e => e.price * e.quantity).reduce((a, b) => a + b, 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 1, positionY)
     positionY += 5
     pdf.text(formatDate(new Date(), 'M/d/yyyy, h:mm a', 'en-US'), pageCenter, positionY, { align: 'center' })
     positionY += 5
