@@ -1,0 +1,10 @@
+<title mat-dialog-title>Adjuntar archivo</title>
+<div mat-dialog-content>
+    
+</div>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+    <button type="button" mat-flat-button color="primary" (click)="fileInput.click()">CARGAR</button>
+    <input type="file" #fileInput (change)="onFileSelected(fileInput.files, fileInput)" [accept]="accept" hidden>
+</mat-dialog-actions>

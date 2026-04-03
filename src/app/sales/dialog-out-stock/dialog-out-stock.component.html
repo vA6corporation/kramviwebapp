@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>Productos agotados</h2>
+<div mat-dialog-content>
+    <mat-list role="list">
+        @for (element of outStocks; track $index) {
+        <mat-list-item role="listitem">
+            <span matListItemTitle>{{ element.fullName }}</span>
+            @if (element.stock > 0) {
+            <span>Disponible: {{ element.stock }}</span>
+            }
+            @if (element.stock <= 0) { <span class="text-danger">Agotado</span>
+                }
+        </mat-list-item>
+        }
+    </mat-list>
+</div>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

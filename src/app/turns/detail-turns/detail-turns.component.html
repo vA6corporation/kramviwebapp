@@ -1,0 +1,179 @@
+@let turn = $turn();
+<div class="container">
+    @if (turn) {
+    <mat-card class="mb-3">
+        <mat-card-header>
+            <mat-card-title>Resumen de caja</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-list role="list">
+                <mat-list-item>
+                    <span matListItemTitle>F/H de apertura</span>
+                    <span>{{ turn.createdAt | date: 'dd MMM yyyy, hh:mm a' }}</span>
+                </mat-list-item>
+                <mat-list-item>
+                    <span matListItemTitle>Monto de apertura</span>
+                    <span>{{ turn.openCash.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                </mat-list-item>
+                @if (totalExpenses) {
+                <mat-list-item>
+                    <span matListItemTitle>Total gastos</span>
+                    <span>{{ totalExpenses.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                </mat-list-item>
+                }
+                <mat-list-item>
+                    <span matListItemTitle>Total recaudado</span>
+                    <span>{{ (totalCollected).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                </mat-list-item>
+                <mat-list-item>
+                    <span matListItemTitle class="text-success">Efectivo final (Monto de apertura + Efectivo - Gastos)</span>
+                    <span class="text-success">{{ (totalCash - totalExpenses + turn.openCash).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                </mat-list-item>
+                @if (totalCredit) {
+                <mat-list-item>
+                    <span matListItemTitle>Total credito</span>
+                    <span>{{ (totalCredit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                </mat-list-item>
+                }
+                @if (totalDebt) {
+                <mat-list-item>
+                    <span matListItemTitle>Total pendiente de pago</span>
+                    <span>{{ (totalDebt).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                </mat-list-item>
+                }
+                <mat-list-item>
+                    <span matListItemTitle>Observaciones</span>
+                    <span align="right" [ngClass]="{ 'text-muted': !turn.observation }">
+                        {{ turn.observation || 'NINGUNO' }}
+                    </span>
+                </mat-list-item>
+            </mat-list>
+            <div class="pb-3">
+                <mat-divider></mat-divider>
+            </div>
+            <mat-list role="list">
+                @for (summaryPayment of $summaryPayments(); track $index) {
+                <mat-list-item>
+                    <span matListItemTitle>{{ summaryPayment.paymentMethod.name }} ({{ summaryPayment.totalQuantity
+                        }})</span>
+                    <span>{{ summaryPayment.totalCharge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                </mat-list-item>
+                }
+            </mat-list>
+        </mat-card-content>
+    </mat-card>
+    <!--<button type="button" (click)="onCloseTurn()" mat-flat-button color="primary" class="w-100 mb-3">
+        CERRAR CAJA
+    </button>-->
+    <mat-card class="mb-3">
+        <mat-card-header>
+            <mat-card-title>Gastos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-list role="list">
+                @for (expense of $expenses(); track expense.id) {
+                <mat-list-item>
+                    <span matListItemTitle>{{ expense.concept }}</span>
+                    <span matListItemLine>{{ expense.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                    <div class="py-3" matListItemMeta>
+                        <button type="button" mat-icon-button aria-label="trash" (click)="onEditExpense(expense)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    </div>
+                </mat-list-item>
+                } @empty {
+                <mat-list-item class="text-center">SIN GASTOS</mat-list-item>
+                }
+            </mat-list>
+        </mat-card-content>
+    </mat-card>
+    <!--<button type="button" (click)="onAddExpense()" mat-flat-button color="primary" class="w-100 mb-3">
+        AGREGAR GASTO
+    </button>-->
+    <mat-card class="mb-3">
+        <mat-card-header>
+            <mat-card-title>Productos vendidos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-action-list>
+                @for (summarySaleItem of $summarySaleItems(); track summarySaleItem.id) {
+                <button type="button" mat-list-item (click)="onSelectSaleProduct(summarySaleItem.saleIds)">
+                    <span matListItemTitle>{{ summarySaleItem.fullName | uppercase }} ({{ summarySaleItem.totalQuantity }})</span>
+                    <span>{{ summarySaleItem.totalCharge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                </button>
+                }
+            </mat-action-list>
+        </mat-card-content>
+    </mat-card>
+    <button type="button" (click)="onGetSummarySales()" mat-flat-button color="primary" class="w-100 mb-3">MOSTRAR
+        PRODUCTOS VENDIDOS</button>
+    @if (credits.length) {
+    <mat-card class="mb-3">
+        <mat-card-header>
+            <mat-card-title>Creditos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-action-list role="list">
+                @for (credit of credits; track credit.id) {
+                <button mat-list-item (click)="onShowSale(credit.id)">
+                    <span matListItemTitle>{{ credit.invoicePrefix }}{{ office.serialPrefix }}-{{ credit.invoiceNumber
+                        }}</span>
+                    @if (credit.payments.length) {
+                    <span matListItemLine>
+                        @for (payment of credit.payments; track payment.id) {
+                        @for (paymentMethod of paymentMethods; track paymentMethod.id) {
+                        @if (paymentMethod.id === payment.paymentMethodId) {
+                        <span>{{ paymentMethod.name }}: {{ payment.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                        }
+                        }
+                        }
+                    </span>
+                    }
+                    <span matListItemLine>{{ credit.user.name | uppercase }} - {{ credit.createdAt | date: 'dd/MM/yyyy'
+                        }} - PENDIENTE: {{ (credit.debt).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                </button>
+                }
+            </mat-action-list>
+        </mat-card-content>
+    </mat-card>
+    }
+    <mat-card class="mb-3">
+        <mat-card-header>
+            <mat-card-title>Ventas</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-action-list role="list">
+                @for (sale of $sales(); track sale.id) {
+                <button mat-list-item (click)="onShowSale(sale.id)">
+                    <span matListItemTitle>{{ sale.invoicePrefix }}{{ office.serialPrefix }}-{{ sale.invoiceNumber
+                        }}</span>
+                    <span matListItemLine>
+                        @for (payment of sale.payments; track payment.id) {
+                        @for (paymentMethod of paymentMethods; track paymentMethod.id) {
+                        @if (paymentMethod.id === payment.paymentMethodId) {
+                        <span>{{ paymentMethod.name }}: {{ payment.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                        }
+                        }
+                        } @empty {
+                            <span>SIN PAGOS</span>
+                        }
+                    </span>
+                    <span matListItemLine>{{ sale.user.name | uppercase }} - {{ sale.createdAt | date: 'dd/MM/yyyy'
+                        }}</span>
+                </button>
+                }
+            </mat-action-list>
+        </mat-card-content>
+    </mat-card>
+    <button type="button" (click)="onGetAllSales()" mat-flat-button color="primary" class="w-100">
+        MOSTRAR TODAS LAS VENTAS
+    </button>
+    } @else {
+    <h2 class="text-muted text-center mb-3 mat-title-large">La caja esta cerrada</h2>
+    <div class="d-flex">
+        <span class="spacer"></span>
+        <button type="button" mat-flat-button color="primary" (click)="onOpenTurn()">APERTURAR CAJA</button>
+        <span class="spacer"></span>
+    </div>
+    }
+</div>

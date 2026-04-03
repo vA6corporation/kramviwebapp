@@ -1,0 +1,100 @@
+import { HttpErrorResponse } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { Observable, Subject } from 'rxjs'
+import { HttpService } from '../http.service'
+import { TurnModel } from './turn.model'
+import { Params } from '@angular/router'
+
+@Injectable({
+    providedIn: 'root'
+})
+export class TurnsService {
+
+    constructor(
+        private readonly httpService: HttpService,
+    ) { }
+
+    private turn: TurnModel | null = null
+    private turn$ = new Subject<TurnModel | null>()
+
+    getTurnById(turnId: any): Observable<TurnModel> {
+        return this.httpService.get(`turns/byId/${turnId}`)
+    }
+
+    setTurn(turn: TurnModel): void {
+        if (this.turn$) {
+            this.turn$.next(turn)
+        }
+    }
+
+    handleOpenTurn(): Observable<TurnModel | null> {
+        if (this.turn === null) {
+            this.loadTurn()
+        } else {
+            setTimeout(() => {
+                this.turn$.next(this.turn)
+            })
+        }
+        return this.turn$.asObservable()
+    }
+
+    getCountTurns(params: Params): Observable<number> {
+        return this.httpService.get(`turns/countTurns`, params)
+    }
+
+    getTurnsByPage(
+        pageIndex: number,
+        pageSize: number,
+        params: Params,
+    ): Observable<TurnModel[]> {
+        return this.httpService.get(`turns/byPage/${pageIndex}/${pageSize}`, params)
+    }
+
+    update(turnId: any, turn: any): Observable<void> {
+        return this.httpService.put(`turns/${turnId}`, { turn })
+    }
+
+    updateObservation(turnId: any, observation: string): Observable<void> {
+        return this.httpService.put(`turns/observation/${turnId}`, { observation })
+    }
+
+    updateCreatedAt(turnId: any, createdAt: string): Observable<void> {
+        return this.httpService.put(`turns/createdAt/${turnId}`, { createdAt })
+    }
+
+    updateOpenTurn(turnId: any): Observable<void> {
+        return this.httpService.put(`turns/openTurn/${turnId}`, {})
+    }
+
+    changeTurn(saleId: any, turnId: any) {
+        return this.httpService.get(`turns/changeTurn/${saleId}/${turnId}`)
+    }
+
+    loadTurn() {
+        this.httpService.get('turns/openTurn').subscribe({
+            next: turn => {
+                this.turn = turn
+                this.turn$.next(turn)
+            }, error: (error: HttpErrorResponse) => {
+                console.log(error)
+                this.turn$.next(null)
+            }
+        })
+    }
+
+    create(openCash: number): void {
+        this.httpService.post('turns', { openCash }).subscribe(turn => {
+            this.turn$.next(turn)
+        })
+    }
+
+    closeTurn(turnId: any) {
+        this.turn$.next(null)
+        this.turn = null
+        return this.httpService.get(`turns/closeTurn/${turnId}`)
+    }
+
+    delete(turnId: any): Observable<void> {
+        return this.httpService.delete(`turns/${turnId}`)
+    }
+}

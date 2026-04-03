@@ -1,0 +1,8 @@
+<mat-grid-list cols="5" rowHeight="100px">
+    @for (table of $tables(); track table.id; let i = $index) {
+    <mat-grid-tile [routerLink]="['/boards/posBoardsWaiter', i]"
+                        [style.background]="table.board ? '#ff0000' : 'lightblue'">
+        <h2 class="mat-title-large">{{ table.name }}</h2>
+    </mat-grid-tile>
+    }
+</mat-grid-list>

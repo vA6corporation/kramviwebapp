@@ -1,0 +1,31 @@
+<div class="container">
+    <form [formGroup]="formGroup" autocomplete="off">
+        <mat-form-field appearance="fill">
+            <mat-label>Tipo de comprobante</mat-label>
+            <mat-select formControlName="invoiceCode" (selectionChange)="fetchData()">
+                <mat-option value="">SELECCIONE UN COMPROBANTE</mat-option>
+                <mat-option value="BOLETA">BOLETA</mat-option>
+                <mat-option value="FACTURA">FACTURA</mat-option>
+                <mat-option value="NOTA DE VENTA">NOTA DE VENTA</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+    <div class="d-flex">
+        <mat-action-list class="w-100">
+            @for (duplicate of duplicates; track $index) {
+            @for (sale of duplicate.items; track $index) {
+            <button mat-list-item (click)="onSelectSale(sale.id)">
+                <span matListItemTitle>{{ sale.invoiceNumber }}</span>
+                <span matListItemLine>{{ sale.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                <span>{{ sale.createdAt | date }}</span>
+            </button>
+            }
+            }
+        </mat-action-list>
+        <mat-list class="w-100" role="list">
+            @for (missing of missings; track $index) {
+            <mat-list-item role="listitem">{{ missing }}</mat-list-item>
+            }
+        </mat-list>
+    </div>
+</div>

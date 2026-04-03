@@ -1,0 +1,142 @@
+<div class="d-flex">
+    <form class="flex-70 d-flex" (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+        <div class="p-3">
+            <p class="caption text-center text-muted mb-0">Transportista</p>
+            @if (carrier) {
+            <button type="button" mat-button color="primary" (click)="onEditCarrier()" class="w-100">
+                <span>{{ carrier.name | uppercase }}</span>
+            </button>
+            <p class="text-center m-0">Placa: {{ carrier.carriagePlate || 'NINGUNO' }}</p>
+            <p class="text-center m-0">N° de licencia: {{ carrier.licenseNumber || 'NINGUNO' }}</p>
+            }
+            <mat-divider class="mb-2"></mat-divider>
+            <p class="caption text-center text-muted mb-0">Destinatario</p>
+            @if (customer) {
+            <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100">
+                <span>{{ customer.name | uppercase }}</span>
+            </button>
+            <p class="text-center mb-3">Celular: {{ customer.formatPhone || 'NINGUNO' }}</p>
+            <p class="text-center mb-3">Direccion: {{ customer.address || 'NINGUNO' }}</p>
+            }
+            <mat-form-field appearance="fill">
+                <mat-label>Fecha de transporte</mat-label>
+                <input matInput [matDatepicker]="transportAtDatePicker" formControlName="transportAt">
+                <mat-datepicker-toggle matSuffix [for]="transportAtDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #transportAtDatePicker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Tipo de transporte</mat-label>
+                <mat-select formControlName="carriageTypeCode">
+                    <mat-option value="" disabled>TIPO DE TRANSPORTE</mat-option>
+                    <mat-option value="01">TRANSPORTE PUBLICO</mat-option>
+                    <mat-option value="02">TRANSPORTE PRIVADO</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Motivo del transporte</mat-label>
+                <mat-select formControlName="remissionGuideTypeCode">
+                    @for (remissionGuideType of remissionGuideTypes; track $index) {
+                    <mat-option [value]="remissionGuideType.code">
+                        {{ remissionGuideType.label }}
+                    </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Descripcion del motivo</mat-label>
+                <input type="text" matInput formControlName="reasonDescription">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Peso (Kilogramos)</mat-label>
+                <input type="number" matInput formControlName="shippingWeight">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Observaciones</mat-label>
+                <input type="text" matInput formControlName="observation">
+            </mat-form-field>
+            <div class="d-flex">
+                <mat-form-field appearance="fill">
+                    <mat-label>Departamento de origen</mat-label>
+                    <mat-select formControlName="originDepartmentCode" #originDepartmentCode
+                        (selectionChange)="onChangeOriginDepartment(originDepartmentCode.value)">
+                        @for (department of departments; track $index) {
+                        <mat-option [value]="department.code">
+                            {{ department.name | uppercase }}
+                        </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Provincia de origen</mat-label>
+                    <mat-select formControlName="originProvinceCode" #originProvinceCode
+                        (selectionChange)="onChangeOriginProvince(originProvinceCode.value)">
+                        @for (province of originProvinces; track $index) {
+                        <mat-option [value]="province.code">
+                            {{ province.name | uppercase }}
+                        </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Distrito de origen</mat-label>
+                    <mat-select formControlName="originLocationCode">
+                        @for (district of originDistricts; track $index) {
+                        <mat-option [value]="district.code">
+                            {{ district.name | uppercase }}
+                        </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <mat-form-field appearance="fill">
+                <mat-label>Direccion de origen</mat-label>
+                <input type="text" matInput formControlName="originAddress">
+            </mat-form-field>
+            <div class="d-flex">
+                <mat-form-field appearance="fill">
+                    <mat-label>Departamento de destino</mat-label>
+                    <mat-select formControlName="destinyDepartmentCode" #destinyDepartmentCode
+                        (selectionChange)="onChangeDestinyDepartment(destinyDepartmentCode.value)">
+                        @for (department of destinyDepartments; track $index) {
+                        <mat-option [value]="department.code">
+                            {{ department.name | uppercase }}
+                        </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Provincia de destino</mat-label>
+                    <mat-select formControlName="destinyProvinceCode" #destinyProvinceCode
+                        (selectionChange)="onChangeDestinyProvince(destinyProvinceCode.value)">
+                        @for (province of destinyProvinces; track $index) {
+                        <mat-option [value]="province.code">
+                            {{ province.name | uppercase }}
+                        </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Distrito de destino</mat-label>
+                    <mat-select formControlName="destinyLocationCode">
+                        @for (district of destinyDistricts; track $index) {
+                        <mat-option [value]="district.code">
+                            {{ district.name | uppercase }}
+                        </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <mat-form-field appearance="fill">
+                <mat-label>Direccion de destino</mat-label>
+                <input type="text" matInput formControlName="destinyAddress">
+            </mat-form-field>
+            <div class="p-2"></div>
+            <button type="submit" class="w-100" mat-flat-button [disabled]="isLoading" color="primary">
+                GUARDAR
+            </button>
+        </div>
+    </form>
+    <div class="flex-30 h-auto bg-white">
+        <app-remission-guide-items></app-remission-guide-items>
+    </div>
+</div>

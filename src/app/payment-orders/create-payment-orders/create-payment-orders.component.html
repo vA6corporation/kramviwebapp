@@ -1,0 +1,62 @@
+<div class="container">
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+        @if (provider) {
+        <button type="button" mat-button color="primary" (click)="onEditProvider()" class="w-100">
+            <span>{{ provider.name | uppercase }}</span>
+        </button>
+        <p class="text-center m-0">{{ provider.address }}</p>
+        <p class="text-center mb-3">{{ provider.phone }}</p>
+        }
+        <mat-form-field appearance="fill">
+            <mat-label>Observaciones</mat-label>
+            <input type="text" matInput formControlName="observation">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Medio de pago</mat-label>
+            <mat-select formControlName="paymentMethodId">
+                @for (paymentMethod of paymentMethods; track $index) {
+                <mat-option [value]="paymentMethod.id">{{ paymentMethod.name }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Descripcion del producto/servicio</mat-label>
+            <input type="text" matInput formControlName="concept">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Importe</mat-label>
+            <input type="number" matInput formControlName="charge">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>N° de comprobante</mat-label>
+            <input type="text" matInput formControlName="serie" class="text-uppercase">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Fecha de pago</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="paymentAt">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>N° de operacion</mat-label>
+            <input type="text" matInput formControlName="operationNumber">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Cuenta de la empresa</mat-label>
+            <mat-select formControlName="bankId">
+                @for (bank of banks; track $index) {
+                <mat-option [value]="bank.id">
+                    {{ bank.name }} {{ bank.accountNumber }}
+                </mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <mat-slide-toggle formControlName="isPaid">Pagado</mat-slide-toggle>
+        <div class="d-flex">
+            <span class="spacer"></span>
+            <button type="button" mat-raised-button routerLink="/paymentOrders" color="primary">CANCELAR</button>
+            <span class="divider"></span>
+            <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
+        </div>
+    </form>
+</div>

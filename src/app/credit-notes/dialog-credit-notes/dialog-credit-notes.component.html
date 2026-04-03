@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>Notas de credito</h2>
+<div mat-dialog-content>
+    @for (creditNote of creditNotes; track creditNote.id) {
+    <mat-action-list>
+        <button mat-list-item (click)="onPrintCreditNote(creditNote.id)">
+            {{ creditNote.invoicePrefix }}{{ office.serialPrefix }}-{{ creditNote.invoiceNumber }}
+            <span class="spacer"></span>
+            {{ creditNote.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
+        </button>
+    </mat-action-list>
+    } @empty {
+    <h2 class="text-center text-muted mat-title-large">Sin notas de credito</h2>
+    }
+</div>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+    <button type="button" mat-flat-button mat-dialog-close color="primary"
+        [routerLink]="['/creditNotes', this.saleId, 'createItems']" [disabled]="isLoading">
+        NUEVA NOTA DE CREDITO
+    </button>
+</mat-dialog-actions>

@@ -1,0 +1,103 @@
+import { Component, inject } from '@angular/core'
+import { HttpErrorResponse } from '@angular/common/http'
+import { PageEvent } from '@angular/material/paginator'
+import { MatTable } from '@angular/material/table'
+import { Subscription, lastValueFrom } from 'rxjs'
+import { parseExcel } from '../../buildExcel'
+import { NavigationService } from '../../navigation/navigation.service'
+import { ToolsService } from '../tools.service'
+import { MaterialModule } from '../../material.module'
+import { CommonModule } from '@angular/common'
+
+@Component({
+    selector: 'app-import-customers',
+    imports: [MaterialModule, CommonModule],
+    templateUrl: './import-customers.component.html',
+    styleUrls: ['./import-customers.component.sass']
+})
+export class ImportCustomersComponent {
+
+    private readonly toolsService = inject(ToolsService)
+    private readonly navigationService = inject(NavigationService)
+
+    displayedColumns: string[] = ['document', 'name', 'address', 'phone', 'email', 'actions']
+    dataSource: any[] = []
+    length: number = 0
+    pageSize: number = 10
+    pageSizeOptions: number[] = [10, 30, 50]
+    pageIndex: number = 0
+    isLoading: boolean = false
+    private distributionId: any = 0
+    private handleDistribution$: Subscription = new Subscription()
+
+    ngOnDestroy() {
+        this.handleDistribution$.unsubscribe()
+    }
+
+    onDistributionChange(distributionId: any) {
+        this.distributionId = distributionId
+    }
+
+    async onFileSelected(files: FileList | null, input: HTMLInputElement, table: MatTable<any>) {
+        if (files && files[0]) {
+            const customers = await parseExcel(files[0])
+            input.value = ''
+            this.dataSource = []
+            for (let index = 0; index < customers.length; index++) {
+                const customer = customers[index]
+                // if (customer.documento) {
+                // }
+                if (String(customer.documento || '').length === 8 || String(customer.documento || '').length === 11) {
+                    this.dataSource.push({
+                        documentType: String(customer.documento || '').length === 11 ? 'RUC' : 'DNI',
+                        document: String(customer.documento || ''),
+                        name: customer.nombres,
+                        address: customer.direccion,
+                        email: customer.email,
+                        phone: String(customer.celular || ''),
+                    })
+                } else {
+                    if (customer.nombres.length > 4) {
+                        this.dataSource.push({
+                            documentType: 'DNI',
+                            document: '',
+                            name: customer.nombres,
+                            address: customer.direccion,
+                            email: customer.email,
+                            phone: String(customer.celular || ''),
+                        })
+                    }
+                }
+            }
+            table.renderRows()
+        }
+    }
+
+    handlePageEvent(event: PageEvent): void {
+    }
+
+    onDeleteCustomer(index: number, table: MatTable<any>) {
+        this.dataSource.splice(index, 1)
+        table.renderRows()
+    }
+
+    async onSubmit() {
+        this.navigationService.loadBarStart()
+        this.isLoading = true
+        let chunk = 1000
+        for (let index = 0; index < this.dataSource.length; index += chunk) {
+            const temporary = this.dataSource.slice(index, index + chunk)
+            try {
+                await lastValueFrom(this.toolsService.importCustomers(temporary, this.distributionId))
+            } catch (error) {
+                if (error instanceof HttpErrorResponse) {
+                    this.navigationService.showMessage(error.error.message)
+                }
+            }
+        }
+        this.dataSource = []
+        this.isLoading = false
+        this.navigationService.loadBarFinish()
+    }
+
+}

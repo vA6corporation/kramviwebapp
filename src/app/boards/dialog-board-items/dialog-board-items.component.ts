@@ -1,0 +1,74 @@
+import { Component, EventEmitter, inject } from '@angular/core'
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
+import { Observable, Subscription } from 'rxjs'
+import { AuthService } from '../../auth/auth.service'
+import { SettingModel } from '../../settings/setting.model'
+import { BoardItemModel } from '../board-item.model'
+import { MaterialModule } from '../../material.module'
+
+@Component({
+    selector: 'app-dialog-board-items',
+    imports: [MaterialModule, ReactiveFormsModule],
+    templateUrl: './dialog-board-items.component.html',
+    styleUrls: ['./dialog-board-items.component.sass']
+})
+export class DialogBoardItemsComponent {
+
+    readonly boardItem: BoardItemModel = inject(MAT_DIALOG_DATA)
+    private readonly formBuilder = inject(FormBuilder)
+    private readonly authService = inject(AuthService)
+    private readonly dialogRef: MatDialogRef<DialogBoardItemsComponent> = inject(MatDialogRef)
+
+    formGroup: FormGroup = this.formBuilder.group({
+        quantity: [this.boardItem.quantity, Validators.required],
+        price: [this.boardItem.price, Validators.required],
+        observation: this.boardItem.observation,
+        isBonus: this.boardItem.igvCode === '11',
+    })
+    setting: SettingModel = new SettingModel()
+
+    private onDeleteBoardItem$: EventEmitter<void> = new EventEmitter()
+    private onUpdateBoardItem$: EventEmitter<any> = new EventEmitter()
+    private handleAuth$: Subscription = new Subscription()
+
+    ngOnDestroy() {
+        this.handleAuth$.unsubscribe()
+    }
+
+    ngOnInit(): void {
+        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
+            this.setting = auth.setting
+        })
+    }
+
+    subTotal(): number {
+        const { quantity } = this.formGroup.value
+        return Number((this.boardItem.price * quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
+    }
+
+    onChangeSubTotal(value: string) {
+        const subTotal = Number(value) / this.boardItem.price
+        this.formGroup.get('quantity')?.patchValue(subTotal.toFixed(4))
+    }
+
+    onSubmit(): void {
+        if (this.formGroup.valid) {
+            this.onUpdateBoardItem$.next(this.formGroup.value)
+            this.dialogRef.close()
+        }
+    }
+
+    handleUpdateBoardItem(): Observable<any> {
+        return this.onUpdateBoardItem$.asObservable()
+    }
+
+    handleDeleteBoardItem(): Observable<void> {
+        return this.onDeleteBoardItem$.asObservable()
+    }
+
+    onDeleteBoardItem(): void {
+        this.onDeleteBoardItem$.emit()
+    }
+
+}

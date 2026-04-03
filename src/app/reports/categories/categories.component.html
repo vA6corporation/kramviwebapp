@@ -1,0 +1,57 @@
+<div class="container">
+    <form [formGroup]="formGroup" autocomplete="off">
+        <mat-form-field appearance="fill">
+            <mat-label>Seleccione un rango de fechas</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+                <input matStartDate placeholder="Desde" formControlName="startDate">
+                <input matEndDate placeholder="Hasta" formControlName="endDate" (dateChange)="onRangeChange()">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+        <div class="d-flex">
+            <mat-form-field appearance="fill">
+                <mat-label>Categoria</mat-label>
+                <mat-select (selectionChange)="onChangeCategory()" formControlName="categoryId">
+                    <mat-option value="">TODAS LAS CATEGORIAS</mat-option>
+                    @for (category of categories; track category.id) {
+                    <mat-option class="text-uppercase" [value]="category.id">
+                        {{ category.name | uppercase }}
+                    </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Usuario</mat-label>
+                <mat-select (selectionChange)="onChangeUser()" formControlName="userId">
+                    <mat-option value="">TODOS LOS USUARIOS</mat-option>
+                    @for (user of users; track user.id) {
+                    <mat-option [value]="user.id" class="text-uppercase">{{ user.name | uppercase }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </form>
+    <div class="d-flex">
+        <span class="spacer"></span>
+        <div>
+            <h2 class="mat-title-large">Recaudacion</h2>
+            <div>
+                <canvas #chargeChart width="300" height="300"></canvas>
+            </div>
+        </div>
+        <span class="spacer"></span>
+    </div>
+    <mat-list>
+        @for (category of filterCategories; track category.id) {
+        <mat-list-item class="text-uppercase">
+            <span matListItemTitle>
+                {{ category.name }}
+            </span>
+            <span matListItemLine>
+                {{ (category.totalCharge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
+            </span>
+        </mat-list-item>
+        }
+    </mat-list>
+</div>

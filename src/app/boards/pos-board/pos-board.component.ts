@@ -1,0 +1,506 @@
+import { Component, inject, signal } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { HttpErrorResponse } from '@angular/common/http'
+import { MatDialog } from '@angular/material/dialog'
+import { ActivatedRoute, Router, RouterModule } from '@angular/router'
+import { Subscription } from 'rxjs'
+import { AuthService } from '../../auth/auth.service'
+import { OfficeModel } from '../../offices/office.model'
+import { SettingModel } from '../../settings/setting.model'
+import { MaterialModule } from '../../material.module'
+import { NavigationService } from '../../navigation/navigation.service'
+import { PrintService } from '../../print/print.service'
+import { CategoriesService } from '../../products/categories.service'
+import { CategoryModel } from '../../products/category.model'
+import { DialogSelectAnnotationsComponent } from '../../products/dialog-select-annotations/dialog-select-annotations.component'
+import { PriceListModel } from '../../products/price-list.model'
+import { ProductModel } from '../../products/product.model'
+import { ProductsService } from '../../products/products.service'
+import { TableModel } from '../../tables/table.model'
+import { TablesService } from '../../tables/tables.service'
+import { UserModel } from '../../users/user.model'
+import { BoardItemModel } from '../board-item.model'
+import { BoardItemsComponent } from '../board-items/board-items.component'
+import { BoardModel } from '../board.model'
+import { BoardsService } from '../boards.service'
+import { DialogDeletedComponent } from '../dialog-deleted/dialog-deleted.component'
+import { DialogPasswordComponent } from '../dialog-password/dialog-password.component'
+import { CreateBoardItemModel } from '../create-board-item.model'
+import { DialogDetailProductsComponent } from '../../products/dialog-detail-products/dialog-detail-products.component'
+
+@Component({
+    selector: 'app-pos-board',
+    imports: [MaterialModule, CommonModule, BoardItemsComponent, RouterModule],
+    templateUrl: './pos-board.component.html',
+    styleUrls: ['./pos-board.component.sass']
+})
+export class PosBoardComponent {
+
+    private readonly router = inject(Router)
+    private readonly matDialog = inject(MatDialog)
+    private readonly activatedRoute = inject(ActivatedRoute)
+    private readonly navigationService = inject(NavigationService)
+    private readonly categoriesService = inject(CategoriesService)
+    private readonly productsService = inject(ProductsService)
+    private readonly authService = inject(AuthService)
+    private readonly boardsService = inject(BoardsService)
+    private readonly tablesService = inject(TablesService)
+    private readonly printService = inject(PrintService)
+
+    table: null | TableModel = null
+    board: BoardModel | null = null
+    $categories = signal<CategoryModel[]>([])
+    charge: number = 0
+    priceLists: PriceListModel[] = []
+    priceListId: any | null = null
+    boardItems: CreateBoardItemModel[] = []
+    preBoardItems: BoardItemModel[] = []
+    gridListCols = 4
+    selectedIndex: number = 0
+    setting: SettingModel = new SettingModel()
+    $products = signal<ProductModel[]>([])
+    $isLoading = signal<boolean>(true)
+    private office: OfficeModel = new OfficeModel()
+    private user: UserModel = new UserModel()
+    private sortByName: boolean = true
+    private tableIndex: number = 0
+
+    private handleClickMenu$: Subscription = new Subscription()
+    private handleSearch$: Subscription = new Subscription()
+    private handleBoardItems$: Subscription = new Subscription()
+    private handleProducts$: Subscription = new Subscription()
+    private handleAuth$: Subscription = new Subscription()
+    private handleCategories$: Subscription = new Subscription()
+    private handlePriceLists$: Subscription = new Subscription()
+    private handleTables$: Subscription = new Subscription()
+
+    ngOnDestroy(): void {
+        this.handleBoardItems$.unsubscribe()
+        this.handleSearch$.unsubscribe()
+        this.handleClickMenu$.unsubscribe()
+        this.handleProducts$.unsubscribe()
+        this.handleAuth$.unsubscribe()
+        this.handleCategories$.unsubscribe()
+        this.handlePriceLists$.unsubscribe()
+        this.handleTables$.unsubscribe()
+    }
+
+    ngOnInit(): void {
+        this.tableIndex = this.activatedRoute.snapshot.params['tableIndex']
+        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
+            this.office = auth.office
+            this.setting = auth.setting
+            this.user = auth.user
+        })
+
+        this.handleBoardItems$ = this.boardsService.handleBoardItems().subscribe(boardItems => {
+            this.boardItems = boardItems
+        })
+
+        this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
+            this.priceLists = priceLists
+            this.priceListId = this.setting.defaultPriceListId || this.priceLists[0]?.id
+        })
+
+        this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
+            switch (id) {
+                case 'change_board': {
+                    if (this.board) {
+                        if (this.setting.password) {
+                            const board = this.board
+                            const dialogRef = this.matDialog.open(DialogPasswordComponent, {
+                                width: '600px',
+                                position: { top: '20px' },
+                            })
+
+                            dialogRef.afterClosed().subscribe(ok => {
+                                if (ok) {
+                                    this.router.navigate(['/boards/changeBoards', board.id])
+                                }
+                            })
+                        } else {
+                            this.router.navigate(['/boards/changeBoards', this.board.id])
+                        }
+                    } else {
+                        this.navigationService.showMessage('Esta mesa esta sin ordenar')
+                    }
+                    break
+                }
+                case 'split_board': {
+                    if (this.board) {
+                        this.router.navigate([`/boards/splitBoards/${this.tableIndex}`])
+                    } else {
+                        this.navigationService.showMessage('Esta mesa esta sin ordenar')
+                    }
+                    break
+                }
+                case 'print_preaccount': {
+                    if (this.board) {
+                        const board = JSON.parse(JSON.stringify(this.board))
+                        if (this.setting.defaultTicket === 'ticket80mm') {
+                            this.printService.printPreaccount80mm(board)
+                        } else {
+                            this.printService.printPreaccount58mm(board)
+                        }
+                    }
+                    break
+                }
+                case 'print_command': {
+                    this.onPrintCommand()
+                    break
+                }
+                case 'print_command_complete': {
+                    this.onPrintCommandComplete()
+                    break
+                }
+                case 'delete_board': {
+                    this.onDeleteBoard()
+                }
+            }
+        })
+
+        this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {
+            this.navigationService.loadBarStart()
+            this.productsService.getProductsByKey(key).subscribe({
+                next: products => {
+                    this.navigationService.loadBarFinish()
+                    this.selectedIndex = 2
+                    ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+
+                    if (this.sortByName) {
+                        products.sort((a, b) => {
+                            if (a.fullName > b.fullName) {
+                                return 1
+                            }
+                            if (a.fullName < b.fullName) {
+                                return -1
+                            }
+                            return 0
+                        })
+                    } else {
+                        products.sort((a, b) => b.price - a.price)
+                    }
+
+                    this.$products.set(products)
+
+                    const foundProduct = products.find(e => e.sku.match(new RegExp(`^${key}$`, 'i')) || e.upc.match(new RegExp(`^${key}$`, 'i')))
+
+                    if (foundProduct) {
+                        this.onSelectProduct(foundProduct)
+                    }
+
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage(error.error.message)
+                }
+            })
+        })
+
+        this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
+            this.$categories.set(categories)
+        })
+
+        this.handleTables$ = this.tablesService.handleTables().subscribe(tables => {
+            this.table = tables[this.tableIndex]
+            if (this.table) {
+                this.navigationService.setTitle('Mesa ' + this.table.name)
+                this.boardsService.setBoard(null)
+                this.navigationService.loadBarStart()
+                this.boardsService.getActiveBoardByTable(this.table.id).subscribe({
+                    next: board => {
+                        this.$isLoading.set(false)
+                        this.navigationService.loadBarFinish()
+                        this.board = board
+                        this.boardsService.setBoard(board)
+                        this.preBoardItems = JSON.parse(JSON.stringify(board.boardItems))
+                        this.boardsService.setBoardItems(board.boardItems)
+                    }, error: (error: HttpErrorResponse) => {
+                        this.$isLoading.set(false)
+                        this.navigationService.loadBarFinish()
+                        console.log(error.error.message)
+                    }
+                })
+            } else {
+                this.router.navigate(['/boards'])
+            }
+        })
+
+        this.navigationService.setMenu([
+            { id: 'search', icon: 'search', show: true, label: '' },
+            { id: 'print_preaccount', icon: 'printer', label: 'Imprimir precuenta', show: false },
+            { id: 'print_command', icon: 'printer', label: 'Imprimir comanda', show: false },
+            { id: 'print_command_complete', icon: 'printer', label: 'Imprimir comanda completa', show: false },
+            { id: 'change_board', icon: 'north_east', label: 'Cambiar mesa', show: false },
+            { id: 'split_board', icon: 'call_split', label: 'Divider mesa', show: false },
+            { id: 'delete_board', icon: 'delete', label: 'Anular mesa', show: false },
+        ])
+    }
+
+    onRightClick(product: ProductModel) {
+        this.matDialog.open(DialogDetailProductsComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: product,
+        })
+        return false
+    }
+
+    urlImage(product: ProductModel) {
+        const styleObject: any = {}
+        if (product.urlImage) {
+            styleObject['background-image'] = `url(${decodeURIComponent(product.urlImage)})`
+            styleObject['background-size'] = 'cover'
+            styleObject['background-position'] = 'center'
+        } else {
+            if (product.isTrackStock && product.stock < 1) {
+                styleObject['background'] = '#ffa7a6'
+            }
+        }
+        return styleObject
+    }
+
+    onChangePriceList() {
+        //ProductsService.setPrices(this.products, this.priceListId, this.setting, this.office)
+    }
+
+    onCancel() {
+        const ok = confirm('Esta seguro de cancelar?...')
+        if (ok) {
+            this.boardsService.setBoardItems([])
+        }
+    }
+
+    onPrintCommand() {
+        if (this.board) {
+            const board: BoardModel = JSON.parse(JSON.stringify(this.board))
+            board.boardItems = board.boardItems.filter(e => (e.quantity - e.preQuantity) > 0)
+            board.boardItems.forEach(e => e.quantity = (e.quantity - e.preQuantity))
+
+            if (this.setting.password) {
+                const dialogRef = this.matDialog.open(DialogPasswordComponent, {
+                    width: '600px',
+                    position: { top: '20px' },
+                })
+
+                dialogRef.afterClosed().subscribe(ok => {
+                    if (ok) {
+                        if (this.setting.defaultTicket === 'ticket80mm') {
+                            this.printService.printCommand80mm(board)
+                        } else {
+                            this.printService.printCommand58mm(board)
+                        }
+                    }
+                })
+            } else {
+                if (this.setting.defaultTicket === 'ticket80mm') {
+                    this.printService.printCommand80mm(board)
+                } else {
+                    this.printService.printCommand58mm(board)
+                }
+            }
+        }
+    }
+
+    onPrintCommandComplete() {
+        if (this.board) {
+            const board: BoardModel = JSON.parse(JSON.stringify(this.board))
+
+            if (this.setting.password) {
+                const dialogRef = this.matDialog.open(DialogPasswordComponent, {
+                    width: '600px',
+                    position: { top: '20px' },
+                })
+
+                dialogRef.afterClosed().subscribe(ok => {
+                    if (ok) {
+                        if (this.setting.defaultTicket === 'ticket80mm') {
+                            this.printService.printCommand80mm(board)
+                        } else {
+                            this.printService.printCommand58mm(board)
+                        }
+                    }
+                })
+            } else {
+                if (this.setting.defaultTicket === 'ticket80mm') {
+                    this.printService.printCommand80mm(board)
+                } else {
+                    this.printService.printCommand58mm(board)
+                }
+            }
+        }
+    }
+
+    onSelectCategory(category: CategoryModel) {
+        this.selectedIndex = 2
+        this.$products.set([])
+        if (category.products) {
+            const products = category.products
+
+            ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+
+            if (this.sortByName) {
+                products.sort((a, b) => {
+                    if (a.fullName > b.fullName) {
+                        return 1
+                    }
+                    if (a.fullName < b.fullName) {
+                        return -1
+                    }
+                    return 0
+                })
+            } else {
+                products.sort((a, b) => b.price - a.price)
+            }
+
+            this.$products.set(products)
+        } else {
+            this.navigationService.loadBarStart()
+            this.productsService.getProductsByCategoryPage(category.id, 1, 500).subscribe(products => {
+                this.navigationService.loadBarFinish()
+                category.products = products
+                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+
+                if (this.sortByName) {
+                    products.sort((a, b) => {
+                        if (a.fullName > b.fullName) {
+                            return 1
+                        }
+                        if (a.fullName < b.fullName) {
+                            return -1
+                        }
+                        return 0
+                    })
+                } else {
+                    products.sort((a, b) => b.price - a.price)
+                }
+
+                this.$products.set(products)
+            })
+        }
+    }
+
+    onSelectProduct(product: ProductModel): void {
+        if (product.annotations.length) {
+            this.matDialog.open(DialogSelectAnnotationsComponent, {
+                width: '600px',
+                position: { top: '20px' },
+                data: product,
+            })
+
+        } else {
+            this.boardsService.addBoardItem(product)
+        }
+    }
+
+    onDeleteBoard() {
+        if (this.board !== null) {
+            const board = this.board
+            if (this.setting.password) {
+                const dialogRef = this.matDialog.open(DialogPasswordComponent, {
+                    width: '600px',
+                    position: { top: '20px' },
+                })
+
+                dialogRef.afterClosed().subscribe(ok => {
+                    if (ok) {
+                        const dialogRef = this.matDialog.open(DialogDeletedComponent, {
+                            width: '600px',
+                            position: { top: '20px' },
+                        })
+                        dialogRef.afterClosed().subscribe(observation => {
+                            if (observation) {
+                                this.navigationService.loadBarStart()
+                                this.boardsService.delete(board.id, observation).subscribe(() => {
+                                    this.navigationService.loadBarFinish()
+                                    this.navigationService.showMessage('Anulado correctamente')
+                                    if (this.board) {
+                                        this.printService.printDeletedCommand80mm(this.board)
+                                    }
+                                    this.router.navigate(['/boards'])
+                                })
+                            }
+                        })
+                    }
+                })
+            } else {
+                const dialogRef = this.matDialog.open(DialogDeletedComponent, {
+                    width: '600px',
+                    position: { top: '20px' },
+                })
+
+                dialogRef.afterClosed().subscribe(observation => {
+                    if (observation) {
+                        this.navigationService.loadBarStart()
+                        this.boardsService.delete(board.id, observation).subscribe(() => {
+                            this.navigationService.loadBarFinish()
+                            this.navigationService.showMessage('Anulado correctamente')
+                            if (this.board) {
+                                this.printService.printDeletedCommand80mm(this.board)
+                            }
+                            this.router.navigate(['/boards'])
+                        })
+                    }
+                })
+            }
+        }
+    }
+
+    onSubmit() {
+        try {
+            if (!this.boardItems.length) {
+                throw new Error("Agrega un producto")
+            }
+
+            if (this.boardItems.find(e => e.price === 0 || e.price === null)) {
+                throw new Error("El producto no puede tener precio 0")
+            }
+
+            if (this.table === null) {
+                throw new Error("La mesa no existe")
+            }
+
+            this.navigationService.loadBarStart()
+            this.$isLoading.set(true)
+            const table = this.table
+            this.boardsService.create(this.table.id, this.boardItems, this.preBoardItems).subscribe({
+                next: savedBoard => {
+                    this.$isLoading.set(false)
+                    this.navigationService.showMessage('Se han guardado los cambios')
+                    const boardItems: BoardItemModel[] = []
+
+                    for (const boardItem of savedBoard.boardItems) {
+                        if (boardItem.quantity - boardItem.preQuantity > 0) {
+                            boardItem.quantity -= boardItem.preQuantity
+                            boardItems.push(boardItem)
+                        }
+                    }
+
+                    savedBoard.boardItems = boardItems
+                    savedBoard.table = table
+                    savedBoard.user = this.user
+
+                    switch (this.setting.defaultTicket) {
+                        case '80MM':
+                            this.printService.printCommand80mm(savedBoard)
+                        break
+                        default:
+                            this.printService.printCommand58mm(savedBoard)
+                        break
+                    }
+
+                    this.navigationService.loadBarFinish()
+                    this.router.navigate(['/boards'])
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                    this.navigationService.loadBarFinish()
+                    this.$isLoading.set(false)
+                }
+            })
+        } catch (error) {
+            if (error instanceof Error) {
+                this.navigationService.showMessage(error.message)
+            }
+        }
+    }
+
+}

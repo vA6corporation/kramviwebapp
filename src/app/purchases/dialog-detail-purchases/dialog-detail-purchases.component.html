@@ -1,0 +1,67 @@
+<h2 mat-dialog-title>Detalles compra {{ purchase?.serie }}</h2>
+<div mat-dialog-content>
+    <mat-list class="m-0">
+        @for (purchaseItem of purchaseItems; track purchaseItem.id) {
+        <mat-list-item>
+            <span matListItemTitle>{{ purchaseItem.fullName }} ({{ purchaseItem.quantity }})</span>
+            <span>{{ (purchaseItem.cost * purchaseItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+            @if (purchaseItem.igvCode === '11') {
+            <span class="divider"></span>
+            <span class="text-success">Bon</span>
+            }
+            @if (purchaseItem.igvCode === '20') {
+            <span class="divider"></span>
+            <span class="text-primary">Exo</span>
+            }
+            @if (purchaseItem.igvCode === '30') {
+            <span class="divider"></span>
+            <span class="text-primary">Ina</span>
+            }
+        </mat-list-item>
+        }
+    </mat-list>
+    <table class="w-100">
+        <tbody>
+            <tr>
+                <td>F. de compra</td>
+                <td align="right">{{ purchase?.purchasedAt | date: 'dd/MM/yyyy' }}</td>
+            </tr>
+            <tr>
+                <td>Serie</td>
+                <td align="right">{{ purchase?.serie || 'NINGUNO' }}</td>
+            </tr>
+            <tr>
+                <td>Proveedor</td>
+                <td align="right">{{ provider?.name || 'NINGUNO' }}</td>
+            </tr>
+            <tr>
+                <td>Observaciones</td>
+                <td align="right">{{ purchase?.observation || 'NINGUNO' }}</td>
+            </tr>
+            <tr>
+                <td>Usuario</td>
+                <td align="right">{{ user?.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <mat-list>
+        @for (paymentPurchase of paymentPurchases; track paymentPurchase.id) {
+        <mat-list-item>
+            <span matListItemTitle>{{ paymentPurchase.paymentMethod.name }}</span>
+            <span matListItemLine>{{ paymentPurchase.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</span>
+            <span>{{ paymentPurchase.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+        </mat-list-item>
+        } @empty {
+        <mat-list-item>
+            <h2 class="text-center mat-title-medium">Sin pagos</h2>
+        </mat-list-item>
+        }
+    </mat-list>
+</div>
+<mat-dialog-actions>
+    <button mat-flat-button (click)="onDeletePurchase()" color="warn">ELIMINAR</button>
+    <button mat-flat-button mat-dialog-close [routerLink]="['/purchases', purchaseId, 'edit']"
+        color="primary">EDITAR</button>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

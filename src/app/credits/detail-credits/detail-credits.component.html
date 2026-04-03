@@ -1,0 +1,134 @@
+<div class="container">
+    <div class="d-flex">
+        <div class="w-100 pr-3">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>Detalles</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <table class="w-100">
+                        <tbody>
+                            <tr>
+                                <td>Fecha de emision</td>
+                                <td align="right">{{ credit?.createdAt | date }}</td>
+                            </tr>
+                            <tr>
+                                <td>Monto total</td>
+                                <td align="right">{{ (credit?.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
+                            </tr>
+                            <tr class="text-primary">
+                                <td>Monto pendiente</td>
+                                <td align="right">{{ ((credit?.charge || 0) - (credit?.payed || 0)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
+                            </tr>
+                            <tr class="text-primary">
+                                <td>Forma de pago</td>
+                                <td align="right">{{ credit?.isCredit ? 'CREDITO' : 'CONTADO' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </mat-card-content>
+            </mat-card>
+            <div class="py-2"></div>
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>Cliente</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    @if (customer) {
+                    <table class="w-100">
+                        <tbody>
+                            <tr>
+                                <td>Nombres</td>
+                                <td align="right">{{ customer.name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Documento</td>
+                                <td align="right">{{ customer.documentType }}: {{ customer.document }}</td>
+                            </tr>
+                            <tr>
+                                <td>Celular</td>
+                                <td align="right" [ngClass]="{ 'text-muted': !customer.phone }">
+                                    {{ customer.phone || 'NINGUNO' }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    } @else {
+                    <p class="text-muted text-center">SIN CLIENTE</p>
+                    }
+                </mat-card-content>
+            </mat-card>
+            <div class="py-2"></div>
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>Productos</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <mat-list>
+                        @for (saleItem of saleItems; track $index) {
+                        <mat-list-item>
+                            <span matListItemTitle>{{ saleItem.fullName }} ({{ saleItem.quantity }})</span>
+                            @if (saleItem.igvCode === '11') {
+                            <span class="text-success ml-2">Bon</span>
+                            }
+                            @if (saleItem.igvCode === '20') {
+                            <span class="text-primary ml-2">Exo</span>
+                            }
+                            @if (saleItem.igvCode === '30') {
+                            <span class="text-primary ml-2">Ina</span>
+                            }
+                            <span>{{ (saleItem.price * saleItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                        </mat-list-item>
+                        }
+                    </mat-list>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="w-100 pr-2">
+            <mat-card class="mb-4">
+                <mat-card-header>
+                    <mat-card-title>Pagos</mat-card-title>
+                </mat-card-header>
+                <mat-list role="list">
+                    @for (payment of payments; track payment.id) {
+                    <mat-list-item role="listitem" [ngClass]="{ 'bg-danger': payment.deletedAt }">
+                        <span matListItemTitle>{{ payment.paymentMethod.name }}</span>
+                        <span matListItemLine>{{ payment.createdAt | date }}<span class="divider"></span>{{
+                            payment.observation }}</span>
+                        <span matListItemLine>{{ payment.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                        <div matListItemMeta class="h-100 d-flex align-items-center">
+                            <button mat-icon-button aria-label="edit" (click)="onEditPayment(payment)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button aria-label="trash"
+                                (click)="onDeletePayment(payment.id, payment.saleId)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </div>
+                    </mat-list-item>
+                    }
+                </mat-list>
+                <mat-card-actions>
+                    <button mat-flat-button color="primary" (click)="onCreatePayment()"
+                        [disabled]="turn === null">PAGAR</button>
+                </mat-card-actions>
+            </mat-card>
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>Cuotas</mat-card-title>
+                </mat-card-header>
+                <mat-list>
+                    @for (due of dues; track $index) {
+                    <mat-list-item>
+                        <span matListItemTitle>{{ due.dueDate | date }}</span>
+                        <span>{{ due.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                    </mat-list-item>
+                    }
+                </mat-list>
+                <mat-card-actions>
+                    <button mat-flat-button color="primary" (click)="onChangeDues()">CUOTAS</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Imprimir comprobante</h2>
+<div mat-dialog-content>
+    <mat-action-list>
+        @for (sale of sales; track sale.id) {
+            <button mat-list-item (click)="printSale(sale.id)">
+                <span matListItemTitle>{{ sale.invoicePrefix }}{{ office.serialPrefix }}-{{ sale.invoiceNumber }}</span>
+                <span>{{ sale.createdAt | date: 'dd MMM yyyy hh:mm a' }}</span>
+            </button>
+        }
+    </mat-action-list>
+</div>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

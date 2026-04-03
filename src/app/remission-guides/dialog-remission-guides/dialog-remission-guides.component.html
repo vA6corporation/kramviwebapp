@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>Guias de remision</h2>
+<div mat-dialog-content>
+    @for (remissionGuide of remissionGuides; track remissionGuide.id) {
+    <mat-action-list>
+        <button mat-list-item (click)="onPrintRemissionGuide(remissionGuide.id)">
+            T{{ office.serialPrefix }}-{{ remissionGuide.remissionGuideNumber }}
+            <span class="spacer"></span>
+        </button>
+    </mat-action-list>
+    } @empty {
+    <h2 class="text-center text-muted mat-title-large">Sin guias de remision</h2>
+    }
+</div>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+    <button type="button" mat-flat-button mat-dialog-close color="primary" [routerLink]="['/remissionGuides/charge']"
+        [queryParams]="{ saleId: saleId }">NUEVA GUIA DE REMISION</button>
+</mat-dialog-actions>

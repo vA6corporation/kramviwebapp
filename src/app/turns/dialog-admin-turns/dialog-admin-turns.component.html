@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>Opciones de administrador</h2>
+<div mat-dialog-content>
+    <form [formGroup]="formDate" autocomplete="off" (submit)="onSubmitDate()" class="d-flex">
+        <mat-form-field appearance="fill">
+            <mat-label>Fecha emision</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="createdAt">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <div class="ml-3">
+            <button mat-flat-button color="primary" type="submit">GUARDAR</button>
+        </div>
+    </form>
+    <table class="w-100">
+        <tbody>
+
+        </tbody>
+    </table>
+    <button mat-flat-button color="primary" type="button" (click)="onDeleteTurn()" class="w-100 mb-3">ELIMINAR
+        CAJA</button>
+    <button mat-flat-button color="primary" type="button" (click)="onOpenTurn()" class="w-100 mb-3">REABRIR
+        CAJA</button>
+</div>
+<mat-dialog-actions>
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

@@ -1,0 +1,33 @@
+<mat-action-list>
+    @for (saleItem of $saleItems(); track $index; let i = $index) {
+    <button mat-list-item (click)="onSelectSaleItem(i)">
+        <span matListItemTitle>{{ saleItem.fullName }}</span>
+        <div matListItemLine class="d-flex my-1">
+            <span class="mr-2">x{{ saleItem.quantity }}</span>
+            @if (saleItem.igvCode === igvCode.BONIFICACION) {
+            <span class="mr-2" [style.color]="'green'">Bonificacion</span>
+            }
+            @if (saleItem.igvCode === igvCode.EXONERADO) {
+            <span class="text-primary mr-2">Exonerado</span>
+            }
+            @if (saleItem.igvCode === igvCode.INAFECTO) {
+            <span class="text-primary mr-2">Inafecto</span>
+            }
+            <span class="text-muted">{{ saleItem.observation }}</span>
+            <span class="spacer"></span>
+            <span>{{ (saleItem.price * saleItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+        </div>
+    </button>
+    }
+    <button mat-list-item>
+        <div matListItemTitle class="d-flex font-weight-bold">
+            <span>
+              Total ({{ $countProducts() }})
+            </span>
+            <span class="spacer"></span>
+            <span>
+                {{ $charge().toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
+            </span>
+        </div>
+    </button>
+</mat-action-list>

@@ -1,0 +1,27 @@
+@if (isAuth()) {
+    <mat-nav-list class="pt-0">
+        <div class="nav-header text-white overflow-hidden">
+            <p class="text-capitalize font-weight-bold mb-1">{{ office.name }}</p>
+            <p class="m-0 text-capitalize text-truncate">{{ business.name }}</p>
+        </div>
+        @for (module of modules; track $index) {
+            @if (module.isAuthorized) {
+                <a [routerLink]="module.path" mat-list-item (click)="onClose()">
+                    <mat-icon matListItemIcon>{{ module.icon }}</mat-icon>
+                    <span matListItemTitle>{{ module.label }}</span>
+                </a>
+            }
+        }
+        <mat-divider></mat-divider>
+        @if (user.isAdmin) {
+            <a mat-list-item routerLink="/settings" (click)="onClose()">
+                <mat-icon matListItemIcon>build</mat-icon>
+                <span matListItemTitle>Ajustes</span>
+            </a>
+        }
+        <a mat-list-item routerLink="/logout" (click)="onClose()">
+            <mat-icon matListItemIcon class="m-3 color-black">logout</mat-icon>
+            <span matListItemTitle>Cerrar sesion</span>
+        </a>
+    </mat-nav-list>
+}

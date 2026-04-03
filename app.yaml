@@ -1,0 +1,21 @@
+runtime: nodejs22
+
+handlers:
+- url: /(.*\.css)
+  static_files: dist/kramviwebapp/browser/\1
+  upload: dist/kramviwebapp/browser/.*\.css
+  mime_type: text/css
+
+- url: /(.*\.js)
+  static_files: dist/kramviwebapp/browser/\1
+  upload: dist/kramviwebapp/browser/.*\.js
+  mime_type: text/javascript
+
+- url: /(.*\..+)$
+  static_files: dist/kramviwebapp/browser/\1
+  upload: dist/kramviwebapp/browser/(.*\..+)$
+
+- url: /.*
+  secure: always
+  static_files: dist/kramviwebapp/browser/index.html
+  upload: dist/kramviwebapp/browser/index.html

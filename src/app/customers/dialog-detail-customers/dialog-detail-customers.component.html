@@ -1,0 +1,35 @@
+<mat-dialog-content>
+    @if (customer) {
+    <table class="my-3 w-100">
+        <tr>
+            <td>Nombres/Razon social:</td>
+            <td align="right">{{ customer.name }}</td>
+        </tr>
+        <tr>
+            <td>Documento:</td>
+            <td align="right">{{ customer.documentType }}: {{ customer.document }}</td>
+        </tr>
+        <tr>
+            <td>Celular:</td>
+            <td align="right" [ngClass]="{ 'text-muted': !customer.phone }">
+                {{ customer.phone || 'NINGUNO' }}
+            </td>
+        </tr>
+        <tr>
+            <td>Direccion:</td>
+            <td align="right">
+                {{ customer.address || 'NINGUNO' }}
+            </td>
+        </tr>
+        <tr>
+            <td>Observaciones:</td>
+            <td align="right" [ngClass]="{ 'text-muted': !customer.observation }">
+                {{ customer.observation || 'NINGUNO' }}
+            </td>
+        </tr>
+    </table>
+    }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

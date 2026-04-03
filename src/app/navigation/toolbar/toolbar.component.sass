@@ -1,0 +1,61 @@
+.spinner
+    margin-right: 0
+    margin-left: 0
+    z-index: 101
+
+.container-spinner
+    top: 0
+    left: 0
+    position: absolute
+    width: 100vw
+    height: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+    overflow: hidden
+
+.container-spinner:after
+    content: ''
+    width: 100vw
+    height: 100%
+    position: absolute
+    top: 0
+    left: 0
+    z-index: 100
+    background: white
+    opacity: 0.5
+    overflow: hidden
+
+.progress-bar
+    z-index: 100
+    height: 4px
+    width: 100%
+    position: fixed
+    background: #e0e0e0
+
+mat-form-field
+    padding-top: 20px
+
+.search
+    display: flex
+    padding-top: 2px
+    padding-bottom: 2px
+    padding-right: 8px
+    padding-left: 8px
+    height: 48px
+    background: #fff
+    border-radius: 5px
+
+.search input
+    font-weight: 500
+    font-size: 15px !important
+    font: inherit
+    outline: none
+    border: none
+
+mat-toolbar
+    color: #005cbb
+    background: #d7e3ff
+
+button
+    color: #005cbb

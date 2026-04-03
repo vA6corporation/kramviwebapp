@@ -1,0 +1,52 @@
+@let customer = $customer();
+@let setting = $setting();
+<div class="d-flex h-100">
+    <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()"
+        [formGroup]="formGroup" autocomplete="off">
+        <div class="px-3">
+            <h2 class="text-center mat-display-small mb-0">{{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</h2>
+            <p class="caption text-center text-muted mb-2">Total a cobrar</p>
+            @if (customer) {
+            <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100">
+                <span>{{ customer.name | uppercase }}</span>
+            </button>
+            @if (customer.formatPhone) {
+            <p class="text-center mb-3">Celular: {{ customer.formatPhone || 'NINGUNO' }}</p>
+            }
+            <p class="text-center mb-3">Direccion: {{ customer.address || 'NINGUNO' }}</p>
+            }
+            @if (setting.isShowTotalDiscount) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Descuento global</mat-label>
+                    <input type="number" matInput formControlName="discount" (input)="onChangeDiscount()">
+                </mat-form-field>
+            }
+            @if (setting.isShowTotalDiscountPercent) {
+            <mat-form-field appearance="fill">
+                <mat-label>Descuento global (Porcentaje)</mat-label>
+                <input type="number" matInput formControlName="discountPercent" (input)="onChangeDiscountPercent()">
+            </mat-form-field>
+            }
+            @if (setting.isShowCurrency) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Moneda</mat-label>
+                    <mat-select formControlName="currencyCode">
+                        <mat-option value="PEN">SOLES</mat-option>
+                        <mat-option value="USD">DOLARES</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            }
+            <mat-form-field appearance="fill">
+                <mat-label>Observaciones</mat-label>
+                <input type="text" matInput formControlName="observation">
+            </mat-form-field>
+            <div class="p-1"></div>
+            <button type="submit" class="w-100" mat-flat-button [disabled]="$isLoading()" color="primary">
+                GUARDAR
+            </button>
+        </div>
+    </form>
+    <div class="flex-30 bg-white list-items">
+        <app-proforma-items></app-proforma-items>
+    </div>
+</div>

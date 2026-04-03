@@ -1,0 +1,59 @@
+import JsBarcode from 'jsbarcode'
+import jsPDF from 'jspdf'
+import { ProductModel } from '../../products/product.model'
+
+export async function buildBarcode30x20mm(
+    products: ProductModel[],
+): Promise<jsPDF> {
+    const pdf = new jsPDF('l', 'mm', [20, 90])
+    const small = 7
+    let text: string = ''
+
+    for (let index = 0; index < products.length; index++) {
+        const product = products[index]
+        let positionY = 2
+
+        JsBarcode("#barcode", product.upc || product.sku || 'sin codigo', {
+            width: 2,
+            height: 36,
+            displayValue: false
+        })
+
+        const barcode: any = document.querySelector("#barcode")
+        const jpegUrl = barcode.toDataURL("image/jpeg")
+
+        pdf.setFont('Helvetica', 'normal')
+        pdf.setFontSize(small)
+        text = `${product.fullName.toUpperCase()} - S/${product.price.toFixed(2)}`
+        let strArr = pdf.splitTextToSize(text, 24)
+        pdf.text(strArr, 2, positionY, { align: 'left' })
+        pdf.text(strArr, 32, positionY, { align: 'left' })
+        pdf.text(strArr, 62, positionY, { align: 'left' })
+
+        let plusBarcode = 7
+        let plusCode = 14
+
+        if (strArr.length > 3) {
+            plusBarcode = 9
+            plusCode = 16
+        }
+
+        pdf.addImage(jpegUrl, "JPEG", 2, positionY + plusBarcode, 26, 5)
+        pdf.addImage(jpegUrl, "JPEG", 32, positionY + plusBarcode, 26, 5)
+        pdf.addImage(jpegUrl, "JPEG", 62, positionY + plusBarcode, 26, 5)
+
+        pdf.setFontSize(small)
+
+        text = product.upc || product.sku || 'sin codigo'
+        pdf.text(text, 15, positionY + plusCode, { align: 'center' })
+        pdf.text(text, 45, positionY + plusCode, { align: 'center' })
+        pdf.text(text, 75, positionY + plusCode, { align: 'center' })
+
+        if (index + 1 < products.length) {
+            pdf.addPage()
+        }
+
+    }
+
+    return pdf
+}

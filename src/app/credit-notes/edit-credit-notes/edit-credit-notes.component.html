@@ -1,0 +1,48 @@
+<div class="d-flex h-100">
+    <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()"
+        [formGroup]="formGroup" autocomplete="off">
+        <div class="px-3">
+            <h2 class="text-center mat-display-small mb-0">{{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</h2>
+            <p class="caption text-center text-muted mb-2">Total a cobrar</p>
+            @if (customer) {
+            <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
+                <span>{{ customer.name | uppercase }}</span>
+            </button>
+            @if (customer.phone) {
+            <p class="text-center mb-3">Celular: {{ customer.formatPhone }}</p>
+            }
+            }
+            @if (setting.isShowEmitionAt) {
+                <mat-form-field appearance="fill">
+                    <mat-label>Fecha de emision</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="createdAt">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            }
+            <mat-form-field appearance="fill">
+                <mat-label>Motivo</mat-label>
+                <mat-select formControlName="reasonCode">
+                    @for (reason of reasons; track $index) {
+                    <mat-option [value]="reason.code">{{ reason.label }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Descripcion del motivo</mat-label>
+                <input type="text" matInput formControlName="reasonDescription">
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Observaciones</mat-label>
+                <input type="text" matInput formControlName="observation">
+            </mat-form-field>
+            <div class="p-1"></div>
+            <button type="submit" class="w-100" mat-flat-button [disabled]="isLoading" color="primary">
+                GUARDAR
+            </button>
+        </div>
+    </form>
+    <div class="flex-30 bg-white list-items">
+        <app-credit-note-items></app-credit-note-items>
+    </div>
+</div>

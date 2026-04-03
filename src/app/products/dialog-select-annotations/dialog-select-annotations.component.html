@@ -1,0 +1,13 @@
+<div mat-dialog-content>
+    <mat-selection-list>
+        <div mat-subheader>Anotaciones rapidas</div>
+        @for (annotation of $annotations(); track $index) {
+        <mat-list-option (click)="onSelectAnnotation(annotation)">{{ annotation }}</mat-list-option>
+        }
+    </mat-selection-list>
+</div>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+    <button type="button" mat-flat-button color="primary" (click)="onSubmit()">GUARDAR</button>
+</mat-dialog-actions>

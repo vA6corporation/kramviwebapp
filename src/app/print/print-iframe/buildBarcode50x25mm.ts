@@ -1,0 +1,59 @@
+import jsPDF from 'jspdf'
+import { formatDate } from '@angular/common'
+import JsBarcode from 'jsbarcode'
+import { ProductModel } from '../../products/product.model'
+
+export async function buildBarcode50x25mm(
+    products: ProductModel[],
+): Promise<jsPDF> {
+    const pdf = new jsPDF('l', 'mm', [25, 50])
+    const small = 7
+    const title = 14
+    let text: string = ''
+
+    for (let index = 0; index < products.length; index++) {
+        const product = products[index]
+        let positionY = 4
+
+        JsBarcode("#barcode", product.upc || product.sku || 'sin codigo', {
+            width: 2,
+            height: 36,
+            displayValue: false
+        })
+
+        const barcode: any = document.querySelector("#barcode")
+        const jpegUrl = barcode.toDataURL("image/jpeg")
+
+        pdf.setFont('Helvetica', 'normal')
+        pdf.setFontSize(small)
+        text = product.fullName.toUpperCase()
+        let strArr = pdf.splitTextToSize(text, 48)
+        pdf.text(strArr, 3, positionY)
+
+        pdf.addImage(jpegUrl, "JPEG", 2, positionY + 4, 45, 10)
+
+        text = product.upc || 'sin codigo'
+        pdf.text(text, 3, positionY + 15, { align: 'left' })
+
+        text = product.sku || 'sin codigo'
+        pdf.text(text, 3, positionY + 18, { align: 'left' })
+
+        text = formatDate(new Date(), 'dd.MM.yy', 'en-US')
+        pdf.text(text, 53, 18, { align: 'center', angle: 90 })
+
+        text = 'S/'
+        pdf.text(text, 32, positionY + 15, { align: 'right' })
+
+        pdf.setFontSize(title)
+
+        text = product.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+        pdf.text(text, 49, positionY + 18, { align: 'right' })
+
+        if (index + 1 < products.length) {
+            pdf.addPage()
+        }
+
+    }
+
+    return pdf
+}

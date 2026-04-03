@@ -1,0 +1,49 @@
+<mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="onChangeSelected($event)" animationDuration="0ms">
+    <mat-tab label="Recaudacion">
+        <ng-template matTabContent>
+            <app-incomes></app-incomes>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Ingresos/Salidas">
+        <ng-template matTabContent>
+            <app-inout></app-inout>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Utilidades">
+        <ng-template matTabContent>
+            <app-utilities></app-utilities>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Productos">
+        <ng-template matTabContent>
+            <app-products></app-products>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Categorias">
+        <ng-template matTabContent>
+            <app-categories></app-categories>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Clientes">
+        <ng-template matTabContent>
+            <app-customers></app-customers>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Facturacion">
+        <ng-template matTabContent>
+            <app-invoices></app-invoices>
+        </ng-template>
+    </mat-tab>
+    @if (business.businessType === 'FOOD') {
+        <mat-tab label="Mozos">
+            <ng-template matTabContent>
+                <app-boards></app-boards>
+            </ng-template>
+        </mat-tab>
+    }
+    <mat-tab label="Proformas">
+        <ng-template matTabContent>
+            <app-proformas></app-proformas>
+        </ng-template>
+    </mat-tab>
+</mat-tab-group>

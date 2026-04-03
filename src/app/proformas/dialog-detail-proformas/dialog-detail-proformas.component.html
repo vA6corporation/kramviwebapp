@@ -1,0 +1,108 @@
+<h2 mat-dialog-title>
+    Detalles P{{ office.serialPrefix }}-{{ proforma?.proformaNumber }}
+    @if (proforma?.deletedAt) {
+    <span class="ml-2 text-danger">ANULADO</span>
+    }
+</h2>
+<div mat-dialog-content>
+    <table class="w-100">
+        <tbody>
+            <tr>
+                <td>Imp. Total</td>
+                <td align="right">{{ (proforma?.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
+            </tr>
+            <tr>
+                <td>Gravado</td>
+                <td align="right">{{ (proforma?.gravado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
+            </tr>
+            <tr>
+                <td>Gratuito</td>
+                <td align="right">{{ (proforma?.gratuito || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
+            </tr>
+            <tr>
+                <td>Exonerado</td>
+                <td align="right">{{ (proforma?.exonerado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
+            </tr>
+            <tr>
+                <td>Inafecto</td>
+                <td align="right">{{ (proforma?.inafecto || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
+            </tr>
+            <tr>
+                <td>
+                    I.G.V.
+                    <span class="font-weight-bold">({{ proforma?.igvPercent }}%)</span>
+                </td>
+                <td align="right">{{ (proforma?.igv || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
+            </tr>
+            <tr>
+                <td>Descuento Global</td>
+                <td align="right">{{ (proforma?.discount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <mat-divider class="mb-3"></mat-divider>
+    <table class="w-100">
+        <tbody>
+            <tr>
+                <td>F/H proforma</td>
+                <td align="right">{{ proforma?.createdAt | date: 'dd/MM/yyyy' }}</td>
+            </tr>
+            <tr>
+                <td>Observaciones</td>
+                <td align="right">{{ proforma?.observation || 'NINGUNO' }}</td>
+            </tr>
+            <tr>
+                <td>Usuario</td>
+                <td align="right">{{ user.name }}</td>
+            </tr>
+            <tr class="text-muted">
+                <td>ID</td>
+                <td align="right">{{ proforma?.id }}</td>
+            </tr>
+        </tbody>
+    </table>
+    @if (customer !== null) {
+    <mat-divider class="mb-0"></mat-divider>
+    <table class="my-3 w-100">
+        <tr>
+            <td>Cliente:</td>
+            <td align="right">{{ customer.name }}</td>
+        </tr>
+        <tr>
+            <td>RUC/DNI:</td>
+            <td align="right">{{ customer.documentType }}: {{ customer.document }}</td>
+        </tr>
+        <tr>
+            <td>Celular:</td>
+            <td align="right" [ngClass]="{ 'text-muted': customer.phone === null }">
+                {{ customer.phone || 'NINGUNO' }}
+            </td>
+        </tr>
+    </table>
+    }
+    <mat-divider class="mb-0"></mat-divider>
+    <mat-list class="m-0">
+        @for (proformaItem of proformaItems; track $index) {
+        <mat-list-item>
+            <span matListItemTitle>{{ proformaItem.fullName }} ({{ proformaItem.quantity }})</span>
+            <span matListItemLine>{{ (proformaItem.price * proformaItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+            @if (proformaItem.igvCode === '11') {
+            <span class="divider"></span>
+            <span class="text-success">Bon</span>
+            }
+            @if (proformaItem.igvCode === '20') {
+            <span class="divider"></span>
+            <span class="text-primary">Exo</span>
+            }
+            @if (proformaItem.igvCode === '30') {
+            <span class="divider"></span>
+            <span class="text-primary">Ina</span>
+            }
+        </mat-list-item>
+        }
+    </mat-list>
+</div>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

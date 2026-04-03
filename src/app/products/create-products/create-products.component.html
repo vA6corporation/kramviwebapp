@@ -1,0 +1,152 @@
+<div class="container">
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+        <mat-form-field appearance="fill">
+            <mat-label>Nombre/Modelo</mat-label>
+            <input type="text" matInput formControlName="name">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Variante</mat-label>
+            <input type="text" matInput formControlName="feature">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Marca</mat-label>
+            <input type="email" matInput formControlName="brand">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Categoria</mat-label>
+            <mat-select formControlName="categoryId" class="text-uppercase">
+                @for (category of $categories(); track category.id) {
+               <mat-option [value]="category.id">
+                    {{ category.name | uppercase }}
+                </mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <div class="mb-3">
+            <button type="button" class="w-100" mat-flat-button color="primary" (click)="onCreateCategory()">NUEVA CATEGORIA</button>
+        </div>
+        <mat-form-field appearance="fill">
+            <mat-label>Unidad de medida</mat-label>
+            <mat-select formControlName="unitCode">
+                @for (unitCode of unitCodes; track $index) {
+                <mat-option [value]="unitCode.code">{{ unitCode.name }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Declaracion</mat-label>
+            <mat-select formControlName="igvCode">
+                <mat-option value="10">GRAVADO</mat-option>
+                <mat-option value="20">EXONERADO</mat-option>
+                <mat-option value="30">INAFECTO</mat-option>
+                <mat-option value="11">BONIFICACION</mat-option>
+            </mat-select>
+        </mat-form-field>
+        @if (setting.isShowPrintZone) {
+        <mat-form-field appearance="fill">
+            <mat-label>Comanda</mat-label>
+            <mat-select formControlName="printZone">
+                <mat-option value="COCINA">COCINA</mat-option>
+                <mat-option value="BARRA">BARRA</mat-option>
+                <mat-option value="HORNO">HORNO</mat-option>
+                <mat-option value="CAJA">CAJA</mat-option>
+            </mat-select>
+        </mat-form-field>
+        }
+        <mat-form-field appearance="fill">
+            <mat-label>Codigo interno</mat-label>
+            <input type="text" matInput formControlName="sku">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Codigo fabricante</mat-label>
+            <input type="text" matInput formControlName="upc">
+        </mat-form-field>
+        <div class="mb-3">
+            <button type="button" class="w-100" mat-flat-button color="primary" (click)="onGenerateEan13()">
+                GENERAR CODIGO
+            </button>
+        </div>
+        @if (setting.defaultPrice === 'GLOBAL') {
+        <mat-form-field appearance="fill">
+            <mat-label>Precio</mat-label>
+            <input type="number" matInput formControlName="price">
+        </mat-form-field>
+        } @else {
+        <ng-container formArrayName="prices">
+            @for (price of formArray.controls; track i; let i = $index) {
+            <mat-form-field appearance="fill" [formGroupName]="i">
+                <mat-label>{{ price.value.name }}</mat-label>
+                <input type="number" matInput formControlName="price">
+            </mat-form-field>
+            }
+        </ng-container>
+        }
+        <mat-form-field appearance="fill">
+            <mat-label>Costo</mat-label>
+            <input type="number" matInput formControlName="cost">
+        </mat-form-field>
+        @if (imgUri) {
+        <div class="text-center mb-3">
+            <img [src]="imgUri" alt="producto" width="400" class="mat-elevation-z2">
+        </div>
+        }
+        <div class="mb-3">
+            <button type="button" mat-flat-button color="primary" (click)="fileImageInput.click()" class="w-100">
+                AGREGAR IMAGEN
+            </button>
+            <input type="file" #fileImageInput accept="image/png, image/gif, image/jpeg"
+                (change)="onFileImageSelected(fileImageInput.files, fileImageInput)" hidden>
+        </div>
+        <mat-list>
+            <div mat-subheader>Anotaciones</div>
+            @for (annotation of $annotations(); track $index; let i = $index) {
+            <mat-list-item>
+                <span matListItemTitle>{{ annotation }}</span>
+                <div matListItemMeta>
+                    <button type="button" mat-icon-button (click)="onRemoveAnnotation(i)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </mat-list-item>
+            }
+        </mat-list>
+        <div class="mb-3">
+            <button type="button" class="w-100" mat-flat-button color="primary"
+                (click)="onDialogCreateAnnotations()">AGREGAR ANOTACION</button>
+        </div>
+        <!--<mat-list>
+            <div mat-subheader>Proveedores</div>
+            @for (provider of providers; track provider.id; let i = $index) {
+            <mat-list-item>
+                <span matListItemTitle>{{ provider.name }}</span>
+                <span matListItemLine>{{ provider.documentType }}: {{ provider.document }}</span>
+                <div matListItemMeta>
+                    <button type="button" mat-icon-button (click)="onRemoveProvider(i)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </mat-list-item>
+            }
+        </mat-list>-->
+        <!--<div class="mb-3">
+            <button type="button" class="w-100" mat-flat-button color="primary" (click)="onDialogProviders()">AGREGAR
+                PROVEEDOR</button>
+        </div>-->
+        <div class="py-3">
+            <mat-slide-toggle formControlName="isTrackStock" (change)="onIsTrackStockChange()">Trackear
+                stock</mat-slide-toggle>
+        </div>
+        @if (isTrackStock) {
+        <mat-form-field appearance="fill">
+            <mat-label>Stock inicial</mat-label>
+            <input type="number" matInput formControlName="stock">
+        </mat-form-field>
+        }
+        <div class="d-flex">
+            <span class="spacer"></span>
+            <button type="button" mat-raised-button routerLink="/products" color="primary">CANCELAR</button>
+            <span class="divider"></span>
+            <button type="submit" [disabled]="$isLoading()" mat-flat-button color="primary">GUARDAR</button>
+        </div>
+    </form>
+</div>

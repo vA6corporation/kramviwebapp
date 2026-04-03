@@ -1,0 +1,67 @@
+<h2 mat-dialog-title>{{ product.fullName }}</h2>
+<div mat-dialog-content>
+    <mat-list role="list">
+        @if (product.upc) {
+            <mat-list-item role="listitem">Codigo fabricante: {{ product.upc }}</mat-list-item>
+        }
+        @if (product.upc) {
+            <mat-list-item role="listitem">Codigo interno: {{ product.sku }}</mat-list-item>
+        }
+        @if (product.description) {
+            <mat-list-item role="listitem">{{ product.description }}</mat-list-item>
+        }
+        @if (product.location) {
+            <mat-list-item role="listitem">
+                Ubicacion: {{ product.location }}
+            </mat-list-item>
+        }
+        @if (product.isTrackStock) {
+            <mat-list-item role="listitem">
+                @if (product.stock > 0) {
+                    <span>
+                        Stock: {{ product.stock.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
+                    </span>
+                }
+                @if (product.stock <= 0) {
+                    <span>
+                        Stock: <span class="text-danger">Agotado</span>
+                    </span>
+                }
+            </mat-list-item>
+        } @else {
+            <mat-list-item role="listitem">
+                Stock: Venta libre
+            </mat-list-item>
+        }
+        @if (setting.isShowCost) {
+            <mat-list-item role="listitem">
+                Costo: {{ product.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
+            </mat-list-item>
+        }
+        @for (price of product.prices; track price.id) {
+            @for (priceList of priceLists; track $index) {
+                @if (price.priceListId === priceList.id) {
+                    <mat-list-item>
+                        {{ priceList.name }}: {{ price.price.toFixed(2) }}
+                    </mat-list-item>
+                }
+            }
+        }
+        @if (product.urlImage) {
+            <img [src]="product.urlImage" class="w-100" alt="Product image">
+        }
+    </mat-list>
+</div>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    @if (isFavorite) {
+        <button mat-flat-button mat-dialog-close (click)="onDeleteFavorites()" color="primary">
+            REMOVER DE FAVORITOS
+        </button>
+    } @else {
+        <button mat-flat-button mat-dialog-close (click)="onCreateFavorites()" color="primary">
+            AGREGAR A FAVORITOS
+        </button>
+    }
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

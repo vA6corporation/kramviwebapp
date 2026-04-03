@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Seleccione una caja</h2>
+<mat-dialog-content>
+    <mat-action-list>
+        @for (turn of turns; track turn.id) {
+        <button mat-list-item (click)="onChangeTurn(turn.id)">
+            <span matListItemTitle>{{ turn.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</span>
+            <span matListItemLine>{{ turn.user.name }}</span>
+        </button>
+        }
+    </mat-action-list>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <span class="spacer"></span>
+    <button type="button" mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

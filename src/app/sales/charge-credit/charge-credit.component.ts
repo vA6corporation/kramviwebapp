@@ -1,0 +1,411 @@
+import { Component, inject } from '@angular/core'
+import { CommonModule, Location } from '@angular/common'
+import { HttpErrorResponse } from '@angular/common/http'
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
+import { MatDialog } from '@angular/material/dialog'
+import { ActivatedRoute, Params, Router } from '@angular/router'
+import { Subscription } from 'rxjs'
+import { CreateCreditModel } from '../create-credit.model'
+import { CreateSaleItemModel } from '../create-sale-item.model'
+import { CreditForm } from '../credit.form'
+import { DialogDueData, DialogDuesComponent } from '../dialog-dues/dialog-dues.component'
+import { DialogOutStockComponent } from '../dialog-out-stock/dialog-out-stock.component'
+import { DialogSaleItemsComponent } from '../dialog-sale-items/dialog-sale-items.component'
+import { SalesService } from '../sales.service'
+import { NavigationService } from '../../navigation/navigation.service'
+import { ProformasService } from '../../proformas/proformas.service'
+import { PaymentMethodsService } from '../../payment-methods/payment-methods.service'
+import { TurnsService } from '../../turns/turns.service'
+import { PrintService } from '../../print/print.service'
+import { AuthService } from '../../auth/auth.service'
+import { CustomerModel } from '../../customers/customer.model'
+import { CreatePaymentModel } from '../../payments/create-payment.model'
+import { CreateDueModel } from '../../dues/create-due.model'
+import { SettingModel } from '../../settings/setting.model'
+import { PaymentMethodModel } from '../../payment-methods/payment-method.model'
+import { UserModel } from '../../users/user.model'
+import { TurnModel } from '../../turns/turn.model'
+import { DialogCreateTurnsComponent } from '../../turns/dialog-create-turns/dialog-create-turns.component'
+import { DialogSearchCustomersComponent } from '../../customers/dialog-search-customers/dialog-search-customers.component'
+import { DialogCreateCustomersComponent } from '../../customers/dialog-create-customers/dialog-create-customers.component'
+import { DialogInitPaymentsComponent } from '../../payments/dialog-init-payments/dialog-init-payments.component'
+import { IgvCode } from '../../products/igv-type.enum'
+import { DialogEditCustomersComponent } from '../../customers/dialog-edit-customers/dialog-edit-customers.component'
+import { MaterialModule } from '../../material.module'
+import { SaleItemsComponent } from '../sale-items/sale-items.component'
+import { DirectivesModule } from '../../directives/directives.module'
+import { DetractionModel } from '../../sales/detraction.model'
+import { DialogDetractionComponent } from '../../sales/dialog-detraction/dialog-detraction.component'
+import { InvoiceCode } from '../../sales/invoice-code.enum'
+
+@Component({
+    selector: 'app-charge-credit',
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent, DirectivesModule],
+    templateUrl: './charge-credit.component.html',
+    styleUrls: ['./charge-credit.component.sass']
+})
+export class ChargeCreditComponent {
+
+    private readonly formBuilder = inject(FormBuilder)
+    private readonly location = inject(Location)
+    private readonly activatedRoute = inject(ActivatedRoute)
+    private readonly router = inject(Router)
+    private readonly matDialog = inject(MatDialog)
+    private readonly navigationService = inject(NavigationService)
+    private readonly proformasService = inject(ProformasService)
+    private readonly paymentMethodsService = inject(PaymentMethodsService)
+    private readonly salesService = inject(SalesService)
+    private readonly turnsService = inject(TurnsService)
+    private readonly printService = inject(PrintService)
+    private readonly authService = inject(AuthService)
+
+    formGroup: FormGroup = this.formBuilder.group({
+        invoiceCode: '03',
+        currencyCode: 'PEN',
+        observation: '',
+        discount: null,
+        deliveryAt: null,
+        createdAt: null,
+        isRetainer: false,
+    })
+    invoiceCodes = [
+        { code: '00', name: 'NOTA DE VENTA' },
+        { code: '03', name: 'BOLETA' },
+        { code: '01', name: 'FACTURA' },
+    ]
+    saleItems: CreateSaleItemModel[] = []
+    charge: number = 0
+    customer: CustomerModel | null = null
+    isLoading: boolean = false
+    payments: CreatePaymentModel[] = []
+    dues: CreateDueModel[] = []
+    setting = new SettingModel()
+    paymentMethods: PaymentMethodModel[] = []
+
+    private backTo: string = ''
+    private detraction: DetractionModel | null = null
+    private user: UserModel = new UserModel()
+    private turn: TurnModel | null = null
+    private params: Params = {}
+
+    private handleClickMenu$: Subscription = new Subscription()
+    private handleOpenTurn$: Subscription = new Subscription()
+    private handleSaleItems$: Subscription = new Subscription()
+    private handlePaymentMethods$: Subscription = new Subscription()
+    private handleAuth$: Subscription = new Subscription()
+    private handleDues$: Subscription = new Subscription()
+
+    ngOnDestroy() {
+        this.handleClickMenu$.unsubscribe()
+        this.handleOpenTurn$.unsubscribe()
+        this.handleSaleItems$.unsubscribe()
+        this.handlePaymentMethods$.unsubscribe()
+        this.handleAuth$.unsubscribe()
+        this.handleDues$.unsubscribe()
+    }
+
+    ngOnInit(): void {
+        this.navigationService.setTitle('Credito')
+
+        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
+            this.user = auth.user
+            this.setting = auth.setting
+
+            this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
+                this.turn = turn
+                if (turn === null) {
+                    this.matDialog.open(DialogCreateTurnsComponent, {
+                        width: '600px',
+                        position: { top: '20px' },
+                    })
+                }
+            })
+
+            if (this.setting.isShowDeliveryAt) {
+                this.formGroup.get('deliveryAt')?.setValidators([Validators.required])
+                this.formGroup.get('deliveryAt')?.updateValueAndValidity()
+            }
+        })
+
+        this.navigationService.setMenu([
+            { id: 'add_init_payment', label: 'Cuota inicial', icon: 'add_card', show: true },
+            { id: 'add_dues', label: 'N° de cuotas', icon: 'event_available', show: true },
+            { id: 'add_customer', label: 'Agregar cliente', icon: 'person_add', show: true },
+        ])
+
+        this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
+            this.paymentMethods = paymentMethods
+            this.formGroup.patchValue({ paymentMethodId: (this.paymentMethods[0] || { id: '' }).id })
+        })
+
+        this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
+            switch (id) {
+                case 'add_customer':
+                    const dialogRef = this.matDialog.open(DialogSearchCustomersComponent, {
+                        width: '600px',
+                        position: { top: '20px' },
+                        data: this.setting.defaultSearchCustomer
+                    })
+
+                    dialogRef.afterClosed().subscribe(customer => {
+                        if (customer) {
+                            this.customer = customer
+                        }
+                    })
+
+                    dialogRef.componentInstance.handleCreateCustomer().subscribe(() => {
+                        const dialogRef = this.matDialog.open(DialogCreateCustomersComponent, {
+                            width: '600px',
+                            position: { top: '20px' },
+                        })
+
+                        dialogRef.afterClosed().subscribe(customer => {
+                            if (customer) {
+                                this.customer = customer
+                            }
+                        })
+                    })
+                    break
+
+                case 'add_dues': {
+                    if (this.turn) {
+                        const data: DialogDueData = {
+                            turnId: this.turn.id,
+                            charge: this.charge,
+                            dues: this.dues
+                        }
+
+                        const dialogRef = this.matDialog.open(DialogDuesComponent, {
+                            width: '600px',
+                            position: { top: '20px' },
+                            data,
+                        })
+
+                        dialogRef.afterClosed().subscribe(dues => {
+                            if (dues && dues.length) {
+                                this.dues = dues
+                            }
+                        })
+                    }
+                    break
+                }
+
+                case 'add_init_payment': {
+                    if (this.turn) {
+                        const dialogRef = this.matDialog.open(DialogInitPaymentsComponent, {
+                            width: '600px',
+                            position: { top: '20px' },
+                            data: this.turn.id,
+                        })
+
+                        dialogRef.afterClosed().subscribe(payments => {
+                            if (payments) {
+                                this.payments = payments
+                                const charge = this.payments.map(e => e.charge).reduce((a, b) => a + b, 0)
+                                this.dues[0].charge = this.dues[0].preCharge - charge
+                            }
+                        })
+                    }
+                    break
+                }
+                default:
+                    break
+            }
+        })
+
+        this.formGroup.get('invoiceCode')?.patchValue(this.setting.defaultInvoice)
+
+        this.handleSaleItems$ = this.salesService.handleSaleItems().subscribe(saleItems => {
+            this.saleItems = saleItems
+            this.charge = 0
+            for (const saleItem of this.saleItems) {
+                if (saleItem.igvCode !== IgvCode.BONIFICACION) {
+                    this.charge += saleItem.price * saleItem.quantity
+                }
+            }
+
+            const now = new Date()
+
+            const due: CreateDueModel = {
+                charge: this.charge,
+                preCharge: this.charge,
+                dueDate: new Date(now.setMonth(now.getMonth() + 1)),
+            }
+
+            this.dues = [due]
+        })
+
+        const { proformaId, backTo } = this.activatedRoute.snapshot.queryParams
+        this.backTo = backTo
+
+        if (proformaId) {
+            Object.assign(this.params, { proformaId })
+            this.proformasService.getProformaById(proformaId).subscribe(proforma => {
+                const { proformaItems, customer, discount } = proforma
+                this.salesService.setSaleItems(proformaItems)
+                this.formGroup.patchValue(proforma)
+                this.charge -= (discount || 0)
+                this.customer = customer
+            })
+        }
+
+    }
+
+    onClickSaleItem(index: number) {
+        this.matDialog.open(DialogSaleItemsComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: index,
+        })
+    }
+
+    onChangeDiscount() {
+        const { discount } = this.formGroup.value
+        this.charge = 0
+
+        for (const saleItem of this.saleItems) {
+            if (saleItem.igvCode !== IgvCode.BONIFICACION) {
+                this.charge += saleItem.price * saleItem.quantity
+            }
+        }
+
+        this.charge -= discount
+
+        if (this.dues.length < 2) {
+            const now = new Date()
+            const due: CreateDueModel = {
+                charge: this.charge,
+                preCharge: this.charge,
+                dueDate: new Date(now.setMonth(now.getMonth() + 1)),
+            }
+
+            this.dues = [due]
+        }
+    }
+
+    onDialogDetraction() {
+        const dialogRef = this.matDialog.open(DialogDetractionComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: this.detraction,
+        })
+
+        dialogRef.afterClosed().subscribe(detraction => {
+            if (detraction) {
+                this.detraction = detraction
+            }
+        })
+    }
+
+    onSubmit() {
+        try {
+            this.isLoading = true
+            this.navigationService.loadBarStart()
+
+            if (this.turn === null) {
+                this.matDialog.open(DialogCreateTurnsComponent, {
+                    width: '600px',
+                    position: { top: '20px' },
+                })
+                throw new Error("Debes aperturar una caja")
+            }
+
+            if (!this.saleItems.length) {
+                throw new Error("Agrega un producto")
+            }
+
+            if (this.customer === null) {
+                throw new Error("Agrega un cliente")
+            }
+
+            const creditForm: CreditForm = this.formGroup.value
+
+            const createdCredit: CreateCreditModel = {
+                invoiceCode: creditForm.invoiceCode,
+                observation: creditForm.observation,
+                turnId: this.turn.id,
+                currencyCode: creditForm.currencyCode || 'PEN',
+                discount: creditForm.discount,
+                deliveryAt: creditForm.deliveryAt,
+                createdAt: creditForm.createdAt,
+                isRetainer: creditForm.isRetainer,
+                isCredit: true,
+
+                customerId: this.customer.id,
+
+                rcPercent: this.setting.defaultRcPercent,
+                igvPercent: this.setting.defaultIgvPercent
+            }
+
+            if (createdCredit.invoiceCode === InvoiceCode.FACTURA && this.customer !== null && this.customer.documentType !== 'RUC') {
+                throw new Error("El cliente debe tener un RUC")
+            }
+
+            this.salesService.createCredit(
+                createdCredit, this.saleItems,
+                this.payments,
+                this.dues,
+                this.detraction,
+                this.params
+            ).subscribe({
+                next: sale => {
+                    Object.assign(sale, {
+                        user: this.user,
+                        customer: this.customer,
+                        saleItems: this.saleItems,
+                        payments: this.payments,
+                    })
+
+                    switch (this.setting.defaultTicket) {
+                        case 'A4':
+                            this.printService.printA4Invoice(sale)
+                        break
+                        case '80MM':
+                            this.printService.printTicket80mm(sale)
+                        break
+                        default:
+                            this.printService.printTicket58mm(sale)
+                        break
+                    }
+
+                    this.salesService.setSaleItems([])
+
+                    if (this.backTo) {
+                        this.router.navigate([this.backTo])
+                    } else {
+                        this.location.back()
+                    }
+
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage('Registrado correctamente')
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                }
+            })
+        } catch (error) {
+            if (error instanceof Error) {
+                this.navigationService.showMessage(error.message)
+            }
+            this.isLoading = false
+            this.navigationService.loadBarFinish()
+        }
+    }
+
+    onEditCustomer() {
+        const dialogRef = this.matDialog.open(DialogEditCustomersComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: this.customer,
+        })
+
+        dialogRef.afterClosed().subscribe(customer => {
+            if (customer) {
+                this.customer = customer
+            }
+        })
+    }
+
+}

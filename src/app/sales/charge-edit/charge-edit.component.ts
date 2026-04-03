@@ -1,0 +1,285 @@
+import { Component, inject } from '@angular/core'
+import { HttpErrorResponse } from '@angular/common/http'
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'
+import { MatDialog } from '@angular/material/dialog'
+import { Router } from '@angular/router'
+import { Subscription } from 'rxjs'
+import { CreateSaleItemModel } from '../create-sale-item.model'
+import { SaleForm } from '../sale.form'
+import { SaleModel } from '../sale.model'
+import { SalesService } from '../sales.service'
+import { UpdateSaleModel } from '../update-sale.model'
+import { NavigationService } from '../../navigation/navigation.service'
+import { PaymentMethodsService } from '../../payment-methods/payment-methods.service'
+import { AuthService } from '../../auth/auth.service'
+import { CreatePaymentModel } from '../../payments/create-payment.model'
+import { CustomerModel } from '../../customers/customer.model'
+import { SettingModel } from '../../settings/setting.model'
+import { PaymentMethodModel } from '../../payment-methods/payment-method.model'
+import { DialogSearchCustomersComponent } from '../../customers/dialog-search-customers/dialog-search-customers.component'
+import { DialogCreateCustomersComponent } from '../../customers/dialog-create-customers/dialog-create-customers.component'
+import { DialogSplitPaymentsComponent, DialogSplitPaymentsData } from '../../payments/dialog-split-payments/dialog-split-payments.component'
+import { DialogEditCustomersComponent } from '../../customers/dialog-edit-customers/dialog-edit-customers.component'
+import { MaterialModule } from '../../material.module'
+import { CommonModule } from '@angular/common'
+import { SaleItemsComponent } from '../sale-items/sale-items.component'
+import { DirectivesModule } from '../../directives/directives.module'
+import { InvoiceCode } from '../invoice-code.enum'
+import { IgvCode } from '../../sales/igv-code.enum'
+
+@Component({
+    selector: 'app-charge-edit',
+    imports: [MaterialModule, ReactiveFormsModule, CommonModule, SaleItemsComponent, DirectivesModule],
+    templateUrl: './charge-edit.component.html',
+    styleUrls: ['./charge-edit.component.sass']
+})
+export class ChargeEditComponent {
+
+    private readonly formBuilder = inject(FormBuilder)
+    private readonly router = inject(Router)
+    private readonly matDialog = inject(MatDialog)
+    private readonly navigationService = inject(NavigationService)
+    private readonly salesService = inject(SalesService)
+    private readonly paymentMethodsService = inject(PaymentMethodsService)
+    private readonly authService = inject(AuthService)
+
+    payments: CreatePaymentModel[] = []
+    saleItems: CreateSaleItemModel[] = []
+    charge: number = 0
+    customer: CustomerModel | null = null
+    isLoading: boolean = false
+    formGroup: FormGroup = this.formBuilder.group({
+        invoiceNumber: null,
+        invoiceCode: '03',
+        currencyCode: 'PEN',
+        observation: '',
+        discount: null,
+        isCredit: false,
+        createdAt: Date(),
+        paymentMethodId: null,
+    })
+    invoiceCodes = [
+        { code: '00', name: 'NOTA DE VENTA' },
+        { code: '03', name: 'BOLETA' },
+        { code: '01', name: 'FACTURA' },
+    ]
+    setting = new SettingModel()
+    private sale: SaleModel | null = null
+    paymentMethods: PaymentMethodModel[] = []
+
+    private handleClickMenu$: Subscription = new Subscription()
+    private handleSaleItems$: Subscription = new Subscription()
+    private handlePaymentMethods$: Subscription = new Subscription()
+    private handleAuth$: Subscription = new Subscription()
+
+    ngOnDestroy() {
+        this.handleClickMenu$.unsubscribe()
+        this.handleSaleItems$.unsubscribe()
+        this.handlePaymentMethods$.unsubscribe()
+        this.handleAuth$.unsubscribe()
+    }
+
+    ngOnInit(): void {
+        this.sale = this.salesService.getSale()
+
+        this.formGroup.get('invoiceCode')?.disable()
+
+        if (this.sale === null) {
+            this.router.navigate(['/invoices'])
+        } else {
+            this.customer = this.sale.customer
+            this.navigationService.setTitle('Guardar cambios')
+
+            this.formGroup.patchValue(this.sale)
+
+            if (this.sale.isCredit) {
+                this.navigationService.setMenu([
+                    // { id: 'split_payment', label: 'Dividir pago', icon: 'add_card', show: true },
+                    { id: 'add_customer', label: 'Desc Excel', icon: 'person_add', show: true },
+                ])
+            } else {
+                this.navigationService.setMenu([
+                    { id: 'split_payment', label: 'Dividir pago', icon: 'add_card', show: true },
+                    { id: 'add_customer', label: 'Desc Excel', icon: 'person_add', show: true },
+                ])
+            }
+
+            this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
+                this.paymentMethods = paymentMethods
+                this.formGroup.patchValue({ paymentMethodId: (this.paymentMethods[0] || { id: '' }).id })
+            })
+
+            this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
+                switch (id) {
+                    case 'add_customer':
+                        const dialogRef = this.matDialog.open(DialogSearchCustomersComponent, {
+                            width: '600px',
+                            position: { top: '20px' },
+                            data: this.setting.defaultSearchCustomer
+                        })
+
+                        dialogRef.afterClosed().subscribe(customer => {
+                            if (customer) {
+                                this.customer = customer
+                            }
+                        })
+
+                        dialogRef.componentInstance.handleCreateCustomer().subscribe(() => {
+                            const dialogRef = this.matDialog.open(DialogCreateCustomersComponent, {
+                                width: '600px',
+                                position: { top: '20px' },
+                            })
+
+                            dialogRef.afterClosed().subscribe(customer => {
+                                if (customer) {
+                                    this.customer = customer
+                                }
+                            })
+                        })
+                        break
+
+                    case 'split_payment':
+                        if (this.sale) {
+                            const data: DialogSplitPaymentsData = {
+                                turnId: this.sale.turnId,
+                                charge: this.charge,
+                                payments: this.payments,
+                            }
+
+                            const dialogRef = this.matDialog.open(DialogSplitPaymentsComponent, {
+                                width: '600px',
+                                position: { top: '20px' },
+                                data,
+                            })
+
+                            dialogRef.afterClosed().subscribe(payments => {
+                                if (payments) {
+                                    this.payments = payments
+                                    if (payments.length) {
+                                        this.formGroup.get('paymentMethodId')?.disable()
+                                    } else {
+                                        this.formGroup.get('paymentMethodId')?.enable()
+                                    }
+                                }
+                            })
+                        }
+                        break
+                    default:
+                        break
+                }
+            })
+
+            this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
+                this.setting = auth.setting
+            })
+
+            this.handleSaleItems$ = this.salesService.handleSaleItems().subscribe(saleItems => {
+                this.saleItems = saleItems
+                this.charge = 0
+
+                for (const saleItem of this.saleItems) {
+                    if (saleItem.igvCode !== IgvCode.BONIFICACION) {
+                        this.charge += saleItem.price * saleItem.quantity
+                    }
+                }
+
+                this.charge -= (this.sale?.discount || 0)
+            })
+        }
+    }
+
+    onSubmit() {
+        try {
+            if (this.sale === null) {
+                throw new Error("La venta no existe")
+            }
+
+            if (!this.saleItems.length) {
+                throw new Error("Agrega un producto")
+            }
+
+            if (this.saleItems.find(e => e.price === 0 || e.price === null)) {
+                throw new Error("El producto no puede tener precio 0")
+            }
+
+            const saleForm: SaleForm = this.formGroup.value
+
+            const createdSale: UpdateSaleModel = {
+                invoiceCode: this.sale.invoiceCode,
+                currencyCode: saleForm.currencyCode || this.sale.currencyCode,
+                paymentMethodId: saleForm.paymentMethodId,
+                observation: saleForm.observation,
+                discount: saleForm.discount,
+                isCredit: this.sale.isCredit,
+                igvPercent: this.sale.igvPercent,
+                rcPercent: this.sale.rcPercent,
+                createdAt: saleForm.createdAt,
+
+                turnId: this.sale.turnId,
+                customerId: this.customer ? this.customer.id : null,
+            }
+
+            if (createdSale.invoiceCode === InvoiceCode.FACTURA && this.customer === null) {
+                throw new Error("Agrega un cliente")
+            }
+
+            if (createdSale.invoiceCode === InvoiceCode.FACTURA && this.customer !== null && this.customer.documentType !== 'RUC') {
+                throw new Error("El cliente debe tener un RUC")
+            }
+
+            this.isLoading = true
+            this.navigationService.loadBarStart()
+
+            this.salesService.updateSaleWithItems(createdSale, this.saleItems, this.payments, this.sale.id).subscribe({
+                next: () => {
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage('Se han guardado los cambios')
+                    this.salesService.setSaleItems([])
+                    this.router.navigate(['/invoices'])
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                    this.isLoading = false
+                    this.navigationService.loadBarFinish()
+                }
+            })
+        } catch (error) {
+            if (error instanceof Error) {
+                this.navigationService.showMessage(error.message)
+            }
+        }
+    }
+
+    onChangeDiscount() {
+        const { discount } = this.formGroup.value
+        this.charge = 0
+        for (const saleItem of this.saleItems) {
+            if (saleItem.igvCode !== IgvCode.BONIFICACION) {
+                this.charge += saleItem.price * saleItem.quantity
+            }
+        }
+        this.charge -= discount
+    }
+
+    onEditCustomer() {
+        const dialogRef = this.matDialog.open(DialogEditCustomersComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: this.customer,
+        })
+
+        dialogRef.afterClosed().subscribe(customer => {
+            if (customer) {
+                this.customer = customer
+            }
+        })
+    }
+
+    onAddCustomer() {
+        this.matDialog.open(DialogSearchCustomersComponent, {
+            width: '600px',
+            position: { top: '20px' },
+        })
+    }
+
+}
