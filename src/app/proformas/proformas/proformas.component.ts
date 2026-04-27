@@ -38,7 +38,7 @@ export class ProformasComponent {
     private readonly formBuilder = inject(FormBuilder)
     private readonly router = inject(Router)
     private readonly activatedRoute = inject(ActivatedRoute)
-    private readonly bottomSheet = inject(MatBottomSheet)
+    private readonly matBottomSheet = inject(MatBottomSheet)
 
     displayedColumns: string[] = ['created', 'serial', 'customer', 'user', 'charge', 'observation', 'actions']
     $dataSource = signal<ProformaModel[]>([])
@@ -176,11 +176,11 @@ export class ProformasComponent {
     }
 
     onPrint(proformaId: any) {
-        this.bottomSheet.open(SheetPrintProformasComponent, { data: proformaId })
+        this.matBottomSheet.open(SheetPrintProformasComponent, { data: proformaId })
     }
 
     onExportPdf(proformaId: any) {
-        this.bottomSheet.open(SheetExportPdfProformasComponent, { data: proformaId })
+        this.matBottomSheet.open(SheetExportPdfProformasComponent, { data: proformaId })
     }
 
     onRangeChange() {

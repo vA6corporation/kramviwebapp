@@ -1,5 +1,5 @@
 import { PrintZoneType } from '../print/print-zone-type.enum'
-import { IgvCode } from '../products/igv-type.enum'
+import { IgvCode } from '../sales/igv-code.enum'
 
 export interface BoardItemModel {
     id: number

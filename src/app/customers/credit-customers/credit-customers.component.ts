@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { MatDialog } from '@angular/material/dialog'
 import { PageEvent } from '@angular/material/paginator'
@@ -37,8 +37,8 @@ export class CreditCustomersComponent {
     private readonly navigationService = inject(NavigationService)
 
     displayedColumns: string[] = ['checked', 'createdAt', 'serial', 'charge', 'remaining', 'actions']
-    dataSource: CreditModel[] = []
-    length: number = 0
+    $dataSource = signal<CreditModel[]>([])
+    $length = signal<number>(0)
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
@@ -85,13 +85,13 @@ export class CreditCustomersComponent {
             switch (id) {
                 case 'print_customer_credits': {
                     if (this.customer) {
-                        this.printService.printCreditCustomer80mm(this.customer, this.dataSource)
+                        this.printService.printCreditCustomer80mm(this.customer, this.$dataSource())
                     }
                     break
                 }
                 case 'export_customer_credits': {
                     if (this.customer) {
-                        this.printService.exportPdfCreditCustomer80mm(this.customer, this.dataSource)
+                        this.printService.exportPdfCreditCustomer80mm(this.customer, this.$dataSource())
                     }
                     break
                 }
@@ -119,7 +119,7 @@ export class CreditCustomersComponent {
 
     onCheckAll(isChecked: boolean) {
         if (isChecked) {
-            this.selectedCredits = this.dataSource
+            this.selectedCredits = this.$dataSource()
         } else {
             this.selectedCredits = []
         }
@@ -180,7 +180,7 @@ export class CreditCustomersComponent {
         this.navigationService.loadBarStart()
         this.creditsService.getCreditsByCustomer(this.customerId).subscribe(credits => {
             this.navigationService.loadBarFinish()
-            this.dataSource = credits
+            this.$dataSource.set(credits)
             this.selectedCredits = []
             this.updateSelectedPayment()
             this.charge = 0

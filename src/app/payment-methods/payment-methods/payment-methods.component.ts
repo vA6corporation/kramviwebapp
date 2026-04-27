@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { PageEvent } from '@angular/material/paginator'
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router'
@@ -22,9 +22,8 @@ export class PaymentMethodsComponent {
     private readonly paymentMethodsService = inject(PaymentMethodsService)
     private readonly navigationService = inject(NavigationService)
 
-    users: UserModel[] = []
     displayedColumns: string[] = ['name', 'actions']
-    dataSource: PaymentMethodModel[] = []
+    $dataSource = signal<PaymentMethodModel[]>([])
     length: number = 0
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
@@ -38,7 +37,12 @@ export class PaymentMethodsComponent {
 
     ngOnInit(): void {
         this.navigationService.setTitle('Medios de pago')
-        this.fetchData()
+        this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
+            this.$dataSource.set(paymentMethods)
+            this.navigationService.loadBarFinish()
+        }, (error: HttpErrorResponse) => {
+            this.navigationService.showMessage(error.error.message)
+        })
     }
 
     handlePageEvent(event: PageEvent): void {
@@ -55,22 +59,14 @@ export class PaymentMethodsComponent {
         })
     }
 
-    fetchData() {
-        this.navigationService.loadBarFinish()
-        this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
-            this.dataSource = paymentMethods
-            this.navigationService.loadBarFinish()
-        }, (error: HttpErrorResponse) => {
-            this.navigationService.showMessage(error.error.message)
-        })
-    }
-
     onDelete(paymentMethodId: any) {
         const ok = confirm('Esta seguro de eliminar?...')
         if (ok) {
             this.paymentMethodsService.delete(paymentMethodId).subscribe(() => {
                 this.navigationService.showMessage('Eliminado correctamente')
-                this.dataSource = this.dataSource.filter(e => e.id !== paymentMethodId)
+                setTimeout(() => {
+                    location.reload()
+                }, 1000)
             })
         }
     }

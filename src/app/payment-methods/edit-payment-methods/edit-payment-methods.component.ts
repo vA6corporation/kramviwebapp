@@ -43,6 +43,7 @@ export class EditPaymentMethodsComponent {
                     this.paymentMethodsService.loadPaymentMethods()
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Se han guardado los cambios')
+                    this.navigationService.back()
                 }, error: (error: HttpErrorResponse) => {
                     this.isLoading = false
                     this.navigationService.loadBarFinish()

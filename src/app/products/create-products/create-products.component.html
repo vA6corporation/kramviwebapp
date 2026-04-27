@@ -1,3 +1,4 @@
+@let provider = $provider();
 <div class="container">
     <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
         <mat-form-field appearance="fill">
@@ -108,30 +109,38 @@
                     </button>
                 </div>
             </mat-list-item>
+            } @empty {
+            <mat-list-item class="text-center">
+                <span matListItemTitle class="text-muted">SIN ANOTACIONES</span>
+            </mat-list-item>
             }
         </mat-list>
         <div class="mb-3">
             <button type="button" class="w-100" mat-flat-button color="primary"
                 (click)="onDialogCreateAnnotations()">AGREGAR ANOTACION</button>
         </div>
-        <!--<mat-list>
-            <div mat-subheader>Proveedores</div>
-            @for (provider of providers; track provider.id; let i = $index) {
+        <mat-list>
+            <div mat-subheader>Proveedor</div>
+            @if (provider) {
             <mat-list-item>
                 <span matListItemTitle>{{ provider.name }}</span>
                 <span matListItemLine>{{ provider.documentType }}: {{ provider.document }}</span>
                 <div matListItemMeta>
-                    <button type="button" mat-icon-button (click)="onRemoveProvider(i)">
+                    <button type="button" mat-icon-button (click)="onRemoveProvider()">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </div>
             </mat-list-item>
+            } @else {
+            <mat-list-item class="text-center">
+                <span matListItemTitle class="text-muted">SIN PROVEEDOR</span>
+            </mat-list-item>
             }
-        </mat-list>-->
-        <!--<div class="mb-3">
+        </mat-list>
+        <div class="mb-3">
             <button type="button" class="w-100" mat-flat-button color="primary" (click)="onDialogProviders()">AGREGAR
                 PROVEEDOR</button>
-        </div>-->
+        </div>
         <div class="py-3">
             <mat-slide-toggle formControlName="isTrackStock" (change)="onIsTrackStockChange()">Trackear
                 stock</mat-slide-toggle>

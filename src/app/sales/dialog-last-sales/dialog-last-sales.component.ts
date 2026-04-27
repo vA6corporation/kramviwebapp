@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { MatDialogRef } from '@angular/material/dialog'
 import { Subscription } from 'rxjs'
@@ -26,8 +26,8 @@ export class DialogLastSalesComponent {
     private readonly navigationService = inject(NavigationService)
     private readonly dialogRef: MatDialogRef<DialogLastSalesComponent> = inject(MatDialogRef)
 
-    sales: SaleModel[] = []
-    office: OfficeModel = new OfficeModel()
+    $sales = signal<SaleModel[]>([])
+    $office = signal<OfficeModel>(new OfficeModel())
     private setting: SettingModel = new SettingModel()
 
     private handleAuth$: Subscription = new Subscription()
@@ -38,11 +38,11 @@ export class DialogLastSalesComponent {
 
     ngOnInit(): void {
         this.salesService.getSalesOfTheDay().subscribe(sales => {
-            this.sales = sales
+            this.$sales.set(sales)
         })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.office = auth.office
+            this.$office.set(auth.office)
             this.setting = auth.setting
         })
     }

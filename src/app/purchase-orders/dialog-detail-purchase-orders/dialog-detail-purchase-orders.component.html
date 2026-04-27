@@ -1,0 +1,53 @@
+@let provider = $provider();
+@let purchaseOrder = $purchaseOrder();
+@let user = $user();
+<h2 mat-dialog-title>Detalles</h2>
+<div mat-dialog-content>
+    <table class="w-100">
+        <tbody>
+            <tr>
+                <td>F/H de registro</td>
+                <td align="right">{{ purchaseOrder?.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</td>
+            </tr>
+            <tr>
+                <td>Serie</td>
+                <td align="right">O{{ $office()?.serialPrefix }}-{{ purchaseOrder?.purchaseOrderNumber }}</td>
+            </tr>
+            <tr>
+                <td>Proveedor</td>
+                <td align="right">{{ provider?.name || 'NINGUNO' }}</td>
+            </tr>
+            <tr>
+                <td>Usuario</td>
+                <td align="right">{{ user?.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <mat-divider class="mb-3"></mat-divider>
+    <mat-list class="m-0">
+        @for (purchaseOrderItem of $purchaseOrderItems(); track purchaseOrderItem.productId) {
+        <mat-list-item>
+            <span matListItemTitle>{{ purchaseOrderItem.fullName }} ({{ purchaseOrderItem.quantity }})</span>
+            <span>{{ (purchaseOrderItem.cost * purchaseOrderItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+            @if (purchaseOrderItem.igvCode === '11') {
+            <span class="divider"></span>
+            <span class="text-success">Bon</span>
+            }
+            @if (purchaseOrderItem.igvCode === '20') {
+            <span class="divider"></span>
+            <span class="text-primary">Exo</span>
+            }
+            @if (purchaseOrderItem.igvCode === '30') {
+            <span class="divider"></span>
+            <span class="text-primary">Ina</span>
+            }
+        </mat-list-item>
+        }
+    </mat-list>
+</div>
+<mat-dialog-actions>
+    <button mat-raised-button mat-dialog-close [routerLink]="['/purchaseOrders', purchaseOrderId, 'edit']"
+        color="primary">EDITAR</button>
+    <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
+</mat-dialog-actions>

@@ -64,13 +64,6 @@ export async function buildTicketRemissionGuide(
         positionY += 4 * strArr.length
     }
 
-    if (office.phone) {
-        pdf.text(`${office.phone}`, pageCenter + marginLeft, positionY, { align: 'center' })
-        pdf.setFont('Helvetica', 'bold')
-        pdf.setFontSize(header)
-        positionY += 6
-    }
-
     pdf.text('GUIA DE REMISION ELECTRONICA\nREMITENTE', pageCenter + marginLeft, positionY, { align: 'center' })
     positionY += 8
     text = `T${office?.serialPrefix}-${remissionGuide?.remissionGuideNumber}`
@@ -204,7 +197,7 @@ export async function buildTicketRemissionGuide(
     text = `Placa`
     pdf.text(text, 0 + marginLeft, positionY)
     if (carrier) {
-        text = carrier.carriagePlate
+        text = carrier.carrierPlate
         positionY += 4
         pdf.text(text, 0 + marginLeft, positionY)
         positionY += 4

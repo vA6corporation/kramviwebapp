@@ -8,7 +8,6 @@ export class OfficeModel {
     address: string = ''
     serialPrefix: string = ''
     codigoAnexo: string = ''
-    phone: string = ''
     activityId: any = 0
     activityName: string = ''
     setting: SettingModel = new SettingModel()

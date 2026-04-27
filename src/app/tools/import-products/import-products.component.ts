@@ -43,9 +43,9 @@ export class ImportProductsComponent {
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
     $isLoading = signal<boolean>(false)
-    priceLists: PriceListModel[] = []
-    offices: OfficeModel[] = []
-    setting: SettingModel = new SettingModel()
+    $priceLists = signal<PriceListModel[]>([])
+    $offices = signal<OfficeModel[]>([])
+    $setting = signal<SettingModel>(new SettingModel())
     private paymentMethodId: any = 0
 
     private handleAuth$: Subscription = new Subscription()
@@ -63,46 +63,37 @@ export class ImportProductsComponent {
 
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
+            this.$setting.set(auth.setting)
 
-            if (this.setting.defaultPrice === PriceType.GLOBAL) {
-                this.displayedColumns.push('price')
-            }
 
-            if (this.setting.defaultPrice === PriceType.OFICINA) {
+            if (this.$setting().defaultPrice === PriceType.OFICINA) {
                 this.handleOffices$ = this.authService.handleOffices().subscribe(offices => {
-                    this.offices = offices
-                    for (const office of this.offices) {
+                    this.$offices.set(offices)
+                    for (const office of offices) {
                         this.displayedColumns.push(office.name)
                     }
                 })
             }
 
             this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
-                this.priceLists = priceLists
-                for (const priceList of this.priceLists) {
+                this.$priceLists.set(priceLists)
+                for (const priceList of priceLists) {
                     this.displayedColumns.push(priceList.name)
                 }
             })
         })
-
-        this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
-            this.paymentMethodId = (paymentMethods[0] || { id: 0 }).id
-        })
-
     }
 
     async onFileSelected(files: FileList | null, input: HTMLInputElement, table: MatTable<any>) {
+        if (this.$setting().defaultPrice === PriceType.GLOBAL) {
+            this.displayedColumns.push('price')
+        }
+
         if (files && files[0]) {
             const products = await parseExcel(files[0])
             input.value = ''
             this.$dataSource.set([])
             for (const product of products) {
-                let expirationAt = null
-                if (product.fechaVencimiento) {
-                    const dates = String(product.fechaVencimiento).split('/')
-                    expirationAt = new Date(Number(dates[2]), Number(dates[1]), Number(dates[0]))
-                }
                 if (product.nombre && product.categoria) {
                     const importProduct: any = {
                         printZone: (product.zonaImpresion || 'COCINA').toUpperCase(),
@@ -112,21 +103,20 @@ export class ImportProductsComponent {
                         category: product.categoria,
                         description: product.descripcion,
                         stock: product.stock,
-                        price: isNaN(product.precio) ? 0 : Number(product.precio.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
-                        cost: isNaN(product.costo) ? 0 : Number(product.costo.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })),
+                        price: isNaN(product.precio) ? 0 : Number(product.precio),
+                        cost: isNaN(product.costo) ? 0 : Number(product.costo),
                         upc: String(product.codigo || ''),
                         sku: String(product.codigoInterno || ''),
                         unidad: product.unidad || 'UNIDADES',
-                        expirationAt,
                         providerName: product.nombreProveedor || '',
                         providerDocument: product.documentoProveedor || '',
                     }
 
-                    for (const priceList of this.priceLists) {
+                    for (const priceList of this.$priceLists()) {
                         importProduct[priceList.name.toLowerCase()] = Number(product[priceList.name] || product[priceList.name.toLowerCase()] || importProduct.price || 0)
                     }
 
-                    for (const office of this.offices) {
+                    for (const office of this.$offices()) {
                         importProduct[office.name.toLowerCase()] = Number(product[office.name])
                     }
 
@@ -171,7 +161,7 @@ export class ImportProductsComponent {
         const promises: any[] = []
         for (let index = 0; index < this.$dataSource().length; index += chunk) {
             const temporary = this.$dataSource().slice(index, index + chunk)
-            const promise = lastValueFrom(this.toolsService.importProducts(temporary, this.priceLists, this.setting.defaultPrice, this.paymentMethodId))
+            const promise = lastValueFrom(this.toolsService.importProducts(temporary, this.$priceLists(), this.$setting().defaultPrice, this.paymentMethodId))
             promises.push(promise)
         }
         try {

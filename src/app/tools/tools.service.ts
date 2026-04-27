@@ -44,11 +44,10 @@ export class ToolsService {
         return this.httpService.post('tools/importSupplies', { supplies })
     }
 
-    addStock(
+    importStock(
         products: any[],
-        paymentMethodId: any,
     ): Observable<void> {
-        return this.httpService.post(`tools/addStock/${paymentMethodId}`, { products })
+        return this.httpService.post('tools/importStock', { products })
     }
 
     checkStock(): Observable<ProductModel[]> {
@@ -58,4 +57,5 @@ export class ToolsService {
     updatePrices(products: any[]): Observable<void> {
         return this.httpService.post('tools/updatePrices', { products })
     }
+
 }

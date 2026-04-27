@@ -30,6 +30,7 @@ export class DialogCreateCustomersComponent {
         phone: new FormControl('', { nonNullable: true }),
         email: new FormControl('', { nonNullable: true, validators: Validators.email }),
         observation: new FormControl('', { nonNullable: true }),
+        creditLimit: new FormControl(null)
     })
     isLoading: boolean = false
     maxLength: number = 8

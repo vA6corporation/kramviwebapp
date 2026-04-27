@@ -66,13 +66,6 @@ export async function buildTicketProforma(
         positionY += 4 * strArr.length
     }
 
-    if (office.phone) {
-        pdf.text(`${office.phone}`, pageCenter + marginLeft, positionY, { align: 'center' })
-        pdf.setFont('Helvetica', 'bold')
-        pdf.setFontSize(header)
-        positionY += 6
-    }
-
     pdf.text('PROFORMA', pageCenter + marginLeft, positionY, { align: 'center' })
     positionY += 4
     text = `P${office?.serialPrefix}-${proforma?.proformaNumber}`

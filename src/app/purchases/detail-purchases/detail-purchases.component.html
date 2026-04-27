@@ -84,34 +84,5 @@
                 </mat-card-content>
             </mat-card>
         </div>
-        <div class="w-100 pr-2">
-            <mat-card class="mb-4">
-                <mat-card-header>
-                    <mat-card-title>Pagos</mat-card-title>
-                </mat-card-header>
-                <mat-list role="list">
-                    @for (paymentPurchase of paymentPurchases; track paymentPurchase.id) {
-                    <mat-list-item role="listitem" [ngClass]="{ 'bg-danger': paymentPurchase.deletedAt }">
-                        <span matListItemTitle>{{ paymentPurchase.paymentMethod.name }}</span>
-                        <span matListItemLine>{{ paymentPurchase.createdAt | date }}<span class="divider"></span>{{
-                            paymentPurchase.observation }}</span>
-                        <span matListItemLine>{{ paymentPurchase.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
-                        <div matListItemMeta class="h-100 d-flex align-items-center">
-                            <button mat-icon-button aria-label="edit" (click)="onEditPaymentPurchase(paymentPurchase)">
-                                <mat-icon>edit</mat-icon>
-                            </button>
-                            <button mat-icon-button aria-label="trash"
-                                (click)="onDeletePaymentPurchase(paymentPurchase.id, paymentPurchase.purchaseId)">
-                                <mat-icon>delete</mat-icon>
-                            </button>
-                        </div>
-                    </mat-list-item>
-                    }
-                </mat-list>
-                <mat-card-actions>
-                    <button mat-flat-button color="primary" (click)="onCreatePaymentPurchase()">PAGAR</button>
-                </mat-card-actions>
-            </mat-card>
-        </div>
     </div>
 </div>

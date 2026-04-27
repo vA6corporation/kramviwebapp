@@ -20,10 +20,10 @@ export class AuthService {
 
     private modules: ModuleModel[] = [
         { label: 'Estado de caja', name: 'openBox', path: '/turns/openTurn', isActive: false, isAuthorized: false, icon: 'point_of_sale', info: 'General' },
-        { label: 'Punto de venta', name: 'posStandard', path: '/posStandard', isActive: false, isAuthorized: false, icon: 'desktop_windows', info: 'Tiendas Minimarkets' },
-        { label: 'Punto de venta', name: 'posFood', path: '/posFood', isActive: false, isAuthorized: false, icon: 'desktop_windows', info: 'Restaurantes FastFood' },
-        { label: 'Atencion de cajero', name: 'boards', path: '/boards', isActive: false, isAuthorized: false, icon: 'desktop_windows', info: 'Restaurantes (Cajero)' },
-        { label: 'Atencion de mozos', name: 'boardsWaiter', path: '/boards/waiter', isActive: false, isAuthorized: false, icon: 'desktop_windows', info: 'Restaurantes (Mozos)' },
+        { label: 'Punto de venta', name: 'posStandard', path: '/posStandard', isActive: false, isAuthorized: false, icon: 'desktop_windows', info: 'Tiendas' },
+        { label: 'Punto de venta', name: 'posFood', path: '/posFood', isActive: false, isAuthorized: false, icon: 'desktop_windows', info: 'Restaurantes' },
+        { label: 'Atencion de cajero', name: 'boards', path: '/boards', isActive: false, isAuthorized: false, icon: 'desktop_windows', info: 'Restaurantes' },
+        { label: 'Atencion de mozos', name: 'boardsWaiter', path: '/boards/waiter', isActive: false, isAuthorized: false, icon: 'desktop_windows', info: 'Restaurantes' },
         { label: 'Entregas', name: 'deliveries', path: '/deliveries', isActive: false, isAuthorized: false, icon: 'outbox', info: 'Casos especiales' },
         { label: 'Proformar', name: 'proformar', path: '/proformas/posProformas', isActive: false, isAuthorized: false, icon: 'desktop_windows', info: 'Tiendas minimarkets' },
         { label: 'Proformas', name: 'proformas', path: '/proformas', isActive: false, isAuthorized: false, icon: 'check_box', info: 'Tiendas minimarkets' },
@@ -41,40 +41,13 @@ export class AuthService {
         { label: 'Guias de remision', name: 'remissionGuides', path: '/remissionGuides', isActive: false, isAuthorized: false, icon: 'receipt', info: 'General' },
         { label: 'Transportistas', name: 'carriers', path: '/carriers', isActive: false, isAuthorized: false, icon: 'local_shipping', info: 'Casos especiales' },
         { label: 'Compras', name: 'purchases', path: '/purchases', isActive: false, isAuthorized: false, icon: 'shopping_cart', info: 'General' },
+        { label: 'Ordenes de Compra', name: 'purchaseOrders', path: '/purchaseOrders', isActive: false, isAuthorized: false, icon: 'shopping_cart', info: 'General' },
         { label: 'Proveedores', name: 'providers', path: '/providers', isActive: false, isAuthorized: false, icon: 'face', info: 'General' },
         { label: 'Ordenes de Pago', name: 'paymentOrders', path: '/paymentOrders', isActive: false, isAuthorized: false, icon: 'local_atm', info: 'General' },
         { label: 'Cuentas bancarias', name: 'banks', path: '/banks', isActive: false, isAuthorized: false, icon: 'account_balance_wallet', info: 'General' },
         { label: 'Usuarios', name: 'users', path: '/users', isActive: false, isAuthorized: false, icon: 'account_circle', info: 'General' },
+        { label: 'Facturador', name: 'biller', path: '/biller', isActive: false, isAuthorized: false, icon: 'star', info: 'General' },
     ]
-
-   // private objectModules = {
-   //     openBox: false,
-   //     turns: false,
-   //     expenses: false,
-   //     posStandard: false,
-   //     posFood: false,
-   //     deliveries: false,
-   //     proformas: false,
-   //     proformar: false,
-   //     boards: false,
-   //     boardsWaiter: false,
-   //     deletedBoards: false,
-   //     credits: false,
-   //     customers: false,
-   //     products: false,
-   //     inventories: false,
-   //     incidents: false,
-   //     reports: false,
-   //     sales: false,
-   //     carriers: false,
-   //     users: false,
-   //     purchases: false,
-   //     providers: false,
-   //     creditNotes: false,
-   //     remissionGuides: false,
-   //     banks: false,
-   //     paymentOrders: false,
-   // }
 
     private auth: AuthModel | null = null
     private isAuth$: Subject<boolean> = new Subject()
@@ -105,10 +78,6 @@ export class AuthService {
         const diff = paymentDate.getTime() - date.getTime()
         return diff <= -(8.64e+7 * 9) && new Date().getHours() >= 9
     }
-
-    //getObjectModules() {
-    //    return this.objectModules
-    //}
 
     handleAuth() {
         return this.auth$.asObservable()
@@ -262,7 +231,6 @@ export class AuthService {
             this.auth.setting = office.setting
             this.auth.activeModule = office.activeModule
             const activeModules = office.activeModule
-            //const modules: ModuleModel[] = []
             for (const module of this.modules) {
                 if (module.name in activeModules && activeModules[module.name] === true) {
                     module.isActive = true
@@ -272,7 +240,6 @@ export class AuthService {
                     if (this.auth.user.isAdmin) {
                         module.isAuthorized = true
                     }
-                    //modules.push(module)
                 }
             }
             this.auth$.next(this.auth)

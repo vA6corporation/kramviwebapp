@@ -1,9 +1,8 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
 import { Subscription } from 'rxjs'
 import { AuthService } from '../../auth/auth.service'
 import { OfficeModel } from '../../offices/office.model'
-import { PaymentPurchaseModel } from '../../payment-purchases/payment-purchase.model'
 import { ProviderModel } from '../../providers/provider.model'
 import { UserModel } from '../../users/user.model'
 import { PurchaseItemModel } from '../purchase-item.model'
@@ -26,12 +25,11 @@ export class DialogDetailPurchasesComponent {
     private readonly authService = inject(AuthService)
     private readonly dialogRef: MatDialogRef<DialogDetailPurchasesComponent> = inject(MatDialogRef)
 
-    purchase: PurchaseModel | null = null
-    purchaseItems: PurchaseItemModel[] = []
-    paymentPurchases: PaymentPurchaseModel[] = []
-    provider: ProviderModel | null = null
-    office: OfficeModel | null = null
-    user: UserModel | null = null
+    $purchase = signal<PurchaseModel | null>(null)
+    $purchaseItems = signal<PurchaseItemModel[]>([])
+    $provider = signal<ProviderModel | null>(null)
+    $office = signal<OfficeModel | null>(null)
+    $user = signal<UserModel | null>(null)
 
     private handleAuth$: Subscription = new Subscription()
 
@@ -41,16 +39,15 @@ export class DialogDetailPurchasesComponent {
 
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.office = auth.office
+            this.$office.set(auth.office)
         })
 
         this.purchasesService.getPurchaseById(this.purchaseId).subscribe(purchase => {
-            this.purchase = purchase
-            const { purchaseItems, user, paymentPurchases, provider } = purchase
-            this.purchaseItems = purchaseItems
-            this.paymentPurchases = paymentPurchases
-            this.provider = provider
-            this.user = user
+            const { purchaseItems, user, provider } = purchase
+            this.$purchase.set(purchase)
+            this.$purchaseItems.set(purchaseItems)
+            this.$provider.set(provider)
+            this.$user.set(user)
         })
     }
 

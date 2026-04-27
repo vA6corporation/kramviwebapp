@@ -1,12 +1,12 @@
-import { Component } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { NavigationService } from '../../navigation/navigation.service';
-import { ProviderModel } from '../provider.model';
-import { ProvidersService } from '../providers.service';
-import { MaterialModule } from '../../material.module';
-import { CommonModule } from '@angular/common';
+import { Component, inject, signal } from '@angular/core'
+import { PageEvent } from '@angular/material/paginator'
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router'
+import { Subscription } from 'rxjs'
+import { NavigationService } from '../../navigation/navigation.service'
+import { ProviderModel } from '../provider.model'
+import { ProvidersService } from '../providers.service'
+import { MaterialModule } from '../../material.module'
+import { CommonModule } from '@angular/common'
 
 @Component({
     selector: 'app-providers',
@@ -16,16 +16,14 @@ import { CommonModule } from '@angular/common';
 })
 export class ProvidersComponent {
 
-    constructor(
-        private readonly providersService: ProvidersService,
-        private readonly navigationService: NavigationService,
-        private readonly router: Router,
-        private readonly activatedRoute: ActivatedRoute,
-    ) { }
+    private readonly router = inject(Router)
+    private readonly activatedRoute = inject(ActivatedRoute)
+    private readonly providersService = inject(ProvidersService)
+    private readonly navigationService = inject(NavigationService)
 
     displayedColumns: string[] = ['document', 'name', 'address', 'email', 'phone', 'actions']
-    dataSource: ProviderModel[] = []
-    length: number = 0
+    $dataSource = signal<ProviderModel[]>([])
+    $length = signal<number>(0)
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
@@ -91,7 +89,7 @@ export class ProvidersComponent {
 
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {
             this.providersService.getProvidersByKey(key).subscribe(providers => {
-                this.dataSource = providers
+                this.$dataSource.set(providers)
             })
         })
     }
@@ -113,7 +111,7 @@ export class ProvidersComponent {
 
     fetchCount() {
         this.providersService.getCountProviders().subscribe(count => {
-            this.length = count
+            this.$length.set(count)
         })
     }
 
@@ -121,7 +119,7 @@ export class ProvidersComponent {
         this.navigationService.loadBarStart()
         this.providersService.getProvidersByPage(this.pageIndex + 1, this.pageSize).subscribe(providers => {
             this.navigationService.loadBarFinish()
-            this.dataSource = providers
+            this.$dataSource.set(providers)
         })
     }
 

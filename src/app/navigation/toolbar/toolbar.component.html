@@ -1,11 +1,11 @@
-@if (isLoadBar()) {
+@if ($isLoadBar()) {
 <div class="progress-bar">
     <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
 </div>
 }
 <mat-toolbar>
-    @if (isAuth()) {
-    @if (isMainScreen()) {
+    @if ($isAuth()) {
+    @if ($isMainScreen()) {
     <button type="button" class="app-navbar" mat-icon-button (click)="onToggleSidenav()">
         <mat-icon>menu</mat-icon>
     </button>
@@ -15,10 +15,10 @@
     </button>
     }
     }
-    <span>{{ title() }}</span>
+    <span>{{ $title() }}</span>
     <span class="spacer"></span>
     <form autocomplete="off" class="mr-2 d-inline search-input" (ngSubmit)="onSubmit()" [formGroup]="formGroup">
-        @if (isAuth() && showSearch() && showInputSearch()) {
+        @if ($isAuth() && $showSearch() && $showInputSearch()) {
         <mat-form-field appearance="outline">
             <input #inputKey matInput type="text" placeholder="Buscar" formControlName="key">
             <button type="button" matSuffix mat-icon-button aria-label="close" (click)="onCloseInputSearch()">
@@ -27,8 +27,8 @@
         </mat-form-field>
         }
     </form>
-    @if (isAuth() && !showInputSearch() && showSearch()) {
-    <button type="button" mat-icon-button aria-label="Mat menu" (click)="showInputSearch.set(true); onToggleSearch()">
+    @if ($isAuth() && !$showInputSearch() && $showSearch()) {
+    <button type="button" mat-icon-button aria-label="Mat menu" (click)="$showInputSearch.set(true); onToggleSearch()">
         <mat-icon>search</mat-icon>
     </button>
     }

@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
-import { DialogRemissionGuideItemsComponent } from '../dialog-remission-guide-items/dialog-remission-guide-items.component';
-import { RemissionGuideItemModel } from '../remission-guide-item.model';
-import { RemissionGuidesService } from '../remission-guides.service';
-import { MaterialModule } from '../../material.module';
+import { Component, inject, signal } from '@angular/core'
+import { MatDialog } from '@angular/material/dialog'
+import { Subscription } from 'rxjs'
+import { DialogRemissionGuideItemsComponent } from '../dialog-remission-guide-items/dialog-remission-guide-items.component'
+import { RemissionGuideItemModel } from '../remission-guide-item.model'
+import { RemissionGuidesService } from '../remission-guides.service'
+import { MaterialModule } from '../../material.module'
 
 @Component({
     selector: 'app-remission-guide-items',
@@ -14,13 +14,12 @@ import { MaterialModule } from '../../material.module';
 })
 export class RemissionGuideItemsComponent {
 
-    constructor(
-        private readonly remissionGuidesService: RemissionGuidesService,
-        private readonly matDialog: MatDialog,
-    ) { }
+    private readonly remissionGuidesService = inject(RemissionGuidesService)
+    private readonly matDialog = inject(MatDialog)
 
     remissionGuideItems: RemissionGuideItemModel[] = []
     private handleRemissionGuideItems$: Subscription = new Subscription()
+    $countProducts = signal(0)
 
     ngOnDestroy() {
         this.handleRemissionGuideItems$.unsubscribe()
@@ -29,6 +28,11 @@ export class RemissionGuideItemsComponent {
     ngOnInit(): void {
         this.handleRemissionGuideItems$ = this.remissionGuidesService.handleRemissionGuideItems().subscribe(remissionGuideItems => {
             this.remissionGuideItems = remissionGuideItems
+            let countProducts = 0
+            for (const remissionGuideItem of remissionGuideItems) {
+                countProducts += remissionGuideItem.quantity
+            }
+            this.$countProducts.set(countProducts)
         })
     }
 

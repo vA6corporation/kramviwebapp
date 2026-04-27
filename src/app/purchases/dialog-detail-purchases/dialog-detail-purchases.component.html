@@ -1,3 +1,7 @@
+@let purchase = $purchase();
+@let purchaseItems = $purchaseItems();
+@let provider = $provider();
+@let user = $user();
 <h2 mat-dialog-title>Detalles compra {{ purchase?.serie }}</h2>
 <div mat-dialog-content>
     <mat-list class="m-0">
@@ -24,8 +28,14 @@
         <tbody>
             <tr>
                 <td>F. de compra</td>
-                <td align="right">{{ purchase?.purchasedAt | date: 'dd/MM/yyyy' }}</td>
+                <td align="right">{{ purchase?.createdAt | date: 'dd/MM/yyyy' }}</td>
             </tr>
+            @if (purchase) {
+            <tr>
+                <td>F. de vencimiento</td>
+                <td align="right">{{ purchase.expirationAt ? (purchase.expirationAt | date: 'dd/MM/yyyy') : 'NINIGUNO' }}</td>
+            </tr>
+            }
             <tr>
                 <td>Serie</td>
                 <td align="right">{{ purchase?.serie || 'NINGUNO' }}</td>
@@ -44,19 +54,6 @@
             </tr>
         </tbody>
     </table>
-    <mat-list>
-        @for (paymentPurchase of paymentPurchases; track paymentPurchase.id) {
-        <mat-list-item>
-            <span matListItemTitle>{{ paymentPurchase.paymentMethod.name }}</span>
-            <span matListItemLine>{{ paymentPurchase.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</span>
-            <span>{{ paymentPurchase.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
-        </mat-list-item>
-        } @empty {
-        <mat-list-item>
-            <h2 class="text-center mat-title-medium">Sin pagos</h2>
-        </mat-list-item>
-        }
-    </mat-list>
 </div>
 <mat-dialog-actions>
     <button mat-flat-button (click)="onDeletePurchase()" color="warn">ELIMINAR</button>

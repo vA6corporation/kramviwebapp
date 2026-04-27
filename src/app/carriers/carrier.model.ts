@@ -6,5 +6,5 @@ export interface CarrierModel {
     licenseNumber: string
     phone: string
     email: string
-    carriagePlate: string
+    carrierPlate: string
 }

@@ -122,8 +122,8 @@ export class TurnsComponent {
                     body.push([
                         formatDate(turn.createdAt, 'dd/MM/yyyy', 'en-US'),
                         formatDate(turn.createdAt, 'h:mm a', 'en-US'),
-                        formatDate(turn.closedAt, 'dd/MM/yyyy', 'en-US'),
-                        formatDate(turn.closedAt, 'h:mm a', 'en-US'),
+                        formatDate(turn.deletedAt, 'dd/MM/yyyy', 'en-US'),
+                        formatDate(turn.deletedAt, 'h:mm a', 'en-US'),
                         user.name,
                     ])
                 }
@@ -260,6 +260,16 @@ export class TurnsComponent {
         }, (error: HttpErrorResponse) => {
             this.navigationService.loadBarFinish()
             this.navigationService.showMessage(error.error.message)
+        })
+    }
+
+    onRestoreTurn(turnId: number, userId: number) {
+        this.turnsService.restore(turnId, userId).subscribe({
+            next: () => {
+                this.fetchData()
+            }, error: (error: HttpErrorResponse) => {
+                this.navigationService.showMessage(error.error.message)
+            }
         })
     }
 

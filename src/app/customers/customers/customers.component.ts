@@ -37,7 +37,7 @@ export class CustomersComponent {
     formGroup: FormGroup = this.formBuilder.group({
         documentType: '',
     })
-    displayedColumns: string[] = ['checked', 'document', 'name', 'phone', 'observation', 'actions']
+    displayedColumns: string[] = ['checked', 'document', 'name', 'phone', 'creditLimit', 'observation', 'actions']
     $dataSource = signal<CustomerModel[]>([])
     $length = signal<number>(0)
     pageSize: number = 10

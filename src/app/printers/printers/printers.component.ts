@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { NavigationService } from '../../navigation/navigation.service';
@@ -15,13 +15,11 @@ import { MaterialModule } from '../../material.module';
 })
 export class PrintersComponent {
 
-    constructor(
-        private readonly matDialog: MatDialog,
-        private readonly navigationService: NavigationService,
-        private readonly printersService: PrintersService,
-    ) { }
+    private readonly matDialog = inject(MatDialog)
+    private readonly navigationService = inject(NavigationService)
+    private readonly printersService = inject(PrintersService)
 
-    dataSource: PrinterModel[] = []
+    $dataSource = signal<PrinterModel[]>([])
     displayedColumns: string[] = ['name', 'invoice', 'preaccount', 'cocina', 'barra', 'horno', 'caja', 'actions']
     private handlePrinters$: Subscription = new Subscription()
 
@@ -32,7 +30,7 @@ export class PrintersComponent {
     ngOnInit(): void {
         this.navigationService.setTitle('Impresoras')
         this.handlePrinters$ = this.printersService.handlePrinters().subscribe(printers => {
-            this.dataSource = printers
+            this.$dataSource.set(printers)
         })
         this.printersService.loadDb()
     }

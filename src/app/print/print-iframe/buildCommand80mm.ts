@@ -3,7 +3,7 @@ import { formatDate } from '@angular/common'
 import { BoardModel } from '../../boards/board.model'
 import { BoardItemModel } from '../../boards/board-item.model'
 import { SettingModel } from '../../settings/setting.model'
-import { IgvCode } from '../../products/igv-type.enum'
+import { IgvCode } from '../../sales/igv-code.enum'
 
 export function buildCommand80mm(
     board: BoardModel,
@@ -45,8 +45,10 @@ export function buildCommand80mm(
         positionY += 3
     }
     pdf.setFontSize(11)
-    pdf.text(`IMPORTE TOTAL: ${totalCharge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 1 + marginLeft, positionY)
-    positionY += 8
+    if (setting.isShowChargeInCommand) {
+        pdf.text(`IMPORTE TOTAL: ${totalCharge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 1 + marginLeft, positionY)
+        positionY += 8
+    }
     pdf.text(formatDate(new Date(), 'M/d/yyyy, h:mm a', 'en-US'), pageCenter, positionY, { align: 'center' })
     positionY += 5
     pdf.text(board.user?.name || '', pageCenter, positionY, { align: 'center' })

@@ -13,13 +13,13 @@ import { MaterialModule } from '../../material.module'
 export class SheetDetailTurnsComponent {
 
     private readonly saleId: any = inject(MAT_BOTTOM_SHEET_DATA)
-    private readonly bottomSheetRef: MatBottomSheetRef<SheetDetailTurnsComponent> = inject(MatBottomSheetRef)
+    private readonly matBottomSheetRef: MatBottomSheetRef<SheetDetailTurnsComponent> = inject(MatBottomSheetRef)
     private readonly matDialog = inject(MatDialog)
 
     onChangeTurn$: EventEmitter<void> = new EventEmitter()
 
     onShowSale() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.matDialog.open(DialogDetailSalesComponent, {
             width: '600px',
             position: { top: '20px' },
@@ -28,7 +28,7 @@ export class SheetDetailTurnsComponent {
     }
 
     onChangeTurn() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.onChangeTurn$.emit()
     }
 

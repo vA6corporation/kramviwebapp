@@ -15,13 +15,13 @@ export class SheetExportPdfComponent {
     constructor(
         @Inject(MAT_BOTTOM_SHEET_DATA)
         private readonly saleId: string,
-        private readonly bottomSheetRef: MatBottomSheetRef<SheetExportPdfComponent>,
+        private readonly matBottomSheetRef: MatBottomSheetRef<SheetExportPdfComponent>,
         private readonly salesService: SalesService,
         private readonly printService: PrintService,
     ) { }
 
     onExportPdf(pageFormat: string): void {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.salesService.getSaleById(this.saleId).subscribe(sale => {
             switch (pageFormat) {
                 case 'A4':

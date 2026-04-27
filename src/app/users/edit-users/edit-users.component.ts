@@ -43,7 +43,7 @@ export class EditUsersComponent {
             this.formGroup.patchValue(user)
         })
 
-        this.officesService.getOfficesByGroup().subscribe(offices => {
+        this.officesService.getOffices().subscribe(offices => {
             this.$offices.set(offices)
         })
     }

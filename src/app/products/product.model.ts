@@ -1,7 +1,7 @@
 import { PrintZoneType } from '../print/print-zone-type.enum'
 import { ProviderModel } from '../providers/provider.model'
 import { CategoryModel } from './category.model'
-import { IgvCode } from './igv-type.enum'
+import { IgvCode } from '../sales/igv-code.enum'
 import { PriceModel } from './price.model'
 
 export interface OfficeStock {
@@ -10,11 +10,10 @@ export interface OfficeStock {
 
 export interface ProductModel {
     id: number
+    uuid: string
     name: string
     feature: string
     brand: string
-    location: string
-    description: string
     price: number
     cost: number
     sku: string
@@ -22,7 +21,7 @@ export interface ProductModel {
     unitCode: string
     unitName: string
     igvCode: IgvCode
-    categoryId: any
+    categoryId: number
     isTrackStock: boolean
     annotations: string[]
     prices: PriceModel[]
@@ -32,9 +31,6 @@ export interface ProductModel {
     minimumStock: number
     urlImage: string
     fullName: string
-    products: ProductModel[]
-    productIds: number[]
-    providers: ProviderModel[]
-    providerIds: number[]
+    provider: ProviderModel | null
     officeStock: OfficeStock
 }

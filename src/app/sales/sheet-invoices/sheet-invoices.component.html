@@ -10,27 +10,27 @@
     </button>
 
     <button type="button" mat-list-item [routerLink]="['/credits', saleId, 'details']"
-        (click)="bottomSheetRef.dismiss()">
+        (click)="matBottomSheetRef.dismiss()">
         <mat-icon class="color-black" matListItemIcon>local_atm</mat-icon>
         <span matListItemTitle>Pagos</span>
     </button>
 
-    <button type="button" mat-list-item [routerLink]="['/sales/copy', saleId]" (click)="bottomSheetRef.dismiss()">
+    <button type="button" mat-list-item [routerLink]="['/sales/copy', saleId]" (click)="matBottomSheetRef.dismiss()">
         <mat-icon class="color-black" matListItemIcon>content_copy</mat-icon>
         <span matListItemTitle>Copiar venta</span>
     </button>
 
-    <button type="button" mat-list-item (click)="onEmailDialog()" (click)="bottomSheetRef.dismiss()">
+    <button type="button" mat-list-item (click)="onEmailDialog()" (click)="matBottomSheetRef.dismiss()">
         <mat-icon class="color-black" matListItemIcon>email</mat-icon>
         <span matListItemTitle>Enviar por correo</span>
     </button>
 
-    <button type="button" mat-list-item (click)="onCreditNoteDialog()" (click)="bottomSheetRef.dismiss()">
+    <button type="button" mat-list-item (click)="onCreditNoteDialog()" (click)="matBottomSheetRef.dismiss()">
         <mat-icon class="color-black" matListItemIcon>receipt</mat-icon>
         <span matListItemTitle>Notas de credito</span>
     </button>
 
-    <button type="button" mat-list-item (click)="onRemissionGuideDialog()" (click)="bottomSheetRef.dismiss()">
+    <button type="button" mat-list-item (click)="onRemissionGuideDialog()" (click)="matBottomSheetRef.dismiss()">
         <mat-icon class="color-black" matListItemIcon>receipt</mat-icon>
         <span matListItemTitle>Guias de remission</span>
     </button>

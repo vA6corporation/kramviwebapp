@@ -14,7 +14,6 @@ export interface PaymentModel {
     turnId: any
     createdAt: string
     observation: string
-    dueDate: string
     user: UserModel
     paymentMethod: PaymentMethodModel
 }

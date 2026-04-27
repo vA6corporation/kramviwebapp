@@ -40,13 +40,13 @@ export class CopyProformasComponent {
 
     $categories = signal<CategoryModel[]>([])
     $products = signal<ProductModel[]>([])
-    favorites: ProductModel[] = []
+    $favorites = signal<ProductModel[]>([])
     priceLists: PriceListModel[] = []
     priceListId: any | null = null
     selectedIndex: number = 0
     proformaItems: ProformaItemModel[] = []
     gridListCols = 4
-    setting: SettingModel = new SettingModel()
+    $setting = signal<SettingModel>(new SettingModel())
     private office: OfficeModel = new OfficeModel()
 
     private handleSearch$: Subscription = new Subscription()
@@ -77,11 +77,11 @@ export class CopyProformasComponent {
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.office = auth.office
-            this.setting = auth.setting
+            this.$setting.set(auth.setting)
 
             this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
-                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
-                this.favorites = products
+                ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
+                this.$favorites.set(products)
             })
         })
 
@@ -116,7 +116,7 @@ export class CopyProformasComponent {
 
         this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
             this.priceLists = priceLists
-            this.priceListId = this.setting.defaultPriceListId || this.priceLists[0]?.id
+            this.priceListId = this.$setting().defaultPriceListId || priceLists[0]?.id
         })
 
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {
@@ -125,7 +125,7 @@ export class CopyProformasComponent {
                 next: products => {
                     this.navigationService.loadBarFinish()
                     this.selectedIndex = 1
-                    ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                    ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
                     this.$products.set(products)
 
                     const foundProduct = products.find(e => e.sku.match(new RegExp(`^${key}$`, 'i')) || e.upc.match(new RegExp(`^${key}$`, 'i')))
@@ -147,7 +147,7 @@ export class CopyProformasComponent {
         this.$products.set([])
         if (category.products) {
             const products = category.products
-            ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+            ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
             this.$products.set(products)
 
         } else {
@@ -155,7 +155,7 @@ export class CopyProformasComponent {
             this.productsService.getProductsByCategoryPage(category.id, 1, 500).subscribe(products => {
                 this.navigationService.loadBarFinish()
                 category.products = products
-                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
                 this.$products.set(products)
             })
         }
@@ -185,7 +185,7 @@ export class CopyProformasComponent {
     }
 
     onChangePriceList() {
-        //ProductsService.setPrices(this.products, this.priceListId, this.setting, this.office)
+        ProductsService.setPrices(this.$products(), this.priceListId, this.$setting(), this.office)
     }
 
     onCancel() {

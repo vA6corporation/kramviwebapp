@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
 import { Subscription } from 'rxjs'
@@ -11,7 +11,7 @@ import { PriceListModel } from '../../products/price-list.model'
 import { SettingModel } from '../../settings/setting.model'
 import { OfficeModel } from '../../offices/office.model'
 import { PriceType } from '../../products/price-type.enum'
-import { IgvCode } from '../../products/igv-type.enum'
+import { IgvCode } from '../../sales/igv-code.enum'
 
 @Component({
     selector: 'app-dialog-sale-items',
@@ -37,8 +37,8 @@ export class DialogSaleItemsComponent {
         isBonus: this.saleItem.igvCode === '11' ? true : false,
     })
 
-    priceLists: PriceListModel[] = []
-    setting: SettingModel = new SettingModel()
+    $priceLists = signal<PriceListModel[]>([])
+    $setting = signal<SettingModel>(new SettingModel())
     private office: OfficeModel = new OfficeModel()
 
     private handlePriceLists$: Subscription = new Subscription()
@@ -51,8 +51,8 @@ export class DialogSaleItemsComponent {
 
     ngOnInit(): void {
         this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
-            this.priceLists = priceLists
-            this.priceListId = this.setting.defaultPriceListId || this.priceLists[0]?.id
+            this.$priceLists.set(priceLists)
+            this.priceListId = this.$setting().defaultPriceListId || priceLists[0]?.id
             for (const price of this.saleItem.prices || []) {
                 if (price.price === this.saleItem.price && price.priceListId) {
                     this.priceListId = price.priceListId
@@ -61,7 +61,7 @@ export class DialogSaleItemsComponent {
         })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
+            this.$setting.set(auth.setting)
             this.office = auth.office
         })
     }

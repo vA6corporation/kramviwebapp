@@ -31,7 +31,7 @@
                     Categorias
                 </ng-template>
                 <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
-                    @for (category of categories; track category.id) {
+                    @for (category of $categories(); track category.id) {
                     <mat-grid-tile (click)="onSelectCategory(category)" [style.background]="category.color">
                         <span class="px-1">
                             {{ category.name.slice(0, 60) }}
@@ -45,7 +45,7 @@
                     Busqueda
                 </ng-template>
                 <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
-                    @for (product of products; track product.id) {
+                    @for (product of $products(); track product.id) {
                     <mat-grid-tile (click)="onSelectProduct(product, $event)" (contextmenu)="onRightClick(product)"
                         [ngStyle]="urlImage(product)">
                         <span [ngClass]="{ 'bg-danger': product.isTrackStock && product.stock < 1 }"
@@ -74,9 +74,8 @@
         <div class="p-3">
             <button type="button" mat-raised-button (click)="onCancel()" color="primary">CANCELAR</button>
             <span class="divider"></span>
-            <button type="button" mat-raised-button color="primary"
-                routerLink="/purchases/chargeCredit">CREDITO</button>
-            <span class="divider"></span>
+            <!--<button type="button" mat-raised-button color="primary"
+              routerLink="/purchases/chargeCredit">CREDITO</button>-->
             <button type="button" mat-flat-button color="primary" routerLink="/purchases/charge">GUARDAR</button>
         </div>
     </div>

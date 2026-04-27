@@ -16,12 +16,12 @@ export class SheetPrintCreditNotesComponent {
 
     private readonly creditNoteId: number = inject(MAT_BOTTOM_SHEET_DATA)
     private readonly navigationService = inject(NavigationService)
-    private readonly bottomSheetRef: MatBottomSheetRef<SheetPrintCreditNotesComponent> = inject(MatBottomSheetRef)
+    private readonly matBottomSheetRef: MatBottomSheetRef<SheetPrintCreditNotesComponent> = inject(MatBottomSheetRef)
     private readonly creditNotesService = inject(CreditNotesService)
     private readonly printService = inject(PrintService)
 
     onPrintA4() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
         this.creditNotesService.getCreditNoteById(this.creditNoteId).subscribe({
             next: creditNote => {
@@ -34,7 +34,7 @@ export class SheetPrintCreditNotesComponent {
     }
 
     onPrintTicket() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
         this.creditNotesService.getCreditNoteById(this.creditNoteId).subscribe({
             next: creditNote => {

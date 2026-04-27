@@ -18,13 +18,13 @@ export class SheetPrintProformasComponent {
         @Inject(MAT_BOTTOM_SHEET_DATA)
         private readonly proformaId: any,
         private readonly navigationService: NavigationService,
-        private readonly bottomSheetRef: MatBottomSheetRef<SheetPrintProformasComponent>,
+        private readonly matBottomSheetRef: MatBottomSheetRef<SheetPrintProformasComponent>,
         private readonly proformasService: ProformasService,
         private readonly printService: PrintService,
     ) { }
 
     onPrintTicket() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
         this.proformasService.getProformaById(this.proformaId).subscribe(proforma => {
             this.navigationService.loadBarFinish()
@@ -36,7 +36,7 @@ export class SheetPrintProformasComponent {
     }
 
     onPrintA4() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
         this.proformasService.getProformaById(this.proformaId).subscribe(proforma => {
             this.navigationService.loadBarFinish()
@@ -45,7 +45,7 @@ export class SheetPrintProformasComponent {
     }
 
     onPrintA4Image() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
         this.proformasService.getProformaById(this.proformaId).subscribe(proforma => {
             this.navigationService.loadBarFinish()

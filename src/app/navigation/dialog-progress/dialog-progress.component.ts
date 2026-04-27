@@ -1,4 +1,4 @@
-import { Component, Inject, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner'
 import { MaterialModule } from '../../material.module'
@@ -11,17 +11,11 @@ import { MaterialModule } from '../../material.module'
 })
 export class DialogProgressComponent {
 
-   // constructor(
-   //     @Inject(MAT_DIALOG_DATA)
-   //     private readonly length: number,
-   //     private readonly matDialogRef: MatDialogRef<DialogProgressComponent>
-   // ) { }
-
     private readonly length: number = inject(MAT_DIALOG_DATA)
     private readonly matDialogRef = inject(MatDialogRef)
 
     mode: ProgressSpinnerMode = 'indeterminate'
-    value = 0
+    $value = signal<number>(0)
     private chunk = 100 / this.length
 
     ngOnInit(): void {
@@ -30,10 +24,12 @@ export class DialogProgressComponent {
 
     onComplete() {
         this.mode = 'determinate'
-        this.value += this.chunk
-        if (this.value >= 100) {
+        let value = this.$value()
+        value += this.chunk
+        if (value >= 100) {
             this.matDialogRef.close()
         }
+        this.$value.set(value)
     }
 
 }

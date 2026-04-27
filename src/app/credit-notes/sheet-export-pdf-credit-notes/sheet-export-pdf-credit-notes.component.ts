@@ -17,13 +17,13 @@ export class SheetExportPdfCreditNotesComponent {
         @Inject(MAT_BOTTOM_SHEET_DATA)
         private readonly creditNoteId: any,
         private readonly navigationService: NavigationService,
-        private readonly bottomSheetRef: MatBottomSheetRef<SheetExportPdfCreditNotesComponent>,
+        private readonly matBottomSheetRef: MatBottomSheetRef<SheetExportPdfCreditNotesComponent>,
         private readonly creditNotesService: CreditNotesService,
         private readonly printService: PrintService,
     ) { }
 
     onExportPdfA4() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
         this.creditNotesService.getCreditNoteById(this.creditNoteId).subscribe(creditNote => {
             this.navigationService.loadBarFinish()
@@ -32,7 +32,7 @@ export class SheetExportPdfCreditNotesComponent {
     }
 
     onExportPdfTicket() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
         this.creditNotesService.getCreditNoteById(this.creditNoteId).subscribe(creditNote => {
             this.navigationService.loadBarFinish()

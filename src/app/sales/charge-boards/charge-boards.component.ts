@@ -54,7 +54,7 @@ export class ChargeBoardsComponent {
 
     payments: CreatePaymentModel[] = []
     boardItems: CreateBoardItemModel[] = []
-    charge: number = 0
+    $charge = signal<number>(0)
     $customer = signal<CustomerModel | null>(null)
     $isLoading = signal<boolean>(false)
     formGroup: FormGroup = this.formBuilder.group({
@@ -79,9 +79,11 @@ export class ChargeBoardsComponent {
 
     $setting = signal<SettingModel>(new SettingModel())
     $paymentMethods = signal<PaymentMethodModel[]>([])
+    $isYesterdayTurn = signal<boolean>(false)
+    $turn = signal<TurnModel | null>(null)
+
     private params: Params = {}
     private user: UserModel = new UserModel()
-    private turn: TurnModel | null = null
     private board: BoardModel | null = null
 
     private handleClickMenu$: Subscription = new Subscription()
@@ -108,8 +110,20 @@ export class ChargeBoardsComponent {
             this.$setting.set(auth.setting)
 
             this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
-                this.turn = turn
-                if (turn === null) {
+                this.$turn.set(turn)
+                if (turn) {
+                    const today = new Date()
+                    today.setHours(0, 0, 0, 0)
+                    const turnDate = new Date(turn.createdAt)
+                    turnDate.setHours(0, 0, 0, 0)
+                    if (turnDate.getMonth() === today.getMonth() && turnDate.getDate() < today.getDate()) {
+                        this.$isYesterdayTurn.set(true)
+                    } else {
+                        if (turnDate.getMonth() !== today.getMonth()) {
+                            this.$isYesterdayTurn.set(true)
+                        }
+                    }
+                } else {
                     this.matDialog.open(DialogCreateTurnsComponent, {
                         width: '600px',
                         position: { top: '20px' }
@@ -117,8 +131,10 @@ export class ChargeBoardsComponent {
                 }
             })
 
-            this.formGroup.get('invoiceCode')?.patchValue(this.$setting().defaultInvoice)
-           // this.formGroup.get('isConsumption')?.patchValue(this.setting.showIsConsumption)
+            if (this.$setting().isShowDeliveryAt) {
+                this.formGroup.get('deliveryAt')?.setValidators([Validators.required])
+                this.formGroup.get('deliveryAt')?.updateValueAndValidity()
+            }
 
             if (this.$setting().isShowEmitionAt) {
                 this.formGroup.get('createdAt')?.patchValue(new Date())
@@ -126,6 +142,8 @@ export class ChargeBoardsComponent {
                 this.formGroup.get('createdAt')?.updateValueAndValidity()
             }
 
+            this.formGroup.get('invoiceCode')?.patchValue(this.$setting().defaultInvoice)
+            this.formGroup.get('currencyCode')?.patchValue(this.$setting().defaultCurrency)
         })
 
         this.navigationService.setMenu([
@@ -168,10 +186,11 @@ export class ChargeBoardsComponent {
                     break
 
                 case 'split_payment':
-                    if (this.turn) {
+                    const turn = this.$turn()
+                    if (turn) {
                         const data: DialogSplitPaymentsData = {
-                            turnId: this.turn.id,
-                            charge: this.charge,
+                            turnId: turn.id,
+                            charge: this.$charge(),
                             payments: this.payments,
                         }
 
@@ -206,55 +225,54 @@ export class ChargeBoardsComponent {
 
         this.handleBoardItems$ = this.boardsService.handleBoardItems().subscribe(boardItems => {
             this.boardItems = boardItems
-            this.charge = 0
+            this.$charge.set(0)
+            let charge = 0
 
             for (const boardItem of this.boardItems) {
                 if (boardItem.igvCode !== IgvCode.BONIFICACION) {
-                    this.charge += boardItem.price * boardItem.quantity
+                    charge += boardItem.price * boardItem.quantity
                 }
             }
 
             const { discount, discountPercent } = this.formGroup.value
 
             if (discountPercent) {
-                let discount = (this.charge / 100) * discountPercent
-                this.charge -= discount
+                let discount = (charge / 100) * discountPercent
+                this.$charge.set(charge - discount)
                 this.formGroup.patchValue({ discount })
             } else {
-                this.charge -= discount
+                this.$charge.set(charge - discount)
             }
-
         })
     }
 
     addCash(cash: number) {
         this.cash = Number(this.cash)
         this.cash += cash
-        const diff = Number(this.cash) - Number(this.charge)
+        const diff = Number(this.cash) - Number(this.$charge())
         this.cashChange = Number(diff.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
         this.formGroup.get('cash')?.patchValue(this.cash)
     }
 
     setCash(cash: any) {
         this.cash = cash
-        const diff = Number(this.cash) - Number(this.charge)
+        const diff = Number(this.cash) - Number(this.$charge())
         this.cashChange = Number(diff.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
     }
 
-    resetCash() {
-        this.cash = 0
-        this.formGroup.get('cash')?.patchValue(this.cash)
-    }
-
     onChangeDiscount() {
+        this.$charge.set(0)
+        let charge = 0
+
         const { discount } = this.formGroup.value
-        this.charge = 0
+
         for (const boardItem of this.boardItems) {
             if (boardItem.igvCode !== IgvCode.BONIFICACION) {
-                this.charge += boardItem.price * boardItem.quantity
+                charge += boardItem.price * boardItem.quantity
             }
         }
-        this.charge -= discount
+
+        this.$charge.set(charge - discount)
     }
 
     onChangeDiscountPercent() {
@@ -271,17 +289,27 @@ export class ChargeBoardsComponent {
 
         if (discountPercent) {
             discount = (charge / 100) * discountPercent
-            this.charge = charge - discount
+            this.$charge.set(charge - discount)
             this.formGroup.patchValue({ discount })
         } else {
-            this.charge = charge
+            this.$charge.set(charge)
             this.formGroup.patchValue({ discount })
         }
     }
 
+    resetCash() {
+        this.cash = 0
+        this.formGroup.get('cash')?.patchValue(this.cash)
+    }
+
     onSubmit() {
         try {
-            if (this.turn === null) {
+            const turn = this.$turn()
+            const saleForm: SaleForm = this.formGroup.value
+            const customer = this.$customer()
+            const charge = this.$charge()
+
+            if (turn === null) {
                 this.matDialog.open(DialogCreateTurnsComponent, {
                     width: '600px',
                     position: { top: '20px' },
@@ -297,9 +325,6 @@ export class ChargeBoardsComponent {
                 throw new Error("El producto no puede tener precio 0")
             }
 
-            const saleForm: SaleForm = this.formGroup.value
-            const customer = this.$customer()
-
             const createdSale: CreateSaleModel = {
                 invoiceCode: saleForm.invoiceCode,
                 paymentMethodId: saleForm.paymentMethodId,
@@ -313,7 +338,7 @@ export class ChargeBoardsComponent {
                 isDelivery: saleForm.isDelivery,
                 igvPercent: this.$setting().defaultIgvPercent,
                 rcPercent: this.$setting().defaultRcPercent,
-                turnId: this.turn.id,
+                turnId: turn.id,
                 customerId: customer ? customer.id : null,
             }
 
@@ -329,11 +354,11 @@ export class ChargeBoardsComponent {
                 throw new Error("No hemos encontrado la mesa")
             }
 
-            if (this.payments.length === 0 && this.charge) {
+            if (this.payments.length === 0 && charge) {
                 const payment = {
-                    charge: this.charge,
+                    charge,
                     paymentMethodId: saleForm.paymentMethodId,
-                    turnId: this.turn.id
+                    turnId: turn.id
                 }
                 this.payments.push(payment)
             }
@@ -375,25 +400,12 @@ export class ChargeBoardsComponent {
                         })
                     }
 
-                    let payments: CreatePaymentModel[] = []
-
-                    if (this.payments.length) {
-                        payments = this.payments
-                    } else {
-                        payments[0] = {
-                            paymentMethodId: createdSale.paymentMethodId || '',
-                            charge: sale.charge,
-                            turnId: sale.turnId,
-                            createdAt: new Date(),
-                        }
-                    }
-
                     Object.assign(sale, {
                         user: this.user,
                         customer,
                         board: this.board,
                         saleItems,
-                        payments,
+                        payments: this.payments,
                     })
 
                     switch (this.$setting().defaultTicket) {

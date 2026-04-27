@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject } from '@angular/core'
+import { Component, ViewChild, inject, signal } from '@angular/core'
 import { CommonModule, formatDate } from '@angular/common'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatSort } from '@angular/material/sort'
@@ -35,8 +35,7 @@ export class UtilitiesComponent {
     private readonly usersService = inject(UsersService)
 
     @ViewChild(MatSort) sort: MatSort = new MatSort()
-    displayedColumns: string[] = ['product', 'sale', 'purchase', 'utility']
-    dataSource: MatTableDataSource<SummarySaleItemModel> = new MatTableDataSource()
+    displayedColumns: string[] = ['product', 'totalQuantity', 'totalCharge', 'totalPurchase', 'totalUtility']
     formGroup: FormGroup = this.formBuilder.group({
         userId: '',
         officeId: '',
@@ -44,11 +43,11 @@ export class UtilitiesComponent {
         startDate: [new Date(), Validators.required],
         endDate: [new Date(), Validators.required],
     })
-
-    offices: OfficeModel[] = []
-    users: UserModel[] = []
-    summarySaleItems: SummarySaleItemModel[] = []
-    categories: CategoryModel[] = []
+    $dataSource = signal<MatTableDataSource<SummarySaleItemModel>>(new MatTableDataSource())
+    $offices = signal<OfficeModel[]>([])
+    $users = signal<UserModel[]>([])
+    $summarySaleItems = signal<SummarySaleItemModel[]>([])
+    $categories = signal<CategoryModel[]>([])
     private params: Params = {}
 
     private handleAuth$: Subscription = new Subscription()
@@ -66,7 +65,7 @@ export class UtilitiesComponent {
     }
 
     ngAfterViewInit() {
-        this.dataSource.sort = this.sort
+        this.$dataSource().sort = this.sort
     }
 
     ngOnInit() {
@@ -77,15 +76,15 @@ export class UtilitiesComponent {
         })
 
         this.handleUsers$ = this.usersService.handleUsers().subscribe(users => {
-            this.users = users
+            this.$users.set(users)
         })
 
         this.handleOffices$ = this.officesService.handleOfficesByActivity().subscribe(offices => {
-            this.offices = offices
+            this.$offices.set(offices)
         })
 
         this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
-            this.categories = categories
+            this.$categories.set(categories)
         })
 
         this.navigationService.setMenu([
@@ -111,8 +110,8 @@ export class UtilitiesComponent {
                         'TOTAL COMPRA',
                         'UTILIDAD',
                     ])
-                    for (const summarySaleItem of this.summarySaleItems) {
-                        const category = this.categories.find(e => e.id === summarySaleItem.categoryId)
+                    for (const summarySaleItem of this.$summarySaleItems()) {
+                        const category = this.$categories().find(e => e.id === summarySaleItem.categoryId)
                         body.push([
                             summarySaleItem.sku,
                             summarySaleItem.upc,
@@ -139,9 +138,9 @@ export class UtilitiesComponent {
             this.navigationService.loadBarStart()
             this.salesService.getSummarySaleItemsByRangeDate(startDate, endDate, this.params).subscribe(summarySaleItems => {
                 this.navigationService.loadBarFinish()
-                this.summarySaleItems = summarySaleItems
-                this.dataSource = new MatTableDataSource(summarySaleItems)
-                this.dataSource.sort = this.sort
+                this.$summarySaleItems.set(summarySaleItems)
+                this.$dataSource.set(new MatTableDataSource(summarySaleItems))
+                this.$dataSource().sort = this.sort
             })
         }
     }
@@ -151,11 +150,11 @@ export class UtilitiesComponent {
     }
 
     totalCharge() {
-        return this.summarySaleItems.map(e => e.totalCharge || 0).reduce((a, b) => a + b, 0)
+        return this.$summarySaleItems().map(e => e.totalCharge || 0).reduce((a, b) => a + b, 0)
     }
 
     totalPurchases() {
-        return this.summarySaleItems.map(e => e.totalPurchase || 0).reduce((a, b) => a + b, 0)
+        return this.$summarySaleItems().map(e => e.totalPurchase || 0).reduce((a, b) => a + b, 0)
     }
 
     onUserChange() {

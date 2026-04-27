@@ -30,6 +30,7 @@ export class DialogEditCustomersComponent {
         phone: new FormControl('', { nonNullable: true }),
         email: new FormControl('', { nonNullable: true, validators: Validators.email }),
         observation: new FormControl('', { nonNullable: true }),
+        creditLimit: new FormControl(null)
     })
     $isLoading = signal<boolean>(false)
     maxLength: number = 11

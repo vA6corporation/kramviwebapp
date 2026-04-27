@@ -1,4 +1,4 @@
-import { Component, inject} from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog'
@@ -45,11 +45,10 @@ export class CreatePaymentOrdersComponent {
         bankId: null,
         isPaid: true,
     })
-    paymentMethods: PaymentMethodModel[] = []
-    isLoading: boolean = false
-    provider: ProviderModel | null = null
-    banks: BankModel[] = []
-    providerBanks: BankModel[] = []
+    $paymentMethods = signal<PaymentMethodModel[]>([])
+    $isLoading = signal<boolean>(false)
+    $provider = signal<ProviderModel | null>(null)
+    $banks = signal<BankModel[]>([])
     private formData: FormData | null = null
 
     private handleClickMenu$: Subscription = new Subscription()
@@ -63,17 +62,17 @@ export class CreatePaymentOrdersComponent {
     ngOnInit(): void {
         this.navigationService.setTitle('Nueva orden de pago')
         this.banksService.getBanks().subscribe(banks => {
-            this.banks = banks
+            this.$banks.set(banks)
         })
 
         this.navigationService.setMenu([
-            { id: 'attach_file', label: 'Adjuntar PDF', icon: 'attach_file', show: true },
+            //{ id: 'attach_file', label: 'Adjuntar PDF', icon: 'attach_file', show: true },
             { id: 'add_provider', label: 'Agregar proveedor', icon: 'person_add', show: true },
         ])
 
         this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
-            this.paymentMethods = paymentMethods
-            this.formGroup.patchValue({ paymentMethodId: (this.paymentMethods[0] || { id: '' }).id })
+            this.$paymentMethods.set(paymentMethods)
+            this.formGroup.patchValue({ paymentMethodId: (paymentMethods[0] || { id: '' }).id })
         })
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
@@ -86,8 +85,7 @@ export class CreatePaymentOrdersComponent {
 
                     dialogRef.afterClosed().subscribe(provider => {
                         if (provider) {
-                            this.provider = provider
-                            this.providerBanks = provider.banks
+                            this.$provider.set(provider)
                         }
                     })
 
@@ -99,8 +97,7 @@ export class CreatePaymentOrdersComponent {
 
                         dialogRef.afterClosed().subscribe(provider => {
                             if (provider) {
-                                this.provider = provider
-                                this.providerBanks = provider.banks
+                                this.$provider.set(provider)
                             }
                         })
                     })
@@ -128,50 +125,46 @@ export class CreatePaymentOrdersComponent {
         const dialogRef = this.matDialog.open(DialogEditProvidersComponent, {
             width: '600px',
             position: { top: '20px' },
-            data: this.provider,
+            data: this.$provider(),
         })
 
         dialogRef.afterClosed().subscribe(provider => {
             if (provider) {
-                this.provider = provider
-                this.providerBanks = provider.banks
+                this.$provider.set(provider)
             }
         })
     }
 
-    onProviderBankChange(accountNumber: string) {
-        this.formGroup.get('providerBankName')?.patchValue(this.providerBanks.find(e => e.accountNumber == accountNumber)?.name)
-    }
-
     onBankChange(accountNumber: string) {
-        this.formGroup.get('name')?.patchValue(this.banks.find(e => e.accountNumber == accountNumber)?.name)
+        this.formGroup.get('name')?.patchValue(this.$banks().find(e => e.accountNumber == accountNumber)?.name)
     }
 
     onSubmit(): void {
+        const provider = this.$provider()
         if (this.formGroup.valid) {
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.navigationService.loadBarStart()
             const createdPaymentOrder = {
                 ...this.formGroup.value,
-                providerId: this.provider?.id,
+                providerId: provider ? provider.id : null,
             }
             this.paymentOrdersService.create(createdPaymentOrder).subscribe({
                 next: paymentOrder => {
                     if (this.formData) {
                         this.paymentOrdersService.uploadFile(this.formData, paymentOrder.id).subscribe(() => {
-                            this.isLoading = false
+                            this.$isLoading.set(false)
                             this.router.navigate(['/paymentOrders'])
                             this.navigationService.loadBarFinish()
                             this.navigationService.showMessage('Registrado correctamente')
                         })
                     } else {
-                        this.isLoading = false
+                        this.$isLoading.set(false)
                         this.router.navigate(['/paymentOrders'])
                         this.navigationService.loadBarFinish()
                         this.navigationService.showMessage('Registrado correctamente')
                     }
                 }, error: (error: HttpErrorResponse) => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage(error.error.message)
                 }

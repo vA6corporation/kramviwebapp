@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
-import { HttpErrorResponse } from '@angular/common/http';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogEditCategoriesComponent } from '../dialog-edit-categories/dialog-edit-categories.component';
-import { DialogCreateCategoriesComponent } from '../dialog-create-categories/dialog-create-categories.component';
-import { DialogProductsComponent } from '../dialog-products/dialog-products.component';
-import { Subscription } from 'rxjs';
-import { MaterialModule } from '../../material.module';
-import { NavigationService } from '../../navigation/navigation.service';
-import { CategoriesService } from '../categories.service';
-import { CategoryModel } from '../category.model';
-import { CommonModule } from '@angular/common';
+import { Component, inject, signal } from '@angular/core'
+import { PageEvent } from '@angular/material/paginator'
+import { HttpErrorResponse } from '@angular/common/http'
+import { MatDialog } from '@angular/material/dialog'
+import { DialogEditCategoriesComponent } from '../dialog-edit-categories/dialog-edit-categories.component'
+import { DialogCreateCategoriesComponent } from '../dialog-create-categories/dialog-create-categories.component'
+import { DialogProductsComponent } from '../dialog-products/dialog-products.component'
+import { Subscription } from 'rxjs'
+import { MaterialModule } from '../../material.module'
+import { NavigationService } from '../../navigation/navigation.service'
+import { CategoriesService } from '../categories.service'
+import { CategoryModel } from '../category.model'
+import { CommonModule } from '@angular/common'
 
 @Component({
     selector: 'app-categories',
@@ -20,38 +20,22 @@ import { CommonModule } from '@angular/common';
 })
 export class CategoriesComponent {
 
-    constructor(
-        private readonly navigationService: NavigationService,
-        private readonly categoriesService: CategoriesService,
-        private readonly matDialog: MatDialog,
-    ) { }
+    private readonly navigationService = inject(NavigationService)
+    private readonly categoriesService = inject(CategoriesService)
+    private readonly matDialog = inject(MatDialog)
 
-    displayedColumns: string[] = ['checked', 'id', 'name', 'products', 'actions']
-    dataSource: CategoryModel[] = []
-    length: number = 0
+    displayedColumns: string[] = ['id', 'name', 'products', 'actions']
+    $dataSource = signal<CategoryModel[]>([])
+    $length = signal<number>(0)
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
     categoriesId: any[] = []
 
-    private handleClickMenu$: Subscription = new Subscription()
-
-    ngOnDestroy() {
-        this.handleClickMenu$.unsubscribe()
-    }
-
     ngOnInit(): void {
         this.navigationService.setTitle('Categorias')
         this.fetchData()
         this.fetchCount()
-
-        this.navigationService.setMenu([
-            { id: 'join_categories', label: 'Combinar categorias', icon: 'join_left', show: false },
-        ])
-
-        this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
-            this.onJoinCategories()
-        })
     }
 
     onShowProducts(category: CategoryModel) {
@@ -69,37 +53,17 @@ export class CategoriesComponent {
         this.fetchData()
     }
 
-    checkAllCategories(isChecked: boolean) {
-        if (isChecked) {
-            this.categoriesId = []
-            this.categoriesId = this.dataSource.map(e => e.id)
-        } else {
-            this.categoriesId = []
-        }
-    }
-
-    checkCategoryId(isChecked: boolean, categoryId: any) {
-        if (isChecked) {
-            this.categoriesId.push(categoryId)
-        } else {
-            const index = this.categoriesId.indexOf(categoryId)
-            if (index > -1) {
-                this.categoriesId.splice(index, 1)
-            }
-        }
-    }
-
     fetchData() {
         this.navigationService.loadBarStart()
         this.categoriesService.getCategoriesByPage(this.pageIndex + 1, this.pageSize).subscribe(categories => {
             this.navigationService.loadBarFinish()
-            this.dataSource = categories
+            this.$dataSource.set(categories)
         })
     }
 
     fetchCount() {
         this.categoriesService.getCountCategories().subscribe(count => {
-            this.length = count
+            this.$length.set(count)
         })
     }
 
@@ -160,26 +124,11 @@ export class CategoriesComponent {
         }
     }
 
-    onJoinCategories() {
-        this.navigationService.loadBarStart()
-        this.categoriesService.joinCategories(this.categoriesId).subscribe({
-            next: () => {
-                this.navigationService.loadBarFinish()
-                this.categoriesId = []
-                this.fetchData()
-                this.fetchCount()
-            }, error: (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message)
-            }
-        })
-    }
-
-    onRestore(category: CategoryModel) {
+    onRestore(categoryId: any) {
         const ok = confirm('Esta seguro de restaurar?...')
         if (ok) {
             this.navigationService.loadBarStart()
-            category.deletedAt = null
-            this.categoriesService.update(category, category.id).subscribe({
+            this.categoriesService.restore(categoryId).subscribe({
                 next: () => {
                     this.navigationService.loadBarFinish()
                     this.categoriesService.loadCategories()

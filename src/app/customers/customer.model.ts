@@ -11,4 +11,5 @@ export interface CustomerModel {
     formatPhone: string
     address: string
     observation: string
+    creditLimit: number | null
 }

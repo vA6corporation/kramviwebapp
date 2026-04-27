@@ -1,5 +1,5 @@
 export interface DueModel {
     charge: number
-    dueDate: Date
+    dueAt: Date
     createdAt: string
 }

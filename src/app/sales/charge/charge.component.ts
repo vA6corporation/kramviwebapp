@@ -70,7 +70,7 @@ export class ChargeComponent {
 
     payments: CreatePaymentModel[] = []
     saleItems: CreateSaleItemModel[] = []
-    charge: number = 0
+    $charge = signal<number>(0)
     $customer = signal<CustomerModel | null>(null)
     $isLoading = signal(false)
     cash: number = 0
@@ -82,9 +82,10 @@ export class ChargeComponent {
     ]
     $setting = signal<SettingModel>(new SettingModel)
     $paymentMethods = signal<PaymentMethodModel[]>([])
-    isYesterdayTurn: boolean = false
-    turn: TurnModel | null = null
+    $isYesterdayTurn = signal<boolean>(false)
+    $turn = signal<TurnModel | null>(null)
     goTo: string = ''
+
     private detraction: DetractionModel | null = null
     private user: UserModel = new UserModel()
     private params: Params = {}
@@ -122,25 +123,27 @@ export class ChargeComponent {
             this.user = auth.user
             this.$setting.set(auth.setting)
 
+            Object.assign(this.params, { isAvailableStock: auth.setting.isAvailableStock })
+
             this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
-                this.turn = turn
-                if (this.turn === null) {
+                this.$turn.set(turn)
+                if (turn) {
+                    const today = new Date()
+                    today.setHours(0, 0, 0, 0)
+                    const turnDate = new Date(turn.createdAt)
+                    turnDate.setHours(0, 0, 0, 0)
+                    if (turnDate.getMonth() === today.getMonth() && turnDate.getDate() < today.getDate()) {
+                        this.$isYesterdayTurn.set(true)
+                    } else {
+                        if (turnDate.getMonth() !== today.getMonth()) {
+                            this.$isYesterdayTurn.set(true)
+                        }
+                    }
+                } else {
                     this.matDialog.open(DialogCreateTurnsComponent, {
                         width: '600px',
                         position: { top: '20px' }
                     })
-                } else {
-                    const today = new Date()
-                    today.setHours(0, 0, 0, 0)
-                    const turnDate = new Date(this.turn.createdAt)
-                    turnDate.setHours(0, 0, 0, 0)
-                    if (turnDate.getMonth() === today.getMonth() && turnDate.getDate() < today.getDate()) {
-                        this.isYesterdayTurn = true
-                    } else {
-                        if (turnDate.getMonth() !== today.getMonth()) {
-                            this.isYesterdayTurn = true
-                        }
-                    }
                 }
             })
 
@@ -189,10 +192,11 @@ export class ChargeComponent {
                     break
 
                 case 'split_payment':
-                    if (this.turn) {
+                    const turn = this.$turn()
+                    if (turn) {
                         const data: DialogSplitPaymentsData = {
-                            turnId: this.turn.id,
-                            charge: this.charge,
+                            turnId: turn.id,
+                            charge: this.$charge(),
                             payments: this.payments,
                         }
 
@@ -221,33 +225,35 @@ export class ChargeComponent {
 
         this.handleSaleItems$ = this.salesService.handleSaleItems().subscribe(saleItems => {
             this.saleItems = saleItems
-            this.charge = 0
+            this.$charge.set(0)
+            let charge = 0
 
             for (const saleItem of this.saleItems) {
                 if (saleItem.igvCode !== IgvCode.BONIFICACION) {
-                    this.charge += saleItem.price * saleItem.quantity
+                    charge += saleItem.price * saleItem.quantity
                 }
             }
 
             const { discount, discountPercent } = this.formGroup.value
 
             if (discountPercent) {
-                let discount = (this.charge / 100) * discountPercent
-                this.charge -= discount
+                let discount = (charge / 100) * discountPercent
+                this.$charge.set(charge - discount)
                 this.formGroup.patchValue({ discount })
             } else {
-                this.charge -= discount
+                this.$charge.set(charge - discount)
             }
         })
 
         const { proformaId } = this.activatedRoute.snapshot.queryParams
+
         if (proformaId) {
             Object.assign(this.params, { proformaId })
             this.proformasService.getProformaById(proformaId).subscribe(proforma => {
                 const { proformaItems, customer, discount } = proforma
                 this.salesService.setSaleItems(proformaItems)
                 this.formGroup.patchValue(proforma)
-                this.charge -= (discount || 0)
+                this.$charge.update(value => value -= (discount || 0))
                 this.$customer.set(customer)
             })
         }
@@ -256,29 +262,30 @@ export class ChargeComponent {
     addCash(cash: number) {
         this.cash = Number(this.cash)
         this.cash += cash
-        const diff = Number(this.cash) - Number(this.charge)
+        const diff = Number(this.cash) - Number(this.$charge())
         this.cashChange = Number(diff.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
         this.formGroup.get('cash')?.patchValue(this.cash)
     }
 
     setCash(cash: any) {
         this.cash = cash
-        const diff = Number(this.cash) - Number(this.charge)
+        const diff = Number(this.cash) - Number(this.$charge())
         this.cashChange = Number(diff.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
     }
 
     onChangeDiscount() {
-        this.charge = 0
+        this.$charge.set(0)
+        let charge = 0
 
         const { discount } = this.formGroup.value
 
         for (const saleItem of this.saleItems) {
             if (saleItem.igvCode !== IgvCode.BONIFICACION) {
-                this.charge += saleItem.price * saleItem.quantity
+                charge += saleItem.price * saleItem.quantity
             }
         }
 
-        this.charge -= discount
+        this.$charge.set(charge - discount)
     }
 
     onChangeDiscountPercent() {
@@ -295,12 +302,17 @@ export class ChargeComponent {
 
         if (discountPercent) {
             discount = (charge / 100) * discountPercent
-            this.charge = charge - discount
+            this.$charge.set(charge - discount)
             this.formGroup.patchValue({ discount })
         } else {
-            this.charge = charge
+            this.$charge.set(charge)
             this.formGroup.patchValue({ discount })
         }
+    }
+
+    resetCash() {
+        this.cash = 0
+        this.formGroup.get('cash')?.patchValue(this.cash)
     }
 
     onDialogDetraction() {
@@ -317,24 +329,25 @@ export class ChargeComponent {
         })
     }
 
-    resetCash() {
-        this.cash = 0
-        this.formGroup.get('cash')?.patchValue(this.cash)
-    }
-
     onSubmit() {
         try {
-            if (!this.formGroup.valid) {
-                throw new Error("Complete los campos")
-            }
+            const turn = this.$turn()
+            const saleForm: SaleForm = this.formGroup.value
+            const customer = this.$customer()
+            const charge = this.$charge()
 
-            if (this.turn === null) {
+            if (turn === null) {
                 this.matDialog.open(DialogCreateTurnsComponent, {
                     width: '600px',
                     position: { top: '20px' },
                 })
                 throw new Error("Debes aperturar una caja")
             }
+
+            if (!this.formGroup.valid) {
+                throw new Error("Complete los campos")
+            }
+
 
             if (!this.saleItems.length) {
                 throw new Error("Agrega un producto")
@@ -343,9 +356,6 @@ export class ChargeComponent {
             if (this.saleItems.find(e => e.price === 0 || e.price === null)) {
                 throw new Error("El producto no puede tener precio 0")
             }
-
-            const saleForm: SaleForm = this.formGroup.value
-            const customer = this.$customer()
 
             const createdSale: CreateSaleModel = {
                 invoiceCode: saleForm.invoiceCode,
@@ -360,7 +370,7 @@ export class ChargeComponent {
                 isDelivery: saleForm.isDelivery,
                 igvPercent: this.$setting().defaultIgvPercent,
                 rcPercent: this.$setting().defaultRcPercent,
-                turnId: this.turn.id,
+                turnId: turn.id,
                 customerId: customer ? customer.id : null,
             }
 
@@ -372,11 +382,11 @@ export class ChargeComponent {
                 throw new Error("El cliente debe tener un RUC")
             }
 
-            if (this.payments.length === 0 && this.charge) {
+            if (this.payments.length === 0 && charge) {
                 const payment = {
-                    charge: this.charge,
+                    charge,
                     paymentMethodId: saleForm.paymentMethodId,
-                    turnId: this.turn.id
+                    turnId: turn.id
                 }
                 this.payments.push(payment)
             }
@@ -392,24 +402,11 @@ export class ChargeComponent {
                 this.params
             ).subscribe({
                 next: sale => {
-                    let payments: CreatePaymentModel[] = []
-
-                    if (this.payments.length) {
-                        payments = this.payments
-                    } else {
-                        payments[0] = {
-                            paymentMethodId: createdSale.paymentMethodId || 0,
-                            charge: sale.charge,
-                            turnId: sale.turnId,
-                            createdAt: new Date()
-                        }
-                    }
-
                     Object.assign(sale, {
                         user: this.user,
                         customer: this.$customer(),
                         saleItems: this.saleItems,
-                        payments,
+                        payments: this.payments,
                     })
 
                     switch (this.$setting().defaultTicket) {

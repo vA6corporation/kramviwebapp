@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { CommonModule, formatDate } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
@@ -46,9 +46,9 @@ export class PurchasesComponent {
         endDate: [null, Validators.required],
     })
 
-    displayedColumns: string[] = ['createdAt', 'purchasedAt', 'serial', 'customer', 'user', 'purchaseOrder', 'charge', 'observation', 'actions']
-    dataSource: PurchaseModel[] = []
-    length: number = 0
+    displayedColumns: string[] = ['createdAt', 'serial', 'customer', 'user', 'charge', 'observation', 'actions']
+    $dataSource = signal<PurchaseModel[]>([])
+    $length = signal<number>(0)
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
@@ -92,7 +92,7 @@ export class PurchasesComponent {
                 const chunk = 500
                 const promises: Promise<any>[] = []
                 const params = { ...this.params, sortBy: '-purchasedAt' }
-                for (let index = 0; index < this.length / chunk; index++) {
+                for (let index = 0; index < this.$length() / chunk; index++) {
                     const promise = lastValueFrom(this.purchasesService.getPurchasesByPage(index + 1, chunk, params))
                     promises.push(promise)
                 }
@@ -104,7 +104,6 @@ export class PurchasesComponent {
                     let body = []
                     body.push([
                         'F. DE REGISTRO',
-                        'F. DE COMPRA',
                         'RUC/DNI',
                         'CLIENTE',
                         'COMPROBANTE',
@@ -125,7 +124,6 @@ export class PurchasesComponent {
                         const { provider } = purchase
                         body.push([
                             formatDate(purchase.createdAt, 'dd/MM/yyyy', 'en-US'),
-                            formatDate(purchase.purchasedAt, 'dd/MM/yyyy', 'en-US'),
                             provider?.document,
                             (provider?.name || 'VARIOS').toUpperCase(),
                             purchase.invoiceName.toUpperCase(),
@@ -269,7 +267,7 @@ export class PurchasesComponent {
         this.purchasesService.getPurchasesByPage(this.pageIndex + 1, this.pageSize, this.params).subscribe({
             next: purchases => {
                 this.navigationService.loadBarFinish()
-                this.dataSource = purchases
+                this.$dataSource.set(purchases)
             }, error: (error: HttpErrorResponse) => {
                 this.navigationService.loadBarFinish()
                 this.navigationService.showMessage(error.error.message)
@@ -279,7 +277,7 @@ export class PurchasesComponent {
 
     fetchCount() {
         this.purchasesService.getCountPurchases(this.params).subscribe(count => {
-            this.length = count
+            this.$length.set(count)
         })
     }
 

@@ -1,6 +1,6 @@
+import { Component, inject, signal } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
-import { Component } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
 import { ActivatedRoute, RouterModule } from '@angular/router'
 import { Subscription } from 'rxjs'
@@ -30,28 +30,26 @@ import { SalesService } from '../../sales/sales.service'
 })
 export class PosStandardEditComponent {
 
-    constructor(
-        private readonly navigationService: NavigationService,
-        private readonly productsService: ProductsService,
-        private readonly favoritesService: FavoritesService,
-        private readonly salesService: SalesService,
-        private readonly authService: AuthService,
-        private readonly matDialog: MatDialog,
-        private readonly activatedRoute: ActivatedRoute,
-        private readonly categoriesService: CategoriesService,
-    ) { }
+    private readonly navigationService = inject(NavigationService)
+    private readonly productsService = inject(ProductsService)
+    private readonly favoritesService = inject(FavoritesService)
+    private readonly salesService = inject(SalesService)
+    private readonly authService = inject(AuthService)
+    private readonly matDialog = inject(MatDialog)
+    private readonly activatedRoute = inject(ActivatedRoute)
+    private readonly categoriesService = inject(CategoriesService)
 
-    saleId: string = ''
-    categories: CategoryModel[] = []
-    products: ProductModel[] = []
-    favorites: ProductModel[] = []
+    $saleId = signal<string>('')
+    $categories = signal<CategoryModel[]>([])
+    $products = signal<ProductModel[]>([])
+    $favorites = signal<ProductModel[]>([])
     priceLists: PriceListModel[] = []
     priceListId: string | null = null
     selectedIndex: number = 0
     gridListCols = 4
-    setting: SettingModel = new SettingModel()
+    $setting = signal<SettingModel>(new SettingModel())
     office: OfficeModel = new OfficeModel()
-    isLoading: boolean = true
+    $isLoading = signal<boolean>(true)
     private sale: SaleModel | null = null
     private sortByName: boolean = true
 
@@ -72,9 +70,10 @@ export class PosStandardEditComponent {
     }
 
     ngOnInit(): void {
-        this.saleId = this.activatedRoute.snapshot.params['saleId']
-        this.salesService.getSaleById(this.saleId).subscribe(sale => {
-            this.isLoading = false
+        const saleId = this.activatedRoute.snapshot.params['saleId']
+        this.$saleId.set(saleId)
+        this.salesService.getSaleById(saleId).subscribe(sale => {
+            this.$isLoading.set(false)
             this.sale = sale
             if (this.sale.isCredit) {
                 this.navigationService.showDialogMessage('Esta venta a sido generada al credito, debera revisar las cuotas pagadas si hace una modificacion')
@@ -91,21 +90,21 @@ export class PosStandardEditComponent {
         this.navigationService.showSearch()
 
         this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
-            this.categories = categories
+            this.$categories.set(categories)
         })
 
         this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
             this.priceLists = priceLists
-            this.priceListId = this.setting.defaultPriceListId || this.priceLists[0]?.id
+            this.priceListId = this.$setting().defaultPriceListId || this.priceLists[0]?.id
         })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
+            this.$setting.set(auth.setting)
             this.office = auth.office
 
             this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
-                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
-                this.favorites = products
+                ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
+                this.$favorites.set(products)
             })
         })
 
@@ -115,11 +114,11 @@ export class PosStandardEditComponent {
                 next: products => {
                     this.navigationService.loadBarFinish()
                     this.selectedIndex = 2
-                    ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
-                    this.products = products
+
+                    ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
 
                     if (this.sortByName) {
-                        this.products.sort((a, b) => {
+                       products.sort((a, b) => {
                             if (a.fullName > b.fullName) {
                                 return 1
                             }
@@ -129,8 +128,10 @@ export class PosStandardEditComponent {
                             return 0
                         })
                     } else {
-                        this.products.sort((a, b) => b.price - a.price)
+                        products.sort((a, b) => b.price - a.price)
                     }
+
+                    this.$products.set(products)
 
                     const foundProduct = products.find(e => e.sku.match(new RegExp(`^${key}$`, 'i')) || e.upc.match(new RegExp(`^${key}$`, 'i')))
 
@@ -147,7 +148,7 @@ export class PosStandardEditComponent {
     }
 
     onChangePriceList() {
-        ProductsService.setPrices(this.products, this.priceListId, this.setting, this.office)
+        ProductsService.setPrices(this.$products(), this.priceListId, this.$setting(), this.office)
     }
 
     onCancel() {
@@ -203,14 +204,13 @@ export class PosStandardEditComponent {
 
     onSelectCategory(category: CategoryModel) {
         this.selectedIndex = 2
-        this.products = []
+        this.$products.set([])
         if (category.products) {
             const products = category.products
-            ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
-            this.products = products
+            ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
 
             if (this.sortByName) {
-                this.products.sort((a, b) => {
+                products.sort((a, b) => {
                     if (a.fullName > b.fullName) {
                         return 1
                     }
@@ -220,19 +220,19 @@ export class PosStandardEditComponent {
                     return 0
                 })
             } else {
-                this.products.sort((a, b) => b.price - a.price)
+                products.sort((a, b) => b.price - a.price)
             }
 
+            this.$products.set(products)
         } else {
             this.navigationService.loadBarStart()
             this.productsService.getProductsByCategoryPage(category.id, 1, 500).subscribe(products => {
                 this.navigationService.loadBarFinish()
                 category.products = products
-                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
-                this.products = products
+                ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
 
                 if (this.sortByName) {
-                    this.products.sort((a, b) => {
+                    products.sort((a, b) => {
                         if (a.fullName > b.fullName) {
                             return 1
                         }
@@ -242,8 +242,10 @@ export class PosStandardEditComponent {
                         return 0
                     })
                 } else {
-                    this.products.sort((a, b) => b.price - a.price)
+                    products.sort((a, b) => b.price - a.price)
                 }
+
+                this.$products.set(products)
             })
         }
     }

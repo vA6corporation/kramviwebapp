@@ -112,6 +112,10 @@ export class ProductsService {
         return this.httpService.get(`products/byKey`, params)
     }
 
+    getStock(productId: number): Observable<number> {
+        return this.httpService.get(`products/stock/${productId}`)
+    }
+
     getProductsByKeyPage(pageIndex: number, pageSize: number, params: Params): Observable<ProductModel[]> {
         return this.httpService.get(`products/byKeyPage/${pageIndex}/${pageSize}`, params)
     }
@@ -123,18 +127,6 @@ export class ProductsService {
 
     getProductStock(productId: any): Observable<number> {
         return this.httpService.get(`products/stock/${productId}`)
-    }
-
-    getProductsByPageWithRecipes(
-        pageIndex: number,
-        pageSize: number,
-        params: Params
-    ): Observable<ProductModel[]> {
-        return this.httpService.get(`products/byPageWithRecipes/${pageIndex}/${pageSize}`, params)
-    }
-
-    getLinkProducts(productId: any): Observable<ProductModel[]> {
-        return this.httpService.get(`products/linkProductsByProduct/${productId}`)
     }
 
     loadPriceLists(): void {
@@ -205,12 +197,12 @@ export class ProductsService {
         return this.httpService.post('products', { product, prices, paymentMethodId })
     }
 
-    updateWithPrices(product: any, prices: any, productId: any, priceType: string): Observable<ProductModel> {
-        return this.httpService.put(`products/${productId}/${priceType}`, { product, prices })
+    updateWithPrices(product: any, prices: any, productId: any): Observable<ProductModel> {
+        return this.httpService.put(`products/${productId}`, { product, prices })
     }
 
-    updatePrices(productId: any, priceType: PriceType, prices: PriceModel[], price: number): Observable<ProductModel> {
-        return this.httpService.put(`products/updatePrices/${productId}/${priceType}/${price}`, { prices })
+    updatePrices(productId: any, prices: PriceModel[], price: number): Observable<ProductModel> {
+        return this.httpService.put(`products/updatePrices/${productId}/${price}`, { prices })
     }
 
     update(product: any, productId: any): Observable<ProductModel> {

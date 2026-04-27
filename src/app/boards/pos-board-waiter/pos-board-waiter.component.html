@@ -31,7 +31,7 @@
     </div>
     <div class="fixed-bottom d-flex align-items-center footer-button">
         <div class="px-3">
-            @if (setting.defaultPrice === 'LISTA') {
+            @if ($setting().defaultPrice === 'LISTA') {
             <mat-form-field appearance="fill">
                 <mat-select [(value)]="priceListId" (selectionChange)="onChangePriceList()">
                     @for (priceList of priceLists; track $index) {

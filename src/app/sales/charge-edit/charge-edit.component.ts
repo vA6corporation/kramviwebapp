@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog'
@@ -45,9 +45,9 @@ export class ChargeEditComponent {
 
     payments: CreatePaymentModel[] = []
     saleItems: CreateSaleItemModel[] = []
-    charge: number = 0
-    customer: CustomerModel | null = null
-    isLoading: boolean = false
+    $charge = signal<number>(0)
+    $customer = signal<CustomerModel | null>(null)
+    $isLoading = signal<boolean>(false)
     formGroup: FormGroup = this.formBuilder.group({
         invoiceNumber: null,
         invoiceCode: '03',
@@ -63,9 +63,9 @@ export class ChargeEditComponent {
         { code: '03', name: 'BOLETA' },
         { code: '01', name: 'FACTURA' },
     ]
-    setting = new SettingModel()
+    $setting = signal<SettingModel>(new SettingModel())
+    $paymentMethods = signal<PaymentMethodModel[]>([])
     private sale: SaleModel | null = null
-    paymentMethods: PaymentMethodModel[] = []
 
     private handleClickMenu$: Subscription = new Subscription()
     private handleSaleItems$: Subscription = new Subscription()
@@ -85,9 +85,9 @@ export class ChargeEditComponent {
         this.formGroup.get('invoiceCode')?.disable()
 
         if (this.sale === null) {
-            this.router.navigate(['/invoices'])
+            this.router.navigate(['/sales'])
         } else {
-            this.customer = this.sale.customer
+            this.$customer.set(this.sale.customer)
             this.navigationService.setTitle('Guardar cambios')
 
             this.formGroup.patchValue(this.sale)
@@ -105,8 +105,8 @@ export class ChargeEditComponent {
             }
 
             this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
-                this.paymentMethods = paymentMethods
-                this.formGroup.patchValue({ paymentMethodId: (this.paymentMethods[0] || { id: '' }).id })
+                this.$paymentMethods.set(paymentMethods)
+                this.formGroup.patchValue({ paymentMethodId: (paymentMethods[0] || { id: '' }).id })
             })
 
             this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
@@ -115,12 +115,12 @@ export class ChargeEditComponent {
                         const dialogRef = this.matDialog.open(DialogSearchCustomersComponent, {
                             width: '600px',
                             position: { top: '20px' },
-                            data: this.setting.defaultSearchCustomer
+                            data: this.$setting().defaultSearchCustomer
                         })
 
                         dialogRef.afterClosed().subscribe(customer => {
                             if (customer) {
-                                this.customer = customer
+                                this.$customer.set(customer)
                             }
                         })
 
@@ -132,7 +132,7 @@ export class ChargeEditComponent {
 
                             dialogRef.afterClosed().subscribe(customer => {
                                 if (customer) {
-                                    this.customer = customer
+                                    this.$customer.set(customer)
                                 }
                             })
                         })
@@ -142,7 +142,7 @@ export class ChargeEditComponent {
                         if (this.sale) {
                             const data: DialogSplitPaymentsData = {
                                 turnId: this.sale.turnId,
-                                charge: this.charge,
+                                charge: this.$charge(),
                                 payments: this.payments,
                             }
 
@@ -170,26 +170,32 @@ export class ChargeEditComponent {
             })
 
             this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-                this.setting = auth.setting
+                this.$setting.set(auth.setting)
             })
 
             this.handleSaleItems$ = this.salesService.handleSaleItems().subscribe(saleItems => {
                 this.saleItems = saleItems
-                this.charge = 0
+                this.$charge.set(0)
+                let charge = 0
 
                 for (const saleItem of this.saleItems) {
                     if (saleItem.igvCode !== IgvCode.BONIFICACION) {
-                        this.charge += saleItem.price * saleItem.quantity
+                        charge += saleItem.price * saleItem.quantity
                     }
                 }
 
-                this.charge -= (this.sale?.discount || 0)
+                charge -= (this.sale?.discount || 0)
+                this.$charge.set(charge)
             })
         }
     }
 
     onSubmit() {
         try {
+            const saleForm: SaleForm = this.formGroup.value
+            const customer = this.$customer()
+            const charge = this.$charge()
+
             if (this.sale === null) {
                 throw new Error("La venta no existe")
             }
@@ -202,44 +208,56 @@ export class ChargeEditComponent {
                 throw new Error("El producto no puede tener precio 0")
             }
 
-            const saleForm: SaleForm = this.formGroup.value
+            //const saleForm: SaleForm = this.formGroup.value
 
             const createdSale: UpdateSaleModel = {
                 invoiceCode: this.sale.invoiceCode,
                 currencyCode: saleForm.currencyCode || this.sale.currencyCode,
                 paymentMethodId: saleForm.paymentMethodId,
                 observation: saleForm.observation,
+                createdAt: saleForm.createdAt,
                 discount: saleForm.discount,
-                isCredit: this.sale.isCredit,
                 igvPercent: this.sale.igvPercent,
                 rcPercent: this.sale.rcPercent,
-                createdAt: saleForm.createdAt,
+                cash: null,
+                deliveryAt: null,
+                isRetainer: false,
+                isDelivery: false,
 
                 turnId: this.sale.turnId,
-                customerId: this.customer ? this.customer.id : null,
+                customerId: customer ? customer.id : null,
             }
 
-            if (createdSale.invoiceCode === InvoiceCode.FACTURA && this.customer === null) {
+            if (createdSale.invoiceCode === InvoiceCode.FACTURA && customer === null) {
                 throw new Error("Agrega un cliente")
             }
 
-            if (createdSale.invoiceCode === InvoiceCode.FACTURA && this.customer !== null && this.customer.documentType !== 'RUC') {
+            if (createdSale.invoiceCode === InvoiceCode.FACTURA && customer !== null && customer.documentType !== 'RUC') {
                 throw new Error("El cliente debe tener un RUC")
             }
 
-            this.isLoading = true
+            if (this.payments.length === 0 && charge) {
+                const payment = {
+                    charge,
+                    paymentMethodId: saleForm.paymentMethodId,
+                    turnId: this.sale.turnId,
+                }
+                this.payments.push(payment)
+            }
+
+            this.$isLoading.set(true)
             this.navigationService.loadBarStart()
 
             this.salesService.updateSaleWithItems(createdSale, this.saleItems, this.payments, this.sale.id).subscribe({
                 next: () => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Se han guardado los cambios')
                     this.salesService.setSaleItems([])
-                    this.router.navigate(['/invoices'])
+                    this.router.navigate(['/sales'])
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.showMessage(error.error.message)
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                 }
             })
@@ -251,34 +269,60 @@ export class ChargeEditComponent {
     }
 
     onChangeDiscount() {
+        this.$charge.set(0)
+        let charge = 0
+
         const { discount } = this.formGroup.value
-        this.charge = 0
+
         for (const saleItem of this.saleItems) {
             if (saleItem.igvCode !== IgvCode.BONIFICACION) {
-                this.charge += saleItem.price * saleItem.quantity
+                charge += saleItem.price * saleItem.quantity
             }
         }
-        this.charge -= discount
+
+        this.$charge.set(charge - discount)
     }
 
-    onEditCustomer() {
-        const dialogRef = this.matDialog.open(DialogEditCustomersComponent, {
-            width: '600px',
-            position: { top: '20px' },
-            data: this.customer,
-        })
+    onChangeDiscountPercent() {
+        let charge = 0
+        let discount = 0
 
-        dialogRef.afterClosed().subscribe(customer => {
-            if (customer) {
-                this.customer = customer
+        const { discountPercent } = this.formGroup.value
+
+        for (const saleItem of this.saleItems) {
+            if (saleItem.igvCode !== IgvCode.BONIFICACION) {
+                charge += saleItem.price * saleItem.quantity
             }
-        })
+        }
+
+        if (discountPercent) {
+            discount = (charge / 100) * discountPercent
+            this.$charge.set(charge - discount)
+            this.formGroup.patchValue({ discount })
+        } else {
+            this.$charge.set(charge)
+            this.formGroup.patchValue({ discount })
+        }
     }
 
     onAddCustomer() {
         this.matDialog.open(DialogSearchCustomersComponent, {
             width: '600px',
             position: { top: '20px' },
+        })
+    }
+
+    onEditCustomer() {
+        const dialogRef = this.matDialog.open(DialogEditCustomersComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: this.$customer(),
+        })
+
+        dialogRef.afterClosed().subscribe(customer => {
+            if (customer) {
+                this.$customer.set(customer)
+            }
         })
     }
 

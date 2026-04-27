@@ -31,8 +31,8 @@
             </ng-container>
             <ng-container matColumnDef="close">
                 <th mat-header-cell *matHeaderCellDef>F/H Cierre</th>
-                <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': element.closedAt === null }">{{
-                    element.closedAt ? (element.closedAt | date: 'dd/MM/yyyy, hh:mm a') : 'ABIERTO' }}</td>
+                <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': element.deletedAt === null }">{{
+                    element.deletedAt ? (element.deletedAt | date: 'dd/MM/yyyy, hh:mm a') : 'ABIERTO' }}</td>
             </ng-container>
             <ng-container matColumnDef="user">
                 <th mat-header-cell *matHeaderCellDef>Usuario</th>
@@ -46,9 +46,15 @@
                     </button>
                     <mat-menu #menu="matMenu" xPosition="before">
                         <button [routerLink]="['/turns', element.id, 'details']" mat-menu-item>
-                            <mat-icon>edit</mat-icon>
+                            <mat-icon>info</mat-icon>
                             <span>Detalles</span>
                         </button>
+                        @if (element.deletedAt) {
+                        <button type="button" (click)="onRestoreTurn(element.id, element.userId)" mat-menu-item>
+                            <mat-icon>edit</mat-icon>
+                            <span>Reabrir caja</span>
+                        </button>
+                        }
                         <button type="button" (click)="onSummaryTurns(element)" mat-menu-item>
                             <mat-icon>download</mat-icon>
                             <span>Exportar resumen</span>

@@ -74,7 +74,6 @@ export class App {
     ngOnInit() {
         window.addEventListener('online', () => this.$isOffline.set(false))
         window.addEventListener('offline', () => this.$isOffline.set(true))
-        this.$isStart.set(true)
 
         const urlParams = new URLSearchParams(window.location.search)
         const kvtoken = urlParams.get('kvtoken')

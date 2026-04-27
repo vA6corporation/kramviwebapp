@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ActivatedRoute, RouterModule } from '@angular/router'
@@ -19,7 +19,6 @@ export class EditProvidersComponent {
     private readonly providersService = inject(ProvidersService)
     private readonly navigationService = inject(NavigationService)
 
-    formArray: FormArray = this.formBuilder.array([])
     formGroup: FormGroup = this.formBuilder.group({
         documentType: ['', Validators.required],
         document: '',
@@ -28,7 +27,7 @@ export class EditProvidersComponent {
         phone: '',
         address: '',
     })
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
     maxLength: number = 11
     private providerId: any = ''
 
@@ -61,15 +60,16 @@ export class EditProvidersComponent {
 
     onSubmit(): void {
         if (this.formGroup.valid) {
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.navigationService.loadBarStart()
             this.providersService.update(this.formGroup.value, this.providerId).subscribe({
                 next: () => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Se han guardado los cambios')
+                    this.navigationService.back()
                 }, error: (error: HttpErrorResponse) => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage(error.error.message)
                 }

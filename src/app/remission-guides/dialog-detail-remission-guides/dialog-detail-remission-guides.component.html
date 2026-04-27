@@ -1,38 +1,41 @@
+@let remissionGuide = $remissionGuide();
+@let carrier = $carrier();
+@let user = $user();
+@let cdr = $cdr();
 <h2 mat-dialog-title>
-    Detalles T{{ office.serialPrefix }}-{{ remissionGuide?.remissionGuideNumber }}
+    Detalles T{{ $office().serialPrefix }}-{{ remissionGuide?.remissionGuideNumber }}
     @if (remissionGuide?.deletedAt) {
     <span class="ml-2 text-danger">ANULADO</span>
     }
 </h2>
 <div mat-dialog-content>
     <mat-list>
-        @for (remissionGuideItem of remissionGuideItems; track remissionGuideItem.productId) {
+        @for (remissionGuideItem of $remissionGuideItems(); track remissionGuideItem.productId) {
         <mat-list-item class="px-0">
-            <span matListItemTitle>{{ remissionGuideItem.fullName }}</span>
-            <span>{{ remissionGuideItem.quantity }}</span>
+            <span matListItemTitle>{{ remissionGuideItem.fullName }} ({{ remissionGuideItem.quantity }})</span>
         </mat-list-item>
         }
     </mat-list>
     <mat-divider></mat-divider>
     @if (carrier) {
-        <mat-list>
-            <mat-list-item class="px-0">
-                <span matListItemTitle>Documento</span>
-                <span>{{ carrier.documentType }}: {{ carrier.document }}</span>
-            </mat-list-item>
-            <mat-list-item class="px-0">
-                <span matListItemTitle>Nombre/Razon social</span>
-                <span>{{ carrier.name }}</span>
-            </mat-list-item>
-            <mat-list-item class="px-0">
-                <span matListItemTitle>N° de placa</span>
-                <span>{{ carrier.carriagePlate }}</span>
-            </mat-list-item>
-            <mat-list-item class="px-0">
-                <span matListItemTitle>N° de licencia de conducir</span>
-                <span>{{ carrier.licenseNumber }}</span>
-            </mat-list-item>
-        </mat-list>
+    <mat-list>
+        <mat-list-item class="px-0">
+            <span matListItemTitle>Documento</span>
+            <span>{{ carrier.documentType }}: {{ carrier.document }}</span>
+        </mat-list-item>
+        <mat-list-item class="px-0">
+            <span matListItemTitle>Nombre/Razon social</span>
+            <span>{{ carrier.name }}</span>
+        </mat-list-item>
+        <mat-list-item class="px-0">
+            <span matListItemTitle>N° de placa</span>
+            <span>{{ carrier.carrierPlate }}</span>
+        </mat-list-item>
+        <mat-list-item class="px-0">
+            <span matListItemTitle>N° de licencia de conducir</span>
+            <span>{{ carrier.licenseNumber }}</span>
+        </mat-list-item>
+    </mat-list>
     }
     <mat-divider></mat-divider>
     <table class="w-100">

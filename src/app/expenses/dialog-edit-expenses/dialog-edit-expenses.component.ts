@@ -22,16 +22,6 @@ export class DialogEditExpensesComponent {
         charge: [this.expense.charge, Validators.required],
     })
 
-    private onDeleteExpense$: EventEmitter<void> = new EventEmitter()
-
-    onDeleteExpense() {
-        this.onDeleteExpense$.emit()
-    }
-
-    handleDeleteExpense() {
-        return this.onDeleteExpense$.asObservable()
-    }
-
     onSubmit() {
         if (this.formGroup.valid) {
             this.dialogRef.close(this.formGroup.value)

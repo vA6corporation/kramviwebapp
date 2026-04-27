@@ -1,5 +1,5 @@
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
-import { Component, inject } from '@angular/core'
 import { OfficeModel } from '../office.model'
 import { NavigationService } from '../../navigation/navigation.service'
 import { OfficesService } from '../offices.service'
@@ -19,7 +19,7 @@ export class OfficesComponent {
     private readonly officesService = inject(OfficesService)
 
     displayedColumns: string[] = ['name', 'address', 'activityName', 'serialPrefix', 'codigoAnexo', 'actions']
-    dataSource: OfficeModel[] = []
+    $dataSource = signal<OfficeModel[]>([])
     length: number = 0
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
@@ -27,15 +27,7 @@ export class OfficesComponent {
 
     ngOnInit(): void {
         this.navigationService.setTitle('Sucursales')
-        this.navigationService.loadBarStart()
-        this.officesService.getOffices().subscribe({
-            next: offices => {
-                this.navigationService.loadBarFinish()
-                this.dataSource = offices
-            }, error: (error: HttpErrorResponse) => {
-                this.navigationService.showMessage(error.error.message)
-            }
-        })
+        this.fetchData()
     }
 
     onDeleteOffice(officeId: any) {
@@ -45,9 +37,21 @@ export class OfficesComponent {
             this.officesService.delete(officeId).subscribe(() => {
                 this.navigationService.loadBarFinish()
                 this.navigationService.showMessage('Eliminado correctamente')
-                this.dataSource = this.dataSource.filter(e => e.id !== officeId)
+                this.fetchData()
             })
         }
+    }
+
+    fetchData() {
+        this.navigationService.loadBarStart()
+        this.officesService.getOffices().subscribe({
+            next: offices => {
+                this.navigationService.loadBarFinish()
+                this.$dataSource.set(offices)
+            }, error: (error: HttpErrorResponse) => {
+                this.navigationService.showMessage(error.error.message)
+            }
+        })
     }
 
 }

@@ -1,5 +1,5 @@
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
-import { Component } from '@angular/core'
 import { PageEvent } from '@angular/material/paginator'
 import { ActivatedRoute, RouterModule } from '@angular/router'
 import { Subscription } from 'rxjs'
@@ -23,18 +23,16 @@ import { CommonModule } from '@angular/common'
 })
 export class DeletedProductsComponent {
 
-    constructor(
-        private readonly productsService: ProductsService,
-        private readonly navigationService: NavigationService,
-        private readonly authService: AuthService,
-        private readonly activatedRoute: ActivatedRoute,
-    ) { }
+    private readonly productsService = inject(ProductsService)
+    private readonly navigationService = inject(NavigationService)
+    private readonly authService = inject(AuthService)
+    private readonly activatedRoute = inject(ActivatedRoute)
 
     categoryId: any = ''
     categories: CategoryModel[] = []
     displayedColumns: string[] = ['name', 'feature', 'brand', 'stock', 'actions']
-    dataSource: ProductModel[] = []
-    length: number = 0
+    $dataSource = signal<ProductModel[]>([])
+    $length = signal<number>(0)
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
@@ -90,7 +88,7 @@ export class DeletedProductsComponent {
                         default:
                             break
                     }
-                    this.dataSource = products
+                    this.$dataSource.set(products)
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.showMessage(error.error.message)
                 }
@@ -114,13 +112,13 @@ export class DeletedProductsComponent {
         this.navigationService.loadBarStart()
         this.productsService.getDeletedProducts(this.pageIndex + 1, this.pageSize).subscribe(products => {
             this.navigationService.loadBarFinish()
-            this.dataSource = products
+            this.$dataSource.set(products)
         })
     }
 
     fetchCount() {
         this.productsService.getCountDeletedProducts().subscribe(count => {
-            this.length = count
+            this.$length.set(count)
         })
     }
 
@@ -128,7 +126,7 @@ export class DeletedProductsComponent {
         this.navigationService.loadBarStart()
         this.productsService.restore(productId).subscribe(() => {
             this.navigationService.loadBarFinish()
-            this.dataSource = this.dataSource.filter(e => e.id !== productId)
+            this.fetchData()
         })
     }
 

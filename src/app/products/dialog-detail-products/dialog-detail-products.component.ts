@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { ProductModel } from '../product.model'
 import { ProductsService } from '../products.service'
-//import { FavoritesService } from '../../favorites/favorites.service'
+import { FavoritesService } from '../../favorites/favorites.service'
 import { NavigationService } from '../../navigation/navigation.service'
 import { MaterialModule } from '../../material.module'
 import { AuthService } from '../../auth/auth.service'
@@ -20,9 +20,11 @@ export class DialogDetailProductsComponent {
 
     readonly product: ProductModel = inject(MAT_DIALOG_DATA)
     private readonly productsService = inject(ProductsService)
+    private readonly favoritesService = inject(FavoritesService)
     private readonly navigationService = inject(NavigationService)
     private readonly authService = inject(AuthService)
 
+    $stock = signal<number>(0)
     isFavorite: boolean = false
     setting: SettingModel = new SettingModel()
     priceLists: PriceListModel[] = []
@@ -35,35 +37,32 @@ export class DialogDetailProductsComponent {
     }
 
     ngOnInit(): void {
-       // this.isFavorite = this.favoritesService.isFavorite(this.product.id)
-       // this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-       //     this.setting = auth.setting
-       // })
-       // this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
-       //     this.priceLists = priceLists
-       // })
-       // this.productsService.getProductById(this.product.id).subscribe(product => {
-       //     Object.assign(this.product, {
-       //         stock: product.stock,
-       //         description: product.description,
-       //         location: product.location,
-       //         isTrackStock: product.isTrackStock,
-       //     })
-       // })
+        this.isFavorite = this.favoritesService.isFavorite(this.product.id)
+        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
+            this.setting = auth.setting
+        })
+
+        this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
+            this.priceLists = priceLists
+        })
+
+        this.productsService.getStock(this.product.id).subscribe(product => {
+            this.$stock.set(product)
+        })
     }
 
     onCreateFavorites() {
-       // this.favoritesService.create(this.product.id).subscribe(() => {
-       //     this.navigationService.showMessage('Favorito agregado correctamente')
-       //     this.favoritesService.loadFavorites()
-       // })
+        this.favoritesService.create(this.product.id).subscribe(() => {
+            this.navigationService.showMessage('Se han guardado los cambios')
+            this.favoritesService.loadFavorites()
+        })
     }
 
     onDeleteFavorites() {
-       // this.favoritesService.delete(this.product.id).subscribe(() => {
-       //     this.navigationService.showMessage('Favorito removido correctamente')
-       //     this.favoritesService.loadFavorites()
-       // })
+        this.favoritesService.delete(this.product.id).subscribe(() => {
+            this.navigationService.showMessage('Se han guardado los cambios')
+            this.favoritesService.loadFavorites()
+        })
     }
 
 }

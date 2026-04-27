@@ -1,4 +1,4 @@
-import { IgvCode } from "../products/igv-type.enum"
+import { IgvCode } from "../sales/igv-code.enum"
 
 export interface CreateBoardItemModel {
     id?: number

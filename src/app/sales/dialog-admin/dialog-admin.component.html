@@ -1,3 +1,8 @@
+@let sale = $sale();
+@let user = $user();
+@let office = $office();
+@let cdr = $cdr();
+@let ticket = $ticket();
 @if (sale && office && user) {
 <h2 mat-dialog-title>
     {{ sale.invoicePrefix }}{{ office.serialPrefix }}-{{ sale.invoiceNumber }}
@@ -104,15 +109,13 @@
     <button type="button" mat-raised-button color="primary" (click)="onDeleteSales()">ELIM.
         VENTAS</button>
     }
-    @if (ticket != null) {
-    <button type="button" mat-raised-button color="primary" (click)="onDeleteTicket()">ELIM.
-        TICKET</button>
+    @if (ticket) {
+    <button type="button" mat-raised-button color="primary" (click)="onDeleteTicket()">ELIM. TICKET</button>
     }
-    @if (cdr != null) {
-    <button type="button" mat-raised-button color="primary" (click)="onDeleteCdr()">ELIM.
-        CDR</button>
+    @if (cdr) {
+    <button type="button" mat-raised-button color="primary" (click)="onDeleteCdr()">ELIM. CDR</button>
     }
-    @if (cdrTicket != null) {
+    @if (cdrTicket) {
     <button type="button" mat-raised-button color="primary" (click)="onDeleteCdrTicket()">ELIM. CDRT</button>
     }
     <span class="spacer"></span>

@@ -1,3 +1,5 @@
+@let customer = $customer();
+@let credit = $credit();
 <div class="container">
     <div class="d-flex">
         <div class="w-100 pr-3">
@@ -65,16 +67,16 @@
                 </mat-card-header>
                 <mat-card-content>
                     <mat-list>
-                        @for (saleItem of saleItems; track $index) {
+                        @for (saleItem of $saleItems(); track $index) {
                         <mat-list-item>
                             <span matListItemTitle>{{ saleItem.fullName }} ({{ saleItem.quantity }})</span>
-                            @if (saleItem.igvCode === '11') {
+                            @if (saleItem.igvCode === igvCode.BONIFICACION) {
                             <span class="text-success ml-2">Bon</span>
                             }
-                            @if (saleItem.igvCode === '20') {
+                            @if (saleItem.igvCode === igvCode.EXONERADO) {
                             <span class="text-primary ml-2">Exo</span>
                             }
-                            @if (saleItem.igvCode === '30') {
+                            @if (saleItem.igvCode === igvCode.INAFECTO) {
                             <span class="text-primary ml-2">Ina</span>
                             }
                             <span>{{ (saleItem.price * saleItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
@@ -90,7 +92,7 @@
                     <mat-card-title>Pagos</mat-card-title>
                 </mat-card-header>
                 <mat-list role="list">
-                    @for (payment of payments; track payment.id) {
+                    @for (payment of $payments(); track payment.id) {
                     <mat-list-item role="listitem" [ngClass]="{ 'bg-danger': payment.deletedAt }">
                         <span matListItemTitle>{{ payment.paymentMethod.name }}</span>
                         <span matListItemLine>{{ payment.createdAt | date }}<span class="divider"></span>{{
@@ -109,8 +111,7 @@
                     }
                 </mat-list>
                 <mat-card-actions>
-                    <button mat-flat-button color="primary" (click)="onCreatePayment()"
-                        [disabled]="turn === null">PAGAR</button>
+                    <button mat-flat-button color="primary" (click)="onCreatePayment()" [disabled]="turn === null">PAGAR</button>
                 </mat-card-actions>
             </mat-card>
             <mat-card>
@@ -118,9 +119,9 @@
                     <mat-card-title>Cuotas</mat-card-title>
                 </mat-card-header>
                 <mat-list>
-                    @for (due of dues; track $index) {
+                    @for (due of $dues(); track $index) {
                     <mat-list-item>
-                        <span matListItemTitle>{{ due.dueDate | date }}</span>
+                        <span matListItemTitle>{{ due.dueAt | date }}</span>
                         <span>{{ due.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
                     </mat-list-item>
                     }

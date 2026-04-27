@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { PageEvent } from '@angular/material/paginator'
 import { NavigationService } from '../../navigation/navigation.service'
 import { TableModel } from '../table.model'
@@ -19,7 +19,7 @@ export class TablesComponent {
     private readonly navigationService = inject(NavigationService)
 
     displayedColumns: string[] = ['name', 'deletedAt', 'actions']
-    dataSource: TableModel[] = []
+    $dataSource = signal<TableModel[]>([])
     length: number = 0
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
@@ -31,22 +31,22 @@ export class TablesComponent {
     }
 
     onRestoreTable(table: TableModel) {
-        table.deletedAt = null
         this.navigationService.loadBarStart()
-        this.tablesService.update(table, table.id).subscribe(() => {
+        this.tablesService.restore(table.id).subscribe(() => {
             this.navigationService.loadBarFinish()
             this.navigationService.showMessage('Se han guardado los cambios')
+            this.fetchData()
         })
     }
 
     onDeleteTable(table: TableModel) {
         const ok = confirm('Estas seguro de desactivar?...')
         if (ok) {
-            table.deletedAt = new Date().toDateString()
             this.navigationService.loadBarStart()
-            this.tablesService.update(table, table.id).subscribe(() => {
+            this.tablesService.delete(table.id).subscribe(() => {
                 this.navigationService.loadBarFinish()
                 this.navigationService.showMessage('Se han guardado los cambios')
+                this.fetchData()
             })
         }
     }
@@ -55,7 +55,7 @@ export class TablesComponent {
         this.navigationService.loadBarStart()
         this.tablesService.getTables().subscribe(tables => {
             this.navigationService.loadBarFinish()
-            this.dataSource = tables
+            this.$dataSource.set(tables)
         })
     }
 

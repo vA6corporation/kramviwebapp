@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
 import { Subscription } from 'rxjs'
@@ -10,7 +10,7 @@ import { PriceType } from '../../products/price-type.enum'
 import { ProductsService } from '../../products/products.service'
 import { ProformaItemModel } from '../proforma-item.model'
 import { ProformasService } from '../proformas.service'
-import { IgvCode } from '../../products/igv-type.enum'
+import { IgvCode } from '../../sales/igv-code.enum'
 import { MaterialModule } from '../../material.module'
 
 @Component({
@@ -37,8 +37,8 @@ export class DialogProformaItemsComponent {
         isBonus: this.proformaItem.igvCode === IgvCode.BONIFICACION ? true : false,
     })
 
-    priceLists: PriceListModel[] = []
-    setting: SettingModel = new SettingModel()
+    $priceLists = signal<PriceListModel[]>([])
+    $setting = signal<SettingModel>(new SettingModel())
     private office: OfficeModel = new OfficeModel()
 
     private handlePriceLists$: Subscription = new Subscription()
@@ -51,8 +51,8 @@ export class DialogProformaItemsComponent {
 
     ngOnInit(): void {
         this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
-            this.priceLists = priceLists
-            this.priceListId = this.setting.defaultPriceListId || this.priceLists[0]?.id
+            this.$priceLists.set(priceLists)
+            this.priceListId = this.$setting().defaultPriceListId || priceLists[0]?.id
             for (const price of this.proformaItem.prices || []) {
                 if (price.price === this.proformaItem.price && price.priceListId) {
                     this.priceListId = price.priceListId
@@ -61,12 +61,12 @@ export class DialogProformaItemsComponent {
         })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
+            this.$setting.set(auth.setting)
         })
     }
 
     onChangePriceList() {
-        switch (this.setting.defaultPrice) {
+        switch (this.$setting().defaultPrice) {
             case PriceType.LISTA: {
                 const price = this.proformaItem.prices.find(e => e.priceListId === this.priceListId) || null
                 if (price) {
@@ -106,4 +106,5 @@ export class DialogProformaItemsComponent {
     onDelete(): void {
         this.proformasService.removeProformaItem(this.index)
     }
+
 }

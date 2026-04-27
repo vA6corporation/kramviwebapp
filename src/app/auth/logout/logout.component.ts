@@ -37,12 +37,16 @@ export class LogoutComponent {
     ngOnInit(): void {
         this.navigationService.setTitle('Cerrar sesion')
 
-        this.handleBusinesses$ = this.authService.handleBusinesses().subscribe(businesses => {
-            this.$businesses.set(businesses)
-        })
-
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.$user.set(auth.user)
+            console.log(auth.user)
+            if (auth.user.officeId === null) {
+                this.handleBusinesses$ = this.authService.handleBusinesses().subscribe(businesses => {
+                    this.$businesses.set(businesses)
+                })
+            } else {
+                this.$businesses.set([])
+            }
         })
     }
 

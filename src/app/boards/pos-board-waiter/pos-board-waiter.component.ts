@@ -56,7 +56,7 @@ export class PosBoardWaiterComponent {
     boardItems: CreateBoardItemModel[] = []
     gridListCols = 4
     selectedIndex: number = 0
-    setting: SettingModel = new SettingModel()
+    $setting = signal<SettingModel>(new SettingModel())
     $products = signal<ProductModel[]>([])
     $isLoading = signal<boolean>(true)
     private office: OfficeModel = new OfficeModel()
@@ -90,21 +90,21 @@ export class PosBoardWaiterComponent {
         })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
+            this.$setting.set(auth.setting)
             this.office = auth.office
             this.user = auth.user
         })
 
         this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
             this.priceLists = priceLists
-            this.priceListId = this.setting.defaultPriceListId || this.priceLists[0]?.id
+            this.priceListId = this.$setting().defaultPriceListId || priceLists[0]?.id
         })
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
             switch (id) {
                 case 'change_board': {
                     if (this.board) {
-                        if (this.setting.password) {
+                        if (this.$setting().password) {
                             const board = this.board
                             const dialogRef = this.matDialog.open(DialogPasswordComponent, {
                                 width: '600px',
@@ -125,13 +125,17 @@ export class PosBoardWaiterComponent {
                     break
                 }
                 case 'print_preaccount': {
-                    if (this.board) {
-                        const board = JSON.parse(JSON.stringify(this.board))
-                        if (this.setting.defaultTicket === 'ticket80mm') {
-                            this.printService.printPreaccount80mm(board)
-                        } else {
-                            this.printService.printPreaccount58mm(board)
-                        }
+                    if (this.board && this.table) {
+                        this.navigationService.loadBarStart()
+                        this.boardsService.createPreaccount(this.board.id, this.table.id, this.board.boardItems).subscribe(preaccount => {
+                            Object.assign(preaccount, { table: this.table, user: this.user })
+                            this.navigationService.loadBarFinish()
+                            if (this.$setting().defaultTicket === '80MM') {
+                                this.printService.printPreaccount80mm(preaccount)
+                            } else {
+                                this.printService.printPreaccount58mm(preaccount)
+                            }
+                        })
                     }
                     break
                 }
@@ -156,7 +160,7 @@ export class PosBoardWaiterComponent {
                     this.navigationService.loadBarFinish()
                     this.selectedIndex = 2
 
-                    ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                    ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
 
                     if (this.sortByName) {
                         products.sort((a, b) => {
@@ -255,7 +259,7 @@ export class PosBoardWaiterComponent {
             board.boardItems = board.boardItems.filter(e => (e.quantity - e.preQuantity) > 0)
             board.boardItems.forEach(e => e.quantity = (e.quantity - e.preQuantity))
 
-            if (this.setting.password) {
+            if (this.$setting().password) {
                 const dialogRef = this.matDialog.open(DialogPasswordComponent, {
                     width: '600px',
                     position: { top: '20px' },
@@ -263,7 +267,7 @@ export class PosBoardWaiterComponent {
 
                 dialogRef.afterClosed().subscribe(ok => {
                     if (ok) {
-                        if (this.setting.defaultTicket === 'ticket80mm') {
+                        if (this.$setting().defaultTicket === '80MM') {
                             this.printService.printCommand80mm(board)
                         } else {
                             this.printService.printCommand58mm(board)
@@ -271,7 +275,7 @@ export class PosBoardWaiterComponent {
                     }
                 })
             } else {
-                if (this.setting.defaultTicket === 'ticket80mm') {
+                if (this.$setting().defaultTicket === '80MM') {
                     this.printService.printCommand80mm(board)
                 } else {
                     this.printService.printCommand58mm(board)
@@ -284,7 +288,7 @@ export class PosBoardWaiterComponent {
         if (this.board) {
             const board: BoardModel = JSON.parse(JSON.stringify(this.board))
 
-            if (this.setting.password) {
+            if (this.$setting().password) {
                 const dialogRef = this.matDialog.open(DialogPasswordComponent, {
                     width: '600px',
                     position: { top: '20px' },
@@ -292,7 +296,7 @@ export class PosBoardWaiterComponent {
 
                 dialogRef.afterClosed().subscribe(ok => {
                     if (ok) {
-                        if (this.setting.defaultTicket === 'ticket80mm') {
+                        if (this.$setting().defaultTicket === '80MM') {
                             this.printService.printCommand80mm(board)
                         } else {
                             this.printService.printCommand58mm(board)
@@ -300,7 +304,7 @@ export class PosBoardWaiterComponent {
                     }
                 })
             } else {
-                if (this.setting.defaultTicket === 'ticket80mm') {
+                if (this.$setting().defaultTicket === '80MM') {
                     this.printService.printCommand80mm(board)
                 } else {
                     this.printService.printCommand58mm(board)
@@ -310,7 +314,7 @@ export class PosBoardWaiterComponent {
     }
 
     onChangePriceList() {
-        //ProductsService.setPrices(this.products, this.priceListId, this.setting, this.office)
+        ProductsService.setPrices(this.$products(), this.priceListId, this.$setting(), this.office)
     }
 
     onCancel() {
@@ -325,7 +329,7 @@ export class PosBoardWaiterComponent {
         this.$products.set([])
         if (category.products) {
             const products = category.products
-            ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+            ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
 
             if (this.sortByName) {
                 products.sort((a, b) => {
@@ -348,7 +352,7 @@ export class PosBoardWaiterComponent {
                 this.navigationService.loadBarFinish()
                 category.products = products
 
-                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
 
                 if (this.sortByName) {
                     products.sort((a, b) => {
@@ -384,7 +388,7 @@ export class PosBoardWaiterComponent {
     onDeleteBoard() {
         if (this.board !== null) {
             const board = this.board
-            if (this.setting.password) {
+            if (this.$setting().password) {
                 const dialogRef = this.matDialog.open(DialogPasswordComponent, {
                     width: '600px',
                     position: { top: '20px' },
@@ -462,7 +466,7 @@ export class PosBoardWaiterComponent {
                     savedBoard.boardItems = boardItems
                     savedBoard.table = table
 
-                    switch (this.setting.defaultTicket) {
+                    switch (this.$setting().defaultTicket) {
                         case '80MM':
                             this.printService.printCommand80mm(savedBoard)
                         break

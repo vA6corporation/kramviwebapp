@@ -25,8 +25,8 @@ export class SettingsService {
         return this.httpService.getFile(url)
     }
 
-    updateImage(image: any) {
-        return this.httpService.put('settings/updateImage', { image })
+    deleteLogo(settingUuid: any) {
+        return this.httpService.delete(`settings/deleteLogo/${settingUuid}`)
     }
 
     uploadCertificate(formData: FormData) {

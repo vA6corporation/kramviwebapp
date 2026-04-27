@@ -1,4 +1,4 @@
 export const environment = {
     baseUrl: 'https://pe.kramvi.com/api/v1/',
-    version: '5.0',
+    version: '5.1',
 }

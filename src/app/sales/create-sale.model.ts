@@ -1,6 +1,6 @@
 export interface CreateSaleModel {
     invoiceCode: string
-    paymentMethodId: any | null
+    paymentMethodId: any
     observation: string
     cash: number | null
     currencyCode: string
@@ -12,5 +12,5 @@ export interface CreateSaleModel {
     isDelivery: boolean
     createdAt: Date | null
     turnId: any
-    customerId: any | null
+    customerId: any
 }

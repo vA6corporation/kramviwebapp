@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { NavigationService } from '../../navigation/navigation.service'
 import { ActivitiesService } from '../activities.service'
@@ -19,7 +19,7 @@ export class ActivitiesComponent {
     private readonly navigationService = inject(NavigationService)
 
     displayedColumns: string[] = ['name', 'actions']
-    dataSource: ActivityModel[] = []
+    $dataSource = signal<ActivityModel[]>([])
     length: number = 0
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
@@ -31,7 +31,7 @@ export class ActivitiesComponent {
         this.activitiesService.getActivities().subscribe({
             next: activities => {
                 this.navigationService.loadBarFinish()
-                this.dataSource = activities
+                this.$dataSource.set(activities)
             }, error: (error: HttpErrorResponse) => {
                 this.navigationService.showMessage(error.error.message)
             }

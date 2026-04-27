@@ -84,12 +84,6 @@ export async function buildTicket58mm(
         positionY += 3 * strArr.length
     }
 
-    if (office.phone) {
-        text = office.phone
-        pdf.text(text, pageCenter + marginLeft, positionY, { align: 'center' })
-        positionY += 3
-    }
-
     pdf.text(`${invoiceTitle}`, pageCenter + marginLeft, positionY, { align: 'center' })
     positionY += 3
     text = `${sale.invoicePrefix}${office.serialPrefix}-${sale.invoiceNumber}`
@@ -148,7 +142,7 @@ export async function buildTicket58mm(
 
     if (sale.isCredit) {
         pdf.text('F. de venc.:', 0 + marginLeft, positionY)
-        pdf.text(`${formatDate(sale.dues[0].dueDate, 'dd/MM/yyyy', 'en-US')}`, 15 + marginLeft, positionY)
+        pdf.text(`${formatDate(sale.dues[0].dueAt, 'dd/MM/yyyy', 'en-US')}`, 15 + marginLeft, positionY)
         positionY += 3
 
         pdf.text('Cuotas:', 0, positionY)

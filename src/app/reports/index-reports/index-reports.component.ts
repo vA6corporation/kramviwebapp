@@ -12,7 +12,7 @@ import { InoutComponent } from '../inout/inout.component'
 import { InvoicesComponent } from '../invoices/invoices.component'
 import { ProductsComponent } from '../products/products.component'
 import { ProformasComponent } from '../proformas/proformas.component'
-import { UtilitiesComponent } from '../utilities/utilities.component'
+//import { UtilitiesComponent } from '../utilities/utilities.component'
 import { MaterialModule } from '../../material.module'
 import { Chart, registerables } from 'chart.js'
 Chart.register(...registerables)
@@ -23,7 +23,7 @@ Chart.register(...registerables)
         MaterialModule,
         IncomesComponent,
         InoutComponent,
-        UtilitiesComponent,
+        //UtilitiesComponent,
         ProductsComponent,
         CategoriesComponent,
         CustomersComponent,

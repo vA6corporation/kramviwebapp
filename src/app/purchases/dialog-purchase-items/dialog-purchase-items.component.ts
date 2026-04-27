@@ -9,7 +9,7 @@ import { SettingModel } from '../../settings/setting.model'
 import { MaterialModule } from '../../material.module'
 import { NavigationService } from '../../navigation/navigation.service'
 import { OfficesService } from '../../offices/offices.service'
-import { IgvCode } from '../../products/igv-type.enum'
+import { IgvCode } from '../../sales/igv-code.enum'
 import { PriceListModel } from '../../products/price-list.model'
 import { PriceType } from '../../products/price-type.enum'
 import { ProductsService } from '../../products/products.service'
@@ -122,7 +122,7 @@ export class DialogPurchaseItemsComponent {
             const { prices, price } = this.formGroup.value
             this.isLoading = true
             this.dialogRef.disableClose = true
-            this.productsService.updatePrices(this.purchaseItem.productId, this.setting.defaultPrice, prices, price).subscribe(() => {
+            this.productsService.updatePrices(this.purchaseItem.productId, prices, price).subscribe(() => {
                 this.formGroup.patchValue({ price, prices })
                 this.purchaseItem.price = price
                 this.purchaseItem.prices = prices

@@ -54,8 +54,6 @@ export async function buildA4PaymentOrder(
     pdf.text(strArr, 45, positionYTitle)
     positionYTitle += 4 * strArr.length
 
-    text = office?.phone || ''
-    pdf.text(text, 45, positionYTitle)
     positionYTitle += 5
 
     pdf.setDrawColor(0)

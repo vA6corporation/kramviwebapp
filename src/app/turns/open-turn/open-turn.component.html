@@ -79,6 +79,9 @@
                         <button type="button" mat-icon-button aria-label="trash" (click)="onEditExpense(expense)">
                             <mat-icon>edit</mat-icon>
                         </button>
+                        <button type="button" mat-icon-button aria-label="trash" (click)="onDeleteExpense(expense.id)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
                     </div>
                 </mat-list-item>
                 } @empty {
@@ -107,14 +110,14 @@
     </mat-card>
     <button type="button" (click)="onGetSummarySales()" mat-flat-button color="primary" class="w-100 mb-3">MOSTRAR
         PRODUCTOS VENDIDOS</button>
-    @if (credits.length) {
+    @if ($credits().length) {
     <mat-card class="mb-3">
         <mat-card-header>
             <mat-card-title>Creditos</mat-card-title>
         </mat-card-header>
         <mat-card-content>
             <mat-action-list role="list">
-                @for (credit of credits; track credit.id) {
+                @for (credit of $credits(); track credit.id) {
                 <button mat-list-item (click)="onShowSale(credit.id)">
                     <span matListItemTitle>{{ credit.invoicePrefix }}{{ office.serialPrefix }}-{{ credit.invoiceNumber
                         }}</span>

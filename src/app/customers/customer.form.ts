@@ -9,4 +9,5 @@ export interface CustomerForm {
     phone: FormControl<string>
     email: FormControl<string>
     observation: FormControl<string>
+    creditLimit: FormControl<number|null>
 }

@@ -4,7 +4,7 @@ export interface TurnModel {
     id: number
     openCash: number
     createdAt: string
-    closedAt: string
+    deletedAt: string
     observation: string
     user: UserModel
 }

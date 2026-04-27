@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core'
-import { CommonModule, Location } from '@angular/common'
+import { Component, inject, signal } from '@angular/core'
+import { CommonModule } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog'
@@ -29,7 +29,7 @@ import { DialogCreateTurnsComponent } from '../../turns/dialog-create-turns/dial
 import { DialogSearchCustomersComponent } from '../../customers/dialog-search-customers/dialog-search-customers.component'
 import { DialogCreateCustomersComponent } from '../../customers/dialog-create-customers/dialog-create-customers.component'
 import { DialogInitPaymentsComponent } from '../../payments/dialog-init-payments/dialog-init-payments.component'
-import { IgvCode } from '../../products/igv-type.enum'
+import { IgvCode } from '../../sales/igv-code.enum'
 import { DialogEditCustomersComponent } from '../../customers/dialog-edit-customers/dialog-edit-customers.component'
 import { MaterialModule } from '../../material.module'
 import { SaleItemsComponent } from '../sale-items/sale-items.component'
@@ -47,7 +47,6 @@ import { InvoiceCode } from '../../sales/invoice-code.enum'
 export class ChargeCreditComponent {
 
     private readonly formBuilder = inject(FormBuilder)
-    private readonly location = inject(Location)
     private readonly activatedRoute = inject(ActivatedRoute)
     private readonly router = inject(Router)
     private readonly matDialog = inject(MatDialog)
@@ -74,18 +73,19 @@ export class ChargeCreditComponent {
         { code: '01', name: 'FACTURA' },
     ]
     saleItems: CreateSaleItemModel[] = []
-    charge: number = 0
-    customer: CustomerModel | null = null
-    isLoading: boolean = false
+    $charge = signal<number>(0)
+    $customer = signal<CustomerModel | null>(null)
+    $isLoading = signal<boolean>(false)
     payments: CreatePaymentModel[] = []
     dues: CreateDueModel[] = []
-    setting = new SettingModel()
-    paymentMethods: PaymentMethodModel[] = []
+    $setting = signal<SettingModel>(new SettingModel())
+    $paymentMethods = signal<PaymentMethodModel[]>([])
+    $isYesterdayTurn = signal<boolean>(false)
+    $turn = signal<TurnModel | null>(null)
 
-    private backTo: string = ''
+    private goTo: string = ''
     private detraction: DetractionModel | null = null
     private user: UserModel = new UserModel()
-    private turn: TurnModel | null = null
     private params: Params = {}
 
     private handleClickMenu$: Subscription = new Subscription()
@@ -109,19 +109,33 @@ export class ChargeCreditComponent {
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.user = auth.user
-            this.setting = auth.setting
+            this.$setting.set(auth.setting)
+
+            Object.assign(this.params, { isAvailableStock: auth.setting.isAvailableStock })
 
             this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
-                this.turn = turn
-                if (turn === null) {
+                this.$turn.set(turn)
+                if (turn) {
+                    const today = new Date()
+                    today.setHours(0, 0, 0, 0)
+                    const turnDate = new Date(turn.createdAt)
+                    turnDate.setHours(0, 0, 0, 0)
+                    if (turnDate.getMonth() === today.getMonth() && turnDate.getDate() < today.getDate()) {
+                        this.$isYesterdayTurn.set(true)
+                    } else {
+                        if (turnDate.getMonth() !== today.getMonth()) {
+                            this.$isYesterdayTurn.set(true)
+                        }
+                    }
+                } else {
                     this.matDialog.open(DialogCreateTurnsComponent, {
                         width: '600px',
-                        position: { top: '20px' },
+                        position: { top: '20px' }
                     })
                 }
             })
 
-            if (this.setting.isShowDeliveryAt) {
+            if (this.$setting().isShowDeliveryAt) {
                 this.formGroup.get('deliveryAt')?.setValidators([Validators.required])
                 this.formGroup.get('deliveryAt')?.updateValueAndValidity()
             }
@@ -134,8 +148,8 @@ export class ChargeCreditComponent {
         ])
 
         this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
-            this.paymentMethods = paymentMethods
-            this.formGroup.patchValue({ paymentMethodId: (this.paymentMethods[0] || { id: '' }).id })
+            this.$paymentMethods.set(paymentMethods)
+            this.formGroup.patchValue({ paymentMethodId: (paymentMethods[0] || { id: '' }).id })
         })
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
@@ -144,12 +158,12 @@ export class ChargeCreditComponent {
                     const dialogRef = this.matDialog.open(DialogSearchCustomersComponent, {
                         width: '600px',
                         position: { top: '20px' },
-                        data: this.setting.defaultSearchCustomer
+                        data: this.$setting().defaultSearchCustomer
                     })
 
                     dialogRef.afterClosed().subscribe(customer => {
                         if (customer) {
-                            this.customer = customer
+                            this.$customer.set(customer)
                         }
                     })
 
@@ -161,17 +175,18 @@ export class ChargeCreditComponent {
 
                         dialogRef.afterClosed().subscribe(customer => {
                             if (customer) {
-                                this.customer = customer
+                                this.$customer.set(customer)
                             }
                         })
                     })
                     break
 
                 case 'add_dues': {
-                    if (this.turn) {
+                    const turn = this.$turn()
+                    if (turn) {
                         const data: DialogDueData = {
-                            turnId: this.turn.id,
-                            charge: this.charge,
+                            turnId: turn.id,
+                            charge: this.$charge(),
                             dues: this.dues
                         }
 
@@ -191,11 +206,12 @@ export class ChargeCreditComponent {
                 }
 
                 case 'add_init_payment': {
-                    if (this.turn) {
+                    const turn = this.$turn()
+                    if (turn) {
                         const dialogRef = this.matDialog.open(DialogInitPaymentsComponent, {
                             width: '600px',
                             position: { top: '20px' },
-                            data: this.turn.id,
+                            data: turn.id,
                         })
 
                         dialogRef.afterClosed().subscribe(payments => {
@@ -213,30 +229,44 @@ export class ChargeCreditComponent {
             }
         })
 
-        this.formGroup.get('invoiceCode')?.patchValue(this.setting.defaultInvoice)
+        this.formGroup.get('invoiceCode')?.patchValue(this.$setting().defaultInvoice)
 
         this.handleSaleItems$ = this.salesService.handleSaleItems().subscribe(saleItems => {
+
             this.saleItems = saleItems
-            this.charge = 0
+            this.$charge.set(0)
+            let charge = 0
+
             for (const saleItem of this.saleItems) {
                 if (saleItem.igvCode !== IgvCode.BONIFICACION) {
-                    this.charge += saleItem.price * saleItem.quantity
+                    charge += saleItem.price * saleItem.quantity
                 }
+            }
+
+            const { discount, discountPercent } = this.formGroup.value
+
+            if (discountPercent) {
+                let discount = (charge / 100) * discountPercent
+                this.$charge.set(charge - discount)
+                this.formGroup.patchValue({ discount })
+            } else {
+                this.$charge.set(charge - discount)
             }
 
             const now = new Date()
 
             const due: CreateDueModel = {
-                charge: this.charge,
-                preCharge: this.charge,
-                dueDate: new Date(now.setMonth(now.getMonth() + 1)),
+                charge: this.$charge(),
+                preCharge: this.$charge(),
+                dueAt: new Date(now.setMonth(now.getMonth() + 1)),
             }
 
             this.dues = [due]
         })
 
-        const { proformaId, backTo } = this.activatedRoute.snapshot.queryParams
-        this.backTo = backTo
+        const { proformaId, goTo } = this.activatedRoute.snapshot.queryParams
+
+        this.goTo = goTo
 
         if (proformaId) {
             Object.assign(this.params, { proformaId })
@@ -244,8 +274,8 @@ export class ChargeCreditComponent {
                 const { proformaItems, customer, discount } = proforma
                 this.salesService.setSaleItems(proformaItems)
                 this.formGroup.patchValue(proforma)
-                this.charge -= (discount || 0)
-                this.customer = customer
+                this.$charge.update(value => value -= (discount || 0))
+                this.$customer.set(customer)
             })
         }
 
@@ -260,26 +290,39 @@ export class ChargeCreditComponent {
     }
 
     onChangeDiscount() {
+        this.$charge.set(0)
+        let charge = 0
+
         const { discount } = this.formGroup.value
-        this.charge = 0
 
         for (const saleItem of this.saleItems) {
             if (saleItem.igvCode !== IgvCode.BONIFICACION) {
-                this.charge += saleItem.price * saleItem.quantity
+                charge += saleItem.price * saleItem.quantity
             }
         }
 
-        this.charge -= discount
+        this.$charge.set(charge - discount)
+    }
 
-        if (this.dues.length < 2) {
-            const now = new Date()
-            const due: CreateDueModel = {
-                charge: this.charge,
-                preCharge: this.charge,
-                dueDate: new Date(now.setMonth(now.getMonth() + 1)),
+    onChangeDiscountPercent() {
+        let charge = 0
+        let discount = 0
+
+        const { discountPercent } = this.formGroup.value
+
+        for (const saleItem of this.saleItems) {
+            if (saleItem.igvCode !== IgvCode.BONIFICACION) {
+                charge += saleItem.price * saleItem.quantity
             }
+        }
 
-            this.dues = [due]
+        if (discountPercent) {
+            discount = (charge / 100) * discountPercent
+            this.$charge.set(charge - discount)
+            this.formGroup.patchValue({ discount })
+        } else {
+            this.$charge.set(charge)
+            this.formGroup.patchValue({ discount })
         }
     }
 
@@ -299,10 +342,12 @@ export class ChargeCreditComponent {
 
     onSubmit() {
         try {
-            this.isLoading = true
-            this.navigationService.loadBarStart()
+            const turn = this.$turn()
+            const creditForm: CreditForm = this.formGroup.value
+            const customer = this.$customer()
+            const charge = this.$charge()
 
-            if (this.turn === null) {
+            if (turn === null) {
                 this.matDialog.open(DialogCreateTurnsComponent, {
                     width: '600px',
                     position: { top: '20px' },
@@ -314,32 +359,32 @@ export class ChargeCreditComponent {
                 throw new Error("Agrega un producto")
             }
 
-            if (this.customer === null) {
+            if (customer === null) {
                 throw new Error("Agrega un cliente")
             }
-
-            const creditForm: CreditForm = this.formGroup.value
 
             const createdCredit: CreateCreditModel = {
                 invoiceCode: creditForm.invoiceCode,
                 observation: creditForm.observation,
-                turnId: this.turn.id,
+                turnId: turn.id,
                 currencyCode: creditForm.currencyCode || 'PEN',
                 discount: creditForm.discount,
                 deliveryAt: creditForm.deliveryAt,
                 createdAt: creditForm.createdAt,
                 isRetainer: creditForm.isRetainer,
                 isCredit: true,
+                customerId: customer.id,
 
-                customerId: this.customer.id,
-
-                rcPercent: this.setting.defaultRcPercent,
-                igvPercent: this.setting.defaultIgvPercent
+                rcPercent: this.$setting().defaultRcPercent,
+                igvPercent: this.$setting().defaultIgvPercent
             }
 
-            if (createdCredit.invoiceCode === InvoiceCode.FACTURA && this.customer !== null && this.customer.documentType !== 'RUC') {
+            if (createdCredit.invoiceCode === InvoiceCode.FACTURA && customer !== null && customer.documentType !== 'RUC') {
                 throw new Error("El cliente debe tener un RUC")
             }
+
+            this.$isLoading.set(true)
+            this.navigationService.loadBarStart()
 
             this.salesService.createCredit(
                 createdCredit, this.saleItems,
@@ -351,12 +396,12 @@ export class ChargeCreditComponent {
                 next: sale => {
                     Object.assign(sale, {
                         user: this.user,
-                        customer: this.customer,
+                        customer,
                         saleItems: this.saleItems,
                         payments: this.payments,
                     })
 
-                    switch (this.setting.defaultTicket) {
+                    switch (this.$setting().defaultTicket) {
                         case 'A4':
                             this.printService.printA4Invoice(sale)
                         break
@@ -370,18 +415,18 @@ export class ChargeCreditComponent {
 
                     this.salesService.setSaleItems([])
 
-                    if (this.backTo) {
-                        this.router.navigate([this.backTo])
+                    if (this.goTo) {
+                        this.router.navigate([this.goTo])
                     } else {
-                        this.location.back()
+                        this.navigationService.back()
                     }
 
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Registrado correctamente')
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.showMessage(error.error.message)
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                 }
             })
@@ -389,7 +434,7 @@ export class ChargeCreditComponent {
             if (error instanceof Error) {
                 this.navigationService.showMessage(error.message)
             }
-            this.isLoading = false
+            this.$isLoading.set(false)
             this.navigationService.loadBarFinish()
         }
     }
@@ -398,12 +443,12 @@ export class ChargeCreditComponent {
         const dialogRef = this.matDialog.open(DialogEditCustomersComponent, {
             width: '600px',
             position: { top: '20px' },
-            data: this.customer,
+            data: this.$customer(),
         })
 
         dialogRef.afterClosed().subscribe(customer => {
             if (customer) {
-                this.customer = customer
+                this.$customer.set(customer)
             }
         })
     }

@@ -141,8 +141,9 @@ export class PurchasesService {
     create(
         purchase: CreatePurchaseModel,
         purchaseItems: CreatePurchaseItemModel[],
+        params: Params,
     ): Observable<PurchaseModel> {
-        return this.httpService.post('purchases', { purchase, purchaseItems })
+        return this.httpService.post('purchases', { purchase, purchaseItems }, params)
     }
 
     createCredit(

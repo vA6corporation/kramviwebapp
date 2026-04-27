@@ -55,7 +55,7 @@ export class OpenTurnComponent {
     openCash: number | null = null
     payments: PaymentModel[] = []
     $expenses = signal<ExpenseModel[]>([])
-    credits: CreditModel[] = []
+    $credits = signal<CreditModel[]>([])
     $summaryPayments = signal<SummaryPaymentModel[]>([])
     $summarySaleItems = signal<SummarySaleItemModel[]>([])
     $sales = signal<SaleModel[]>([])
@@ -260,17 +260,17 @@ export class OpenTurnComponent {
                 }
             })
 
-           // this.creditsService.getCreditsByTurn(turn.id).subscribe(credits => {
-           //     this.credits = credits
-           //     for (const credit of this.credits) {
-           //         if (credit.isCredit) {
-           //             this.totalCredit += credit.charge
-           //         }
-           //         if (credit.isPaid === false) {
-           //             this.totalDebt += credit.debt
-           //         }
-           //     }
-           // })
+            this.creditsService.getCreditsByTurn(turn.id).subscribe(credits => {
+                this.$credits.set(credits)
+                for (const credit of credits) {
+                    if (credit.isCredit) {
+                        this.totalCredit += credit.charge
+                    }
+                    if (credit.isPaid === false) {
+                        this.totalDebt += credit.debt
+                    }
+                }
+            })
         }
     }
 
@@ -338,16 +338,10 @@ export class OpenTurnComponent {
         }
     }
 
-    onEditExpense(expense: ExpenseModel) {
-        const dialogRef = this.matDialog.open(DialogEditExpensesComponent, {
-            width: '600px',
-            position: { top: '20px' },
-            data: expense,
-        })
-
-        dialogRef.componentInstance.handleDeleteExpense().subscribe(() => {
-            this.navigationService.loadBarStart()
-            this.expensesService.delete(expense.id).subscribe({
+    onDeleteExpense(expenseId: number) {
+        const ok = confirm('Estas seguro de eliminar?...')
+        if (ok) {
+            this.expensesService.delete(expenseId).subscribe({
                 next: () => {
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Eliminado correctamente')
@@ -357,6 +351,14 @@ export class OpenTurnComponent {
                     this.navigationService.loadBarFinish()
                 }
             })
+        }
+    }
+
+    onEditExpense(expense: ExpenseModel) {
+        const dialogRef = this.matDialog.open(DialogEditExpensesComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: expense,
         })
 
         dialogRef.afterClosed().subscribe(updatedExpense => {

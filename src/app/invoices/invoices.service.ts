@@ -28,7 +28,7 @@ export class InvoicesService {
     }
 
     getBadCdrs(): Observable<CdrModel[]> {
-        return this.httpService.get('invoices/badCdrs');
+        return this.httpService.get('invoices/badCdrs')
     }
 
     getCdrsByRangeDate(
@@ -36,21 +36,21 @@ export class InvoicesService {
         endDate: Date,
         params: Params,
     ): Observable<CdrModel[]> {
-        return this.httpService.get(`invoices/cdrsByRangeDate/${startDate}/${endDate}`, params);
+        return this.httpService.get(`invoices/cdrsByRangeDate/${startDate}/${endDate}`, params)
     }
 
     getCheckCdrs(
         salesId: any[],
     ): Observable<CdrModel[]> {
-        return this.httpService.post(`invoices/checkCdrs`, { salesId });
+        return this.httpService.post(`invoices/checkCdrs`, { salesId })
     }
 
     statusCdr(saleId: any): Observable<CdrModel> {
-        return this.httpService.get(`invoices/statusCdr/${saleId}`);
+        return this.httpService.get(`invoices/statusCdr/${saleId}`)
     }
 
     cancelInvoice(saleId: any, deletedReason: string): Observable<any> {
-        return this.httpService.delete(`tickets/invoice/${saleId}/${deletedReason}`);
+        return this.httpService.delete(`tickets/invoice/${saleId}/${deletedReason}`)
     }
 
     softDeleteInvoice(saleId: any, deletedReason: string): Observable<any> {
@@ -58,35 +58,35 @@ export class InvoicesService {
     }
 
     sendInvoice(saleId: any) {
-        return this.httpService.get(`invoices/send/${saleId}`);
+        return this.httpService.get(`invoices/send/${saleId}`)
     }
 
     sendDeleteInvoice(saleId: any) {
-        return this.httpService.get(`invoices/sendDelete/${saleId}`);
+        return this.httpService.get(`invoices/sendDelete/${saleId}`)
     }
 
     sendInvoiceMassive(saleIds: number[]) {
-        return this.httpService.post('invoices/sendMassive', { saleIds });
+        return this.httpService.post('invoices/sendMassive', { saleIds })
     }
 
     copyInvoiceMassive(salesId: any[]) {
-        return this.httpService.post('invoices/copyMassive', { salesId });
+        return this.httpService.post('invoices/copyMassive', { salesId })
     }
 
     deleteCdr(cdrId: any) {
-        return this.httpService.delete(`invoices/${cdrId}`);
+        return this.httpService.delete(`invoices/${cdrId}`)
     }
 
     deleteTicket(ticketId: any) {
-        return this.httpService.delete(`tickets/${ticketId}`);
+        return this.httpService.delete(`tickets/${ticketId}`)
     }
 
     getDeleteTicketBySale(saleId: any): Observable<CdrModel> {
-        return this.httpService.get(`tickets/deleteTicketBySale/${saleId}`);
+        return this.httpService.get(`tickets/deleteTicketBySale/${saleId}`)
     }
 
     deleteCdrTicket(saleId: any) {
-        return this.httpService.delete(`tickets/deleteCdrTicket/${saleId}`);
+        return this.httpService.delete(`tickets/deleteCdrTicket/${saleId}`)
     }
 
 }

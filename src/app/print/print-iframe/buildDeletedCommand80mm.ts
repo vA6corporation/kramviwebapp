@@ -3,7 +3,7 @@ import { formatDate } from '@angular/common'
 import { BoardModel } from '../../boards/board.model'
 import { BoardItemModel } from '../../boards/board-item.model'
 import { SettingModel } from '../../settings/setting.model'
-import { IgvCode } from '../../products/igv-type.enum'
+import { IgvCode } from '../../sales/igv-code.enum'
 
 export function buildDeletedCommand80mm(
     board: BoardModel,

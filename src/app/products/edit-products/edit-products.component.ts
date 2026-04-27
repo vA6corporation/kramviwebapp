@@ -1,4 +1,4 @@
-import { Component, NgZone, inject, signal } from '@angular/core'
+import { Component, NgZone, inject, signal, computed } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
@@ -69,13 +69,13 @@ export class EditProductsComponent {
     offices: OfficeModel[] = []
     priceLists: PriceListModel[] = []
     $annotations = signal<string[]>([])
-    imageId: any = 0
-    urlImage: string = ''
-    setting: SettingModel = new SettingModel()
+    productUuid: string = ''
+    $urlImage = signal<string>('')
+    $setting = signal<SettingModel>(new SettingModel())
     office: OfficeModel = new OfficeModel()
-    products: ProductModel[] = []
-    providers: ProviderModel[] = []
+    $provider = signal<ProviderModel | null>(null)
     isTrackStock = false
+    $priceControls = signal(this.formArray.controls)
 
     private handleCategories$: Subscription = new Subscription()
     private handleAuth$: Subscription = new Subscription()
@@ -97,25 +97,25 @@ export class EditProductsComponent {
         })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
+            this.$setting.set(auth.setting)
             this.office = auth.office
 
             this.productId = this.activatedRoute.snapshot.params['productId']
             this.navigationService.loadBarStart()
             this.productsService.getProductById(this.productId).subscribe(product => {
                 this.formGroup.patchValue(product)
-                this.products = product.products
-                this.providers = product.providers
-                this.isTrackStock = product.isTrackStock                // this.providers = product.providers
+                this.productUuid = product.uuid
+                this.$provider.set(product.provider)
+                this.isTrackStock = product.isTrackStock
                 this.navigationService.loadBarFinish()
 
                 if (product.urlImage) {
-                    this.urlImage = product.urlImage + `?ignoreCache=${Math.random()}`
+                    this.$urlImage.set(product.urlImage + `?ignoreCache=${Math.random()}`)
                 }
 
                 this.$annotations.set(product.annotations)
 
-                switch (this.setting.defaultPrice) {
+                switch (this.$setting().defaultPrice) {
                     case PriceType.OFICINA:
                         this.formGroup.get('price')?.setValidators([])
                         this.formGroup.get('price')?.updateValueAndValidity()
@@ -131,6 +131,7 @@ export class EditProductsComponent {
                                 })
                                 this.formArray.push(formGroup)
                             }
+                            this.$priceControls.set(Array.from(this.formArray.controls))
                         })
                         break
                     case PriceType.LISTA:
@@ -185,25 +186,16 @@ export class EditProductsComponent {
                     const formData = new FormData()
                     formData.append('file', result, result.name)
                     this.ngZone.run(() => {
-                        this.productsService.uploadImage(formData, this.productId).subscribe(res => {
+                        this.productsService.uploadImage(formData, this.productUuid).subscribe(res => {
                             const { urlImage } = res
                             this.navigationService.showMessage('Imagen actualizada')
                             this.navigationService.loadBarFinish()
-                            this.urlImage = urlImage + `?ignoreCache=${Math.random()}`
+                            this.$urlImage.set(urlImage + `?ignoreCache=${Math.random()}`)
                         })
                     })
                 }
             })
         }
-    }
-
-    onExcludedChange() {
-       // const excluded = this.excluded.indexOf(this.office.id)
-       // if (excluded >= 0) {
-       //     this.excluded.splice(excluded, 1)
-       // } else {
-       //     this.excluded.push(this.office.id)
-       // }
     }
 
     onCreateCategory() {
@@ -246,23 +238,6 @@ export class EditProductsComponent {
         })
     }
 
-    onDialogProducts() {
-       // const dialogRef = this.matDialog.open(DialogSearchProductsComponent, {
-       //     width: '600px',
-       //     position: { top: '20px' },
-       // })
-
-       // dialogRef.afterClosed().subscribe(product => {
-       //     if (product) {
-       //         this.products.push(product)
-       //     }
-       // })
-    }
-
-    onRemoveProduct(index: number) {
-        this.products.splice(index, 1)
-    }
-
     onRemoveAnnotation(index: number) {
         this.$annotations.update(annotations => {
           annotations.splice(index, 1)
@@ -271,47 +246,31 @@ export class EditProductsComponent {
     }
 
     onDialogProviders() {
-       // const dialogRef = this.matDialog.open(DialogSearchProvidersComponent, {
-       //     width: '600px',
-       //     position: { top: '20px' },
-       // })
+        const dialogRef = this.matDialog.open(DialogSearchProvidersComponent, {
+            width: '600px',
+            position: { top: '20px' },
+        })
 
-       // dialogRef.afterClosed().subscribe(provider => {
-       //     if (provider) {
-       //         this.providers.push(provider)
-       //     }
-       // })
+        dialogRef.afterClosed().subscribe(provider => {
+            if (provider) {
+                this.$provider.set(provider)
+            }
+        })
     }
 
-    onRemoveProvider(index: number) {
-        //this.providers.splice(index, 1)
-    }
-
-    onOpenDialogSearchProducts() {
-       // const dialogRef = this.matDialog.open(DialogSearchProductsComponent, {
-       //     width: '600px',
-       //     position: { top: '20px' },
-       // })
-
-       // dialogRef.afterClosed().subscribe(product => {
-       //     if (product) {
-       //         this.products.push(product)
-       //     }
-       // })
+    onRemoveProvider() {
+        this.$provider.set(null)
     }
 
     onSubmit(): void {
         if (this.formGroup.valid) {
             this.$isLoading.set(true)
             const product = this.formGroup.value
-            //const productIds = this.products.map(e => e.id)
-            //const providerIds = this.providers.map(e => e.id)
+            const provider = this.$provider()
             product.annotations = this.$annotations()
-            //product.excluded = this.excluded
-            //product.productIds = productIds
-            //product.providerIds = [...new Set(providerIds)]
+            product.providerId = provider ? provider.id : null
             this.navigationService.loadBarStart()
-            this.productsService.updateWithPrices(product, this.formArray.value, this.productId, this.setting.defaultPrice).subscribe({
+            this.productsService.updateWithPrices(product, this.formArray.value, this.productId).subscribe({
                 next: () => {
                     this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()

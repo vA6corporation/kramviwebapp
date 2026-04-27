@@ -41,13 +41,9 @@
             <input type="text" matInput formControlName="urbanizacion">
         </mat-form-field>
         <mat-form-field appearance="fill">
-            <mat-label>Codigo pais</mat-label>
-            <input type="text" matInput formControlName="codigoPais">
-        </mat-form-field>
-        <mat-form-field appearance="fill">
             <mat-label>Actividad</mat-label>
             <mat-select formControlName="activityId" class="text-uppercase">
-                @for (activity of activities; track $index) {
+                @for (activity of $activities(); track $index) {
                 <mat-option [value]="activity.id">{{ activity.name | uppercase }}</mat-option>
                 }
             </mat-select>
@@ -57,7 +53,7 @@
             <div class="py-3">
                 <button type="button" mat-raised-button routerLink="/offices" color="primary">CANCELAR</button>
                 <span class="divider"></span>
-                <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
+                <button type="submit" [disabled]="$isLoading()" mat-flat-button color="primary">GUARDAR</button>
             </div>
         </div>
     </form>

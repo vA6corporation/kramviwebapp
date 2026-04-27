@@ -1,6 +1,6 @@
+import { Component, ElementRef, ViewChild, inject, signal } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
-import { Component, ElementRef, ViewChild } from '@angular/core'
 import { Params } from '@angular/router'
 import { Chart, ChartOptions, ChartType } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
@@ -22,19 +22,17 @@ import { buildExcel } from '../../buildExcel'
 })
 export class InoutComponent {
 
-    constructor(
-        private readonly navigationService: NavigationService,
-        private readonly reportsService: ReportsService,
-        private readonly authService: AuthService,
-        private readonly usersService: UsersService,
-    ) { }
+    private readonly navigationService = inject(NavigationService)
+    private readonly reportsService = inject(ReportsService)
+    private readonly authService = inject(AuthService)
+    private readonly usersService = inject(UsersService)
 
     @ViewChild('incomesChart') incomesChart!: ElementRef<HTMLCanvasElement>
     years: number[] = []
     year: number = new Date().getFullYear()
-    offices: OfficeModel[] = []
+    $offices = signal<OfficeModel[]>([])
     officeId: number = 0
-    users: UserModel[] = []
+    $users = signal<UserModel[]>([])
     userId: number = 0
     private chart: Chart | null = null
     private months: string[] = [
@@ -52,7 +50,7 @@ export class InoutComponent {
         'Dic'
     ]
     displayedColumns: string[] = ['month', 'sales', 'purchases', 'final']
-    dataSource: any[] = []
+    $dataSource = signal<any[]>([])
     private params: Params = {}
 
     private handleAuth$: Subscription = new Subscription()
@@ -80,11 +78,11 @@ export class InoutComponent {
         ])
 
         this.handleUsers$ = this.usersService.handleUsers().subscribe(users => {
-            this.users = users
+            this.$users.set(users)
         })
 
         this.handleOffices$ = this.authService.handleOffices().subscribe(offices => {
-            this.offices = offices
+            this.$offices.set(offices)
         })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
@@ -104,7 +102,7 @@ export class InoutComponent {
                 'FINAL'
             ])
 
-            for (const month of this.dataSource) {
+            for (const month of this.$dataSource()) {
                 body.push([
                     month.month,
                     Number(month.sale.toFixed(2)),
@@ -123,49 +121,41 @@ export class InoutComponent {
         this.navigationService.loadBarStart()
         this.reportsService.getInOutByYearOfficeUser(this.year, this.params).subscribe({
             next: res => {
+                console.log(res)
+                const { sales, purchases, paymentOrders } = res
                 this.navigationService.loadBarFinish()
                 this.chart?.destroy()
-                const { sales, purchases, purchaseSupplies, paymentOrders } = res
                 const dataSource = []
 
                 for (let index = 0; index < 12; index++) {
                     const sale = sales[index]
                     const purchase = purchases[index]
-                    const purchaseSupply = purchaseSupplies[index]
                     const paymentOrder = paymentOrders[index]
 
                     const data: any = {}
 
                     data.month = this.months[index]
 
-                    if (sale.mes === index + 1) {
+                    if (sale.month === index + 1) {
                         data.sale = sale.total
                     }
 
-                    if (purchase.mes === index + 1) {
+                    if (purchase.month === index + 1) {
                         data.purchase = purchase.total
                     }
 
-                    if (purchaseSupply.mes === index + 1) {
-                        data.purchaseSupply = purchaseSupply.total
-                    }
-
-                    if (paymentOrder.mes === index + 1) {
+                    if (paymentOrder.month === index + 1) {
                         data.paymentOrder = paymentOrder.total
                     }
 
                     dataSource.push(data)
                 }
 
-                if (purchaseSupplies.map((e: any) => e.total).reduce((a: any, b: any) => a + b, 0)) {
-                    this.displayedColumns.splice(3, 0, 'purchaseSupplies')
-                }
-
                 if (paymentOrders.map((e: any) => e.total).reduce((a: any, b: any) => a + b, 0)) {
                     this.displayedColumns.splice(3, 0, 'paymentOrders')
                 }
 
-                this.dataSource = dataSource
+                this.$dataSource.set(dataSource)
 
                 const data = {
                     labels: this.months,
@@ -182,15 +172,6 @@ export class InoutComponent {
                         {
                             label: 'Compras',
                             data: purchases.map((e: any) => e.total),
-                            fill: true,
-                            datalabels: {
-                                align: 'start',
-                                anchor: 'start'
-                            } as any
-                        },
-                        {
-                            label: 'Insumos',
-                            data: purchaseSupplies.map((e: any) => e.total),
                             fill: true,
                             datalabels: {
                                 align: 'start',

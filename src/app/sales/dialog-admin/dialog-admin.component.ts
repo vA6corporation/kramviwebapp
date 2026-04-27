@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject } from '@angular/core'
+import { Component, EventEmitter, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
@@ -62,15 +62,12 @@ export class DialogAdminComponent {
         sunatCode: null,
     })
 
-    sale: SaleModel | null = null
-    customer: CustomerModel | null = null
-    saleItems: SaleItemModel[] = []
-    payments: PaymentModel[] = []
-    office: OfficeModel | null = null
-    user: UserModel | null = null
-    cdr: CdrModel | null = null
+    $sale = signal<SaleModel | null>(null)
+    $office = signal<OfficeModel | null>(null)
+    $user = signal<UserModel | null>(null)
+    $cdr = signal<CdrModel | null>(null)
+    $ticket = signal<TicketModel | null>(null)
     cdrTicket: CdrModel | null = null
-    ticket: TicketModel | null = null
     private onUpdate$: EventEmitter<void> = new EventEmitter()
 
     private handleAuth$: Subscription = new Subscription()
@@ -81,7 +78,7 @@ export class DialogAdminComponent {
 
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.office = auth.office
+            this.$office.set(auth.office)
         })
         this.fetchData()
     }
@@ -92,28 +89,27 @@ export class DialogAdminComponent {
 
     fetchData() {
         this.salesService.getSaleById(this.data.saleId).subscribe(sale => {
-            this.sale = sale
-            const { saleItems, customer, payments, user, cdr } = sale
-            this.customer = customer
-            this.payments = payments
-            this.saleItems = saleItems
-            this.user = user
-            this.cdr = cdr
+            const { user, cdr } = sale
+            console.log(sale)
+            this.$sale.set(sale)
+            this.$user.set(user)
+            this.$cdr.set(cdr)
 
             this.formGroup.patchValue(sale)
             this.formDate.patchValue(sale)
             this.formCdr.patchValue(cdr || {})
         })
         this.invoicesService.getDeleteTicketBySale(this.data.saleId).subscribe(ticket => {
-            this.ticket = ticket
+            this.$ticket.set(ticket)
             this.formTicket.patchValue(ticket)
         })
     }
 
     onSubmitDate() {
-        if (this.sale) {
-            Object.assign(this.sale, this.formDate.value)
-            this.salesService.updateDateSale(this.sale, this.data.saleId).subscribe({
+        const sale = this.$sale()
+        if (sale) {
+            Object.assign(sale, this.formDate.value)
+            this.salesService.updateDateSale(sale, this.data.saleId).subscribe({
                 next: () => {
                     this.navigationService.showMessage('Se han guardado los cambios')
                     this.onUpdate$.emit()
@@ -125,9 +121,10 @@ export class DialogAdminComponent {
     }
 
     onSubmit() {
-        if (this.sale) {
-            Object.assign(this.sale, this.formGroup.value)
-            this.salesService.update(this.sale, this.data.saleId).subscribe({
+        const sale = this.$sale()
+        if (sale) {
+            Object.assign(sale, this.formGroup.value)
+            this.salesService.update(sale, this.data.saleId).subscribe({
                 next: () => {
                     this.navigationService.showMessage('Se han guardado los cambios')
                     this.onUpdate$.emit()
@@ -139,9 +136,10 @@ export class DialogAdminComponent {
     }
 
     onUndelete() {
-        if (this.sale) {
-            Object.assign(this.sale, { deletedAt: null })
-            this.salesService.updateDeleteSale(this.sale, this.data.saleId).subscribe({
+        const sale = this.$sale()
+        if (sale) {
+            Object.assign(sale, { deletedAt: null })
+            this.salesService.updateDeleteSale(sale, this.data.saleId).subscribe({
                 next: () => {
                     this.navigationService.showMessage('Se han guardado los cambios')
                     this.onUpdate$.emit()
@@ -164,10 +162,11 @@ export class DialogAdminComponent {
     }
 
     onSubmitTicket() {
-        if (this.ticket) {
+        const ticket = this.$ticket()
+        if (ticket) {
             this.navigationService.loadBarStart()
-            Object.assign(this.ticket, this.formTicket.value)
-            this.salesService.updateTicket(this.ticket, this.ticket.id).subscribe({
+            Object.assign(ticket, this.formTicket.value)
+            this.salesService.updateTicket(ticket, ticket.id).subscribe({
                 next: () => {
                     this.navigationService.loadBarFinish()
                     this.onUpdate$.emit()
@@ -179,10 +178,11 @@ export class DialogAdminComponent {
     }
 
     onSubmitCdr() {
-        if (this.cdr) {
+        const cdr = this.$cdr()
+        if (cdr) {
             this.navigationService.loadBarStart()
-            Object.assign(this.cdr, this.formCdr.value)
-            this.salesService.updateCdr(this.cdr, this.cdr.id).subscribe({
+            Object.assign(cdr, this.formCdr.value)
+            this.salesService.updateCdr(cdr, cdr.id).subscribe({
                 next: () => {
                     this.onUpdate$.emit()
                     this.navigationService.loadBarFinish()
@@ -195,8 +195,9 @@ export class DialogAdminComponent {
 
     onDeleteCdr() {
         const ok = confirm('Esta seguro de eliminar el CDR?...')
-        if (ok && this.cdr !== null) {
-            this.invoicesService.deleteCdr(this.cdr.id).subscribe(() => {
+        const cdr = this.$cdr()
+        if (ok && cdr) {
+            this.invoicesService.deleteCdr(cdr.id).subscribe(() => {
                 this.fetchData()
                 this.onUpdate$.emit()
             })
@@ -205,8 +206,9 @@ export class DialogAdminComponent {
 
     onDeleteSale() {
         const ok = confirm('Esta seguro de eliminar la venta?...')
-        if (ok && this.sale !== null) {
-            this.salesService.delete(this.sale.id).subscribe(() => {
+        const sale = this.$sale()
+        if (ok && sale) {
+            this.salesService.delete(sale.id).subscribe(() => {
                 this.navigationService.showMessage('Eliminado correctamente')
                 this.dialogRef.close()
                 this.onUpdate$.emit()
@@ -239,8 +241,9 @@ export class DialogAdminComponent {
 
     onDeleteTicket() {
         const ok = confirm('Esta seguro de eliminar el ticket')
-        if (ok && this.ticket !== null) {
-            this.invoicesService.deleteTicket(this.ticket.id).subscribe(() => {
+        const ticket = this.$ticket()
+        if (ok && ticket) {
+            this.invoicesService.deleteTicket(ticket.id).subscribe(() => {
                 this.fetchData()
                 this.onUpdate$.emit()
             })

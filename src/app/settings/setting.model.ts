@@ -17,6 +17,7 @@ export class SettingModel {
     isShowCost: boolean = false
     isShowPrintZone: boolean = false
     isShowCurrency: boolean = false
+    isShowChargeInCommand: boolean = false
     isShowTotalDiscount: boolean = false
     isShowTotalDiscountPercent: boolean = false
     isShowEmitionAt: boolean = false
@@ -25,6 +26,9 @@ export class SettingModel {
     isShowCredit: boolean = false
     isShowDeliveryAt: boolean = false
     isShowEditPrice: boolean = false
+    isAvailableStock: boolean = false
+    isShowSubPrice: boolean = false
+    isShowBonus: boolean = false
     marginLeft: number = 0
     marginRight: number = 0
     textService: string = ''

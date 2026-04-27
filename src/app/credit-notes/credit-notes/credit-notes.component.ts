@@ -42,7 +42,7 @@ export class CreditNotesComponent {
     private readonly activatedRoute = inject(ActivatedRoute)
     private readonly router = inject(Router)
     private readonly matDialog = inject(MatDialog)
-    private readonly bottomSheet = inject(MatBottomSheet)
+    private readonly matBottomSheet = inject(MatBottomSheet)
 
     formGroup: FormGroup = this.formBuilder.group({
         invoiceCode: '',
@@ -378,11 +378,11 @@ export class CreditNotesComponent {
     }
 
     onPrint(creditNoteId: any) {
-        this.bottomSheet.open(SheetPrintCreditNotesComponent, { data: creditNoteId })
+        this.matBottomSheet.open(SheetPrintCreditNotesComponent, { data: creditNoteId })
     }
 
     onExportPdf(creditNoteId: any) {
-        this.bottomSheet.open(SheetExportPdfCreditNotesComponent, { data: creditNoteId })
+        this.matBottomSheet.open(SheetExportPdfCreditNotesComponent, { data: creditNoteId })
     }
 
     onSendInvoice(creditNoteId: any) {

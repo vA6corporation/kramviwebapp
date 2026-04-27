@@ -1,0 +1,92 @@
+@let customer = $customer();
+@let setting = $setting();
+<div class="d-flex h-100">
+    <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()"
+        [formGroup]="formGroup" autocomplete="off">
+        <div class="px-3">
+            <h2 class="text-center mat-display-small mb-0">{{ $charge().toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</h2>
+            <p class="caption text-center text-muted mb-2">Total a cobrar</p>
+            @if (customer) {
+            <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
+                <span>{{ customer.name | uppercase }}</span>
+            </button>
+            @if (customer.formatPhone) {
+            <p class="text-center mb-3">Celular: {{ customer.formatPhone }}</p>
+            }
+            }
+            <mat-form-field appearance="fill">
+                <mat-label>Comprobante</mat-label>
+                <mat-select formControlName="invoiceCode">
+                    @for (invoiceCode of invoiceCodes; track $index) {
+                    <mat-option [value]="invoiceCode.code">
+                        {{ invoiceCode.name }}
+                    </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Medio de pago</mat-label>
+                <mat-select formControlName="paymentMethodId">
+                    @for (paymentMethod of $paymentMethods(); track paymentMethod.id) {
+                    <mat-option [value]="paymentMethod.id">
+                        {{ paymentMethod.name }}
+                    </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            @if (setting.isShowEmitionAt) {
+            <mat-form-field appearance="fill">
+                <mat-label>Fecha de emision</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="createdAt">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            }
+            @if (setting.isShowTotalDiscount) {
+            <mat-form-field appearance="fill">
+                <mat-label>Descuento global</mat-label>
+                <input type="number" matInput formControlName="discount" (input)="onChangeDiscount()">
+            </mat-form-field>
+            }
+            @if (setting.isShowCurrency) {
+            <mat-form-field appearance="fill">
+                <mat-label>Moneda</mat-label>
+                <mat-select formControlName="currencyCode">
+                    <mat-option value="PEN">SOLES</mat-option>
+                    <mat-option value="USD">DOLARES</mat-option>
+                </mat-select>
+            </mat-form-field>
+            }
+            <mat-form-field appearance="fill">
+                <mat-label>Observaciones</mat-label>
+                <input type="text" matInput formControlName="observation" [autofocus]>
+            </mat-form-field>
+            @if (setting.isShowRetainer) {
+            <div class="pb-3">
+                <mat-slide-toggle formControlName="isRetainer">Es agente retenedor</mat-slide-toggle>
+            </div>
+            }
+            @if (setting.isShowDetraction) {
+            <button type="button" class="w-100 mb-3" mat-flat-button [disabled]="$isLoading()" color="primary"
+                (click)="onDialogDetraction()">
+                INFORMACION DE LA DETRACCION
+            </button>
+            }
+            <button type="button" class="w-100" mat-flat-button [disabled]="$isLoading()" color="primary"
+                (click)="onSubmit()">
+                GUARDAR
+            </button>
+        </div>
+    </form>
+    <div class="flex-30 bg-white biller-items">
+        <app-biller-items></app-biller-items>
+    </div>
+    <div class="fixed-bottom d-flex align-items-center footer-button">
+        <span class="spacer"></span>
+        <div class="p-3">
+            <button type="button" mat-raised-button (click)="onCancel()" color="primary">CANCELAR</button>
+            <span class="divider"></span>
+            <button type="button" mat-flat-button color="primary" (click)="onAddProduct()">AGREGAR PRODUCTO</button>
+        </div>
+    </div>
+</div>

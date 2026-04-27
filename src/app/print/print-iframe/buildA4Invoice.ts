@@ -73,19 +73,13 @@ export async function buildA4Invoice(
         text = setting.textService
         strArr = pdf.splitTextToSize(text, 95)
         pdf.text(strArr, 90, positionYTitle, { align: 'center' })
-        positionYTitle += 3 * strArr.length
+        positionYTitle += (3 * strArr.length) + 1
     }
 
     text = office.address
     strArr = pdf.splitTextToSize(text, 95)
     pdf.text(strArr, 90, positionYTitle, { align: 'center' })
     positionYTitle += 3 * strArr.length
-
-    if (office.phone) {
-        text = office.phone
-        pdf.text(text, 90, positionYTitle, { align: 'center' })
-        positionYTitle += 3
-    }
 
     if (setting.textHeader) {
         pdf.setDrawColor(0)
@@ -247,7 +241,7 @@ export async function buildA4Invoice(
     pdf.text(text, 170, 55)
 
     if (sale.isCredit) {
-        text = `${formatDate(sale.dues[0]?.dueDate, 'dd/MM/yyyy', 'en-US')}`
+        text = `${formatDate(sale.dues[0]?.dueAt, 'dd/MM/yyyy', 'en-US')}`
         pdf.text(text, 170, 60)
         text = `${sale.dues.length} cuotas`
         pdf.text(text, 170, 65)
@@ -423,7 +417,7 @@ export async function buildA4Invoice(
         }
         for (let index = 0; index < dues.length; index++) {
             const due = dues[index]
-            text = `Cuota ${index + 1} - Fecha de pago: ${formatDate(due.dueDate, 'dd/MM/yyyy', 'en-US')} - Monto: ${(due.charge - (retainer / sale.dues.length)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+            text = `Cuota ${index + 1} - Fecha de pago: ${formatDate(due.dueAt, 'dd/MM/yyyy', 'en-US')} - Monto: ${(due.charge - (retainer / sale.dues.length)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
             pdf.text(text, 5, positionYitems)
             positionYitems += 5
         }

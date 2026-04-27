@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog'
@@ -42,8 +42,8 @@ export class ChargeRemissionGuidesComponent {
 
     formGroup: FormGroup = this.formBuilder.group({
         transportAt: [new Date(), Validators.required],
-        carriageTypeCode: ['01', Validators.required],
-        remissionGuideTypeCode: ['', Validators.required],
+        carrierCode: ['01', Validators.required],
+        remissionGuideCode: ['', Validators.required],
         reasonDescription: ['', Validators.required],
         shippingWeight: ['', Validators.required],
         observation: '',
@@ -57,7 +57,7 @@ export class ChargeRemissionGuidesComponent {
         destinyLocationCode: ['', Validators.required],
     })
 
-    remissionGuideTypes: any[] = [
+    remissionGuideCodes: any[] = [
         { code: '01', label: 'VENTA' },
         { code: '02', label: 'COMPRA' },
         { code: '04', label: 'TRASLADO ENTRE ESTABLECIMIENTO DE LA MISMA EMPRESA' },
@@ -165,10 +165,10 @@ export class ChargeRemissionGuidesComponent {
     destinyDistricts: any[] = this.districts
 
     remissionGuideItems: RemissionGuideItemModel[] = []
-    carrier: CarrierModel | null = null
-    customer: CustomerModel | null = null
-    isLoading: boolean = false
-    setting = new SettingModel()
+    $carrier = signal<CarrierModel | null>(null)
+    $customer = signal<CustomerModel | null>(null)
+    $isLoading = signal<boolean>(false)
+    $setting = signal<SettingModel>(new SettingModel())
     private params: Params = {}
     private saleId: any | null = null
 
@@ -186,7 +186,7 @@ export class ChargeRemissionGuidesComponent {
         this.navigationService.setTitle('Guardar')
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
+            this.$setting.set(auth.setting)
             if (!auth.business.clientId) {
                 this.navigationService.showDialogMessage('Es necesario activar las credenciales de API Sunat para poder enviar la guia de remision, contacte al soporte tecnico')
             }
@@ -208,7 +208,7 @@ export class ChargeRemissionGuidesComponent {
 
                     dialogRef.afterClosed().subscribe(carrier => {
                         if (carrier) {
-                            this.carrier = carrier
+                            this.$carrier.set(carrier)
                         }
                     })
 
@@ -220,7 +220,7 @@ export class ChargeRemissionGuidesComponent {
 
                         dialogRef.afterClosed().subscribe(carrier => {
                             if (carrier) {
-                                this.carrier = carrier
+                                this.$carrier.set(carrier)
                             }
                         })
                     })
@@ -230,12 +230,12 @@ export class ChargeRemissionGuidesComponent {
                     const dialogRef = this.matDialog.open(DialogSearchCustomersComponent, {
                         width: '600px',
                         position: { top: '20px' },
-                        data: this.setting.defaultSearchCustomer
+                        data: this.$setting().defaultSearchCustomer
                     })
 
                     dialogRef.afterClosed().subscribe(customer => {
                         if (customer) {
-                            this.customer = customer
+                            this.$customer.set(customer)
                         }
                     })
 
@@ -247,7 +247,7 @@ export class ChargeRemissionGuidesComponent {
 
                         dialogRef.afterClosed().subscribe(customer => {
                             if (customer) {
-                                this.customer = customer
+                                this.$customer.set(customer)
                             }
                         })
                     })
@@ -257,8 +257,6 @@ export class ChargeRemissionGuidesComponent {
                     break
             }
         })
-
-        this.formGroup.get('invoiceCode')?.patchValue(this.setting.defaultInvoice)
 
         this.handleRemissionGuideItems$ = this.remissionGuidesService.handleRemissionGuideItems().subscribe(remissionGuideItems => {
             this.remissionGuideItems = remissionGuideItems
@@ -270,7 +268,7 @@ export class ChargeRemissionGuidesComponent {
             Object.assign(this.params, { saleId })
             this.salesService.getSaleById(saleId).subscribe(sale => {
                 const { saleItems, customer } = sale
-                this.customer = customer
+                this.$customer.set(customer)
                 this.remissionGuidesService.setRemissionGuideItems(saleItems)
             })
         }
@@ -301,16 +299,18 @@ export class ChargeRemissionGuidesComponent {
     }
 
     onSubmit() {
+        const customer = this.$customer()
+        const carrier = this.$carrier()
         try {
             if (!this.formGroup.valid) {
                 throw new Error("Complete los campos")
             }
 
-            if (this.customer === null) {
+            if (customer === null) {
                 throw new Error("Agrege un cliente")
             }
 
-            if (this.carrier === null) {
+            if (carrier === null) {
                 throw new Error("Agrege un transportista")
             }
 
@@ -318,12 +318,13 @@ export class ChargeRemissionGuidesComponent {
                 throw new Error("Agrega un producto")
             }
 
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.navigationService.loadBarStart()
+
             const formData = this.formGroup.value
             const remissionGuide: CreateRemissionGuideModel = {
-                remissionGuideTypeCode: formData.remissionGuideTypeCode,
-                carriageTypeCode: formData.carriageTypeCode,
+                remissionGuideCode: formData.remissionGuideCode,
+                carrierCode: formData.carrierCode,
                 shippingWeight: formData.shippingWeight,
                 reasonDescription: formData.reasonDescription,
                 transportAt: formData.transportAt,
@@ -332,29 +333,29 @@ export class ChargeRemissionGuidesComponent {
                 destinyLocationCode: formData.destinyLocationCode,
                 destinyAddress: formData.destinyAddress,
                 observation: formData.observation,
-                carrierId: this.carrier?.id || null,
-                customerId: this.customer?.id || null,
+                carrierId: carrier ? carrier.id : null,
+                customerId: customer ? customer.id : null,
                 saleId: this.saleId,
             }
 
             this.remissionGuidesService.create(
                 remissionGuide,
                 this.remissionGuideItems,
-                this.carrier,
+                carrier,
                 this.params
             ).subscribe({
                 next: () => {
                     this.navigationService.loadBarFinish()
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.remissionGuidesService.setRemissionGuideItems([])
-                    this.customer = null
-                    this.carrier = null
+                    this.$customer.set(null)
+                    this.$carrier.set(null)
                     const queryParams: Params = { tabIndex: 2 }
                     this.router.navigate(['/remissionGuides'], { queryParams })
                     this.navigationService.showMessage('Registrado correctamente')
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.loadBarFinish()
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.showMessage(error.error.message)
                 }
             })
@@ -362,7 +363,7 @@ export class ChargeRemissionGuidesComponent {
             if (error instanceof Error) {
                 this.navigationService.showMessage(error.message)
             }
-            this.isLoading = false
+            this.$isLoading.set(false)
             this.navigationService.loadBarFinish()
         }
     }
@@ -371,12 +372,12 @@ export class ChargeRemissionGuidesComponent {
         const dialogRef = this.matDialog.open(DialogEditCustomersComponent, {
             width: '600px',
             position: { top: '20px' },
-            data: this.customer,
+            data: this.$customer(),
         })
 
         dialogRef.afterClosed().subscribe(customer => {
             if (customer) {
-                this.customer = customer
+                this.$customer.set(customer)
             }
         })
     }
@@ -385,12 +386,12 @@ export class ChargeRemissionGuidesComponent {
         const dialogRef = this.matDialog.open(DialogEditCarriersComponent, {
             width: '600px',
             position: { top: '20px' },
-            data: this.carrier,
+            data: this.$carrier(),
         })
 
         dialogRef.afterClosed().subscribe(carrier => {
             if (carrier) {
-                this.carrier = carrier
+                this.$carrier.set(carrier)
             }
         })
     }

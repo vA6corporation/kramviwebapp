@@ -10,9 +10,9 @@
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Fecha de vencimiento</mat-label>
-                    <input matInput [matDatepicker]="dueDatePicker" formControlName="dueDate">
-                    <mat-datepicker-toggle matSuffix [for]="dueDatePicker"></mat-datepicker-toggle>
-                    <mat-datepicker #dueDatePicker></mat-datepicker>
+                    <input matInput [matDatepicker]="dueAtPicker" formControlName="dueAt">
+                    <mat-datepicker-toggle matSuffix [for]="dueAtPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #dueAtPicker></mat-datepicker>
                 </mat-form-field>
                 @if (formArray.controls.length > 1) {
                     <button type="button" mat-flat-button (click)="onDeleteDue(i)"

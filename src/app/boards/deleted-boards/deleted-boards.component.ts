@@ -42,13 +42,13 @@ export class DeletedBoardsComponent {
         filterCommands: false,
         tableId: '',
     })
-    displayedColumns: string[] = ['createdAt', 'ticketNumber', 'boardNumber', 'sale', 'user', 'charge', 'deletedBoardItems', 'observation', 'actions']
+    displayedColumns: string[] = ['createdAt', 'ticketNumber', 'boardNumber', 'sale', 'user', 'charge', 'deletedBoardItems', 'preaccountsCount', 'observation', 'actions']
     $dataSource = signal<BoardModel[]>([])
     $length = signal<number>(0)
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
-    tables: TableModel[] = []
+    $tables = signal<TableModel[]>([])
     office: OfficeModel = new OfficeModel()
     private setting: SettingModel = new SettingModel()
 
@@ -81,7 +81,7 @@ export class DeletedBoardsComponent {
         }
 
         this.handleTables$ = this.tablesService.handleTables().subscribe(tables => {
-            this.tables = tables
+            this.$tables.set(tables)
         })
 
         this.fetchData()

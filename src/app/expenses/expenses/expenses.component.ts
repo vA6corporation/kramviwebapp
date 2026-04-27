@@ -35,10 +35,10 @@ export class ExpensesComponent {
     private readonly authService = inject(AuthService)
 
     formGroup: FormGroup = this.formBuilder.group({
-        startDate: [new Date(), Validators.required],
-        endDate: [new Date(), Validators.required],
+        startDate: [null, Validators.required],
+        endDate: [null, Validators.required],
     })
-    displayedColumns: string[] = ['createdAt', 'concept', 'charge', 'user', 'actions']
+    displayedColumns: string[] = ['createdAt', 'deletedAt', 'concept', 'charge', 'user', 'actions']
     $dataSource = signal<ExpenseModel[]>([])
     $length = signal<number>(0)
     pageSize: number = 10
@@ -152,7 +152,7 @@ export class ExpensesComponent {
         }
     }
 
-    onDelete(expenseId: any) {
+    onDeleteExpense(expenseId: any) {
         const ok = confirm('Esta seguro de eliminar?...')
         if (ok) {
             this.navigationService.loadBarStart()
@@ -183,17 +183,14 @@ export class ExpensesComponent {
     }
 
     fetchData() {
-        if (this.formGroup.valid) {
-            this.navigationService.loadBarStart()
-            const { startDate, endDate } = this.formGroup.value
-            this.expensesService.getExpensesByPage(this.pageIndex + 1, this.pageSize, this.params).subscribe(expenses => {
-                this.navigationService.loadBarFinish()
-                this.$dataSource.set(expenses)
-            }, (error: HttpErrorResponse) => {
-                this.navigationService.loadBarFinish()
-                this.navigationService.showMessage(error.error.message)
-            })
-        }
+        this.navigationService.loadBarStart()
+        this.expensesService.getExpensesByPage(this.pageIndex + 1, this.pageSize, this.params).subscribe(expenses => {
+            this.navigationService.loadBarFinish()
+            this.$dataSource.set(expenses)
+        }, (error: HttpErrorResponse) => {
+            this.navigationService.loadBarFinish()
+            this.navigationService.showMessage(error.error.message)
+        })
     }
 
     fetchCount() {

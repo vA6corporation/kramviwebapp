@@ -1,5 +1,5 @@
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
-import { Component, inject } from '@angular/core'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { Router, RouterModule } from '@angular/router'
 import { NavigationService } from '../../navigation/navigation.service'
@@ -31,32 +31,31 @@ export class CreateOfficesComponent {
         provincia: ['', Validators.required],
         distrito: ['', Validators.required],
         urbanizacion: ['', Validators.required],
-        codigoPais: ['', Validators.required],
         activityId: ['', Validators.required]
     })
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
     maxlength: number = 11
-    activities: any[] = []
+    $activities = signal<any[]>([])
 
     ngOnInit(): void {
         this.navigationService.setTitle('Nueva sucursal')
         this.officesService.getActivities().subscribe(activities => {
-            this.activities = activities
+            this.$activities.set(activities)
         })
     }
 
     onSubmit(): void {
         if (this.formGroup.valid) {
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.navigationService.loadBarStart()
             this.officesService.create(this.formGroup.value).subscribe({
                 next: () => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.router.navigate(['/offices'])
                     this.navigationService.showMessage('Registrado correctamente')
                 }, error: (error: HttpErrorResponse) => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage(error.error.message)
                 }

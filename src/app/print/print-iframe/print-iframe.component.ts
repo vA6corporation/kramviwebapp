@@ -16,6 +16,8 @@ import { buildA5Invoice } from './buildA5Invoice'
 import { buildTurn58mm } from './buildTurn58mm'
 import { buildA4RemissionGuide } from './buildA4RemissionGuide'
 import { buildA4Purchase } from './buildA4Purchase'
+import { buildA4PurchaseOrder } from './buildA4PurchaseOrder'
+import { buildTicket80mmPurchaseOrder } from './buildTicket80mmPurchaseOrder'
 import { buildA4PaymentOrder } from './buildA4PaymentOrder'
 import { buildCreditCustomer80mm } from './buildCreditCustomer80mm'
 import { buildTicketProforma } from './buildTicketProforma'
@@ -260,7 +262,7 @@ export class PrintIframeComponent {
         })
 
         this.printService.handlePrintA5Invoice().subscribe(async sale => {
-            const pdf = await buildA5Invoice(sale, this.setting, this.business, this.office)
+            const pdf = await buildA5Invoice(sale, this.setting, this.business, this.office, this.urlLogo)
             if (main) {
                 const file = pdf.output('arraybuffer')
                 main.print(file)
@@ -272,7 +274,7 @@ export class PrintIframeComponent {
         })
 
         this.printService.handleExportPdfA5Invoice().subscribe(async sale => {
-            const pdf = await buildA5Invoice(sale, this.setting, this.business, this.office)
+            const pdf = await buildA5Invoice(sale, this.setting, this.business, this.office, this.urlLogo)
             pdf.save(`${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}`)
         })
 
@@ -656,8 +658,8 @@ export class PrintIframeComponent {
             }
         })
 
-        this.printService.handlePrintPreaccount80mm().subscribe(board => {
-            const pdf = buildPreaccount80mm(board, this.setting)
+        this.printService.handlePrintPreaccount80mm().subscribe(preaccount => {
+            const pdf = buildPreaccount80mm(preaccount, this.setting)
             if (main) {
                 const file = pdf.output('arraybuffer')
                 const printers = this.printers.filter(e => e.printAccount)
@@ -676,8 +678,8 @@ export class PrintIframeComponent {
             }
         })
 
-        this.printService.handlePrintPreaccount58mm().subscribe(board => {
-            const pdf = buildPreaccount58mm(board, this.setting)
+        this.printService.handlePrintPreaccount58mm().subscribe(preaccount => {
+            const pdf = buildPreaccount58mm(preaccount, this.setting)
             if (main) {
                 const file = pdf.output('arraybuffer')
                 const printers = this.printers.filter(e => e.printAccount)
@@ -697,7 +699,7 @@ export class PrintIframeComponent {
         })
 
         this.printService.handlePrintPurchaseA4().subscribe(async purchase => {
-            const pdf = await buildA4Purchase(purchase, this.setting, this.business, this.office)
+            const pdf = await buildA4Purchase(purchase, this.setting, this.business, this.office, this.urlLogo)
             if (main) {
                 const file = pdf.output('arraybuffer')
                 main.print(file)
@@ -709,8 +711,42 @@ export class PrintIframeComponent {
         })
 
         this.printService.handleExportPdfPurchaseA4().subscribe(async purchase => {
-            const pdf = await buildA4Purchase(purchase, this.setting, this.business, this.office)
+            const pdf = await buildA4Purchase(purchase, this.setting, this.business, this.office, this.urlLogo)
             pdf.save(`COMPRA_${purchase.serie || 'SIN_SERIE'}`)
+        })
+
+        this.printService.handleExportPdfA4PurchaseOrder().subscribe(async purchaseOrder => {
+            const pdf = await buildA4PurchaseOrder(purchaseOrder, this.setting, this.business, this.office, this.urlLogo)
+            pdf.save(`O${this.office.serialPrefix}-${purchaseOrder.purchaseOrderNumber}`)
+        })
+
+        this.printService.handlePrintA4PurchaseOrder().subscribe(async purchaseOrder => {
+            const pdf = await buildA4PurchaseOrder(purchaseOrder, this.setting, this.business, this.office, this.urlLogo)
+            if (main) {
+                const file = pdf.output('arraybuffer')
+                main.print(file)
+            } else {
+                pdf.autoPrint({ variant: 'non-conform' })
+                const blobUrl = pdf.output('bloburl')
+                this.print(blobUrl)
+            }
+        })
+
+        this.printService.handleExportPdf80mmPurchaseOrder().subscribe(async purchaseOrder => {
+            const pdf = await buildTicket80mmPurchaseOrder(purchaseOrder, this.setting, this.business, this.office, this.urlLogo)
+            pdf.save(`O${this.office.serialPrefix}-${purchaseOrder.purchaseOrderNumber}`)
+        })
+
+        this.printService.handlePrintTicket80mmPurchaseOrder().subscribe(async purchaseOrder => {
+            const pdf = await buildTicket80mmPurchaseOrder(purchaseOrder, this.setting, this.business, this.office, this.urlLogo)
+            if (main) {
+                const file = pdf.output('arraybuffer')
+                main.print(file)
+            } else {
+                pdf.autoPrint({ variant: 'non-conform' })
+                const blobUrl = pdf.output('bloburl')
+                this.print(blobUrl)
+            }
         })
 
         this.printService.handlePrintPaymentOrderA4().subscribe(async paymentOrder => {

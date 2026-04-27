@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog'
-import { ActivatedRoute, Router } from '@angular/router'
+import { ActivatedRoute, Params, Router } from '@angular/router'
 import { lastValueFrom, Subscription } from 'rxjs'
 import { AuthService } from '../../auth/auth.service'
 import { SettingModel } from '../../settings/setting.model'
@@ -16,8 +16,9 @@ import { ProviderModel } from '../../providers/provider.model'
 import { CreatePurchaseItemModel } from '../create-purchase-item.model'
 import { CreatePurchaseModel } from '../create-purchase.model'
 import { PurchasesService } from '../purchases.service'
+import { PurchaseOrdersService } from '../../purchase-orders/purchase-orders.service'
 import { ProductsService } from '../../products/products.service'
-import { IgvCode } from '../../products/igv-type.enum'
+import { IgvCode } from '../../sales/igv-code.enum'
 import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component'
 import { MaterialModule } from '../../material.module'
 import { CommonModule } from '@angular/common'
@@ -26,10 +27,9 @@ import { InvoiceCode } from '../../sales/invoice-code.enum'
 
 interface FormData {
     invoiceCode: string
-    paymentMethodId: any
-    purchasedAt: Date
-    expirationAt: Date
-    serie: string | null
+    createdAt: Date
+    expirationAt: Date | null
+    serie: string
     observation: string
 }
 
@@ -46,60 +46,43 @@ export class ChargePurchasesComponent {
     private readonly router = inject(Router)
     private readonly matDialog = inject(MatDialog)
     private readonly navigationService = inject(NavigationService)
-    private readonly paymentMethodsService = inject(PaymentMethodsService)
     private readonly purchasesService = inject(PurchasesService)
+    private readonly purchaseOrdersService = inject(PurchaseOrdersService)
     private readonly productsService = inject(ProductsService)
     private readonly authService = inject(AuthService)
 
-    payments: PaymentModel[] = []
-    purchaseItems: CreatePurchaseItemModel[] = []
-    charge: number = 0
-    provider: ProviderModel | null = null
-    isLoading: boolean = false
     formGroup: FormGroup = this.formBuilder.group({
         invoiceCode: '00',
-        paymentMethodId: '',
-        purchasedAt: new Date(),
-        serie: null,
+        createdAt: new Date(),
+        expirationAt: null,
+        serie: '',
         observation: '',
     } as FormData)
-
+    purchaseItems: CreatePurchaseItemModel[] = []
+    $charge = signal<number>(0)
+    $provider = signal<ProviderModel | null>(null)
+    $isLoading = signal<boolean>(false)
     invoiceCodes = [
         { code: '00', name: 'NOTA DE VENTA' },
         { code: '03', name: 'BOLETA' },
         { code: '01', name: 'FACTURA' },
     ]
+    private params: Params = {}
 
-    paymentMethods: PaymentMethodModel[] = []
-    private setting = new SettingModel()
-
-    private handleAuth$: Subscription = new Subscription()
     private handleClickMenu$: Subscription = new Subscription()
-    private handlePaymentMethods$: Subscription = new Subscription()
     private handlePurchaseItems$: Subscription = new Subscription()
 
     ngOnDestroy() {
-        this.handleAuth$.unsubscribe()
         this.handleClickMenu$.unsubscribe()
-        this.handlePaymentMethods$.unsubscribe()
         this.handlePurchaseItems$.unsubscribe()
     }
 
     ngOnInit(): void {
         this.navigationService.setTitle('Comprar')
 
-        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
-        })
-
         this.navigationService.setMenu([
             { id: 'add_provider', label: 'Agregar proveedor', icon: 'person_add', show: true },
         ])
-
-        this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
-            this.paymentMethods = paymentMethods
-            this.formGroup.patchValue({ paymentMethodId: (this.paymentMethods[0] || { id: '' }).id })
-        })
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
             switch (id) {
@@ -111,7 +94,7 @@ export class ChargePurchasesComponent {
 
                     dialogRef.afterClosed().subscribe(provider => {
                         if (provider) {
-                            this.provider = provider
+                            this.$provider.set(provider)
                         }
                     })
 
@@ -123,7 +106,7 @@ export class ChargePurchasesComponent {
 
                         dialogRef.afterClosed().subscribe(provider => {
                             if (provider) {
-                                this.provider = provider
+                                this.$provider.set(provider)
                             }
                         })
                     })
@@ -133,59 +116,85 @@ export class ChargePurchasesComponent {
             }
         })
 
-        this.formGroup.get('invoiceCode')?.patchValue(this.setting.defaultInvoice)
-
         this.handlePurchaseItems$ = this.purchasesService.handlePurchaseItems().subscribe(purchaseItems => {
             this.purchaseItems = purchaseItems
-            this.charge = 0
+            this.$charge.set(0)
+            let charge = 0
+
             for (const purchaseItem of this.purchaseItems) {
                 if (purchaseItem.igvCode !== IgvCode.BONIFICACION) {
-                    this.charge += purchaseItem.cost * purchaseItem.quantity
+                    charge += purchaseItem.cost * purchaseItem.quantity
                 }
             }
+
+            this.$charge.set(charge)
         })
+
+        const purchaseOrderId = this.activatedRoute.snapshot.queryParams['purchaseOrderId']
+
+        if (purchaseOrderId) {
+            Object.assign(this.params, { purchaseOrderId })
+            this.navigationService.loadBarStart()
+            this.purchaseOrdersService.getPurchaseOrderById(purchaseOrderId).subscribe(purchaseOrder => {
+                this.navigationService.loadBarFinish()
+                this.$provider.set(purchaseOrder.provider)
+                const purchaseItems: CreatePurchaseItemModel[] = []
+                for (const purchaseOrderItem of purchaseOrder.purchaseOrderItems) {
+                    const createdPurchaseItem: CreatePurchaseItemModel = {
+                        fullName: purchaseOrderItem.fullName,
+                        cost: purchaseOrderItem.cost,
+                        price: purchaseOrderItem.price,
+                        prices: purchaseOrderItem.prices,
+                        quantity: purchaseOrderItem.quantity,
+                        preIgvCode: purchaseOrderItem.igvCode,
+                        igvCode: purchaseOrderItem.igvCode,
+                        unitCode: purchaseOrderItem.unitCode,
+                        isTrackStock: true,
+                        productId: purchaseOrderItem.productId,
+                    }
+                    purchaseItems.push(createdPurchaseItem)
+                }
+                this.purchaseItems = purchaseItems
+                this.purchasesService.setPurchaseItems(this.purchaseItems)
+            })
+        }
     }
 
     onSubmit() {
         try {
             const formData: FormData = this.formGroup.value
+            const provider = this.$provider()
+
             const purchase: CreatePurchaseModel = {
                 invoiceCode: formData.invoiceCode,
-                isCredit: false,
-                paymentMethodId: formData.paymentMethodId,
                 serie: formData.serie,
-                purchasedAt: formData.purchasedAt,
+                createdAt: formData.createdAt,
                 expirationAt: formData.expirationAt,
                 observation: formData.observation,
-                providerId: this.provider ? this.provider.id : null,
+                providerId: provider ? provider.id : null,
             }
 
             if (this.purchaseItems.length === 0) {
                 throw new Error('Agrega un producto')
             }
 
-            if (purchase.invoiceCode === InvoiceCode.FACTURA && this.provider === null) {
+            if (purchase.invoiceCode === InvoiceCode.FACTURA && provider === null) {
                 throw new Error('Agrega un provedor')
             }
 
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.navigationService.loadBarStart()
 
-            this.purchasesService.create(purchase, this.purchaseItems).subscribe({
+            this.purchasesService.create(purchase, this.purchaseItems, this.params).subscribe({
                 next: () => {
-                    for (const purchaseItem of this.purchaseItems) {
-                        if (purchaseItem.isTrackStock === false) {
-                            lastValueFrom(this.productsService.updateTrackStock(purchaseItem.productId))
-                        }
-                    }
                     this.purchasesService.setPurchaseItems([])
                     this.router.navigate(['/purchases'])
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Registrado correctamente')
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.showMessage(error.error.message)
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                 }
             })
@@ -193,16 +202,22 @@ export class ChargePurchasesComponent {
             if (error instanceof Error) {
                 this.navigationService.showMessage(error.message)
             }
-            this.isLoading = false
+            this.$isLoading.set(false)
             this.navigationService.loadBarFinish()
         }
     }
 
     onEditProvider() {
-        this.matDialog.open(DialogEditProvidersComponent, {
+        const dialogRef = this.matDialog.open(DialogEditProvidersComponent, {
             width: '600px',
             position: { top: '20px' },
-            data: this.provider,
+            data: this.$provider(),
+        })
+
+        dialogRef.afterClosed().subscribe(provider => {
+            if (provider) {
+                this.$provider.set(provider)
+            }
         })
     }
 

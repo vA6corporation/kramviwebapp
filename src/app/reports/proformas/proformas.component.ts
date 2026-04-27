@@ -145,7 +145,7 @@ export class ProformasComponent {
             const { startDate, endDate, userId, isBilled } = this.formGroup.value
             const params: Params = { userId, isBilled }
 
-            this.proformasService.getSummaryProformasByRangeDateWorkers(
+            this.proformasService.getSummaryProformasByRangeDate(
                 startDate,
                 endDate,
                 params

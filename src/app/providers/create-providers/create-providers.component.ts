@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { Router, RouterModule } from '@angular/router'
@@ -15,7 +15,6 @@ import { ProvidersService } from '../providers.service'
 export class CreateProvidersComponent {
 
     private readonly formBuilder = inject(FormBuilder)
-    private readonly router = inject(Router)
     private readonly providersService = inject(ProvidersService)
     private readonly navigationService = inject(NavigationService)
 
@@ -27,7 +26,7 @@ export class CreateProvidersComponent {
         phone: '',
         address: '',
     })
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
     maxLength: number = 11
 
     ngOnInit(): void {
@@ -54,16 +53,16 @@ export class CreateProvidersComponent {
 
     onSubmit(): void {
         if (this.formGroup.valid) {
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.navigationService.loadBarStart()
             this.providersService.create(this.formGroup.value).subscribe({
                 next: () => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
-                    this.router.navigate(['/providers'])
+                    this.navigationService.back()
                     this.navigationService.showMessage('Registrado correctamente')
                 }, error: (error: HttpErrorResponse) => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage(error.error.message)
                 }

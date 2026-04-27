@@ -63,11 +63,13 @@ export class SettingsComponent {
             carriers: false,
             users: false,
             purchases: false,
+            purchaseOrders: false,
             providers: false,
             creditNotes: false,
             remissionGuides: false,
             banks: false,
             paymentOrders: false,
+            biller: false,
         }),
         setting: this.formBuilder.group({
             defaultInvoice: '03',
@@ -84,6 +86,7 @@ export class SettingsComponent {
             isShowCost: false,
             isShowPrintZone: false,
             isShowCurrency: false,
+            isShowChargeInCommand: false,
             isShowTotalDiscount: false,
             isShowTotalDiscountPercent: false,
             isShowEmitionAt: false,
@@ -92,6 +95,9 @@ export class SettingsComponent {
             isShowCredit: false,
             isShowDeliveryAt: false,
             isShowEditPrice: false,
+            isAvailableStock: false,
+            isShowSubPrice: false,
+            isShowBonus: false,
             marginLeft: 0,
             marginRight: 0,
             textService: '',
@@ -229,39 +235,6 @@ export class SettingsComponent {
         this.matDialog.open(DialogPriceListsComponent, { width: '600px', position: { top: '20px' } })
     }
 
-    onDeleteLogo() {
-       // this.navigationService.loadBarStart()
-       // this.ngZone.run(() => {
-       //     this.settingsService.updateImage({ logo: '' }).subscribe(() => {
-       //         this.navigationService.showMessage('Logo eliminado correctamente')
-       //         this.navigationService.loadBarFinish()
-       //         this.setting.logo = ""
-       //     })
-       // })
-    }
-
-    onDeleteBanner() {
-       // this.navigationService.loadBarStart()
-       // this.ngZone.run(() => {
-       //     this.settingsService.updateImage({ banner: '' }).subscribe(() => {
-       //         this.navigationService.showMessage('Banner eliminado correctamente')
-       //         this.navigationService.loadBarFinish()
-       //         this.setting.banner = ""
-       //     })
-       // })
-    }
-
-    onDeleteTittle() {
-       // this.navigationService.loadBarStart()
-       // this.ngZone.run(() => {
-       //     this.settingsService.updateImage({ tittle: '' }).subscribe(() => {
-       //         this.navigationService.showMessage('Titulo eliminado correctamente')
-       //         this.navigationService.loadBarFinish()
-       //         this.setting.header = ""
-       //     })
-       // })
-    }
-
     onSelectCertificate(certificateId: any) {
         const ok = confirm('Esta seguro de usar este certificado')
         if (ok) {
@@ -273,7 +246,6 @@ export class SettingsComponent {
                     setTimeout(() => {
                         location.reload()
                     }, 1000)
-                    //this.fetchData()
                     this.onGetCertificates()
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.loadBarFinish()
@@ -319,6 +291,19 @@ export class SettingsComponent {
         this.downloadFile(urlCertificate, 'certificado.pem')
     }
 
+    onDeleteLogo() {
+        this.navigationService.loadBarStart()
+        this.ngZone.run(() => {
+            this.settingsService.deleteLogo(this.$setting().uuid).subscribe(() => {
+                this.navigationService.showMessage('Logo eliminado correctamente')
+                this.navigationService.loadBarFinish()
+                setTimeout(() => {
+                    location.reload()
+                }, 1000)
+            })
+        })
+    }
+
     onFileLogoSelected(files: FileList | null, input: HTMLInputElement) {
         if (files !== null && files[0] !== null) {
             const file: File = files[0]
@@ -336,84 +321,11 @@ export class SettingsComponent {
                             this.settingsService.getLogo(this.$setting().uuid).then(blobLogo => {
                                 this.$urlLogo.set(URL.createObjectURL(blobLogo))
                             })
-                            //this.fetchData()
                         }, error: (error: HttpErrorResponse) => {
                             console.log(error)
                             this.navigationService.showMessage(error.error.message)
                         }
                     })
-                   // reader.readAsDataURL(result)
-                   // reader.onload = () => {
-                   //     this.ngZone.run(() => {
-                   //         this.settingsService.updateImage({ logo: reader.result as string }).subscribe({
-                   //             next: () => {
-                   //                 this.setting.logo = reader.result as string
-                   //                 this.navigationService.showMessage('Logo actualizado')
-                   //             }, error: (error: HttpErrorResponse) => {
-                   //                 this.navigationService.showMessage(error.error.message)
-                   //             }
-                   //         })
-                   //     })
-                   // }
-                   // reader.onerror = function (error) {
-                   //     console.log('Error: ', error)
-                   // }
-                }
-            })
-        }
-    }
-
-    onFileBannerSelected(files: FileList | null, input: HTMLInputElement) {
-        if (files !== null && files[0] !== null) {
-            const file: File = files[0]
-            input.value = ''
-            new Compressor(file, {
-                quality: 0.6,
-                success: (result) => {
-                   // const reader = new FileReader()
-                   // reader.readAsDataURL(result)
-                   // reader.onload = () => {
-                   //     this.ngZone.run(() => {
-                   //         this.settingsService.updateImage({ banner: reader.result as string }).subscribe(() => {
-                   //             this.setting.banner = reader.result as string
-                   //             this.navigationService.showMessage('Banner actualizado')
-                   //         }, (error: HttpErrorResponse) => {
-                   //             this.navigationService.showMessage(error.error.message)
-                   //         })
-                   //     })
-                   // }
-                   // reader.onerror = function (error) {
-                   //     console.log('Error: ', error)
-                   // }
-                }
-            })
-        }
-    }
-
-    onFileTittleSelected(files: FileList | null, input: HTMLInputElement) {
-        if (files !== null && files[0] !== null) {
-            const file: File = files[0]
-            input.value = ''
-            new Compressor(file, {
-                quality: 0.6,
-                success: (result) => {
-                   // const reader = new FileReader()
-                   // reader.readAsDataURL(result)
-                   // reader.onload = () => {
-                   //     this.ngZone.run(() => {
-                   //         this.settingsService.updateImage({ tittle: reader.result as string }).subscribe({
-                   //             next: () => {
-                   //                 this.setting.header = reader.result as string
-                   //                 this.navigationService.showMessage('Titulo actualizado')
-                   //             }, error: (error: HttpErrorResponse) => {
-                   //                 this.navigationService.showMessage(error.error.message)
-                   //             }
-                   //         })
-                   //     })
-                   // }
-                   // reader.onerror = function (error) {
-                   //     console.log('Error: ', error)
-                   // }
                 }
             })
         }
@@ -431,7 +343,6 @@ export class SettingsComponent {
                     next: () => {
                         this.navigationService.loadBarFinish()
                         this.onGetCertificates()
-                        //this.fetchData()
                         setTimeout(() => {
                             location.reload()
                         }, 1000)
@@ -481,6 +392,7 @@ export class SettingsComponent {
             this.isLoading.set(true)
             this.navigationService.loadBarStart()
             const { activeModule, setting, business, office } = this.formGroup.value
+            delete business.sunattk
             this.settingsService.save(activeModule, setting, business, office).subscribe({
                 next: () => {
                     this.navigationService.showMessage("Se han guardado los cambios")

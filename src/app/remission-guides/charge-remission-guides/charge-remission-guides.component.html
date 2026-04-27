@@ -1,22 +1,26 @@
+@let customer = $customer();
+@let carrier = $carrier();
 <div class="d-flex">
     <form class="flex-70 d-flex" (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
         <div class="p-3">
-            <p class="caption text-center text-muted mb-0">Transportista</p>
+            <p class="caption text-center text-muted">Transportista</p>
             @if (carrier) {
-            <button type="button" mat-button color="primary" (click)="onEditCarrier()" class="w-100 mb-3">
+            <button type="button" mat-button color="primary" (click)="onEditCarrier()" class="w-100">
                 <span>{{ carrier.name | uppercase }}</span>
             </button>
-            <p class="text-center m-0">Placa: {{ carrier.carriagePlate || 'NINGUNO' }}</p>
-            <p class="text-center m-0">N° de licencia: {{ carrier.licenseNumber || 'NINGUNO' }}</p>
+            <p class="text-center mb-0">Placa: {{ carrier.carrierPlate || 'NINGUNO' }}</p>
+            <p class="text-center my-0">N° de licencia: {{ carrier.licenseNumber || 'NINGUNO' }}</p>
             }
             <mat-divider class="mb-2"></mat-divider>
-            <p class="caption text-center text-muted mb-0">Destinatario</p>
+            <p class="caption text-center text-muted">Destinatario</p>
             @if (customer) {
-            <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
+            <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100">
                 <span>{{ customer.name | uppercase }}</span>
             </button>
-            <p class="text-center mb-3">Celular: {{ customer.formatPhone || 'NINGUNO' }}</p>
-            <p class="text-center mb-3">Direccion: {{ customer.address || 'NINGUNO' }}</p>
+            @if (customer.formatPhone) {
+            <p class="text-center">Celular: {{ customer.formatPhone || 'NINGUNO' }}</p>
+            }
+            <p class="text-center">Direccion: {{ customer.address || 'NINGUNO' }}</p>
             }
             <mat-form-field appearance="fill">
                 <mat-label>Fecha de transporte</mat-label>
@@ -26,7 +30,7 @@
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Tipo de transporte</mat-label>
-                <mat-select formControlName="carriageTypeCode">
+                <mat-select formControlName="carrierCode">
                     <mat-option value="" disabled>TIPO DE TRANSPORTE</mat-option>
                     <mat-option value="01">TRANSPORTE PUBLICO</mat-option>
                     <mat-option value="02">TRANSPORTE PRIVADO</mat-option>
@@ -34,10 +38,10 @@
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Motivo del transporte</mat-label>
-                <mat-select formControlName="remissionGuideTypeCode">
-                    @for (remissionGuideType of remissionGuideTypes; track $index) {
-                    <mat-option [value]="remissionGuideType.code">
-                        {{ remissionGuideType.label }}
+                <mat-select formControlName="remissionGuideCode">
+                    @for (remissionGuideCode of remissionGuideCodes; track $index) {
+                    <mat-option [value]="remissionGuideCode.code">
+                        {{ remissionGuideCode.label }}
                     </mat-option>
                     }
                 </mat-select>
@@ -131,12 +135,12 @@
                 <input type="text" matInput formControlName="destinyAddress">
             </mat-form-field>
             <div class="p-2"></div>
-            <button type="submit" class="w-100" mat-flat-button [disabled]="isLoading" color="primary">
+            <button type="submit" class="w-100" mat-flat-button [disabled]="$isLoading()" color="primary">
                 GUARDAR
             </button>
         </div>
     </form>
-    <div class="flex-30 h-auto bg-white">
+    <div class="flex-30 h-auto bg-white remission-guide-items">
         <app-remission-guide-items></app-remission-guide-items>
     </div>
 </div>

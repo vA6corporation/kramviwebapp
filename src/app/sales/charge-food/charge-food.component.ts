@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core'
-import { CommonModule, Location } from '@angular/common'
+import { CommonModule } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog'
@@ -40,7 +40,6 @@ import { IgvCode } from '../../sales/igv-code.enum'
 export class ChargeFoodComponent {
 
     private readonly formBuilder = inject(FormBuilder)
-    private readonly location = inject(Location)
     private readonly router = inject(Router)
     private readonly matDialog = inject(MatDialog)
     private readonly navigationService = inject(NavigationService)
@@ -66,17 +65,17 @@ export class ChargeFoodComponent {
     })
     payments: CreatePaymentModel[] = []
     saleItems: CreateSaleItemModel[] = []
-    charge: number = 0
+    $charge = signal<number>(0)
     $customer = signal<CustomerModel | null>(null)
     $isLoading = signal<boolean>(false)
     cash: number = 0
     cashChange: number = 0
     $setting = signal<SettingModel>(new SettingModel())
     $paymentMethods = signal<PaymentMethodModel[]>([])
+    $isYesterdayTurn = signal<boolean>(false)
+    $turn = signal<TurnModel | null>(null)
 
-    private turn: TurnModel | null = null
     private user: UserModel = new UserModel()
-    backTo: string = ''
 
     invoiceCodes = [
         { code: '00', name: 'NOTA DE VENTA' },
@@ -101,15 +100,30 @@ export class ChargeFoodComponent {
     ngOnInit(): void {
         this.navigationService.setTitle('Cobrar')
 
-        this.backTo = this.activatedRoute.snapshot.queryParams['backTo']
+        this.navigationService.setMenu([
+            { id: 'split_payment', label: 'Dividir pago', icon: 'add_card', show: true },
+            { id: 'add_customer', label: 'Agregar cliente', icon: 'person_add', show: true },
+        ])
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.user = auth.user
             this.$setting.set(auth.setting)
 
             this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
-                this.turn = turn
-                if (turn === null) {
+                this.$turn.set(turn)
+                if (turn) {
+                    const today = new Date()
+                    today.setHours(0, 0, 0, 0)
+                    const turnDate = new Date(turn.createdAt)
+                    turnDate.setHours(0, 0, 0, 0)
+                    if (turnDate.getMonth() === today.getMonth() && turnDate.getDate() < today.getDate()) {
+                        this.$isYesterdayTurn.set(true)
+                    } else {
+                        if (turnDate.getMonth() !== today.getMonth()) {
+                            this.$isYesterdayTurn.set(true)
+                        }
+                    }
+                } else {
                     this.matDialog.open(DialogCreateTurnsComponent, {
                         width: '600px',
                         position: { top: '20px' }
@@ -117,9 +131,10 @@ export class ChargeFoodComponent {
                 }
             })
 
-            this.formGroup.get('invoiceCode')?.patchValue(this.$setting().defaultInvoice)
-            this.formGroup.get('currencyCode')?.patchValue(this.$setting().defaultCurrency)
-            //this.formGroup.get('isConsumption')?.patchValue(this.setting.isConsumption)
+            if (this.$setting().isShowDeliveryAt) {
+                this.formGroup.get('deliveryAt')?.setValidators([Validators.required])
+                this.formGroup.get('deliveryAt')?.updateValueAndValidity()
+            }
 
             if (this.$setting().isShowEmitionAt) {
                 this.formGroup.get('createdAt')?.patchValue(new Date())
@@ -127,12 +142,9 @@ export class ChargeFoodComponent {
                 this.formGroup.get('createdAt')?.updateValueAndValidity()
             }
 
+            this.formGroup.get('invoiceCode')?.patchValue(this.$setting().defaultInvoice)
+            this.formGroup.get('currencyCode')?.patchValue(this.$setting().defaultCurrency)
         })
-
-        this.navigationService.setMenu([
-            { id: 'split_payment', label: 'Dividir pago', icon: 'add_card', show: true },
-            { id: 'add_customer', label: 'Agregar cliente', icon: 'person_add', show: true },
-        ])
 
         this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
             this.$paymentMethods.set(paymentMethods)
@@ -168,10 +180,11 @@ export class ChargeFoodComponent {
                     })
                     break
                 case 'split_payment':
-                    if (this.turn) {
+                    const turn = this.$turn()
+                    if (turn) {
                         const data: DialogSplitPaymentsData = {
-                            turnId: this.turn.id,
-                            charge: this.charge,
+                            turnId: turn.id,
+                            charge: this.$charge(),
                             payments: this.payments,
                         }
 
@@ -200,38 +213,41 @@ export class ChargeFoodComponent {
 
         this.handleSaleItems$ = this.salesService.handleSaleItems().subscribe(saleItems => {
             this.saleItems = saleItems
-            this.charge = 0
+            this.$charge.set(0)
+            let charge = 0
             for (const saleItem of this.saleItems) {
                 if (saleItem.igvCode !== IgvCode.BONIFICACION) {
-                    this.charge += saleItem.price * saleItem.quantity
+                    charge += saleItem.price * saleItem.quantity
                 }
             }
+            this.$charge.set(charge)
         })
     }
 
     addCash(cash: number) {
         this.cash = Number(this.cash)
         this.cash += cash
-        const diff = Number(this.cash) - Number(this.charge)
+        const diff = Number(this.cash) - Number(this.$charge())
         this.cashChange = Number(diff.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
         this.formGroup.get('cash')?.patchValue(this.cash)
     }
 
     setCash(cash: any) {
         this.cash = cash
-        const diff = Number(this.cash) - Number(this.charge)
+        const diff = Number(this.cash) - Number(this.$charge())
         this.cashChange = Number(diff.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
     }
 
     onChangeDiscount() {
         const { discount } = this.formGroup.value
-        this.charge = 0
+        this.$charge.set(0)
+        let charge = 0
         for (const saleItem of this.saleItems) {
             if (saleItem.igvCode !== IgvCode.BONIFICACION) {
-                this.charge += saleItem.price * saleItem.quantity
+                charge += saleItem.price * saleItem.quantity
             }
         }
-        this.charge -= discount
+        this.$charge.set(charge - discount)
     }
 
     resetCash() {
@@ -241,7 +257,12 @@ export class ChargeFoodComponent {
 
     onSubmit() {
         try {
-            if (this.turn === null) {
+            const turn = this.$turn()
+            const saleForm: SaleForm = this.formGroup.value
+            const customer = this.$customer()
+            const charge = this.$charge()
+
+            if (turn === null) {
                 this.matDialog.open(DialogCreateTurnsComponent, {
                     width: '600px',
                     position: { top: '20px' },
@@ -257,8 +278,6 @@ export class ChargeFoodComponent {
                 throw new Error("El producto no puede tener precio 0")
             }
 
-            const saleForm: SaleForm = this.formGroup.value
-            const customer = this.$customer()
 
             const createdSale: CreateSaleModel = {
                 invoiceCode: saleForm.invoiceCode,
@@ -272,7 +291,7 @@ export class ChargeFoodComponent {
                 isRetainer: saleForm.isRetainer,
                 isDelivery: saleForm.isDelivery,
 
-                turnId: this.turn.id,
+                turnId: turn.id,
                 customerId: customer ? customer.id : null,
 
                 igvPercent: this.$setting().defaultIgvPercent,
@@ -287,11 +306,11 @@ export class ChargeFoodComponent {
                 throw new Error("El cliente debe tener un RUC")
             }
 
-            if (this.payments.length === 0 && this.charge) {
+            if (this.payments.length === 0 && charge) {
                 const payment = {
-                    charge: this.charge,
+                    charge,
                     paymentMethodId: saleForm.paymentMethodId,
-                    turnId: this.turn.id
+                    turnId: turn.id
                 }
                 this.payments.push(payment)
             }
@@ -307,19 +326,6 @@ export class ChargeFoodComponent {
                 {}
             ).subscribe({
                 next: sale => {
-                    let payments: CreatePaymentModel[] = []
-
-                    if (this.payments.length) {
-                        payments = this.payments
-                    } else {
-                        payments[0] = {
-                            paymentMethodId: createdSale.paymentMethodId || '',
-                            charge: sale.charge,
-                            turnId: sale.turnId,
-                            createdAt: new Date(),
-                        }
-                    }
-
                     const saleItems = JSON.parse(JSON.stringify(this.saleItems))
 
                     for (const saleItem of saleItems) {
@@ -330,18 +336,15 @@ export class ChargeFoodComponent {
                         user: this.user,
                         customer: customer,
                         saleItems,
-                        payments,
+                        payments: this.payments,
                     })
 
                     this.printService.printTicket80mm(sale)
                     this.printService.printCommandFastFood80mm(sale)
 
                     this.salesService.setSaleItems([])
-                    if (this.backTo) {
-                        this.router.navigate([this.backTo])
-                    } else {
-                        this.location.back()
-                    }
+
+                    this.navigationService.back()
                     this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Registrado correctamente')

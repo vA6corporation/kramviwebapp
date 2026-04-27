@@ -1,3 +1,4 @@
+@let provider = $provider();
 <div class="container">
     <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
         <mat-form-field appearance="fill">
@@ -44,7 +45,7 @@
                 <mat-option value="11">BONIFICACION</mat-option>
             </mat-select>
         </mat-form-field>
-        @if (setting.isShowPrintZone) {
+        @if ($setting().isShowPrintZone) {
         <mat-form-field appearance="fill">
             <mat-label>Comanda</mat-label>
             <mat-select formControlName="printZone">
@@ -68,14 +69,14 @@
                 GENERAR CODIGO
             </button>
         </div>
-        @if (setting.defaultPrice === 'GLOBAL') {
+        @if ($setting().defaultPrice === 'GLOBAL') {
         <mat-form-field appearance="fill">
             <mat-label>Precio</mat-label>
             <input type="number" matInput formControlName="price">
         </mat-form-field>
         } @else {
         <ng-container formArrayName="prices">
-            @for (price of formArray.controls; track i; let i = $index) {
+            @for (price of $priceControls(); track i; let i = $index) {
             <mat-form-field appearance="fill" [formGroupName]="i">
                 <mat-label>{{ price.value.name }}</mat-label>
                 <input type="number" matInput formControlName="price">
@@ -87,9 +88,9 @@
             <mat-label>Costo</mat-label>
             <input type="number" matInput formControlName="cost">
         </mat-form-field>
-        @if (urlImage) {
+        @if ($urlImage()) {
         <div class="text-center mb-3">
-            <img [src]="urlImage" alt="producto" width="400" class="mat-elevation-z2">
+            <img [src]="$urlImage()" alt="producto" width="400" class="mat-elevation-z2">
         </div>
         <p class="text-center text-danger">Si actualizas la imagen puede demorar hasta 1 hora en reflejarse los cambios
         </p>
@@ -111,30 +112,38 @@
                     </button>
                 </div>
             </mat-list-item>
+            } @empty {
+            <mat-list-item class="text-center">
+                <span matListItemTitle class="text-muted">SIN ANOTACIONES</span>
+            </mat-list-item>
             }
         </mat-list>
         <div class="mb-3">
-            <button type="button" class="w-100" mat-flat-button color="primary" (click)="onDialogCreateAnnotations()">AGREGAR
-                ANOTACION</button>
+            <button type="button" class="w-100" mat-flat-button color="primary"
+                (click)="onDialogCreateAnnotations()">AGREGAR ANOTACION</button>
         </div>
-        <!--<mat-list>
-            <div mat-subheader>Proveedores</div>
-            @for (provider of providers; track provider.id; let i = $index) {
+        <mat-list>
+            <div mat-subheader>Proveedor</div>
+            @if (provider) {
             <mat-list-item>
                 <span matListItemTitle>{{ provider.name }}</span>
                 <span matListItemLine>{{ provider.documentType }}: {{ provider.document }}</span>
                 <div matListItemMeta>
-                    <button type="button" mat-icon-button (click)="onRemoveProvider(i)">
+                    <button type="button" mat-icon-button (click)="onRemoveProvider()">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </div>
             </mat-list-item>
+            } @else {
+            <mat-list-item class="text-center">
+                <span matListItemTitle class="text-muted">SIN PROVEEDOR</span>
+            </mat-list-item>
             }
-        </mat-list>-->
-        <!--<div class="mb-3">
+        </mat-list>
+        <div class="mb-3">
             <button type="button" class="w-100" mat-flat-button color="primary" (click)="onDialogProviders()">AGREGAR
                 PROVEEDOR</button>
-        </div>-->
+        </div>
         <div class="py-3">
             <mat-slide-toggle formControlName="isTrackStock" (change)="onIsTrackStockChange()">Trackear
                 stock</mat-slide-toggle>

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { CommonModule, formatDate } from '@angular/common'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatBottomSheet } from '@angular/material/bottom-sheet'
@@ -32,7 +32,7 @@ export class RemissionGuidesComponent {
     private readonly formBuilder = inject(FormBuilder)
     private readonly router = inject(Router)
     private readonly matDialog = inject(MatDialog)
-    private readonly bottomSheet = inject(MatBottomSheet)
+    private readonly matBottomSheet = inject(MatBottomSheet)
     private readonly activatedRoute = inject(ActivatedRoute)
     private readonly remissionGuidesService = inject(RemissionGuidesService)
     private readonly navigationService = inject(NavigationService)
@@ -46,14 +46,14 @@ export class RemissionGuidesComponent {
         startDate: ['', Validators.required],
         endDate: ['', Validators.required],
     })
-    users: UserModel[] = []
+    $users = signal<UserModel[]>([])
     displayedColumns: string[] = ['created', 'serial', 'sale', 'customer', 'user', 'actions']
-    dataSource: RemissionGuideModel[] = []
-    length: number = 0
+    $dataSource = signal<RemissionGuideModel[]>([])
+    $length = signal<number>(0)
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
-    office: OfficeModel = new OfficeModel()
+    $office = signal<OfficeModel>(new OfficeModel())
     private params: Params = {}
 
     private handleClickMenu$: Subscription = new Subscription()
@@ -70,7 +70,7 @@ export class RemissionGuidesComponent {
         this.navigationService.setTitle('Guias de remision')
 
         this.handleUsers$ = this.usersService.handleUsers().subscribe(users => {
-            this.users = users
+            this.$users.set(users)
         })
 
         const queryParams = this.activatedRoute.snapshot.queryParams
@@ -94,7 +94,7 @@ export class RemissionGuidesComponent {
         ])
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.office = auth.office
+            this.$office.set(auth.office)
 
             if (!auth.business.clientId) {
                 this.navigationService.showDialogMessage('Es necesario activar las credenciales de API Sunat para poder enviar las guias de remision, contacte al soporte tecnico')
@@ -117,7 +117,7 @@ export class RemissionGuidesComponent {
         const chunk = 500
         const promises: Promise<any>[] = []
 
-        for (let index = 0; index < this.length / chunk; index++) {
+        for (let index = 0; index < this.$length() / chunk; index++) {
             const promise = lastValueFrom(this.remissionGuidesService.getRemissionGuidesByPage(index + 1, chunk, this.params))
             promises.push(promise)
         }
@@ -150,7 +150,7 @@ export class RemissionGuidesComponent {
                     customer?.name,
                     customer?.address,
                     customer?.phone,
-                    `T${this.office.serialPrefix}-${remissionGuide.remissionGuideNumber}`,
+                    `T${this.$office().serialPrefix}-${remissionGuide.remissionGuideNumber}`,
                     user.name,
                     remissionGuide.observation,
                     remissionGuide.deletedAt ? 'SI' : 'NO'
@@ -211,7 +211,7 @@ export class RemissionGuidesComponent {
 
     fetchCount() {
         this.remissionGuidesService.getCountRemissionGuides(this.params).subscribe(count => {
-            this.length = count
+            this.$length.set(count)
         })
     }
 
@@ -223,7 +223,7 @@ export class RemissionGuidesComponent {
             this.params
         ).subscribe(creditNotes => {
             this.navigationService.loadBarFinish()
-            this.dataSource = creditNotes
+            this.$dataSource.set(creditNotes)
         })
     }
 
@@ -291,8 +291,8 @@ export class RemissionGuidesComponent {
     // }
 
     onOptions(remissionGuideId: any) {
-        const bottomSheetRef = this.bottomSheet.open(SheetRemissionGuidesComponent, { data: remissionGuideId })
-        bottomSheetRef.instance.handleSendRemissionGuide().subscribe(() => {
+        const matBottomSheetRef = this.matBottomSheet.open(SheetRemissionGuidesComponent, { data: remissionGuideId })
+        matBottomSheetRef.instance.handleSendRemissionGuide().subscribe(() => {
             this.fetchData()
         })
     }

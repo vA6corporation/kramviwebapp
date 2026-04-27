@@ -12,9 +12,9 @@
         <div class="d-flex">
             <mat-form-field appearance="fill">
                 <mat-label>Sucursal</mat-label>
-                <mat-select [(value)]="officeId" (selectionChange)="onChangeOffice()">
+                <mat-select formControlName="officeId" (selectionChange)="onChangeOffice()">
                     <mat-option value="">TODAS LAS SUCURSALES</mat-option>
-                    @for (office of offices; track $index) {
+                    @for (office of $offices(); track $index) {
                     <mat-option [value]="office.id">
                         {{ office.name | uppercase }}
                     </mat-option>
@@ -23,9 +23,9 @@
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Usuario</mat-label>
-                <mat-select [(value)]="userId" (selectionChange)="onChangeUser()">
+                <mat-select formControlName="userId" (selectionChange)="onChangeUser()">
                     <mat-option value="">TODOS LOS USUARIOS</mat-option>
-                    @for (user of users; track $index) {
+                    @for (user of $users(); track $index) {
                     <mat-option [value]="user.id" class="text-uppercase">
                         {{ user.name }}
                     </mat-option>
@@ -41,37 +41,37 @@
           Incluir Notas de Venta
         </mat-slide-toggle>
         </p>
-        <table mat-table [dataSource]="dataSource" class="w-100 mat-elevation-z2">
+        <table mat-table [dataSource]="$dataSource()" class="w-100 mat-elevation-z2">
           <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef>Comprobante</th>
-                <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+                <td mat-cell *matCellDef="let element">{{ element.invoiceName }}</td>
                 <td mat-footer-cell *matFooterCellDef>Total</td>
             </ng-container>
             <ng-container matColumnDef="quantity">
                 <th mat-header-cell *matHeaderCellDef>Cantidad</th>
-                <td mat-cell *matCellDef="let element">{{ element.quantity }}</td>
-                <td mat-footer-cell *matFooterCellDef>{{ totalQuantity }}</td>
+                <td mat-cell *matCellDef="let element">{{ element.totalQuantity }}</td>
+                <td mat-footer-cell *matFooterCellDef>{{ $totalQuantity() }}</td>
             </ng-container>
             <ng-container matColumnDef="base">
                 <th mat-header-cell *matHeaderCellDef>Base Imponible</th>
-                <td mat-cell *matCellDef="let element">{{ (element.charge - element.igv).toLocaleString('en-US', {
+                <td mat-cell *matCellDef="let element">{{ (element.totalCharge - element.totalIgv).toLocaleString('en-US', {
                     minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
-                <td mat-footer-cell *matFooterCellDef>{{ totalBase.toLocaleString('en-US', { minimumFractionDigits: 2,
+                <td mat-footer-cell *matFooterCellDef>{{ $totalBase().toLocaleString('en-US', { minimumFractionDigits: 2,
                     maximumFractionDigits: 2 }) }}</td>
             </ng-container>
             <ng-container matColumnDef="igv">
                 <th mat-header-cell *matHeaderCellDef>IGV</th>
-                <td mat-cell *matCellDef="let element">{{ element.igv.toLocaleString('en-US', { minimumFractionDigits:
+                <td mat-cell *matCellDef="let element">{{ element.totalIgv.toLocaleString('en-US', { minimumFractionDigits:
                     2, maximumFractionDigits: 2 }) }}</td>
-                <td mat-footer-cell *matFooterCellDef>{{ totalIgv.toLocaleString('en-US', { minimumFractionDigits: 2,
+                <td mat-footer-cell *matFooterCellDef>{{ $totalIgv().toLocaleString('en-US', { minimumFractionDigits: 2,
                     maximumFractionDigits: 2 }) }}</td>
             </ng-container>
             <ng-container matColumnDef="charge">
                 <th mat-header-cell *matHeaderCellDef>Importe T.</th>
                 <td mat-cell *matCellDef="let element">
-                    {{ element.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
+                    {{ element.totalCharge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                 </td>
-                <td mat-footer-cell *matFooterCellDef>{{ totalCharge.toLocaleString('en-US', { minimumFractionDigits: 2,
+                <td mat-footer-cell *matFooterCellDef>{{ $totalCharge().toLocaleString('en-US', { minimumFractionDigits: 2,
                     maximumFractionDigits: 2 }) }}</td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

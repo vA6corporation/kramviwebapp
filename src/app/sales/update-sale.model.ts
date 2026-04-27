@@ -1,13 +1,16 @@
 export interface UpdateSaleModel {
     invoiceCode: string
-    paymentMethodId: any | null
-    currencyCode: string
+    paymentMethodId: any
     observation: string
-    createdAt: Date | null
+    cash: number | null
+    currencyCode: string
     discount: number | null
-    isCredit: boolean
+    deliveryAt: Date | null
     igvPercent: number
     rcPercent: number
-    customerId: any | null
+    isRetainer: boolean
+    isDelivery: boolean
+    createdAt: Date | null
     turnId: any
+    customerId: any
 }

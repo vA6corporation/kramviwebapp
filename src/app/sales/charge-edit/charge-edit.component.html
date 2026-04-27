@@ -1,15 +1,19 @@
+@let customer = $customer();
+@let setting = $setting();
 <div class="d-flex h-100">
     <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()"
         [formGroup]="formGroup">
         <div class="px-3">
-            <h2 class="text-center mat-display-small mb-0">{{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</h2>
+            <h2 class="text-center mat-display-small mb-0">{{ $charge().toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</h2>
             <p class="caption text-center text-muted mb-2">Total a cobrar</p>
             @if (customer) {
-            <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
+            <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100">
                 <span>{{ customer.name | uppercase }}</span>
             </button>
-            <p class="text-center mb-3">Celular: {{ customer.formatPhone || 'NINGUNO' }}</p>
-            <p class="text-center mb-3">Direccion: {{ customer.address || 'NINGUNO' }}</p>
+            @if (customer.formatPhone) {
+            <p class="text-center">Celular: {{ customer.formatPhone || 'NINGUNO' }}</p>
+            }
+            <p class="text-center">Direccion: {{ customer.address || 'NINGUNO' }}</p>
             }
             <mat-form-field appearance="fill">
                 <mat-label>Comprobante</mat-label>
@@ -24,7 +28,7 @@
             <mat-form-field appearance="fill">
                 <mat-label>Medio de pago</mat-label>
                 <mat-select formControlName="paymentMethodId">
-                    @for (paymentMethod of paymentMethods; track paymentMethod.id) {
+                    @for (paymentMethod of $paymentMethods(); track paymentMethod.id) {
                     <mat-option [value]="paymentMethod.id">
                         {{ paymentMethod.name }}
                     </mat-option>
@@ -58,8 +62,7 @@
                 <mat-label>Observaciones</mat-label>
                 <input type="text" matInput formControlName="observation">
             </mat-form-field>
-            <button type="button" class="w-100" mat-flat-button [disabled]="isLoading" color="primary"
-                (click)="onSubmit()">
+            <button type="button" class="w-100" mat-flat-button [disabled]="$isLoading()" color="primary" (click)="onSubmit()">
                 GUARDAR
             </button>
         </div>

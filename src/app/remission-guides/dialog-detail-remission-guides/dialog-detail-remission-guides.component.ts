@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { DomSanitizer } from '@angular/platform-browser'
 import { Subscription } from 'rxjs'
@@ -27,13 +27,12 @@ export class DialogDetailRemissionGuidesComponent {
     private readonly authService = inject(AuthService)
     private readonly sanitizer = inject(DomSanitizer)
 
-    remissionGuide: RemissionGuideModel | null = null
-    remissionGuideItems: RemissionGuideItemModel[] = []
-    user: UserModel = new UserModel()
-    office: OfficeModel = new OfficeModel()
-    business: BusinessModel = new BusinessModel()
-    cdr: CdrRgModel | null = null
-    carrier: CarrierModel | null = null
+    $remissionGuide = signal<RemissionGuideModel | null>(null)
+    $remissionGuideItems = signal<RemissionGuideItemModel[]>([])
+    $user = signal<UserModel>(new UserModel())
+    $office = signal<OfficeModel>(new OfficeModel())
+    $carrier = signal<CarrierModel | null>(null)
+    $cdr = signal<CdrRgModel | null>(null)
 
     private handleAuth$: Subscription = new Subscription()
 
@@ -43,17 +42,16 @@ export class DialogDetailRemissionGuidesComponent {
 
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.business = auth.business
-            this.office = auth.office
+            this.$office.set(auth.office)
         })
 
         this.remissionGuidesService.getRemissionGuideById(this.remissionGuideId).subscribe(remissionGuide => {
             const { remissionGuideItems, user, cdr, carrier } = remissionGuide
-            this.remissionGuide = remissionGuide
-            this.remissionGuideItems = remissionGuideItems
-            this.user = user
-            this.cdr = cdr
-            this.carrier = carrier
+            this.$remissionGuide.set(remissionGuide)
+            this.$remissionGuideItems.set(remissionGuideItems)
+            this.$user.set(user)
+            this.$cdr.set(cdr)
+            this.$carrier.set(carrier)
         })
     }
 

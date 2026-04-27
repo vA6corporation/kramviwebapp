@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog'
@@ -25,11 +25,10 @@ import { IgvCode } from '../../sales/igv-code.enum'
 
 interface FormData {
     invoiceCode: string
-    purchasedAt: Date
     createdAt: Date
-    serie: string | null
+    expirationAt: Date | null
+    serie: string
     observation: string
-    paymentMethodId: number
 }
 
 @Component({
@@ -51,11 +50,9 @@ export class ChargeEditPurchasesComponent {
 
     formGroup: FormGroup = this.formBuilder.group({
         invoiceCode: '00',
-        paymentMethodId: 0,
-        purchasedAt: new Date(),
         createdAt: new Date(),
-        serie: null,
-        officeId: ['', Validators.required],
+        expirationAt: null,
+        serie: '',
         observation: '',
     } as FormData)
     invoiceCodes = [
@@ -65,9 +62,9 @@ export class ChargeEditPurchasesComponent {
     ]
     payments: PaymentModel[] = []
     purchaseItems: CreatePurchaseItemModel[] = []
-    charge: number = 0
-    provider: ProviderModel | null = null
-    isLoading: boolean = false
+    $charge = signal<number>(0)
+    $provider = signal<ProviderModel | null>(null)
+    $isLoading = signal<boolean>(false)
     offices: OfficeModel[] = []
     params: Params = {}
 
@@ -94,7 +91,7 @@ export class ChargeEditPurchasesComponent {
             this.router.navigate(['purchases'])
         } else {
             this.purchaseId = purchase.id
-            this.provider = purchase.provider
+            this.$provider.set(purchase.provider)
             this.navigationService.setTitle('Comprar')
             this.formGroup.patchValue(purchase)
 
@@ -124,7 +121,7 @@ export class ChargeEditPurchasesComponent {
 
                         dialogRef.afterClosed().subscribe(provider => {
                             if (provider) {
-                                this.provider = provider
+                                this.$provider.set(provider)
                             }
                         })
 
@@ -136,7 +133,7 @@ export class ChargeEditPurchasesComponent {
 
                             dialogRef.afterClosed().subscribe(provider => {
                                 if (provider) {
-                                    this.provider = provider
+                                    this.$provider.set(provider)
                                 }
                             })
                         })
@@ -148,12 +145,14 @@ export class ChargeEditPurchasesComponent {
 
             this.handlePurchaseItems$ = this.purchasesService.handlePurchaseItems().subscribe(purchaseItems => {
                 this.purchaseItems = purchaseItems
-                this.charge = 0
+                this.$charge.set(0)
+                let charge = 0
                 for (const purchaseItem of this.purchaseItems) {
                     if (purchaseItem.igvCode !== IgvCode.BONIFICACION) {
-                        this.charge += purchaseItem.cost * purchaseItem.quantity
+                        charge += purchaseItem.cost * purchaseItem.quantity
                     }
                 }
+                this.$charge.set(charge)
             })
         }
     }
@@ -167,41 +166,41 @@ export class ChargeEditPurchasesComponent {
         if (this.formGroup.valid) {
             try {
                 const formData: FormData = this.formGroup.value
+                const provider = this.$provider()
                 const purchase = {
                     invoiceCode: formData.invoiceCode,
                     serie: formData.serie,
-                    purchasedAt: formData.purchasedAt,
                     createdAt: formData.createdAt,
+                    expirationAt: formData.expirationAt,
                     observation: formData.observation,
-                    paymentMethodId: formData.paymentMethodId,
-                    providerId: this.provider ? this.provider.id : null,
+                    providerId: provider ? provider.id : null,
                 }
 
                 if (this.purchaseItems.length === 0) {
                     throw new Error('Agrega un producto')
                 }
 
-                if (purchase.invoiceCode === InvoiceCode.FACTURA && this.provider === null) {
+                if (purchase.invoiceCode === InvoiceCode.FACTURA && provider === null) {
                     throw new Error('Agrega un proveedor')
                 }
 
-                if (purchase.invoiceCode === InvoiceCode.FACTURA && this.provider?.documentType !== 'RUC') {
+                if (purchase.invoiceCode === InvoiceCode.FACTURA && provider?.documentType !== 'RUC') {
                     throw new Error('El proveedor debe tener un RUC')
                 }
 
-                this.isLoading = true
+                this.$isLoading.set(true)
                 this.navigationService.loadBarStart()
 
                 this.purchasesService.updatePurchase(purchase, this.purchaseItems, this.purchaseId, this.params).subscribe({
                     next: () => {
                         this.purchasesService.setPurchaseItems([])
                         this.router.navigate(['/purchases'])
-                        this.isLoading = false
+                        this.$isLoading.set(false)
                         this.navigationService.loadBarFinish()
                         this.navigationService.showMessage('Se han guardado los cambios')
                     }, error: (error: HttpErrorResponse) => {
                         this.navigationService.showMessage(error.error.message)
-                        this.isLoading = false
+                        this.$isLoading.set(false)
                         this.navigationService.loadBarFinish()
                     }
                 })
@@ -209,17 +208,23 @@ export class ChargeEditPurchasesComponent {
                 if (error instanceof Error) {
                     this.navigationService.showMessage(error.message)
                 }
-                this.isLoading = false
+                this.$isLoading.set(false)
                 this.navigationService.loadBarFinish()
             }
         }
     }
 
     onEditProvider() {
-        this.matDialog.open(DialogEditProvidersComponent, {
+        const dialogRef = this.matDialog.open(DialogEditProvidersComponent, {
             width: '600px',
             position: { top: '20px' },
-            data: this.provider,
+            data: this.$provider(),
+        })
+
+        dialogRef.afterClosed().subscribe(provider => {
+            if (provider) {
+                this.$provider.set(provider)
+            }
         })
     }
 

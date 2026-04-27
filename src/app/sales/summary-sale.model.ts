@@ -1,6 +1,6 @@
 export interface SummarySaleModel {
-    id: number
-    quantity: number
-    igv: number
-    charge: number
+    invoiceCode: string
+    totalQuantity: number
+    totalIgv: number
+    totalCharge: number
 }

@@ -20,7 +20,7 @@ import { PrintService } from '../../print/print.service'
 export class SheetRemissionGuidesComponent {
 
     private readonly remissionGuideId: any = inject(MAT_BOTTOM_SHEET_DATA)
-    private readonly bottomSheetRef: MatBottomSheetRef<SheetRemissionGuidesComponent> = inject(MatBottomSheetRef)
+    private readonly matBottomSheetRef: MatBottomSheetRef<SheetRemissionGuidesComponent> = inject(MatBottomSheetRef)
     private readonly remissionGuidesService = inject(RemissionGuidesService)
     private readonly navigationService = inject(NavigationService)
     private readonly printService = inject(PrintService)
@@ -49,21 +49,21 @@ export class SheetRemissionGuidesComponent {
     }
 
     onExportPdfTicket() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.remissionGuidesService.getRemissionGuideById(this.remissionGuideId).subscribe(remissionGuide => {
             this.printService.exportRemissionGuidePdfTicket80mm(remissionGuide)
         })
     }
 
     onExportPdf() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.remissionGuidesService.getRemissionGuideById(this.remissionGuideId).subscribe(remissionGuide => {
             this.printService.exportPdfA4RemissionGuide(remissionGuide)
         })
     }
 
     onSendRemissionGuide() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
         if (this.sunattk) {
             this.remissionGuidesService.sendRemissionGuide(this.remissionGuideId, this.sunattk).subscribe({
@@ -104,7 +104,7 @@ export class SheetRemissionGuidesComponent {
     }
 
     async onDownloadXmlCdr() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
         const remissionGuide = await lastValueFrom(this.remissionGuidesService.getRemissionGuideById(this.remissionGuideId))
         const fileName = `${this.business.ruc}-09-T${this.office.serialPrefix}-${remissionGuide.remissionGuideNumber}.zip`

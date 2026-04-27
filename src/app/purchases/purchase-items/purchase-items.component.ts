@@ -1,6 +1,6 @@
-import { Component } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { Subscription } from 'rxjs'
-import { IgvCode } from '../../products/igv-type.enum'
+import { IgvCode } from '../../sales/igv-code.enum'
 import { CreatePurchaseItemModel } from '../create-purchase-item.model'
 import { PurchasesService } from '../purchases.service'
 import { MatDialog } from '@angular/material/dialog'
@@ -16,14 +16,13 @@ import { CommonModule } from '@angular/common'
 })
 export class PurchaseItemsComponent {
 
-    constructor(
-        private readonly purchasesService: PurchasesService,
-        private readonly matDialog: MatDialog,
-    ) { }
+    private readonly purchasesService = inject(PurchasesService)
+    private readonly matDialog = inject(MatDialog)
 
+    $purchaseItems = signal<CreatePurchaseItemModel[]>([])
+    $charge = signal(0)
+    $countProducts = signal(0)
     igvCode = IgvCode
-    purchaseItems: CreatePurchaseItemModel[] = []
-    charge: number = 0
 
     private handlePurchaseItems$: Subscription = new Subscription()
 
@@ -33,13 +32,19 @@ export class PurchaseItemsComponent {
 
     ngOnInit(): void {
         this.handlePurchaseItems$ = this.purchasesService.handlePurchaseItems().subscribe(purchaseItems => {
-            this.purchaseItems = purchaseItems
-            this.charge = 0
-            for (const purchaseItem of this.purchaseItems) {
+            this.$purchaseItems.set(purchaseItems)
+            this.$charge.set(0)
+            this.$countProducts.set(0)
+            let charge = 0
+            let countProducts = 0
+            for (const purchaseItem of purchaseItems) {
+                countProducts += purchaseItem.quantity
                 if (purchaseItem.igvCode !== IgvCode.BONIFICACION) {
-                    this.charge += purchaseItem.cost * purchaseItem.quantity
+                    charge += purchaseItem.cost * purchaseItem.quantity
                 }
             }
+            this.$charge.set(charge)
+            this.$countProducts.set(countProducts)
         })
     }
 

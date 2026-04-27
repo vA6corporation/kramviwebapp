@@ -19,7 +19,7 @@ import { CreditNotesService } from '../credit-notes.service'
 import { MaterialModule } from '../../material.module'
 import { CommonModule } from '@angular/common'
 import { CreditNoteItemsComponent } from '../credit-note-items/credit-note-items.component'
-import { IgvCode } from '../../products/igv-type.enum'
+import { IgvCode } from '../../sales/igv-code.enum'
 
 interface FormData {
     discount: any

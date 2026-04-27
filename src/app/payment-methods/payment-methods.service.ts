@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { HttpService } from '../http.service';
-import { PaymentMethodModel } from './payment-method.model';
-import { filter } from 'rxjs/operators';
+import { Injectable } from '@angular/core'
+import { BehaviorSubject, Observable } from 'rxjs'
+import { HttpService } from '../http.service'
+import { PaymentMethodModel } from './payment-method.model'
+import { filter } from 'rxjs/operators'
 
 @Injectable({
     providedIn: 'root'

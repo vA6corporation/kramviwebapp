@@ -11,6 +11,7 @@ export async function buildA4Purchase(
     setting: SettingModel,
     business: BusinessModel,
     office: OfficeModel,
+    urlLogo: string
 ): Promise<jsPDF> {
     const header = 11
     const body = 8
@@ -22,9 +23,9 @@ export async function buildA4Purchase(
     let strArr: string[] = []
     const pageHeight = pdf.internal.pageSize.height
 
-   // if (setting?.logo) {
-   //     pdf.addImage(setting.logo, "JPEG", 5, 5, 35, 35)
-   // }
+    if (urlLogo) {
+        pdf.addImage(urlLogo, "JPEG", 5, 5, 35, 35)
+    }
 
     let positionYTitle = 10
 
@@ -56,8 +57,6 @@ export async function buildA4Purchase(
     pdf.text(strArr, 45, positionYTitle)
     positionYTitle += 4 * strArr.length
 
-    text = office?.phone || ''
-    pdf.text(text, 45, positionYTitle)
     positionYTitle += 5
 
     pdf.setDrawColor(0)

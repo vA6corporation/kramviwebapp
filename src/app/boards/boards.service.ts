@@ -8,6 +8,7 @@ import { CreateSaleModel } from '../sales/create-sale.model'
 import { SaleModel } from '../sales/sale.model'
 import { BoardItemModel } from './board-item.model'
 import { BoardModel } from './board.model'
+import { PreaccountModel } from './preaccount.model'
 import { CreateBoardItemModel } from './create-board-item.model'
 import { SummaryBoardModel } from './summary-board.model'
 import { IgvCode } from '../sales/igv-code.enum'
@@ -190,6 +191,14 @@ export class BoardsService {
         preBoardItems: BoardItemModel[],
     ): Observable<BoardModel> {
         return this.httpService.post(`boards/${tableId}`, { boardItems, preBoardItems })
+    }
+
+    createPreaccount(
+        boardId: any,
+        tableId: any,
+        preaccountItems: CreateBoardItemModel[],
+    ): Observable<PreaccountModel> {
+        return this.httpService.post(`preaccounts/${boardId}/${tableId}`, { preaccountItems })
     }
 
     saveSaleSplit(

@@ -7,7 +7,7 @@
                     Favoritos
                 </ng-template>
                 <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
-                    @for (product of favorites; track product.id) {
+                    @for (product of $favorites(); track product.id) {
                     <mat-grid-tile (click)="onSelectProduct(product)" [ngStyle]="urlImage(product)">
                         <span [ngClass]="{ 'bg-danger': product.isTrackStock && product.stock < 1 }"
                             class="bg-lightblue px-1">
@@ -59,7 +59,7 @@
     </div>
     <div class="fixed-bottom d-flex align-items-center footer-button">
         <div class="px-3">
-            @if (setting.defaultPrice === 'LISTA') {
+            @if ($setting().defaultPrice === 'LISTA') {
             <mat-form-field appearance="fill">
                 <mat-select [(value)]="priceListId" (selectionChange)="onChangePriceList()">
                     @for (priceList of priceLists; track $index) {

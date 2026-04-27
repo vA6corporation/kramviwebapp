@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { ReactiveFormsModule } from '@angular/forms'
@@ -32,8 +32,8 @@ export class CreatePurchasesComponent {
     private readonly purchasesService = inject(PurchasesService)
     private readonly categoriesService = inject(CategoriesService)
 
-    categories: CategoryModel[] = []
-    products: ProductModel[] = []
+    $categories = signal<CategoryModel[]>([])
+    $products = signal<ProductModel[]>([])
     favorites: ProductModel[] = []
     selectedIndex: number = 0
     gridListCols = 4
@@ -59,7 +59,7 @@ export class CreatePurchasesComponent {
         ])
 
         this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
-            this.categories = categories
+            this.$categories.set(categories)
         })
 
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {
@@ -67,7 +67,7 @@ export class CreatePurchasesComponent {
             this.productsService.getProductsByKey(key).subscribe({
                 next: products => {
                     this.navigationService.loadBarFinish()
-                    this.products = products
+                    this.$products.set(products)
                     this.selectedIndex = 2
                     const foundProduct = products.find(e => e.sku.match(new RegExp(`^${key}$`, 'i')) || e.upc.match(new RegExp(`^${key}$`, 'i')))
                     if (foundProduct) {
@@ -87,15 +87,15 @@ export class CreatePurchasesComponent {
 
     onSelectCategory(category: CategoryModel) {
         this.selectedIndex = 2
-        this.products = []
+        this.$products.set([])
         if (category.products) {
-            this.products = category.products
+            this.$products.set(category.products)
         } else {
             this.navigationService.loadBarStart()
             this.productsService.getProductsByCategoryPage(category.id, 1, 500).subscribe(products => {
                 this.navigationService.loadBarFinish()
                 category.products = products
-                this.products = products
+                this.$products.set(products)
             })
         }
     }

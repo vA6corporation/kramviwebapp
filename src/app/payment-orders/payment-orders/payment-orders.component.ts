@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { CommonModule, formatDate } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
@@ -35,8 +35,8 @@ export class PaymentOrdersComponent {
     private readonly authService = inject(AuthService)
 
     displayedColumns: string[] = ['paymentOrderNumber', 'serie', 'concept', 'provider', 'charge', 'paymentAt', 'observation', 'actions']
-    dataSource: PaymentOrderModel[] = []
-    length: number = 0
+    $dataSource = signal<PaymentOrderModel[]>([])
+    $length = signal<number>(0)
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
@@ -44,7 +44,8 @@ export class PaymentOrdersComponent {
         startDate: ['', Validators.required],
         endDate: ['', Validators.required],
     })
-    offices: OfficeModel[] = []
+    $offices = signal<OfficeModel[]>([])
+    $office = signal<OfficeModel>(new OfficeModel())
     officeId: number = 0
     private business: BusinessModel = new BusinessModel()
     private params: Params = {}
@@ -65,11 +66,12 @@ export class PaymentOrdersComponent {
         this.navigationService.setTitle('Ordenes de pago')
 
         this.handleOffices$ = this.authService.handleOffices().subscribe(offices => {
-            this.offices = offices
+            this.$offices.set(offices)
         })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.business = auth.business
+            this.$office.set(auth.office)
             this.officeId = auth.office.id
             Object.assign(this.params, { officeId: this.officeId })
             this.fetchData()
@@ -143,7 +145,7 @@ export class PaymentOrdersComponent {
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {
             this.paymentOrdersService.getPaymentOrdersByKey(key).subscribe({
                 next: paymentOrders => {
-                    this.dataSource = paymentOrders
+                    this.$dataSource.set(paymentOrders)
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.showMessage(error.error.message)
                 }
@@ -211,7 +213,7 @@ export class PaymentOrdersComponent {
 
     fetchCount() {
         this.paymentOrdersService.getCountPaymentOrders(this.params).subscribe(count => {
-            this.length = count
+            this.$length.set(count)
         }, (error: HttpErrorResponse) => {
             this.navigationService.showMessage(error.error.message)
         })
@@ -222,7 +224,7 @@ export class PaymentOrdersComponent {
         this.paymentOrdersService.getPaymentOrdersByPage(this.pageIndex + 1, this.pageSize, this.params).subscribe({
             next: paymentOrders => {
                 this.navigationService.loadBarFinish()
-                this.dataSource = paymentOrders
+                this.$dataSource.set(paymentOrders)
             }, error: (error: HttpErrorResponse) => {
                 this.navigationService.loadBarFinish()
                 this.navigationService.showMessage(error.error.message)

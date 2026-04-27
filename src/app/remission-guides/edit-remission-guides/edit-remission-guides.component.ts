@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { MatDialog } from '@angular/material/dialog'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
@@ -36,22 +36,17 @@ export class EditRemissionGuidesComponent {
     private readonly remissionGuidesService = inject(RemissionGuidesService)
     private readonly authService = inject(AuthService)
 
-    categories: CategoryModel[] = []
-    products: ProductModel[] = []
-    favorites: ProductModel[] = []
-    priceLists: PriceListModel[] = []
-    priceListId: any | null = null
+    $categories = signal<CategoryModel[]>([])
+    $products = signal<ProductModel[]>([])
+    $favorites = signal<ProductModel[]>([])
     selectedIndex: number = 0
     remissionGuideItems: RemissionGuideItemModel[] = []
-    gridListCols = 4
     office: OfficeModel = new OfficeModel()
-    isLoading: boolean = true
-    private setting: SettingModel = new SettingModel()
+    $isLoading = signal<boolean>(true)
 
     private handleSearch$: Subscription = new Subscription()
     private handleClickMenu$: Subscription = new Subscription()
     private handleRemissionGuideItems$: Subscription = new Subscription()
-    private handlePriceLists$: Subscription = new Subscription()
     private handleFavorites$: Subscription = new Subscription()
     private handleAuth$: Subscription = new Subscription()
 
@@ -59,7 +54,6 @@ export class EditRemissionGuidesComponent {
         this.handleSearch$.unsubscribe()
         this.handleClickMenu$.unsubscribe()
         this.handleRemissionGuideItems$.unsubscribe()
-        this.handlePriceLists$.unsubscribe()
         this.handleFavorites$.unsubscribe()
         this.handleAuth$.unsubscribe()
     }
@@ -69,7 +63,7 @@ export class EditRemissionGuidesComponent {
         this.navigationService.loadBarStart()
         this.remissionGuidesService.getRemissionGuideById(remissionGuideId).subscribe({
             next: remissionGuide => {
-                this.isLoading = false
+                this.$isLoading.set(false)
                 this.navigationService.loadBarFinish()
                 this.remissionGuidesService.setRemissionGuide(remissionGuide)
                 this.remissionGuidesService.setRemissionGuideItems(remissionGuide.remissionGuideItems)
@@ -108,18 +102,11 @@ export class EditRemissionGuidesComponent {
             }
         })
 
-        this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
-            this.priceLists = priceLists
-            this.priceListId = this.setting.defaultPriceListId || this.priceLists[0]?.id
-        })
-
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.office = auth.office
-            this.setting = auth.setting
 
             this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
-                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
-                this.favorites = products
+                this.$favorites.set(products)
             })
         })
 
@@ -129,7 +116,7 @@ export class EditRemissionGuidesComponent {
                 next: products => {
                     this.navigationService.loadBarFinish()
                     this.selectedIndex = 2
-                    this.products = products
+                    this.$products.set(products)
 
                     const foundProduct = products.find(e => e.sku.match(new RegExp(`^${key}$`, 'i')) || e.upc.match(new RegExp(`^${key}$`, 'i')))
 
@@ -153,7 +140,7 @@ export class EditRemissionGuidesComponent {
     }
 
     onSelectProduct(product: ProductModel): void {
-        if (product.annotations.length || product.productIds.length) {
+        if (product.annotations.length) {
             this.matDialog.open(DialogSelectAnnotationsComponent, {
                 width: '600px',
                 position: { top: '20px' },
@@ -166,16 +153,16 @@ export class EditRemissionGuidesComponent {
 
     onSelectCategory(category: CategoryModel) {
         this.selectedIndex = 2
-        this.products = []
+        this.$products.set([])
         if (category.products) {
             const products = category.products
-            this.products = products
+            this.$products.set(products)
         } else {
             this.navigationService.loadBarStart()
             this.productsService.getProductsByCategoryPage(category.id, 1, 500).subscribe(products => {
                 this.navigationService.loadBarFinish()
                 category.products = products
-                this.products = products
+                this.$products.set(products)
             })
         }
     }

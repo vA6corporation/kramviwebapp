@@ -39,13 +39,13 @@ export class PosProformasComponent {
 
     $categories = signal<CategoryModel[]>([])
     $products = signal<ProductModel[]>([])
-    favorites: ProductModel[] = []
+    $favorites = signal<ProductModel[]>([])
     priceLists: PriceListModel[] = []
     priceListId: any | null = null
     selectedIndex: number = 0
     proformaItems: ProformaItemModel[] = []
     gridListCols = 4
-    setting: SettingModel = new SettingModel()
+    $setting = signal<SettingModel>(new SettingModel())
     office: OfficeModel = new OfficeModel()
 
     private handleSearch$: Subscription = new Subscription()
@@ -81,7 +81,7 @@ export class PosProformasComponent {
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.office = auth.office
-            this.setting = auth.setting
+            this.$setting.set(auth.setting)
         })
 
         this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
@@ -104,7 +104,7 @@ export class PosProformasComponent {
 
         this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
             this.priceLists = priceLists
-            this.priceListId = this.setting.defaultPriceListId || this.priceLists[0]?.id
+            this.priceListId = this.$setting().defaultPriceListId || priceLists[0]?.id
         })
 
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {
@@ -113,7 +113,7 @@ export class PosProformasComponent {
                 next: products => {
                     this.navigationService.loadBarFinish()
                     this.selectedIndex = 2
-                    ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                    ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
                     this.$products.set(products)
 
                     const foundProduct = products.find(e => e.sku.match(new RegExp(`^${key}$`, 'i')) || e.upc.match(new RegExp(`^${key}$`, 'i')))
@@ -130,8 +130,8 @@ export class PosProformasComponent {
         })
 
         this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
-            ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
-            this.favorites = products
+            ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
+            this.$favorites.set(products)
         })
     }
 
@@ -140,7 +140,7 @@ export class PosProformasComponent {
         this.$products.set([])
         if (category.products) {
             const products = category.products
-            ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+            ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
             this.$products.set(products)
 
         } else {
@@ -148,7 +148,7 @@ export class PosProformasComponent {
             this.productsService.getProductsByCategoryPage(category.id, 1, 500).subscribe(products => {
                 this.navigationService.loadBarFinish()
                 category.products = products
-                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
                 this.$products.set(products)
             })
         }
@@ -178,8 +178,8 @@ export class PosProformasComponent {
     }
 
     onChangePriceList() {
-        //ProductsService.setPrices(this.products, this.priceListId, this.setting, this.office)
-        //ProductsService.setPrices(this.favorites, this.priceListId, this.setting, this.office)
+        ProductsService.setPrices(this.$products(), this.priceListId, this.$setting(), this.office)
+        ProductsService.setPrices(this.$favorites(), this.priceListId, this.$setting(), this.office)
     }
 
     onCancel() {

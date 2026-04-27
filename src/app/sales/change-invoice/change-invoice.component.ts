@@ -17,7 +17,7 @@ import { PaymentMethodsService } from '../../payment-methods/payment-methods.ser
 import { CreatePaymentModel } from '../../payments/create-payment.model'
 import { PaymentModel } from '../../payments/payment.model'
 import { PrintService } from '../../print/print.service'
-import { IgvCode } from '../../products/igv-type.enum'
+import { IgvCode } from '../../sales/igv-code.enum'
 import { CreateSaleItemModel } from '../../sales/create-sale-item.model'
 import { CreateSaleModel } from '../../sales/create-sale.model'
 import { SaleForm } from '../../sales/sale.form'
@@ -243,8 +243,6 @@ export class ChangeInvoiceComponent {
                         user: this.user,
                         customer: this.customer,
                         saleItems: this.saleItems,
-                        worker: null,
-                        referred: null,
                         payments,
                     })
 

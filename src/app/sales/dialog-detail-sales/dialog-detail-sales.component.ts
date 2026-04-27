@@ -56,6 +56,7 @@ export class DialogDetailSalesComponent {
         })
 
         this.salesService.getSaleById(this.saleId).subscribe(sale => {
+            console.log(sale)
             const { saleItems, customer, payments, user, cdr, ticket } = sale
             this.$sale.set(sale)
             this.$customer.set(customer)
@@ -74,4 +75,5 @@ export class DialogDetailSalesComponent {
     sanitize(url: string) {
         return this.sanitizer.bypassSecurityTrustUrl(url)
     }
+
 }

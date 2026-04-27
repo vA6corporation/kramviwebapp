@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
@@ -39,8 +39,8 @@ export class ChargeEditRemissionGuidesComponent {
 
     formGroup: FormGroup = this.formBuilder.group({
         transportAt: [new Date(), Validators.required],
-        carriageTypeCode: ['01', Validators.required],
-        remissionGuideTypeCode: ['', Validators.required],
+        carrierCode: ['01', Validators.required],
+        remissionGuideCode: ['', Validators.required],
         reasonDescription: ['', Validators.required],
         shippingWeight: ['', Validators.required],
         observation: '',
@@ -54,7 +54,7 @@ export class ChargeEditRemissionGuidesComponent {
         destinyAddress: ['', Validators.required],
     })
 
-    remissionGuideTypes: any[] = [
+    remissionGuideCodes: any[] = [
         { code: '01', label: 'VENTA' },
         { code: '02', label: 'COMPRA' },
         { code: '04', label: 'TRASLADO ENTRE ESTABLECIMIENTO DE LA MISMA EMPRESA' },
@@ -162,9 +162,9 @@ export class ChargeEditRemissionGuidesComponent {
     destinyDistricts: any[] = this.districts
 
     remissionGuideItems: RemissionGuideItemModel[] = []
-    carrier: CarrierModel | null = null
-    customer: CustomerModel | null = null
-    isLoading: boolean = false
+    $carrier = signal<CarrierModel | null>(null)
+    $customer = signal<CustomerModel | null>(null)
+    $isLoading = signal<boolean>(false)
     setting = new SettingModel()
     private saleId: any | null = null
     private remissionGuideId: any = ''
@@ -190,8 +190,8 @@ export class ChargeEditRemissionGuidesComponent {
 
         if (remissionGuide) {
             const { customer, carrier, saleId, id } = remissionGuide
-            this.customer = customer
-            this.carrier = carrier
+            this.$customer.set(customer)
+            this.$carrier.set(carrier)
             this.saleId = saleId
             this.remissionGuideId = id
             this.formGroup.patchValue(remissionGuide)
@@ -231,7 +231,7 @@ export class ChargeEditRemissionGuidesComponent {
 
                     dialogRef.afterClosed().subscribe(carrier => {
                         if (carrier) {
-                            this.carrier = carrier
+                            this.$carrier.set(carrier)
                         }
                     })
 
@@ -243,7 +243,7 @@ export class ChargeEditRemissionGuidesComponent {
 
                         dialogRef.afterClosed().subscribe(carrier => {
                             if (carrier) {
-                                this.carrier = carrier
+                                this.$carrier.set(carrier)
                             }
                         })
                     })
@@ -258,7 +258,7 @@ export class ChargeEditRemissionGuidesComponent {
 
                     dialogRef.afterClosed().subscribe(customer => {
                         if (customer) {
-                            this.customer = customer
+                            this.$customer.set(customer)
                         }
                     })
 
@@ -270,7 +270,7 @@ export class ChargeEditRemissionGuidesComponent {
 
                         dialogRef.afterClosed().subscribe(customer => {
                             if (customer) {
-                                this.customer = customer
+                                this.$customer.set(customer)
                             }
                         })
                     })
@@ -311,16 +311,18 @@ export class ChargeEditRemissionGuidesComponent {
     }
 
     onSubmit() {
+        const customer = this.$customer()
+        const carrier = this.$carrier()
         try {
             if (!this.formGroup.valid) {
                 throw new Error("Complete los campos")
             }
 
-            if (this.customer === null) {
+            if (customer === null) {
                 throw new Error("Agrege un cliente")
             }
 
-            if (this.carrier === null) {
+            if (carrier === null) {
                 throw new Error("Agrege un transportista")
             }
 
@@ -328,12 +330,13 @@ export class ChargeEditRemissionGuidesComponent {
                 throw new Error("Agrega un producto")
             }
 
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.navigationService.loadBarStart()
+
             const formData = this.formGroup.value
             const remissionGuide: CreateRemissionGuideModel = {
-                remissionGuideTypeCode: formData.remissionGuideTypeCode,
-                carriageTypeCode: formData.carriageTypeCode,
+                remissionGuideCode: formData.remissionGuideCode,
+                carrierCode: formData.carrierCode,
                 shippingWeight: formData.shippingWeight,
                 reasonDescription: formData.reasonDescription,
                 transportAt: formData.transportAt,
@@ -342,27 +345,27 @@ export class ChargeEditRemissionGuidesComponent {
                 destinyLocationCode: formData.destinyLocationCode,
                 destinyAddress: formData.destinyAddress,
                 observation: formData.observation,
-                carrierId: this.carrier?.id || null,
-                customerId: this.customer?.id || null,
+                carrierId: carrier ? carrier.id : null,
+                customerId: customer? customer.id : null,
                 saleId: this.saleId,
             }
 
             this.remissionGuidesService.update(
                 remissionGuide,
                 this.remissionGuideItems,
-                this.carrier,
+                carrier,
                 this.remissionGuideId
             ).subscribe({
                 next: () => {
                     this.navigationService.loadBarFinish()
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.remissionGuidesService.setRemissionGuideItems([])
                     const queryParams: Params = { tabIndex: 2 }
                     this.router.navigate(['/remissionGuides'], { queryParams })
                     this.navigationService.showMessage('Se han guardado los cambios')
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.loadBarFinish()
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.showMessage(error.error.message)
                 }
             })
@@ -370,7 +373,7 @@ export class ChargeEditRemissionGuidesComponent {
             if (error instanceof Error) {
                 this.navigationService.showMessage(error.message)
             }
-            this.isLoading = false
+            this.$isLoading.set(false)
             this.navigationService.loadBarFinish()
         }
     }
@@ -379,12 +382,12 @@ export class ChargeEditRemissionGuidesComponent {
         const dialogRef = this.matDialog.open(DialogEditCustomersComponent, {
             width: '600px',
             position: { top: '20px' },
-            data: this.customer,
+            data: this.$customer(),
         })
 
         dialogRef.afterClosed().subscribe(customer => {
             if (customer) {
-                this.customer = customer
+                this.$customer.set(customer)
             }
         })
     }
@@ -393,12 +396,12 @@ export class ChargeEditRemissionGuidesComponent {
         const dialogRef = this.matDialog.open(DialogEditCarriersComponent, {
             width: '600px',
             position: { top: '20px' },
-            data: this.carrier,
+            data: this.$carrier(),
         })
 
         dialogRef.afterClosed().subscribe(carrier => {
             if (carrier) {
-                this.carrier = carrier
+                this.$carrier.set(carrier)
             }
         })
     }

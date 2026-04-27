@@ -52,7 +52,7 @@ export class SalesComponent {
     private readonly formBuilder = inject(FormBuilder)
     private readonly router = inject(Router)
     private readonly matDialog = inject(MatDialog)
-    private readonly bottomSheet = inject(MatBottomSheet)
+    private readonly matBottomSheet = inject(MatBottomSheet)
     private readonly salesService = inject(SalesService)
     private readonly categoriesService = inject(CategoriesService)
     private readonly invoicesService = inject(InvoicesService)
@@ -113,7 +113,6 @@ export class SalesComponent {
     private handleClickMenu$: Subscription = new Subscription()
     private handleSearch$: Subscription = new Subscription()
     private handleCategories$: Subscription = new Subscription()
-    private handleWorkers: Subscription = new Subscription()
     private handleUsers$: Subscription = new Subscription()
     private handlePaymentMethods$: Subscription = new Subscription()
     private handleAuth$: Subscription = new Subscription()
@@ -122,7 +121,6 @@ export class SalesComponent {
         this.handleClickMenu$.unsubscribe()
         this.handleSearch$.unsubscribe()
         this.handleCategories$.unsubscribe()
-        this.handleWorkers.unsubscribe()
         this.handleUsers$.unsubscribe()
         this.handlePaymentMethods$.unsubscribe()
         this.handleAuth$.unsubscribe()
@@ -378,8 +376,8 @@ export class SalesComponent {
     }
 
     onOptions(saleId: string) {
-        const bottomSheetRef = this.bottomSheet.open(SheetInvoicesComponent, { data: saleId })
-        bottomSheetRef.instance.handleSendInvoice().subscribe(() => {
+        const matBottomSheetRef = this.matBottomSheet.open(SheetInvoicesComponent, { data: saleId })
+        matBottomSheetRef.instance.handleSendInvoice().subscribe(() => {
             this.fetchData()
         })
     }
@@ -907,11 +905,11 @@ export class SalesComponent {
     }
 
     onPrint(saleId: string) {
-        this.bottomSheet.open(SheetPrintComponent, { data: saleId })
+        this.matBottomSheet.open(SheetPrintComponent, { data: saleId })
     }
 
     onExportPdf(saleId: string) {
-        this.bottomSheet.open(SheetExportPdfComponent, { data: saleId })
+        this.matBottomSheet.open(SheetExportPdfComponent, { data: saleId })
     }
 
     onDeleteInvoice(sale: SaleModel) {
@@ -919,9 +917,11 @@ export class SalesComponent {
             this.navigationService.loadBarStart()
             this.invoicesService.sendInvoice(sale.id).subscribe({
                 next: cdr => {
-                    sale.cdr = cdr
+                    const createdSale = JSON.parse(JSON.stringify(sale))
+                    createdSale.cdr = cdr
+                    this.fetchData()
                     this.navigationService.loadBarFinish()
-                    this.onDeleteInvoice(sale)
+                    this.onDeleteInvoice(createdSale)
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.showMessage(error.error.message)
                     this.navigationService.loadBarFinish()

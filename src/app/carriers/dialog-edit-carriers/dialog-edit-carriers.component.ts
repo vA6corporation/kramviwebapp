@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
@@ -26,26 +26,26 @@ export class DialogEditCarriersComponent {
         documentType: this.carrier.documentType,
         document: this.carrier.document,
         name: [this.carrier.name, Validators.required],
-        carriagePlate: this.carrier.carriagePlate,
+        carrierPlate: this.carrier.carrierPlate,
         licenseNumber: this.carrier.licenseNumber,
         phone: this.carrier.phone,
         email: [this.carrier.email, Validators.email]
     })
     carrierId: any = this.carrier.id
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
     customerId: any = 0
     maxlength: number = 11
 
     onSubmit() {
         if (this.formGroup.valid) {
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.carriersService.update(this.formGroup.value, this.carrierId).subscribe({
                 next: () => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.dialogRef.close(this.formGroup.value)
                     this.navigationService.showMessage('Se han guardado los cambios')
                 }, error: (error: HttpErrorResponse) => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.showMessage(error.error.message)
                 }
             })

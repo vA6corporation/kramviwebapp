@@ -7,7 +7,7 @@ import { DialogBoardItemsComponent } from '../dialog-board-items/dialog-board-it
 import { DialogPasswordComponent } from '../dialog-password/dialog-password.component'
 import { AuthService } from '../../auth/auth.service'
 import { NavigationService } from '../../navigation/navigation.service'
-import { IgvCode } from '../../products/igv-type.enum'
+import { IgvCode } from '../../sales/igv-code.enum'
 import { SettingModel } from '../../settings/setting.model'
 import { MaterialModule } from '../../material.module'
 import { CreateBoardItemModel } from '../create-board-item.model'
@@ -30,8 +30,8 @@ export class BoardItemsComponent {
 
     igvCode = IgvCode
     $boardItems = signal<CreateBoardItemModel[]>([])
-    charge: number = 0
-    countProducts = 0
+    $charge = signal<number>(0)
+    $countProducts = signal<number>(0)
     private setting: SettingModel = new SettingModel()
     private board: BoardModel | null = null
 
@@ -52,14 +52,18 @@ export class BoardItemsComponent {
 
         this.handleBoardItems$ = this.boardsService.handleBoardItems().subscribe(boardItems => {
             this.$boardItems.set(boardItems)
-            this.charge = 0
-            this.countProducts = 0
+            this.$charge.set(0)
+            this.$countProducts.set(0)
+            let charge = 0
+            let countProducts = 0
             for (const boardItem of boardItems) {
-                this.countProducts += boardItem.quantity
+                countProducts += boardItem.quantity
                 if (boardItem.igvCode !== IgvCode.BONIFICACION) {
-                    this.charge += boardItem.price * boardItem.quantity
+                    charge += boardItem.price * boardItem.quantity
                 }
             }
+            this.$charge.set(charge)
+            this.$countProducts.set(countProducts)
         })
 
         this.handleBoard$ = this.boardsService.handleBoard().subscribe(board => {

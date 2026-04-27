@@ -23,10 +23,10 @@ import { buildExcel } from '../../buildExcel'
 import { DialogProgressComponent } from '../../navigation/dialog-progress/dialog-progress.component'
 import { MaterialModule } from '../../material.module'
 import { BusinessType } from '../../businesses/business.model'
-//import { DialogPasswordComponent } from '../../boards/dialog-password/dialog-password.component'
+import { DialogPasswordComponent } from '../../boards/dialog-password/dialog-password.component'
 //import { DialogProductProvidersComponent } from '../../providers/dialog-product-providers/dialog-product-providers.component'
-//import { ProvidersService } from '../../providers/providers.service'
-//import { ProviderModel } from '../../providers/provider.model'
+import { ProvidersService } from '../../providers/providers.service'
+import { ProviderModel } from '../../providers/provider.model'
 
 @Component({
     selector: 'app-products',
@@ -40,11 +40,11 @@ export class ProductsComponent {
     private readonly activatedRoute = inject(ActivatedRoute)
     private readonly matDialog = inject(MatDialog)
     private readonly router = inject(Router)
-    private readonly bottomSheet = inject(MatBottomSheet)
+    private readonly matBottomSheet = inject(MatBottomSheet)
     private readonly productsService = inject(ProductsService)
     private readonly navigationService = inject(NavigationService)
     private readonly categoriesService = inject(CategoriesService)
-    //private readonly providersService = inject(ProvidersService)
+    private readonly providersService = inject(ProvidersService)
     private readonly authService = inject(AuthService)
 
     formGroup: FormGroup = this.formBuilder.group({
@@ -52,10 +52,9 @@ export class ProductsComponent {
         providerId: '',
     })
     $categories = signal<CategoryModel[]>([])
-    //providers: ProviderModel[] = []
+    $providers = signal<ProviderModel[]>([])
     preDisplayedColumns: string[] = [
         'checked',
-        'createdAt',
         'name',
         'feature',
         'brand',
@@ -66,13 +65,12 @@ export class ProductsComponent {
         'price',
         'stock',
         'minimumStock',
-        //'provider',
         'comanda',
+        'provider',
         'actions'
     ]
-    displayedColumns: string[] = [
+    $displayedColumns = signal<string[]>([
         'checked',
-        'lastPurchaseItem',
         'name',
         'feature',
         'brand',
@@ -83,18 +81,18 @@ export class ProductsComponent {
         'price',
         'stock',
         'minimumStock',
-        //'provider',
         'comanda',
+        'provider',
         'actions'
-    ]
+    ])
     $dataSource = signal<ProductModel[]>([])
     $length = signal(0)
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
-    priceLists: PriceListModel[] = []
+    $priceLists = signal<PriceListModel[]>([])
     priceListId: any | null = null
-    setting: SettingModel = new SettingModel()
+    $setting = signal<SettingModel>(new SettingModel())
     productIds: number[] = []
     private office: OfficeModel = new OfficeModel()
     private business: BusinessModel = new BusinessModel()
@@ -142,22 +140,22 @@ export class ProductsComponent {
             this.$categories.set(categories)
         })
 
-       // this.handleProviders$ = this.providersService.handleProviders().subscribe(providers => {
-       //     this.providers = providers
-       // })
+        this.handleProviders$ = this.providersService.handleProviders().subscribe(providers => {
+            this.$providers.set(providers)
+        })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
+            this.$setting.set(auth.setting)
             this.office = auth.office
             this.business = auth.business
 
             Object.assign(this.params, { officeId: this.office.id })
 
-            switch (this.setting.defaultPrice) {
+            switch (this.$setting().defaultPrice) {
                 case PriceType.LISTA:
                     this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
-                        this.priceLists = priceLists
-                        this.priceListId = this.setting.defaultPriceListId || this.priceLists[0]?.id
+                        this.$priceLists.set(priceLists)
+                        this.priceListId = this.$setting().defaultPriceListId || priceLists[0]?.id
                     })
                     break
             }
@@ -209,7 +207,7 @@ export class ProductsComponent {
                     const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
                     let body = []
 
-                    switch (this.setting.defaultPrice) {
+                    switch (this.$setting().defaultPrice) {
                         case PriceType.GLOBAL: {
                             body.push([
                                 'ID',
@@ -303,7 +301,7 @@ export class ProductsComponent {
                                 'VALORACION 2',
                             ]
 
-                            for (const priceList of this.priceLists) {
+                            for (const priceList of this.$priceLists()) {
                                 titleRow.push(priceList.name.toUpperCase())
                             }
 
@@ -323,7 +321,7 @@ export class ProductsComponent {
                                     Number((product.price * product.stock).toFixed(2)),
                                 ]
 
-                                for (const priceList of this.priceLists) {
+                                for (const priceList of this.$priceLists()) {
                                     const price = product.prices.find(e => e.priceListId === priceList.id)
                                     bodyRow.push(price ? price.price : product.price)
                                 }
@@ -396,7 +394,6 @@ export class ProductsComponent {
     }
 
     fetchData(): void {
-        this.displayedColumns = Array.from(this.preDisplayedColumns)
         this.productIds = []
         if (this.key) {
             this.navigationService.loadBarStart()
@@ -404,57 +401,70 @@ export class ProductsComponent {
             this.productsService.getProductsByKeyPage(this.pageIndex + 1, this.pageSize, this.params).subscribe({
                 next: products => {
                     this.navigationService.loadBarFinish()
-                    ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                    ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
                     this.$dataSource.set(products)
+                    this.$displayedColumns.set(Array.from(this.preDisplayedColumns))
 
                     if (this.business.businessType === BusinessType.STORE) {
-                        const index = this.displayedColumns.findIndex(e => e === 'comanda')
+                        const index = this.$displayedColumns().findIndex(e => e === 'comanda')
                         if (index >= 0) {
-                            this.displayedColumns.splice(index, 1)
+                            this.$displayedColumns.update(values => {
+                                values.splice(index, 1)
+                                return values
+                            })
                         }
                     }
 
                     if (!products.find(e => e.feature)) {
-                        const index = this.displayedColumns.findIndex(e => e === 'feature')
+                        const index = this.$displayedColumns().findIndex(e => e === 'feature')
                         if (index >= 0) {
-                            this.displayedColumns.splice(index, 1)
+                            this.$displayedColumns.update(values => {
+                                values.splice(index, 1)
+                                return values
+                            })
                         }
                     }
 
                     if (!products.find(e => e.brand)) {
-                        const index = this.displayedColumns.findIndex(e => e === 'brand')
+                        const index = this.$displayedColumns().findIndex(e => e === 'brand')
                         if (index >= 0) {
-                            this.displayedColumns.splice(index, 1)
+                            this.$displayedColumns.update(values => {
+                                values.splice(index, 1)
+                                return values
+                            })
                         }
                     }
 
                     if (!products.find(e => e.sku)) {
-                        const index = this.displayedColumns.findIndex(e => e === 'sku')
+                        const index = this.$displayedColumns().findIndex(e => e === 'sku')
                         if (index >= 0) {
-                            this.displayedColumns.splice(index, 1)
+                            this.$displayedColumns.update(values => {
+                                values.splice(index, 1)
+                                return values
+                            })
                         }
                     }
 
                     if (!products.find(e => e.upc)) {
-                        const index = this.displayedColumns.findIndex(e => e === 'upc')
+                        const index = this.$displayedColumns().findIndex(e => e === 'upc')
                         if (index >= 0) {
-                            this.displayedColumns.splice(index, 1)
+                            this.$displayedColumns.update(values => {
+                                values.splice(index, 1)
+                                return values
+                            })
                         }
                     }
 
                     if (!products.find(e => e.minimumStock)) {
-                        const index = this.displayedColumns.findIndex(e => e === 'minimumStock')
+                        const index = this.$displayedColumns().findIndex(e => e === 'minimumStock')
                         if (index >= 0) {
-                            this.displayedColumns.splice(index, 1)
+                            this.$displayedColumns.update(values => {
+                                values.splice(index, 1)
+                                return values
+                            })
                         }
                     }
 
-                   // if (!products.find(e => e.providers.length)) {
-                   //     const index = this.displayedColumns.findIndex(e => e === 'provider')
-                   //     if (index >= 0) {
-                   //         this.displayedColumns.splice(index, 1)
-                   //     }
-                   // }
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.showMessage(error.error.message)
                     this.navigationService.loadBarFinish()
@@ -464,64 +474,79 @@ export class ProductsComponent {
             this.navigationService.loadBarStart()
             this.productsService.getProductsByPage(this.pageIndex + 1, this.pageSize, this.params).subscribe(products => {
                 this.navigationService.loadBarFinish()
-                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
                 this.$dataSource.set(products)
+                this.$displayedColumns.set(Array.from(this.preDisplayedColumns))
 
                 if (this.business.businessType === BusinessType.STORE) {
-                    const index = this.displayedColumns.findIndex(e => e === 'comanda')
+                    const index = this.$displayedColumns().findIndex(e => e === 'comanda')
                     if (index >= 0) {
-                        this.displayedColumns.splice(index, 1)
+                        this.$displayedColumns.update(values => {
+                            values.splice(index, 1)
+                            return values
+                        })
                     }
                 }
 
                 if (!products.find(e => e.feature)) {
-                    const index = this.displayedColumns.findIndex(e => e === 'feature')
+                    const index = this.$displayedColumns().findIndex(e => e === 'feature')
                     if (index >= 0) {
-                        this.displayedColumns.splice(index, 1)
+                        this.$displayedColumns.update(values => {
+                            values.splice(index, 1)
+                            return values
+                        })
                     }
                 }
 
                 if (!products.find(e => e.brand)) {
-                    const index = this.displayedColumns.findIndex(e => e === 'brand')
+                    const index = this.$displayedColumns().findIndex(e => e === 'brand')
                     if (index >= 0) {
-                        this.displayedColumns.splice(index, 1)
-                    }
-                }
-
-                if (!products.find(e => e.location)) {
-                    const index = this.displayedColumns.findIndex(e => e === 'location')
-                    if (index >= 0) {
-                        this.displayedColumns.splice(index, 1)
+                        this.$displayedColumns.update(values => {
+                            values.splice(index, 1)
+                            return values
+                        })
                     }
                 }
 
                 if (!products.find(e => e.sku)) {
-                    const index = this.displayedColumns.findIndex(e => e === 'sku')
+                    const index = this.$displayedColumns().findIndex(e => e === 'sku')
                     if (index >= 0) {
-                        this.displayedColumns.splice(index, 1)
+                        this.$displayedColumns.update(values => {
+                            values.splice(index, 1)
+                            return values
+                        })
                     }
                 }
 
                 if (!products.find(e => e.upc)) {
-                    const index = this.displayedColumns.findIndex(e => e === 'upc')
+                    const index = this.$displayedColumns().findIndex(e => e === 'upc')
                     if (index >= 0) {
-                        this.displayedColumns.splice(index, 1)
+                        this.$displayedColumns.update(values => {
+                            values.splice(index, 1)
+                            return values
+                        })
                     }
                 }
 
                 if (!products.find(e => e.minimumStock)) {
-                    const index = this.displayedColumns.findIndex(e => e === 'minimumStock')
+                    const index = this.$displayedColumns().findIndex(e => e === 'minimumStock')
                     if (index >= 0) {
-                        this.displayedColumns.splice(index, 1)
+                        this.$displayedColumns.update(values => {
+                            values.splice(index, 1)
+                            return values
+                        })
                     }
                 }
 
-               // if (!products.find(e => e.providers.length)) {
-               //     const index = this.displayedColumns.findIndex(e => e === 'provider')
-               //     if (index >= 0) {
-               //         this.displayedColumns.splice(index, 1)
-               //     }
-               // }
+                if (!products.find(e => e.provider)) {
+                    const index = this.$displayedColumns().findIndex(e => e === 'provider')
+                    if (index >= 0) {
+                        this.$displayedColumns.update(values => {
+                            values.splice(index, 1)
+                            return values
+                        })
+                    }
+                }
             })
         }
     }
@@ -551,33 +576,25 @@ export class ProductsComponent {
         }
     }
 
-    onProvidersProduct(providerIds: string[]) {
-       // this.matDialog.open(DialogProductProvidersComponent, {
-       //     width: '600px',
-       //     position: { top: '20px' },
-       //     data: providerIds
-       // })
-    }
-
     onEditProduct(productId: any) {
-        if (this.setting.password) {
-           // const dialogRef = this.matDialog.open(DialogPasswordComponent, {
-           //     width: '600px',
-           //     position: { top: '20px' },
-           // })
+        if (this.$setting().password) {
+            const dialogRef = this.matDialog.open(DialogPasswordComponent, {
+                width: '600px',
+                position: { top: '20px' },
+            })
 
-           // dialogRef.afterClosed().subscribe(ok => {
-           //     if (ok) {
-           //         this.router.navigate(['/products', productId, 'edit'])
-           //     }
-           // })
+            dialogRef.afterClosed().subscribe(ok => {
+                if (ok) {
+                    this.router.navigate(['/products', productId, 'edit'])
+                }
+            })
         } else {
             this.router.navigate(['/products', productId, 'edit'])
         }
     }
 
     onPrintBarcode(product: ProductModel) {
-        this.bottomSheet.open(SheetPrintBarcodesComponent, { data: [product] })
+        this.matBottomSheet.open(SheetPrintBarcodesComponent, { data: [product] })
     }
 
     onPrintBarcodeMassive() {
@@ -585,12 +602,12 @@ export class ProductsComponent {
             alert('Debes seleccionar almenos 1 producto')
         } else {
             const products = this.$dataSource().filter(e => this.productIds.includes(e.id))
-            this.bottomSheet.open(SheetPrintBarcodesComponent, { data: products })
+            this.matBottomSheet.open(SheetPrintBarcodesComponent, { data: products })
         }
     }
 
     onChangePriceList() {
-        ProductsService.setPrices(this.$dataSource(), this.priceListId, this.setting, this.office)
+        ProductsService.setPrices(this.$dataSource(), this.priceListId, this.$setting(), this.office)
     }
 
     onCategoryChange() {

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { MatDialog } from '@angular/material/dialog'
@@ -23,6 +23,7 @@ import { TurnModel } from '../../turns/turn.model'
 import { TurnsService } from '../../turns/turns.service'
 import { CreditModel } from '../credit.model'
 import { CreditsService } from '../credits.service'
+import { IgvCode } from '../../sales/igv-code.enum'
 
 @Component({
     selector: 'app-detail-credits',
@@ -42,13 +43,14 @@ export class DetailCreditsComponent {
     private readonly salesService = inject(SalesService)
     private readonly duesService = inject(DuesService)
 
-    credit: CreditModel | null = null
-    payments: PaymentModel[] = []
-    customer: CustomerModel | null = null
+    $credit = signal<CreditModel | null>(null)
+    $payments = signal<PaymentModel[]>([])
+    $customer = signal<CustomerModel | null>(null)
     turn: TurnModel | null = null
-    saleItems: SaleItemModel[] = []
-    office: OfficeModel = new OfficeModel()
-    dues: CreateDueModel[] = []
+    $saleItems = signal<SaleItemModel[]>([])
+    $office = signal<OfficeModel>(new OfficeModel())
+    $dues = signal<CreateDueModel[]>([])
+    igvCode = IgvCode
     private creditId: any = 0
 
     private handleOpenTurn$: Subscription = new Subscription()
@@ -64,7 +66,7 @@ export class DetailCreditsComponent {
 
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.office = auth.office
+            this.$office.set(auth.office)
 
             this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
                 this.turn = turn
@@ -99,11 +101,13 @@ export class DetailCreditsComponent {
     }
 
     onChangeDues() {
-        if (this.credit) {
+        const credit = this.$credit()
+        const dues = this.$dues()
+        if (credit) {
             const data: DialogDueData = {
-                turnId: this.credit.turnId,
-                charge: this.credit.charge,
-                dues: this.dues,
+                turnId: credit.turnId,
+                charge: credit.charge,
+                dues,
             }
 
             const dialogRef = this.matDialog.open(DialogDuesComponent, {
@@ -113,9 +117,9 @@ export class DetailCreditsComponent {
             })
 
             dialogRef.afterClosed().subscribe(dues => {
-                if (dues && dues.length && this.credit) {
+                if (dues && dues.length && credit) {
                     this.navigationService.loadBarStart()
-                    this.duesService.update(dues, this.credit.id).subscribe({
+                    this.duesService.update(dues, credit.id).subscribe({
                         next: () => {
                             this.fetchData()
                             this.navigationService.showMessage('Se han guardado los cambios')
@@ -158,21 +162,22 @@ export class DetailCreditsComponent {
         this.navigationService.loadBarStart()
         this.creditsService.getCreditById(this.creditId).subscribe(credit => {
             this.navigationService.loadBarFinish()
-            this.navigationService.setTitle(`Pagos ${credit.invoicePrefix}${this.office.serialPrefix}-${credit.invoiceNumber}`)
-            this.credit = credit
-            this.payments = credit.payments
-            this.customer = credit.customer
-            this.saleItems = credit.saleItems
-            this.dues = credit.dues.map(e => ({ charge: e.charge, preCharge: e.charge, dueDate: e.dueDate }))
-            this.salesService.setSaleItems(this.saleItems)
+            this.navigationService.setTitle(`Pagos ${credit.invoicePrefix}${this.$office().serialPrefix}-${credit.invoiceNumber}`)
+            this.$credit.set(credit)
+            this.$payments.set(credit.payments)
+            this.$customer.set(credit.customer)
+            this.$saleItems.set(credit.saleItems)
+            this.$dues.set(credit.dues.map(e => ({ charge: e.charge, preCharge: e.charge, dueAt: e.dueAt })))
+            this.salesService.setSaleItems(this.$saleItems())
         })
     }
 
     onCreatePayment() {
-        if (this.credit && this.turn) {
+        const credit = this.$credit()
+        if (credit && this.turn) {
             const data: DialogCreatePaymentData = {
                 turnId: this.turn.id,
-                saleId: this.credit.id
+                saleId: credit.id
             }
 
             const dialogRef = this.matDialog.open(DialogCreatePaymentsComponent, {
@@ -182,9 +187,9 @@ export class DetailCreditsComponent {
             })
 
             dialogRef.afterClosed().subscribe(payment => {
-                if (payment && this.credit) {
+                if (payment && credit) {
                     this.navigationService.loadBarStart()
-                    this.paymentsService.create(payment, this.credit.id).subscribe({
+                    this.paymentsService.create(payment, credit.id).subscribe({
                         next: () => {
                             this.navigationService.showMessage('Registrado correctamente')
                             this.navigationService.loadBarFinish()

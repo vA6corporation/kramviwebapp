@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router'
@@ -24,13 +24,14 @@ export class EditCarriersComponent {
         documentType: ['DNI', Validators.required],
         document: ['', Validators.required],
         name: ['', Validators.required],
-        carriagePlate: ['', Validators.required],
+        carrierPlate: '',
+        licenseNumber: '',
         address: '',
         phone: '',
         email: ['', Validators.email],
     })
 
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
     maxLength: number = 11
     private carrierId: any = 0
 
@@ -67,16 +68,16 @@ export class EditCarriersComponent {
 
     onSubmit(): void {
         if (this.formGroup.valid) {
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.navigationService.loadBarStart()
             this.carriersService.update(this.formGroup.value, this.carrierId).subscribe({
                 next: () => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.router.navigate(['/carriers'])
                     this.navigationService.showMessage('Registrado correctamente')
                 }, error: (error: HttpErrorResponse) => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage(error.error.message)
                 }

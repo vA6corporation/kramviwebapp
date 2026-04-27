@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
@@ -30,7 +30,7 @@ export class DialogEditProvidersComponent {
         email: ['', Validators.email],
     })
     maxlength: number = 11
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
 
     ngOnInit() {
         this.formGroup.patchValue(this.provider)
@@ -38,15 +38,15 @@ export class DialogEditProvidersComponent {
 
     onSubmit() {
         if (this.formGroup.valid) {
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.providersService.update(this.formGroup.value, this.provider.id).subscribe({
-                next: () => {
-                    this.isLoading = false
-                    this.dialogRef.close(this.formGroup.value)
+                next: provider => {
+                    this.$isLoading.set(false)
+                    this.dialogRef.close(provider)
                     this.navigationService.showMessage('Se han guardado los cambios')
                 }, error: (error: HttpErrorResponse) => {
                     console.log(error)
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.showMessage(error.error.message)
                 }
             })

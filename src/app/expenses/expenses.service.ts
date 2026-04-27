@@ -22,7 +22,7 @@ export class ExpensesService {
     }
 
     getCountExpenses(params: Params): Observable<number> {
-        return this.httpService.get('expenses/countExpenses')
+        return this.httpService.get('expenses/countExpenses', params)
     }
 
     getExpensesByYearOffice(year: number, officeId: any): Observable<number[]> {

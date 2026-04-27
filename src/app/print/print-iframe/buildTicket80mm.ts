@@ -66,7 +66,7 @@ export async function buildTicket80mm(
 
     if (urlLogo) {
         positionY += 42
-        pdf.addImage(urlLogo, "JPEG", 15 + marginLeft, 0, 40, 40)
+        pdf.addImage(urlLogo, "JPEG", 15, 0, 40, 40)
     }
 
     text = (office.tradeName || '').toUpperCase()
@@ -102,12 +102,6 @@ export async function buildTicket80mm(
         pdf.text(strArr, pageCenter, positionY, { align: 'center' })
         positionY += 3 * strArr.length
         positionY += strArr.length
-    }
-
-    if (office.phone) {
-        text = office.phone
-        pdf.text(text, pageCenter, positionY, { align: 'center' })
-        positionY += 3
     }
 
     pdf.text(invoiceTitle, pageCenter, positionY, { align: 'center' })
@@ -189,7 +183,7 @@ export async function buildTicket80mm(
 
     if (sale.isCredit) {
         pdf.text('F. de venc.', 0 + marginLeft, positionY)
-        pdf.text(`: ${formatDate(sale.dues[0]?.dueDate, 'dd/MM/yyyy', 'en-US')}`, 18 + marginLeft, positionY)
+        pdf.text(`: ${formatDate(sale.dues[0]?.dueAt, 'dd/MM/yyyy', 'en-US')}`, 18 + marginLeft, positionY)
 
         positionY += 3
 

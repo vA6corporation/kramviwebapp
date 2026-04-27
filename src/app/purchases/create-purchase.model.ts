@@ -1,10 +1,8 @@
 export interface CreatePurchaseModel {
     invoiceCode: string
-    isCredit: boolean
-    paymentMethodId: any
-    serie: string | null
-    purchasedAt: Date
+    serie: string
+    createdAt: Date
     expirationAt: Date | null
-    providerId: any | null
+    providerId: number | null
     observation: string
 }

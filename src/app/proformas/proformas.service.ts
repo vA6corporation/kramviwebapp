@@ -68,7 +68,6 @@ export class ProformasService {
                 unitCode: product.unitCode,
                 observation: '',
                 unitName: product.unitName,
-                description: product.description,
                 urlImage: product.urlImage,
                 prices: product.prices,
             }
@@ -86,12 +85,12 @@ export class ProformasService {
         return this.httpService.get(`proformas/byId/${proformaId}`)
     }
 
-    getSummaryProformasByRangeDateWorkers(
+    getSummaryProformasByRangeDate(
         startDate: string,
         endDate: string,
         params: Params
     ): Observable<SummaryProformaModel[]> {
-        return this.httpService.get(`proformas/summaryProformasByRangeDateWorker/${startDate}/${endDate}`, params)
+        return this.httpService.get(`proformas/summaryProformasByRangeDate/${startDate}/${endDate}`, params)
     }
 
     getCountProformas(params: Params): Observable<number> {

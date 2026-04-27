@@ -1,18 +1,28 @@
+@let customer = $customer();
+@let setting = $setting();
+@let turn = $turn();
 <div class="d-flex">
     <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()"
         [formGroup]="formGroup" autocomplete="off">
         <div class="px-3">
-            <h2 class="text-center mat-display-small mb-0">{{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</h2>
+            <h2 class="text-center mat-display-small mb-0">{{ $charge().toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</h2>
             <p class="caption text-center text-muted mb-2">Total a cobrar</p>
             @if (payments.length) {
             <p class="text-center mb-3">Monto a cuenta: {{ payments[0].charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</p>
             }
+            @if (turn && $isYesterdayTurn()) {
+                <div class="bg-warning rounded">
+                    <p class="caption text-center text-muted mb-2">Estas usando una caja de una fecha anterior {{ turn.createdAt | date }}</p>
+                </div>
+            }
             @if (customer) {
-            <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
+            <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100">
                 <span>{{ customer.name | uppercase }}</span>
             </button>
-            <p class="text-center mb-3">Celular: {{ customer.formatPhone || 'NINGUNO' }}</p>
-            <p class="text-center mb-3">Direccion: {{ customer.address || 'NINGUNO' }}</p>
+            @if (customer.formatPhone) {
+            <p class="text-center">Celular: {{ customer.formatPhone || 'NINGUNO' }}</p>
+            }
+            <p class="text-center">Direccion: {{ customer.address || 'NINGUNO' }}</p>
             }
             <mat-form-field appearance="fill">
                 <mat-label>Comprobante</mat-label>
@@ -65,12 +75,12 @@
             </div>
             }
             @if (setting.isShowDetraction) {
-            <button type="button" class="w-100 mb-3" mat-flat-button [disabled]="isLoading" color="primary"
+            <button type="button" class="w-100 mb-3" mat-flat-button [disabled]="$isLoading()" color="primary"
                 (click)="onDialogDetraction()">
                 INFORMACION DE LA DETRACCION
             </button>
             }
-            <button type="button" class="w-100" mat-flat-button [disabled]="isLoading" color="primary"
+            <button type="button" class="w-100" mat-flat-button [disabled]="$isLoading()" color="primary"
                 (click)="onSubmit()">
                 GUARDAR
             </button>

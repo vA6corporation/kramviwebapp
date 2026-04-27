@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, inject } from '@angular/core'
+import { Component, ElementRef, ViewChild, inject, signal } from '@angular/core'
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
 import { Params } from '@angular/router'
 import { Chart, ChartOptions, ChartType, Colors } from 'chart.js'
@@ -17,6 +17,7 @@ import { CommonModule } from '@angular/common'
 import { SalesService } from '../../sales/sales.service'
 import { SummarySaleModel } from '../../sales/summary-sale.model'
 import { ActivatedRoute, Router } from '@angular/router'
+import { InvoiceCode } from '../../sales/invoice-code.enum'
 Chart.register(Colors)
 
 @Component({
@@ -37,12 +38,14 @@ export class InvoicesComponent {
     private readonly usersService = inject(UsersService)
 
     displayedColumns: string[] = ['id', 'quantity', 'base', 'igv', 'charge']
-    dataSource: SummarySaleModel[] = []
+    $dataSource = signal<SummarySaleModel[]> ([])
     length: number = 0
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
     formGroup = this.formBuilder.group({
+        userId: 0,
+        officeId: 0,
         startDate: [new Date(), Validators.required],
         endDate: [new Date(), Validators.required],
         includeSaleNotes: false,
@@ -50,16 +53,14 @@ export class InvoicesComponent {
     chart: Chart | null = null
     categoryId: string = ''
     categories: CategoryModel[] = []
-    offices: OfficeModel[] = []
-    officeId: number = 0
-    users: UserModel[] = []
-    userId: number = 0
-    invoices: any[] = []
-    totalQuantity: number = 0
-    totalBase: number = 0
-    totalIgv: number = 0
-    totalCharge: number = 0
-    private params: Params = { officeId: this.officeId }
+    $offices = signal<OfficeModel[]>([])
+    $users = signal<UserModel[]>([])
+    $summarySales = signal<any[]>([])
+    $totalQuantity = signal<number>(0)
+    $totalBase = signal<number>(0)
+    $totalIgv = signal<number>(0)
+    $totalCharge = signal<number>(0)
+    private params: Params = {}
     @ViewChild('incomesChargeChart')
     private incomesChargeChart!: ElementRef<HTMLCanvasElement>
 
@@ -83,7 +84,7 @@ export class InvoicesComponent {
         })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.officeId = auth.office.id
+            this.formGroup.patchValue({ officeId: auth.office.id })
             const { startDate, endDate } = this.activatedRoute.snapshot.queryParams
             if (startDate && endDate) {
                 Object.assign(this.params, { startDate, endDate })
@@ -92,16 +93,16 @@ export class InvoicesComponent {
                     endDate: new Date(endDate)
                 })
             }
-            Object.assign(this.params, { officeId: this.officeId })
+            Object.assign(this.params, { officeId: auth.office.id })
             this.fetchData()
         })
 
         this.handleUsers$ = this.usersService.handleUsers().subscribe(users => {
-            this.users = users
+            this.$users.set(users)
         })
 
         this.handleOffices$ = this.authService.handleOffices().subscribe(offices => {
-            this.offices = offices
+            this.$offices.set(offices)
         })
     }
 
@@ -111,52 +112,53 @@ export class InvoicesComponent {
             const { startDate, endDate, includeSaleNotes } = this.formGroup.value
             Object.assign(this.params, { startDate, endDate })
             this.navigationService.loadBarStart()
-            this.salesService.getSummarySales(this.params).subscribe(summaryInvoices => {
-               // let filterSummaryInvoices = Array.from(summaryInvoices)
-               // if (!includeSaleNotes) { filterSummaryInvoices = filterSummaryInvoices.filter(e => e.id !== 'NOTA DE VENTA') }
-               // this.navigationService.loadBarFinish()
-               // this.invoices = filterSummaryInvoices
-               // this.dataSource = filterSummaryInvoices
-               // this.totalQuantity = filterSummaryInvoices.map(e => e.quantity).reduce((a, b) => a + b, 0)
-               // this.totalCharge = filterSummaryInvoices.map(e => e.charge).reduce((a, b) => a + b, 0)
-               // this.totalIgv = filterSummaryInvoices.map(e => e.igv).reduce((a, b) => a + b, 0)
-               // this.totalBase = this.totalCharge - this.totalIgv
-               // const data = {
-               //     datasets: [
-               //         {
-               //             label: 'Dataset 1',
-               //             data: filterSummaryInvoices.map((e: any) => e.charge),
-               //                 fill: true
-               //         },
-               //     ]
-               // }
+                this.salesService.getSummarySales(this.params).subscribe(summarySales => {
+                let filterSummarySales = Array.from(summarySales)
+                if (!includeSaleNotes) { filterSummarySales = filterSummarySales.filter(e => e.invoiceCode !== InvoiceCode.NOTA_DE_VENTA) }
+                this.navigationService.loadBarFinish()
+                this.$summarySales.set(filterSummarySales)
+                this.$dataSource.set(filterSummarySales)
+                this.$totalQuantity.set(filterSummarySales.map(e => e.totalQuantity).reduce((a, b) => a + b, 0))
+                this.$totalCharge.set(filterSummarySales.map(e => e.totalCharge).reduce((a, b) => a + b, 0))
+                this.$totalIgv.set(filterSummarySales.map(e => e.totalIgv).reduce((a, b) => a + b, 0))
+                this.$totalBase.set(this.$totalCharge() - this.$totalIgv())
 
-               // const config = {
-               //     type: 'pie' as ChartType,
-               //     data: data,
-               //     plugins: [ChartDataLabels],
-               //     options: {
-               //         maintainAspectRatio: false,
-               //         plugins: {
-               //             datalabels: {
-               //                 backgroundColor: function (ctx) {
-               //                     return 'rgba(73, 79, 87, 0.5)'
-               //                 },
-               //                 borderRadius: 4,
-               //                 color: 'white',
-               //                 font: {
-               //                     weight: 'bold'
-               //                 },
-               //                 formatter: (value, ctx) => {
-               //                     return this.invoices[ctx.dataIndex].id
-               //                 },
-               //                 padding: 6
-               //             },
-               //         }
-               //     } as ChartOptions,
-               // }
-               // const canvas = this.incomesChargeChart.nativeElement
-               // this.chart = new Chart(canvas, config)
+                const data = {
+                    datasets: [
+                        {
+                            label: 'Dataset 1',
+                            data: filterSummarySales.map((e: any) => e.totalCharge),
+                            fill: true
+                        },
+                    ]
+                }
+
+                const config = {
+                    type: 'pie' as ChartType,
+                    data: data,
+                    plugins: [ChartDataLabels],
+                    options: {
+                        maintainAspectRatio: false,
+                        plugins: {
+                            datalabels: {
+                                backgroundColor: function (ctx) {
+                                    return 'rgba(73, 79, 87, 0.5)'
+                                },
+                                borderRadius: 4,
+                                color: 'white',
+                                font: {
+                                    weight: 'bold'
+                                },
+                                formatter: (value, ctx) => {
+                                    return this.$summarySales()[ctx.dataIndex].invoiceName
+                                },
+                                padding: 6
+                            },
+                        }
+                    } as ChartOptions,
+                }
+                const canvas = this.incomesChargeChart.nativeElement
+                this.chart = new Chart(canvas, config)
             })
         }
     }
@@ -176,12 +178,14 @@ export class InvoicesComponent {
     }
 
     onChangeOffice() {
-        Object.assign(this.params, { officeId: this.officeId })
+        const { officeId } = this.formGroup.value
+        Object.assign(this.params, { officeId })
         this.fetchData()
     }
 
     onChangeUser() {
-        Object.assign(this.params, { userId: this.userId })
+        const { userId } = this.formGroup.value
+        Object.assign(this.params, { userId })
         this.fetchData()
     }
 

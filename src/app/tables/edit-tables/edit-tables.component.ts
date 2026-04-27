@@ -44,6 +44,7 @@ export class EditTablesComponent {
                     this.isLoading = false
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Se han guardado los cambios')
+                    this.navigationService.back()
                 }, error: (error: HttpErrorResponse) => {
                     console.log(error)
                     this.isLoading = false

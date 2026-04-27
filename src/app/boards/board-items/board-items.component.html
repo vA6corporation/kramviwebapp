@@ -22,11 +22,11 @@
     <button mat-list-item>
         <div matListItemTitle class="d-flex font-weight-bold">
             <span>
-                Total ({{ countProducts }})
+                Total ({{ $countProducts() }})
             </span>
             <span class="spacer"></span>
             <span>
-                {{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
+                {{ $charge().toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
             </span>
         </div>
     </button>

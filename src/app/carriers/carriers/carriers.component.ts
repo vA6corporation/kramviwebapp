@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { NavigationService } from '../../navigation/navigation.service';
-import { CarrierModel } from '../carrier.model';
-import { CarriersService } from '../carriers.service';
-import { MaterialModule } from '../../material.module';
-import { CommonModule } from '@angular/common';
+import { Component, inject, signal } from '@angular/core'
+import { MatDialog } from '@angular/material/dialog'
+import { PageEvent } from '@angular/material/paginator'
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router'
+import { Subscription } from 'rxjs'
+import { NavigationService } from '../../navigation/navigation.service'
+import { CarrierModel } from '../carrier.model'
+import { CarriersService } from '../carriers.service'
+import { MaterialModule } from '../../material.module'
+import { CommonModule } from '@angular/common'
 
 @Component({
     selector: 'app-carriers',
@@ -17,17 +17,15 @@ import { CommonModule } from '@angular/common';
 })
 export class CarriersComponent {
 
-    constructor(
-        private readonly carriersService: CarriersService,
-        private readonly navigationService: NavigationService,
-        private readonly matDialog: MatDialog,
-        private readonly router: Router,
-        private readonly activatedRoute: ActivatedRoute,
-    ) { }
+    private readonly carriersService = inject(CarriersService)
+    private readonly navigationService = inject(NavigationService)
+    private readonly matDialog = inject(MatDialog)
+    private readonly router = inject(Router)
+    private readonly activatedRoute = inject(ActivatedRoute)
 
     displayedColumns: string[] = ['document', 'name', 'address', 'email', 'phone', 'actions']
-    dataSource: CarrierModel[] = []
-    length: number = 0
+    $dataSource = signal<CarrierModel[]>([])
+    $length = signal<number>(0)
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
@@ -82,24 +80,24 @@ export class CarriersComponent {
         this.navigationService.loadBarStart()
 
         this.carriersService.getCarriersCount().subscribe(count => {
-            this.length = count
+            this.$length.set(count)
         })
 
         this.carriersService.getCarriersByPage(this.pageIndex + 1, this.pageSize).subscribe(carriers => {
             this.navigationService.loadBarFinish()
-            this.dataSource = carriers
+            this.$dataSource.set(carriers)
         })
     }
 
     onDelete(customerId: any) {
-        // const ok = confirm('Esta seguro de eliminar?...');
+        // const ok = confirm('Esta seguro de eliminar?...')
         // if (ok) {
         //   this.customersService.delete(customerId).subscribe(() => {
-        //     this.navigationService.showMessage('Eliminado correctamente');
-        //     this.fetchData();
+        //     this.navigationService.showMessage('Eliminado correctamente')
+        //     this.fetchData()
         //   }, (error: HttpErrorResponse) => {
-        //     this.navigationService.showMessage(error.error.message);
-        //   });
+        //     this.navigationService.showMessage(error.error.message)
+        //   })
         // }
     }
 

@@ -32,10 +32,10 @@
     </div>
     <div class="fixed-bottom d-flex align-items-center footer-button">
         <div class="px-3">
-            @if (setting.defaultPrice === 'LISTA') {
+            @if ($setting().defaultPrice === 'LISTA') {
             <mat-form-field appearance="fill">
                 <mat-select [(value)]="priceListId" (selectionChange)="onChangePriceList()">
-                    @for (priceList of priceLists; track $index) {
+                    @for (priceList of $priceLists(); track $index) {
                     <mat-option [value]="priceList.id">{{ priceList.name }}</mat-option>
                     }
                 </mat-select>
@@ -45,7 +45,7 @@
         <span class="spacer"></span>
         <div class="p-3">
             <button type="button" mat-raised-button (click)="onCancel()" color="primary">CANCELAR</button>
-            @if (setting.isShowCredit) {
+            @if ($setting().isShowCredit) {
             <span class="divider"></span>
             <button type="button" mat-raised-button color="primary" routerLink="/sales/chargeCredit">CREDITO</button>
             }

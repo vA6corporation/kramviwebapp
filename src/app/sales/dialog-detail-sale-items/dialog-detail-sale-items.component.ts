@@ -6,7 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { OfficeModel } from '../../offices/office.model'
 import { AuthService } from '../../auth/auth.service'
 import { Subscription } from 'rxjs'
-import { IgvCode } from '../../products/igv-type.enum'
+import { IgvCode } from '../../sales/igv-code.enum'
 import { CommonModule } from '@angular/common'
 
 @Component({

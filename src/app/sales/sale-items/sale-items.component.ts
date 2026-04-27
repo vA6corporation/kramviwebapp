@@ -5,7 +5,7 @@ import { CreateSaleItemModel } from '../create-sale-item.model'
 import { DialogSaleItemsComponent } from '../dialog-sale-items/dialog-sale-items.component'
 import { SalesService } from '../sales.service'
 import { MaterialModule } from '../../material.module'
-import { IgvCode } from '../../products/igv-type.enum'
+import { IgvCode } from '../../sales/igv-code.enum'
 
 @Component({
     selector: 'app-sale-items',
@@ -19,8 +19,8 @@ export class SaleItemsComponent {
     private readonly matDialog = inject(MatDialog)
 
     $saleItems = signal<CreateSaleItemModel[]>([])
-    $charge = signal(0)
-    $countProducts = signal(0)
+    $charge = signal<number>(0)
+    $countProducts = signal<number>(0)
     igvCode = IgvCode
 
     private handleSaleItems$: Subscription = new Subscription()

@@ -5,6 +5,6 @@ export interface ProviderModel {
     name: string
     email: string
     phone: string
+    formatPhone: string
     address: string
-    banks: any[]
 }

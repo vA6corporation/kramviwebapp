@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { Router, RouterModule } from '@angular/router'
@@ -24,47 +24,38 @@ export class CreateUsersComponent {
     private readonly usersService = inject(UsersService)
     private readonly navigationService = inject(NavigationService)
     private readonly officesService = inject(OfficesService)
-    private readonly authService = inject(AuthService)
 
     formGroup: FormGroup = this.formBuilder.group({
         name: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(3)]],
-        assignedOfficeId: null,
+        officeId: null,
     })
-    isLoading: boolean = false
-    offices: OfficeModel[] = []
+    $isLoading = signal<boolean>(false)
+    $offices = signal<OfficeModel[]>([])
     hide: boolean = true
-
-    private handleAuth$: Subscription = new Subscription()
-
-    ngOnDestroy() {
-        this.handleAuth$.unsubscribe()
-    }
 
     ngOnInit(): void {
         this.navigationService.setTitle('Nuevo usuario')
 
-        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.officesService.getOffices().subscribe(offices => {
-                this.offices = offices
-            })
+        this.officesService.getOffices().subscribe(offices => {
+            this.$offices.set(offices)
         })
     }
 
     onSubmit(): void {
         if (this.formGroup.valid) {
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.navigationService.loadBarStart()
             this.usersService.create(this.formGroup.value).subscribe({
                 next: () => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.router.navigate(['/users'])
                     this.usersService.loadUsers()
                     this.navigationService.showMessage('Registrado correctamente')
                 }, error: (error: HttpErrorResponse) => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage(error.error.message)
                 }

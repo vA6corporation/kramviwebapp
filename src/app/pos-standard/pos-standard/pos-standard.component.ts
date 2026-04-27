@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core'
+import { Component, inject, signal, computed } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { MatDialog } from '@angular/material/dialog'
@@ -43,12 +43,12 @@ export class PosStandardComponent {
     enviroment = environment
     $categories = signal<CategoryModel[]>([])
     $products = signal<ProductModel[]>([])
-    favorites: ProductModel[] = []
-    priceLists: PriceListModel[] = []
+    $favorites = signal<ProductModel[]>([])
+    $priceLists = signal<PriceListModel[]>([])
     priceListId: string | null = null
     selectedIndex: number = 0
     gridListCols = 4
-    setting: SettingModel = new SettingModel()
+    $setting = signal<SettingModel>(new SettingModel())
     office: OfficeModel = new OfficeModel()
     private sortByName: boolean = true
 
@@ -88,12 +88,12 @@ export class PosStandardComponent {
         })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
+            this.$setting.set(auth.setting)
             this.office = auth.office
 
             this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
-                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
-                this.favorites = products
+                ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
+                this.$favorites.set(products)
             })
         })
 
@@ -109,18 +109,25 @@ export class PosStandardComponent {
                     this.sortByName = !this.sortByName
                     if (this.sortByName) {
                         this.navigationService.showMessage('Orden por nombre')
-                       // this.products.sort((a, b) => {
-                       //     if (a.fullName > b.fullName) {
-                       //         return 1
-                       //     }
-                       //     if (a.fullName < b.fullName) {
-                       //         return -1
-                       //     }
-                       //     return 0
-                       // })
+                        this.$products.update(values => {
+                            values.sort((a, b) => {
+                                if (a.fullName > b.fullName) {
+                                    return 1
+                                }
+                                if (a.fullName < b.fullName) {
+                                    return -1
+                                }
+                                return 0
+                            })
+                            return values
+                        })
+
                     } else {
                         this.navigationService.showMessage('Orden por precio')
-                       // this.products.sort((a, b) => b.price - a.price)
+                        this.$products.update(values => {
+                            values.sort((a, b) => b.price - a.price).reverse()
+                            return values
+                        })
                     }
                     break
                 default:
@@ -129,8 +136,8 @@ export class PosStandardComponent {
         })
 
         this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
-            this.priceLists = priceLists
-            this.priceListId = this.setting.defaultPriceListId || this.priceLists[0]?.id
+            this.$priceLists.set(priceLists)
+            this.priceListId = this.$setting().defaultPriceListId || priceLists[0]?.id
         })
 
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {
@@ -140,7 +147,7 @@ export class PosStandardComponent {
                     this.navigationService.loadBarFinish()
                     this.selectedIndex = 2
 
-                    ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                    ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
 
                     if (this.sortByName) {
                         products.sort((a, b) => {
@@ -184,7 +191,7 @@ export class PosStandardComponent {
         this.$products.set([])
         if (category.products) {
             const products = category.products
-            ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+            ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
 
             if (this.sortByName) {
                 products.sort((a, b) => {
@@ -206,8 +213,7 @@ export class PosStandardComponent {
             this.productsService.getProductsByCategoryPage(category.id, 1, 500).subscribe(products => {
                 this.navigationService.loadBarFinish()
                 category.products = products
-
-                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
 
                 if (this.sortByName) {
                     products.sort((a, b) => {
@@ -238,22 +244,24 @@ export class PosStandardComponent {
     }
 
     urlImage(product: ProductModel) {
-        const styleObject: any = {}
-        if (product.urlImage) {
-            styleObject['background-image'] = `url(${decodeURIComponent(product.urlImage)})`
-            styleObject['background-size'] = 'cover'
-            styleObject['background-position'] = 'center'
-        } else {
-            if (product.isTrackStock && product.stock < 1) {
-                styleObject['background'] = '#ffa7a6'
+        return computed(() => {
+            const styleObject: any = {}
+            if (product.urlImage) {
+                styleObject['background-image'] = `url(${decodeURIComponent(product.urlImage)})`
+                styleObject['background-size'] = 'cover'
+                styleObject['background-position'] = 'center'
+            } else {
+                if (product.isTrackStock && product.stock < 1) {
+                    styleObject['background'] = '#ffa7a6'
+                }
             }
-        }
-        return styleObject
+            return styleObject
+        })
     }
 
     onChangePriceList() {
-        //ProductsService.setPrices(this.products, this.priceListId, this.setting, this.office)
-        //ProductsService.setPrices(this.favorites, this.priceListId, this.setting, this.office)
+        ProductsService.setPrices(this.$products(), this.priceListId, this.$setting(), this.office)
+        ProductsService.setPrices(this.$favorites(), this.priceListId, this.$setting(), this.office)
     }
 
     onCancel() {

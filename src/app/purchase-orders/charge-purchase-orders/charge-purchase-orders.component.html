@@ -1,0 +1,30 @@
+@let provider = $provider();
+<div class="d-flex h-100">
+    <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()"
+        [formGroup]="formGroup">
+        <div class="px-3">
+            <h2 class="text-center mat-display-small mb-0">{{ $charge().toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</h2>
+            <p class="caption text-center text-muted mb-2">Total a comprar</p>
+            @if (provider) {
+            <button type="button" mat-button color="primary" (click)="onEditProvider()" class="w-100">
+                <span>{{ provider.name | uppercase }}</span>
+            </button>
+            @if (provider.formatPhone) {
+            <p class="text-center">Celular: {{ provider.formatPhone || 'NINGUNO' }}</p>
+            }
+            <p class="text-center">Direccion: {{ provider.address || 'NINGUNO' }}</p>
+            }
+            <mat-form-field appearance="fill">
+                <mat-label>Observaciones</mat-label>
+                <input type="text" matInput formControlName="observation">
+            </mat-form-field>
+            <button type="button" class="w-100" mat-flat-button [disabled]="$isLoading()" color="primary"
+                (click)="onSubmit()">
+                GUARDAR
+            </button>
+        </div>
+    </form>
+    <div class="flex-30 bg-white list-items">
+        <app-purchase-order-items></app-purchase-order-items>
+    </div>
+</div>

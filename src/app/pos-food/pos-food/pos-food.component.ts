@@ -36,11 +36,11 @@ export class PosFoodComponent {
     private readonly authService = inject(AuthService)
 
     $categories = signal<CategoryModel[]>([])
-    priceLists: PriceListModel[] = []
+    $priceLists = signal<PriceListModel[]>([])
     priceListId: string | null = null
     gridListCols = 4
     selectedIndex: number = 0
-    setting: SettingModel = new SettingModel()
+    $setting = signal<SettingModel>(new SettingModel())
     office: OfficeModel = new OfficeModel()
     $products = signal<ProductModel[]>([])
     private sortByName: boolean = true
@@ -76,7 +76,7 @@ export class PosFoodComponent {
         ])
 
         this.handleAuth$eAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
+            this.$setting.set(auth.setting)
             this.office = auth.office
         })
 
@@ -104,7 +104,7 @@ export class PosFoodComponent {
                     this.navigationService.loadBarFinish()
                     this.selectedIndex = 1
 
-                    ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                    ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
 
                     if (this.sortByName) {
                         products.sort((a, b) => {
@@ -135,8 +135,8 @@ export class PosFoodComponent {
         })
 
         this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
-            this.priceLists = priceLists
-            this.priceListId = this.setting.defaultPriceListId || this.priceLists[0]?.id
+            this.$priceLists.set(priceLists)
+            this.priceListId = this.$setting().defaultPriceListId || priceLists[0]?.id
         })
     }
 
@@ -155,7 +155,7 @@ export class PosFoodComponent {
     }
 
     onChangePriceList() {
-       // ProductsService.setPrices(this.products, this.priceListId, this.setting, this.office)
+        ProductsService.setPrices(this.$products(), this.priceListId, this.$setting(), this.office)
     }
 
     onCancel() {
@@ -171,7 +171,7 @@ export class PosFoodComponent {
         if (category.products) {
             const products = category.products
 
-            ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+            ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
 
             if (this.sortByName) {
                 products.sort((a, b) => {
@@ -194,7 +194,7 @@ export class PosFoodComponent {
                 this.navigationService.loadBarFinish()
                 category.products = products
 
-                ProductsService.setPrices(products, this.priceListId, this.setting, this.office)
+                ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
 
                 if (this.sortByName) {
                     products.sort((a, b) => {

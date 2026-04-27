@@ -14,7 +14,7 @@
         <mat-label>Sucursal</mat-label>
         <mat-select [(value)]="officeId" (selectionChange)="onOfficeChange()">
             <mat-option value="">TODAS LAS SUCURSALES</mat-option>
-            @for (office of offices; track office.id) {
+            @for (office of $offices(); track office.id) {
                 <mat-option [value]="office.id">
                     {{ office.name | uppercase }}
                 </mat-option>
@@ -22,11 +22,10 @@
         </mat-select>
     </mat-form-field>
     <div class="mat-elevation-z2">
-        <table mat-table [dataSource]="dataSource" class="w-100">
+        <table mat-table [dataSource]="$dataSource()" class="w-100">
             <ng-container matColumnDef="paymentOrderNumber">
                 <th mat-header-cell *matHeaderCellDef>N°</th>
-                <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'yyyyMM' }}-{{
-                    element.paymentOrderNumber }}</td>
+                <td mat-cell *matCellDef="let element">O{{ $office().serialPrefix }}-{{ element.paymentOrderNumber }}</td>
             </ng-container>
             <ng-container matColumnDef="serie">
                 <th mat-header-cell *matHeaderCellDef>Serie</th>
@@ -95,7 +94,7 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{ 'bg-success': row.isPaid }"></tr>
         </table>
         <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex"
-            [length]="length" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
+            [length]="$length()" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
     </div>
     <div class="fixed-bottom p-3" style="right: 0; left: unset; width: auto;">
         <button mat-fab color="primary" class="float-right" routerLink="/paymentOrders/create">

@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Params } from '@angular/router';
-import { Observable } from 'rxjs';
-import { HttpService } from '../http.service';
-import { CreditModel } from './credit.model';
+import { Injectable } from '@angular/core'
+import { Params } from '@angular/router'
+import { Observable } from 'rxjs'
+import { HttpService } from '../http.service'
+import { CreditModel } from './credit.model'
 
 @Injectable({
     providedIn: 'root'
@@ -78,4 +78,5 @@ export class CreditsService {
     ): Observable<void> {
         return this.httpService.post(`credits/paidCustomerCredits/${paymentMethodId}/${turnId}`, { creditIds })
     }
+
 }

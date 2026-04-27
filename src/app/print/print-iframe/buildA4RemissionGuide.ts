@@ -58,8 +58,6 @@ export async function buildA4RemissionGuide(
     pdf.text(strArr, 45, positionYTitle)
     positionYTitle += 4 * strArr.length
 
-    text = office?.phone || ''
-    pdf.text(text, 45, positionYTitle)
     positionYTitle += 5
 
     pdf.setDrawColor(0)
@@ -213,7 +211,7 @@ export async function buildA4RemissionGuide(
 
     pdf.setFont('Helvetica', 'normal')
 
-    text = carrier?.carriagePlate || 'NINGUNO'
+    text = carrier?.carrierPlate || 'NINGUNO'
     pdf.text(text, 8, positionYCarrier)
 
     text = carrier?.licenseNumber || 'NINGUNO'

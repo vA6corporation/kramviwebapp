@@ -1,31 +1,21 @@
 <div class="container">
     <div class="mat-elevation-z2">
-        <table mat-table [dataSource]="dataSource" class="w-100">
-            <ng-container matColumnDef="checked">
-                <th mat-header-cell *matHeaderCellDef>
-                    <mat-checkbox (change)="checkAllCategories($event.checked)"
-                        [checked]="dataSource.length > 0 && dataSource.length === categoriesId.length"></mat-checkbox>
-                </th>
-                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">
-                    <mat-checkbox (change)="checkCategoryId($event.checked, element.id)"
-                        [checked]="categoriesId.includes(element.id)"></mat-checkbox>
-                </td>
-            </ng-container>
+        <table mat-table [dataSource]="$dataSource()" class="w-100">
             <ng-container matColumnDef="id">
-                <th mat-header-cell *matHeaderCellDef>Nombre</th>
-                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">
+                <th mat-header-cell *matHeaderCellDef>Id</th>
+                <td mat-cell *matCellDef="let element">
                     {{ element.id }}
                 </td>
             </ng-container>
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef>Nombre</th>
-                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">
+                <td mat-cell *matCellDef="let element">
                     {{ element.name | uppercase }}
                 </td>
             </ng-container>
             <ng-container matColumnDef="products">
                 <th mat-header-cell *matHeaderCellDef>Productos</th>
-                <td mat-cell *matCellDef="let element" class="text-capitalize truncate-cell">{{ element.countProducts }}
+                <td mat-cell *matCellDef="let element">{{ element.productsCount }}
                 </td>
             </ng-container>
             <ng-container matColumnDef="actions">
@@ -49,7 +39,7 @@
                             <span>Editar</span>
                         </button>
                         @if (element.deletedAt) {
-                        <button type="button" (click)="onRestore(element)" mat-menu-item>
+                        <button type="button" (click)="onRestore(element.id)" mat-menu-item>
                             <mat-icon>restore_from_trash</mat-icon>
                             <span>Restaurar</span>
                         </button>
@@ -67,7 +57,7 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" [style.background]="row.color"></tr>
         </table>
         <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" [pageIndex]="pageIndex"
-            [length]="length" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
+            [length]="$length()" (page)="handlePageEvent($event)" showFirstLastButtons></mat-paginator>
     </div>
     <div class="fixed-bottom p-3" style="right: 0; left: unset; width: auto;">
         <button type="button" (click)="onCreateCategory()" mat-fab color="primary" class="float-right">

@@ -1,11 +1,11 @@
 import { formatDate } from '@angular/common'
-import jsPDF from 'jspdf'
 import { OfficeModel } from '../../offices/office.model'
 import { SettingModel } from '../../settings/setting.model'
 import { SaleItemModel } from '../../sales/sale-item.model'
 import { SaleModel } from '../../sales/sale.model'
 import { PaymentMethodModel } from '../../payment-methods/payment-method.model'
 import { IgvCode } from '../../sales/igv-code.enum'
+import jsPDF from 'jspdf'
 
 export function buildCommandFastFood80mm(
     sale: SaleModel,
@@ -14,18 +14,18 @@ export function buildCommandFastFood80mm(
     setting: SettingModel,
     paymentMethods: PaymentMethodModel[],
 ): jsPDF {
-    const pdf = new jsPDF('p', 'mm', [297, 80])
-    let positionY: number = 10
-    const pageCenter = 38
-    const body = 14
+    const pdf = new jsPDF('p', 'mm', [297, 72])
+    let positionY: number = 3
+    const pageCenter = 35
+    const body = 12
     const marginLeft = setting.marginLeft
     const marginRight = setting.marginRight
     let strArr: string[] = []
     pdf.setFontSize(body)
     pdf.text(`TICKET N° ${sale.invoicePrefix}${office.serialPrefix}-${sale.invoiceNumber}`, pageCenter, positionY, { align: 'center' })
-    positionY += 5
-    pdf.text(`${sale.isDelivery ? 'DELIVERY' : 'ESTABLECIMIENTO'}`, pageCenter, positionY, { align: 'center' })
-    positionY += 8
+    //positionY += 5
+    //pdf.text(`${sale.isDelivery ? 'DELIVERY' : 'ESTABLECIMIENTO'}`, pageCenter, positionY, { align: 'center' })
+    positionY += 10
 
     let totalCharge = 0
 
@@ -48,6 +48,7 @@ export function buildCommandFastFood80mm(
         positionY += 5 * strArr.length
         positionY += 3
     }
+    positionY += 5
     pdf.setFontSize(11)
 
     pdf.text(`IMPORTE TOTAL: ${totalCharge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 1 + marginLeft, positionY)

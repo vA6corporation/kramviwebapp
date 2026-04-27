@@ -24,7 +24,7 @@ import { RouterModule } from '@angular/router'
 export class SheetInvoicesComponent {
 
     readonly saleId: number = inject(MAT_BOTTOM_SHEET_DATA)
-    readonly bottomSheetRef: MatBottomSheetRef<SheetInvoicesComponent> = inject(MatBottomSheetRef)
+    readonly matBottomSheetRef: MatBottomSheetRef<SheetInvoicesComponent> = inject(MatBottomSheetRef)
     private readonly navigationService = inject(NavigationService)
     private readonly invoicesService = inject(InvoicesService)
     private readonly authService = inject(AuthService)
@@ -53,7 +53,7 @@ export class SheetInvoicesComponent {
     }
 
     onCreditNoteDialog() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.matDialog.open(DialogCreditNotesComponent, {
             width: '600px',
             position: { top: '20px' },
@@ -62,7 +62,7 @@ export class SheetInvoicesComponent {
     }
 
     onRemissionGuideDialog() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
 
         this.matDialog.open(DialogRemissionGuidesComponent, {
             width: '600px',
@@ -72,7 +72,7 @@ export class SheetInvoicesComponent {
     }
 
     onEmailDialog() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.matDialog.open(DialogSendEmailComponent, {
             width: '600px',
             position: { top: '20px' },
@@ -81,7 +81,7 @@ export class SheetInvoicesComponent {
     }
 
     onStatusCdr() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
         this.invoicesService.statusCdr(this.saleId).subscribe({
             next: cdr => {
@@ -104,7 +104,7 @@ export class SheetInvoicesComponent {
     }
 
     async onDownloadXmlCdr() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
         const sale = await lastValueFrom(this.salesService.getSaleById(this.saleId))
         const fileName = `${this.business.ruc}-${sale.invoiceCode}-${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}.zip`
@@ -147,7 +147,7 @@ export class SheetInvoicesComponent {
     }
 
     onSendInvoice() {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
         this.invoicesService.sendInvoice(this.saleId).subscribe({
             next: () => {

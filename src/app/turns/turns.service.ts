@@ -97,4 +97,9 @@ export class TurnsService {
     delete(turnId: any): Observable<void> {
         return this.httpService.delete(`turns/${turnId}`)
     }
+
+    restore(turnId: any, userId: any) {
+        return this.httpService.delete(`turns/${turnId}/${userId}`)
+    }
+
 }

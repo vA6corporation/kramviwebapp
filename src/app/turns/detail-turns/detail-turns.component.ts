@@ -44,7 +44,7 @@ export class DetailTurnsComponent {
 
     private readonly matDialog = inject(MatDialog)
     private readonly activatedRoute = inject(ActivatedRoute)
-    private readonly bottomSheet = inject(MatBottomSheet)
+    private readonly matBottomSheet = inject(MatBottomSheet)
     private readonly turnsService = inject(TurnsService)
     private readonly navigationService = inject(NavigationService)
     private readonly paymentsService = inject(PaymentsService)
@@ -59,7 +59,7 @@ export class DetailTurnsComponent {
     openCash: number | null = null
     payments: PaymentModel[] = []
     $expenses = signal<ExpenseModel[]>([])
-    credits: CreditModel[] = []
+    $credits = signal<CreditModel[]>([])
     $summaryPayments = signal<SummaryPaymentModel[]>([])
     $summarySaleItems = signal<SummarySaleItemModel[]>([])
     $sales = signal<SaleModel[]>([])
@@ -204,8 +204,8 @@ export class DetailTurnsComponent {
     }
 
     onShowSheet(saleId: any) {
-        const bottomSheetRef = this.bottomSheet.open(SheetDetailTurnsComponent, { data: saleId })
-        bottomSheetRef.instance.handleChangeTurn().subscribe(() => {
+        const matBottomSheetRef = this.matBottomSheet.open(SheetDetailTurnsComponent, { data: saleId })
+        matBottomSheetRef.instance.handleChangeTurn().subscribe(() => {
             const dialogRef = this.matDialog.open(DialogChangeTurnComponent, {
                 width: '600px',
                 position: { top: '20px' },
@@ -288,8 +288,8 @@ export class DetailTurnsComponent {
             })
 
             this.creditsService.getCreditsByTurn(turn.id).subscribe(credits => {
-                this.credits = credits
-                for (const credit of this.credits) {
+                this.$credits.set(credits)
+                for (const credit of credits) {
                     if (credit.isCredit) {
                         this.totalCredit += credit.charge
                     }
@@ -299,57 +299,6 @@ export class DetailTurnsComponent {
                 }
             })
         }
-    }
-
-    onAddExpense() {
-        const dialogRef = this.matDialog.open(DialogCreateExpensesComponent, {
-            width: '600px',
-            position: { top: '20px' },
-        })
-
-        dialogRef.afterClosed().subscribe(expense => {
-            if (expense) {
-                this.fetchData()
-            }
-        })
-    }
-
-    onEditExpense(expense: ExpenseModel) {
-        const dialogRef = this.matDialog.open(DialogEditExpensesComponent, {
-            width: '600px',
-            position: { top: '20px' },
-            data: expense,
-        })
-
-        dialogRef.componentInstance.handleDeleteExpense().subscribe(() => {
-            this.navigationService.loadBarStart()
-            this.expensesService.delete(expense.id).subscribe({
-                next: () => {
-                    this.navigationService.loadBarFinish()
-                    this.navigationService.showMessage('Eliminado correctamente')
-                    this.fetchData()
-                }, error: (error: HttpErrorResponse) => {
-                    this.navigationService.showMessage(error.error.message)
-                    this.navigationService.loadBarFinish()
-                }
-            })
-        })
-
-        dialogRef.afterClosed().subscribe(updatedExpense => {
-            if (updatedExpense) {
-                this.navigationService.loadBarStart()
-                this.expensesService.update(updatedExpense, expense.id).subscribe({
-                    next: () => {
-                        this.navigationService.loadBarFinish()
-                        this.fetchData()
-                        this.navigationService.showMessage('Se han guardado los cambios')
-                    }, error: (error: HttpErrorResponse) => {
-                        this.navigationService.showMessage(error.error.message)
-                        this.navigationService.loadBarFinish()
-                    }
-                })
-            }
-        })
     }
 
     onCloseTurn() {

@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core'
 import { BoardModel } from '../boards/board.model'
+import { PreaccountModel } from '../boards/preaccount.model'
 import { CreditNoteModel } from '../credit-notes/credit-note.model'
 import { CustomerModel } from '../customers/customer.model'
 import { ExpenseModel } from '../expenses/expense.model'
@@ -8,6 +9,7 @@ import { SummaryPaymentModel } from '../payments/summary-payment.model'
 import { ProductModel } from '../products/product.model'
 import { ProformaModel } from '../proformas/proforma.model'
 import { PurchaseModel } from '../purchases/purchase.model'
+import { PurchaseOrderModel } from '../purchase-orders/purchase-order.model'
 import { RemissionGuideModel } from '../remission-guides/remission-guide.model'
 import { SaleModel } from '../sales/sale.model'
 import { SummarySaleItemModel } from '../sales/summary-sale-item.model'
@@ -53,18 +55,26 @@ export class PrintService {
     private printCommandFastFood80mm$: EventEmitter<SaleModel> = new EventEmitter()
 
     private printCommand80mm$: EventEmitter<BoardModel> = new EventEmitter()
-    private printPreaccount80mm$: EventEmitter<BoardModel> = new EventEmitter()
+    private printPreaccount80mm$: EventEmitter<PreaccountModel> = new EventEmitter()
 
     private printDeletedCommand80mm$: EventEmitter<BoardModel> = new EventEmitter()
 
     private printCommand58mm$: EventEmitter<BoardModel> = new EventEmitter()
-    private printPreaccount58mm$: EventEmitter<BoardModel> = new EventEmitter()
+    private printPreaccount58mm$: EventEmitter<PreaccountModel> = new EventEmitter()
 
     private printA4Invoice$: EventEmitter<SaleModel> = new EventEmitter()
     private exportPdfA4Invoice$: EventEmitter<SaleModel> = new EventEmitter()
 
     private printA4RemissionGuide$: EventEmitter<RemissionGuideModel> = new EventEmitter()
     private exportPdfA4RemissionGuide$: EventEmitter<RemissionGuideModel> = new EventEmitter()
+
+
+    private printA4PurchaseOrder$: EventEmitter<PurchaseOrderModel> = new EventEmitter()
+    private exportPdfA4PurchaseOrder$: EventEmitter<PurchaseOrderModel> = new EventEmitter()
+
+    private printTicket80mmPurchaseOrder$: EventEmitter<PurchaseOrderModel> = new EventEmitter()
+    private exportPdf80mmPurchaseOrder$: EventEmitter<PurchaseOrderModel> = new EventEmitter()
+
 
     private printA5Invoice$: EventEmitter<SaleModel> = new EventEmitter()
     private exportPdfA5Invoice$: EventEmitter<SaleModel> = new EventEmitter()
@@ -92,6 +102,43 @@ export class PrintService {
 
     private printCreditCustomer80mm$: EventEmitter<any> = new EventEmitter()
     private exportCreditCustomer80mm$: EventEmitter<any> = new EventEmitter()
+
+
+    // A4PurchaseOrder ######
+    printA4PurchaseOrder(purchaseOrder: PurchaseOrderModel): void {
+        this.printA4PurchaseOrder$.emit(purchaseOrder)
+    }
+
+    handlePrintA4PurchaseOrder() {
+        return this.printA4PurchaseOrder$.asObservable()
+    }
+
+    exportPdfA4PurchaseOrder(purchaseOrder: PurchaseOrderModel) {
+        this.exportPdfA4PurchaseOrder$.emit(purchaseOrder)
+    }
+
+    handleExportPdfA4PurchaseOrder() {
+        return this.exportPdfA4PurchaseOrder$.asObservable()
+    }
+
+    // Ticket80mmPurchaseOrder ######
+    printTicket80mmPurchaseOrder(purchaseOrder: PurchaseOrderModel): void {
+        this.printTicket80mmPurchaseOrder$.emit(purchaseOrder)
+    }
+
+    handlePrintTicket80mmPurchaseOrder() {
+        return this.printTicket80mmPurchaseOrder$.asObservable()
+    }
+
+    exportPdfTicket80mmPurchaseOrder(purchaseOrder: PurchaseOrderModel) {
+        this.exportPdf80mmPurchaseOrder$.emit(purchaseOrder)
+    }
+
+    handleExportPdf80mmPurchaseOrder() {
+        return this.exportPdf80mmPurchaseOrder$.asObservable()
+    }
+
+
 
     exportRemissionGuidePdfTicket80mm(remissionGuide: RemissionGuideModel): void {
         this.exportRemissionGuidePdfTicket80mm$.emit(remissionGuide)
@@ -424,16 +471,16 @@ export class PrintService {
     }
 
     // Preaccound
-    printPreaccount80mm(board: BoardModel): void {
-        this.printPreaccount80mm$.emit(board)
+    printPreaccount80mm(preaccount: PreaccountModel): void {
+        this.printPreaccount80mm$.emit(preaccount)
     }
 
     handlePrintPreaccount80mm() {
         return this.printPreaccount80mm$.asObservable()
     }
 
-    printPreaccount58mm(board: BoardModel): void {
-        this.printPreaccount58mm$.emit(board)
+    printPreaccount58mm(preaccount: PreaccountModel): void {
+        this.printPreaccount58mm$.emit(preaccount)
     }
 
     handlePrintPreaccount58mm() {

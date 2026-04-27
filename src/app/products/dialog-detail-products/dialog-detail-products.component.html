@@ -4,25 +4,17 @@
         @if (product.upc) {
             <mat-list-item role="listitem">Codigo fabricante: {{ product.upc }}</mat-list-item>
         }
-        @if (product.upc) {
+        @if (product.sku) {
             <mat-list-item role="listitem">Codigo interno: {{ product.sku }}</mat-list-item>
-        }
-        @if (product.description) {
-            <mat-list-item role="listitem">{{ product.description }}</mat-list-item>
-        }
-        @if (product.location) {
-            <mat-list-item role="listitem">
-                Ubicacion: {{ product.location }}
-            </mat-list-item>
         }
         @if (product.isTrackStock) {
             <mat-list-item role="listitem">
-                @if (product.stock > 0) {
+                @if ($stock() > 0) {
                     <span>
-                        Stock: {{ product.stock.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
+                        Stock: {{ $stock().toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                     </span>
                 }
-                @if (product.stock <= 0) {
+                @if ($stock() <= 0) {
                     <span>
                         Stock: <span class="text-danger">Agotado</span>
                     </span>
@@ -54,6 +46,7 @@
 </div>
 <mat-dialog-actions>
     <span class="spacer"></span>
+    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
     @if (isFavorite) {
         <button mat-flat-button mat-dialog-close (click)="onDeleteFavorites()" color="primary">
             REMOVER DE FAVORITOS
@@ -63,5 +56,4 @@
             AGREGAR A FAVORITOS
         </button>
     }
-    <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
 </mat-dialog-actions>

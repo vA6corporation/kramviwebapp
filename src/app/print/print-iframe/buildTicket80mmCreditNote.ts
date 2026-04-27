@@ -77,12 +77,6 @@ export async function buildTicket80mmCreditNote(
         positionY += 2
     }
 
-    if (office.phone) {
-        text = office.phone
-        pdf.text(text, pageCenter + marginLeft, positionY, { align: 'center' })
-        positionY += 3
-    }
-
     positionY += 2
 
     pdf.text(invoiceTitle, pageCenter + marginLeft, positionY, { align: 'center' })

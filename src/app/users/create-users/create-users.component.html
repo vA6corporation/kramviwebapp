@@ -18,10 +18,10 @@
         </mat-form-field>
         <mat-form-field appearance="fill" floatLabel="always">
             <mat-label>Sucursal</mat-label>
-            <mat-select formControlName="assignedOfficeId" placeholder="ACCESO A TODAS LAS SUCURSALES"
+            <mat-select formControlName="officeId" placeholder="ACCESO A TODAS LAS SUCURSALES"
                 class="text-uppercase">
                 <mat-option>ACCESO A TODAS LAS SUCURSALES</mat-option>
-                @for (office of offices; track $index) {
+                @for (office of $offices(); track $index) {
                     <mat-option [value]="office.id">
                         {{ office.name | uppercase }}
                     </mat-option>
@@ -32,7 +32,7 @@
             <span class="spacer"></span>
             <button type="button" mat-raised-button routerLink="/users" color="primary">CANCELAR</button>
             <div class="divider"></div>
-            <button type="submit" [disabled]="isLoading" mat-flat-button color="primary">GUARDAR</button>
+            <button type="submit" [disabled]="$isLoading()" mat-flat-button color="primary">GUARDAR</button>
         </div>
     </form>
 </div>

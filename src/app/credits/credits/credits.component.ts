@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { CommonModule, formatDate } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'
@@ -31,9 +31,9 @@ export class CreditsComponent {
     private readonly navigationService = inject(NavigationService)
     private readonly authService = inject(AuthService)
 
-    displayedColumns: string[] = ['createdAt', 'dueDate', 'serial', 'customer', 'mobileNumber', 'worker', 'charge', 'remaining', 'actions']
-    dataSource: CreditModel[] = []
-    length: number = 0
+    displayedColumns: string[] = ['createdAt', 'dueAt', 'serial', 'customer', 'phone', 'charge', 'remaining', 'actions']
+    $dataSource = signal<CreditModel[]>([])
+    $length = signal<number>(0)
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
@@ -88,7 +88,7 @@ export class CreditsComponent {
             this.creditsService.getCreditsByKey(key, this.params).subscribe({
                 next: credits => {
                     this.navigationService.loadBarFinish()
-                    this.dataSource = credits
+                    this.$dataSource.set(credits)
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage(error.error.message)
@@ -130,7 +130,7 @@ export class CreditsComponent {
                     const { customer } = credit
                     body.push([
                         formatDate(credit.createdAt, 'dd/MM/yyyy', 'en-US'),
-                        credit.dues[0] ? formatDate(credit.dues[0].dueDate, 'dd/MM/yyyy', 'en-US') : '',
+                        credit.dues[0] ? formatDate(credit.dues[0].dueAt, 'dd/MM/yyyy', 'en-US') : '',
                         `${credit.invoicePrefix}${this.office.serialPrefix}-${credit.invoiceNumber}`,
                         Number(credit.charge.toFixed(2)),
                         Number((credit.charge - credit.payed).toFixed(2)),
@@ -185,7 +185,7 @@ export class CreditsComponent {
 
     fetchCount() {
         this.creditsService.getCountCredits(this.params).subscribe(count => {
-            this.length = count
+            this.$length.set(count)
         })
     }
 
@@ -205,7 +205,7 @@ export class CreditsComponent {
             this.params
         ).subscribe({
             next: credits => {
-                this.dataSource = credits
+                this.$dataSource.set(credits)
                 this.navigationService.loadBarFinish()
             }, error: (error: HttpErrorResponse) => {
                 this.navigationService.loadBarFinish()

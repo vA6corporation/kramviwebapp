@@ -176,11 +176,6 @@
                     <mat-label>Texto al pie del comprobante</mat-label>
                     <textarea rows="8" matInput formControlName="textBottom"></textarea>
                 </mat-form-field>
-                <!--<div class="mb-4">
-                    <mat-slide-toggle formControlName="isAttentionTicket">
-                        Imprimir ticket de atencion
-                    </mat-slide-toggle>
-                </div>-->
                 <button type="button" mat-flat-button color="primary" (click)="fileInput.click()">CARGAR LOGO</button>
                 <span class="divider"></span>
                 <button type="button" mat-flat-button color="primary" (click)="onDeleteLogo()">ELIMINAR LOGO</button>
@@ -265,6 +260,11 @@
                             Mostrar fecha de emision
                         </mat-slide-toggle>
                     </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="isAvailableStock">
+                            No permitir ventas sin stock
+                        </mat-slide-toggle>
+                    </mat-list-item>
                 </mat-list>
             </mat-expansion-panel>
 
@@ -295,16 +295,16 @@
                             Permitir editar precios
                         </mat-slide-toggle>
                     </mat-list-item>
-                    <!--<mat-list-item>
-                        <mat-slide-toggle formControlName="showSubPrice">
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="isShowSubPrice">
                             Permitir editar monto
                         </mat-slide-toggle>
-                    </mat-list-item>-->
-                    <!--<mat-list-item>
-                        <mat-slide-toggle formControlName="allowBonus">
-                            Permitir bonus
+                    </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="isShowBonus">
+                            Permitir bonificacion
                         </mat-slide-toggle>
-                    </mat-list-item>-->
+                    </mat-list-item>
                 </mat-list>
             </mat-expansion-panel>
 
@@ -377,6 +377,11 @@
                             Mostrar zona de impresion
                         </mat-slide-toggle>
                     </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="isShowChargeInCommand">
+                            Mostrar importe total en las comandas
+                        </mat-slide-toggle>
+                    </mat-list-item>
                 </mat-list>
             </mat-expansion-panel>
 
@@ -403,7 +408,7 @@
                         }
                     </mat-select>
                 </mat-form-field>
-                <mat-list>
+                <mat-list class="mb-3">
                     @for (priceList of $priceLists(); track priceList.id) {
                     <mat-list-item>
                         {{ priceList.name }}

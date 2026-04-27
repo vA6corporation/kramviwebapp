@@ -46,11 +46,13 @@ export class PrivilegesComponent {
         carriers: false,
         users: false,
         purchases: false,
+        purchaseOrders: false,
         providers: false,
         creditNotes: false,
         remissionGuides: false,
         banks: false,
         paymentOrders: false,
+        biller: false,
     })
     $modules = signal<ModuleModel[]>([])
     $isLoading = signal<boolean>(false)

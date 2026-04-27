@@ -14,8 +14,8 @@ import { NavigationService } from '../../navigation/navigation.service'
 import { OfficesService } from '../../offices/offices.service'
 import { PaymentMethodModel } from '../../payment-methods/payment-method.model'
 import { PaymentMethodsService } from '../../payment-methods/payment-methods.service'
-//import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component'
-//import { ProviderModel } from '../../providers/provider.model'
+import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component'
+import { ProviderModel } from '../../providers/provider.model'
 import { CategoriesService } from '../categories.service'
 import { CategoryModel } from '../category.model'
 import { DialogCreateCategoriesComponent } from '../dialog-create-categories/dialog-create-categories.component'
@@ -75,8 +75,7 @@ export class CreateProductsComponent {
     office: OfficeModel = new OfficeModel()
     isTrackStock = false
     imgUri: string = ''
-    products: ProductModel[] = []
-    //providers: ProviderModel[] = []
+    $provider = signal<ProviderModel | null>(null)
     private file: File | null = null
     private paymentMethodId: any = 0
     private paymentMethods: PaymentMethodModel[] = []
@@ -226,49 +225,30 @@ export class CreateProductsComponent {
         }
     }
 
-    onOpenDialogSearchProducts() {
-       // const dialogRef = this.matDialog.open(DialogSearchProductsComponent, {
-       //     width: '600px',
-       //     position: { top: '20px' },
-       // })
-
-       // dialogRef.afterClosed().subscribe(product => {
-       //     if (product) {
-       //         this.products.push(product)
-       //     }
-       // })
-    }
-
-    onRemoveProduct(index: number) {
-        this.products.splice(index, 1)
-    }
-
     onDialogProviders() {
-       // const dialogRef = this.matDialog.open(DialogSearchProvidersComponent, {
-       //     width: '600px',
-       //     position: { top: '20px' },
-       // })
+        const dialogRef = this.matDialog.open(DialogSearchProvidersComponent, {
+            width: '600px',
+            position: { top: '20px' },
+        })
 
-       // dialogRef.afterClosed().subscribe(provider => {
-       //     if (provider) {
-       //         this.providers.push(provider)
-       //     }
-       // })
+        dialogRef.afterClosed().subscribe(provider => {
+            if (provider) {
+                this.$provider.set(provider)
+            }
+        })
     }
 
-    onRemoveProvider(index: number) {
-        //this.providers.splice(index, 1)
+    onRemoveProvider() {
+        this.$provider.set(null)
     }
 
     onSubmit(): void {
         if (this.formGroup.valid) {
             this.$isLoading.set(true)
             const product = this.formGroup.value
-            const productIds = this.products.map(e => e.id)
-            //const providerIds = this.providers.map(e => e.id)
+            const provider = this.$provider()
             product.annotations = this.$annotations()
-            product.productIds = productIds
-            //product.providerIds = [...new Set(providerIds)]
+            product.providerId = provider ? provider.id : null
             this.navigationService.loadBarStart()
             this.productsService.create(product, this.formArray.value, this.paymentMethodId).subscribe({
                 next: product => {
@@ -279,7 +259,7 @@ export class CreateProductsComponent {
                                 const formData = new FormData()
                                 formData.append('file', result, result.name)
                                 this.ngZone.run(() => {
-                                    this.productsService.uploadImage(formData, product.id).subscribe(imageId => {
+                                    this.productsService.uploadImage(formData, product.uuid).subscribe(imageId => {
                                         this.$isLoading.set(false)
                                         this.navigationService.loadBarFinish()
                                         this.router.navigate(['/products'])

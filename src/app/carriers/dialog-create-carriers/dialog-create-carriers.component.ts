@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatDialogRef } from '@angular/material/dialog'
@@ -23,23 +23,23 @@ export class DialogCreateCarriersComponent {
         documentType: 'RUC',
         document: ['', Validators.required],
         name: ['', Validators.required],
-        carriagePlate: '',
+        carrierPlate: '',
         licenseNumber: '',
         phone: '',
         email: ''
     })
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
 
     onSubmit() {
         if (this.formGroup.valid) {
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.carriersService.create(this.formGroup.value).subscribe({
                 next: carrier => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.dialogRef.close(carrier)
                     this.navigationService.showMessage('Registrado correctamente')
                 }, error: (error: HttpErrorResponse) => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.showMessage(error.error.message)
                 }
             })

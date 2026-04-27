@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { ReactiveFormsModule } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog'
@@ -37,14 +37,11 @@ export class CreateRemissionGuidesComponent {
     private readonly categoriesService = inject(CategoriesService)
     private readonly authService = inject(AuthService)
 
-    categories: CategoryModel[] = []
-    products: ProductModel[] = []
-    favorites: ProductModel[] = []
-    priceLists: PriceListModel[] = []
-    priceListId: any | null = null
+    $categories = signal<CategoryModel[]>([])
+    $products = signal<ProductModel[]>([])
+    $favorites = signal<ProductModel[]>([])
     selectedIndex: number = 0
     remissionGuideItems: RemissionGuideItemModel[] = []
-    gridListCols = 4
     office: OfficeModel = new OfficeModel()
 
     private handleSearch$: Subscription = new Subscription()
@@ -68,12 +65,12 @@ export class CreateRemissionGuidesComponent {
             this.office = auth.office
 
             this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
-                this.favorites = products
+                this.$favorites.set(products)
             })
         })
 
         this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
-            this.categories = categories
+            this.$categories.set(categories)
         })
 
         if (this.authService.isDebtorCancel()) {
@@ -130,7 +127,7 @@ export class CreateRemissionGuidesComponent {
                 next: products => {
                     this.navigationService.loadBarFinish()
                     this.selectedIndex = 2
-                    this.products = products
+                    this.$products.set(products)
 
                     const foundProduct = products.find(e => e.sku.match(new RegExp(`^${key}$`, 'i')) || e.upc.match(new RegExp(`^${key}$`, 'i')))
 
@@ -167,16 +164,16 @@ export class CreateRemissionGuidesComponent {
 
     onSelectCategory(category: CategoryModel) {
         this.selectedIndex = 2
-        this.products = []
+        this.$products.set([])
         if (category.products) {
             const products = category.products
-            this.products = products
+            this.$products.set(products)
         } else {
             this.navigationService.loadBarStart()
             this.productsService.getProductsByCategoryPage(category.id, 1, 500).subscribe(products => {
                 this.navigationService.loadBarFinish()
                 category.products = products
-                this.products = products
+                this.$products.set(products)
             })
         }
     }

@@ -21,7 +21,7 @@
                 <mat-label>Todas las mesas</mat-label>
                 <mat-select formControlName="tableId" (selectionChange)="onFilterChange()">
                     <mat-option value="">TODAS LAS MESAS</mat-option>
-                    @for (table of tables; track table.id) {
+                    @for (table of $tables(); track table.id) {
                         <mat-option [value]="table.id">{{ table.name }}</mat-option>
                     }
                 </mat-select>
@@ -67,6 +67,10 @@
             <ng-container matColumnDef="user">
                 <th mat-header-cell *matHeaderCellDef>Usuario</th>
                 <td mat-cell *matCellDef="let element">{{ element.user.name }}</td>
+            </ng-container>
+            <ng-container matColumnDef="preaccountsCount">
+                <th mat-header-cell *matHeaderCellDef>Precuentas</th>
+                <td mat-cell *matCellDef="let element">{{ element.preaccountsCount }}</td>
             </ng-container>
             <ng-container matColumnDef="observation">
                 <th mat-header-cell *matHeaderCellDef>Observaciones</th>

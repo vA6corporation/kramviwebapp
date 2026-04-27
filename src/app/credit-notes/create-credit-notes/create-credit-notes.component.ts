@@ -21,7 +21,7 @@ import { DialogSearchCustomersComponent } from '../../customers/dialog-search-cu
 import { MaterialModule } from '../../material.module'
 import { CommonModule } from '@angular/common'
 import { SaleItemsComponent } from '../../sales/sale-items/sale-items.component'
-import { IgvCode } from '../../products/igv-type.enum'
+import { IgvCode } from '../../sales/igv-code.enum'
 
 interface FormData {
     discount: any,

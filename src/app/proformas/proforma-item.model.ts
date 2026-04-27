@@ -1,4 +1,4 @@
-import { IgvCode } from '../products/igv-type.enum'
+import { IgvCode } from '../sales/igv-code.enum'
 import { PriceModel } from '../products/price.model'
 
 export interface ProformaItemModel {
@@ -14,7 +14,6 @@ export interface ProformaItemModel {
     unitCode: string
     observation: string
     unitName: string
-    description: string
     urlImage: string
     prices: PriceModel[]
 }

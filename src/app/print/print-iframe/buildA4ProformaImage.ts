@@ -49,8 +49,6 @@ export async function buildA4ProformaImage(
     pdf.text(strArr, 45, positionYTitle)
     positionYTitle += 5 * strArr.length
 
-    text = `Cel. ${office?.phone}`
-    pdf.text(text, 45, positionYTitle)
     positionYTitle += 5
 
     pdf.setDrawColor(0)
@@ -189,11 +187,6 @@ export async function buildA4ProformaImage(
         subPositionYItems += 4
 
         text = `Sub Total: ${(proformaItem.price * proformaItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-        pdf.text(text, 7, subPositionYItems)
-
-        subPositionYItems += 4
-
-        text = `${proformaItem.description || ''}`
         pdf.text(text, 7, subPositionYItems)
 
         subPositionYItems += 4

@@ -1,5 +1,5 @@
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
-import { Component, inject } from '@angular/core'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ActivatedRoute, RouterModule } from '@angular/router'
 import { Subscription } from 'rxjs'
@@ -36,12 +36,11 @@ export class EditOfficesComponent {
         provincia: [null, Validators.required],
         distrito: [null, Validators.required],
         urbanizacion: [null, Validators.required],
-        codigoPais: [null, Validators.required],
         activityId: [null, Validators.required]
     })
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
     maxlength: number = 11
-    activities: any[] = []
+    $activities = signal<any[]>([])
     user: UserModel = new UserModel()
     business: BusinessModel = new BusinessModel()
     private officeId: any = ''
@@ -57,8 +56,8 @@ export class EditOfficesComponent {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.user = auth.user
             this.business = auth.business
-            this.officesService.getActivitiesByGroup().subscribe(activities => {
-                this.activities = activities
+            this.officesService.getActivities().subscribe(activities => {
+                this.$activities.set(activities)
             })
         })
 
@@ -70,15 +69,16 @@ export class EditOfficesComponent {
 
     onSubmit(): void {
         if (this.formGroup.valid) {
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.navigationService.loadBarStart()
             this.officesService.update(this.formGroup.value, this.officeId).subscribe({
                 next: () => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Se han guardado los cambios')
+                    this.navigationService.back()
                 }, error: (error: HttpErrorResponse) => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage(error.error.message)
                 }

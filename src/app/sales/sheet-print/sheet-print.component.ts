@@ -16,13 +16,13 @@ export class SheetPrintComponent {
     constructor(
         @Inject(MAT_BOTTOM_SHEET_DATA)
         private readonly saleId: string,
-        private readonly bottomSheetRef: MatBottomSheetRef<SheetPrintComponent>,
+        private readonly matBottomSheetRef: MatBottomSheetRef<SheetPrintComponent>,
         private readonly salesService: SalesService,
         private readonly printService: PrintService,
     ) { }
 
     onPrint(pageFormat: string): void {
-        this.bottomSheetRef.dismiss()
+        this.matBottomSheetRef.dismiss()
         this.salesService.getSaleById(this.saleId).subscribe(sale => {
             switch (pageFormat) {
                 case 'A4':

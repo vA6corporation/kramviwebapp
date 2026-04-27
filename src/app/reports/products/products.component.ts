@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, inject } from '@angular/core'
+import { Component, ElementRef, ViewChild, inject, signal } from '@angular/core'
 import { CommonModule, formatDate } from '@angular/common'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { Params } from '@angular/router'
@@ -28,9 +28,9 @@ import { MatTableDataSource } from '@angular/material/table'
 })
 export class ProductsComponent {
 
+    private readonly formBuilder = inject(FormBuilder)
     private readonly salesService = inject(SalesService)
     private readonly usersService = inject(UsersService)
-    private readonly formBuilder = inject(FormBuilder)
     private readonly categoriesService = inject(CategoriesService)
     private readonly navigationService = inject(NavigationService)
     private readonly officesService = inject(OfficesService)
@@ -50,14 +50,13 @@ export class ProductsComponent {
         endDate: [new Date(), Validators.required],
     })
     displayedColumns: string[] = ['product', 'quantity', 'price', 'cost', 'totalCharge', 'totalPurchase', 'totalUtility', 'stock']
-    dataSource: MatTableDataSource<SummarySaleItemModel> = new MatTableDataSource()
+    $dataSource = signal<MatTableDataSource<SummarySaleItemModel>>(new MatTableDataSource())
     categoryId: string = ''
-    categories: CategoryModel[] = []
-    summarySaleItems: SummarySaleItemModel[] = []
-    users: UserModel[] = []
-    offices: OfficeModel[] = []
-    totalQuantity: number = 0
-    totalCharge: number = 0
+    $categories = signal<CategoryModel[]>([])
+    $summarySaleItems = signal<SummarySaleItemModel[]>([])
+    $users = signal<UserModel[]>([])
+    $totalQuantity = signal<number>(0)
+    $totalCharge = signal<number>(0)
     private chargeChartRef: Chart | null = null
     private quantityChartRef: Chart | null = null
 
@@ -76,7 +75,7 @@ export class ProductsComponent {
     }
 
     ngAfterViewInit() {
-        this.dataSource.sort = this.sort
+        this.$dataSource().sort = this.sort
     }
 
     ngOnInit() {
@@ -85,15 +84,11 @@ export class ProductsComponent {
         ])
 
         this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
-            this.categories = categories
+            this.$categories.set(categories)
         })
 
         this.handleUsers$ = this.usersService.handleUsers().subscribe(users => {
-            this.users = users
-        })
-
-        this.handleOffices$ = this.officesService.handleOfficesByActivity().subscribe(offices => {
-            this.offices = offices
+            this.$users.set(users)
         })
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
@@ -115,12 +110,12 @@ export class ProductsComponent {
                 'STOCK',
             ])
 
-            this.summarySaleItems.forEach(summarySaleItem => {
+            this.$summarySaleItems().forEach(summarySaleItem => {
                 body.push([
                     summarySaleItem.fullName.toUpperCase(),
                     summarySaleItem.sku,
                     summarySaleItem.upc,
-                    this.categories.find(e => e.id === summarySaleItem.categoryId)?.name.toUpperCase(),
+                    this.$categories().find(e => e.id === summarySaleItem.categoryId)?.name.toUpperCase(),
                     summarySaleItem.totalQuantity,
                     Number((summarySaleItem.totalCharge / summarySaleItem.totalQuantity).toFixed(2)),
                     summarySaleItem.cost,
@@ -149,6 +144,14 @@ export class ProductsComponent {
         }
     }
 
+    totalCharge() {
+        return this.$summarySaleItems().map(e => e.totalCharge || 0).reduce((a, b) => a + b, 0)
+    }
+
+    totalPurchases() {
+        return this.$summarySaleItems().map(e => e.totalPurchase || 0).reduce((a, b) => a + b, 0)
+    }
+
     fetchData() {
         if (this.formGroup.valid) {
             this.navigationService.loadBarStart()
@@ -168,12 +171,12 @@ export class ProductsComponent {
                 params
             ).subscribe(summarySaleItems => {
                 this.navigationService.loadBarFinish()
-                this.summarySaleItems = summarySaleItems
-                this.dataSource = new MatTableDataSource(summarySaleItems)
-                this.dataSource.sort = this.sort
+                this.$summarySaleItems.set(summarySaleItems)
+                this.$dataSource.set(new MatTableDataSource(summarySaleItems))
+                this.$dataSource().sort = this.sort
 
-                this.totalCharge = summarySaleItems.map(e => e.totalCharge).reduce((a, b) => a + b, 0)
-                this.totalQuantity = summarySaleItems.map(e => e.totalQuantity).reduce((a, b) => a + b, 0)
+                this.$totalCharge.set(summarySaleItems.map(e => e.totalCharge).reduce((a, b) => a + b, 0))
+                this.$totalQuantity.set(summarySaleItems.map(e => e.totalQuantity).reduce((a, b) => a + b, 0))
 
                 const dataCharge = {
                     datasets: [

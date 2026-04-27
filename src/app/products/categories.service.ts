@@ -55,4 +55,8 @@ export class CategoriesService {
         return this.httpService.delete(`categories/${categoryId}`)
     }
 
+    restore(categoryId: any) {
+        return this.httpService.delete(`categories/restore/${categoryId}`)
+    }
+
 }

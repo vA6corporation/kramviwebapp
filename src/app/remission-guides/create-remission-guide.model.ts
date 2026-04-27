@@ -1,6 +1,6 @@
 export interface CreateRemissionGuideModel {
-    remissionGuideTypeCode: string
-    carriageTypeCode: string
+    remissionGuideCode: string
+    carrierCode: string
     shippingWeight: string
     reasonDescription: string
     transportAt: string

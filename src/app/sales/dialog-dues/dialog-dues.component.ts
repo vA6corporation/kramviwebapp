@@ -42,7 +42,7 @@ export class DialogDuesComponent {
         for (const due of this.data.dues) {
             const formGroup = this.formBuilder.group({
                 charge: [due.charge, Validators.required],
-                dueDate: [due.dueDate, Validators.required],
+                dueAt: [due.dueAt, Validators.required],
             })
             this.formArray.push(formGroup)
         }
@@ -53,12 +53,12 @@ export class DialogDuesComponent {
             const due: CreateDueModel = {
                 charge: this.data.charge,
                 preCharge: this.data.charge,
-                dueDate: new Date(now.setMonth(now.getMonth() + 1)),
+                dueAt: new Date(now.setMonth(now.getMonth() + 1)),
             }
 
             const formGroup = this.formBuilder.group({
                 charge: [due.charge, Validators.required],
-                dueDate: [due.dueDate, Validators.required],
+                dueAt: [due.dueAt, Validators.required],
             })
 
             this.formArray.push(formGroup)
@@ -69,7 +69,7 @@ export class DialogDuesComponent {
         const now = new Date()
         const formGroup = this.formBuilder.group({
             charge: [null, Validators.required],
-            dueDate: [new Date(now.setMonth(now.getMonth() + 1)), Validators.required],
+            dueAt: [new Date(now.setMonth(now.getMonth() + 1)), Validators.required],
             paymentType: ['EFECTIVO', Validators.required],
             isPaid: false,
             turnId: this.data.turnId
@@ -87,7 +87,7 @@ export class DialogDuesComponent {
             const date = new Date()
             date.setHours(0, 0, 0, 0)
 
-            if (dues.find(e => new Date(e.dueDate).getTime() <= date.getTime())) {
+            if (dues.find(e => new Date(e.dueAt).getTime() <= date.getTime())) {
                 throw new Error('Fecha de pago no puede ser anterior o igual a la fecha de emisión del comprobante')
             }
 

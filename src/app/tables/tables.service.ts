@@ -31,7 +31,7 @@ export class TablesService {
     }
 
     getTables(): Observable<TableModel[]> {
-        return this.httpService.get('tables/all')
+        return this.httpService.get('tables/withDeleted')
     }
 
     getTableById(tableId: any): Observable<TableModel> {
@@ -44,6 +44,14 @@ export class TablesService {
 
     update(table: any, tableId: any): Observable<void> {
         return this.httpService.put(`tables/${tableId}`, { table })
+    }
+
+    delete(tableId: any) {
+        return this.httpService.delete(`tables/${tableId}`)
+    }
+
+    restore(tableId: any) {
+        return this.httpService.delete(`tables/restore/${tableId}`)
     }
 
 }

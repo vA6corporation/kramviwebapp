@@ -21,12 +21,12 @@ export class ToolbarComponent {
     formGroup: FormGroup = this.formBuilder.group({
         key: null,
     })
-    isAuth = signal(false)
-    title = signal('Kramvi')
-    showSearch = signal(false)
-    showInputSearch = signal(false)
-    isLoadBar = signal(true)
-    isMainScreen = signal(false)
+    $isAuth = signal<boolean>(false)
+    $title = signal<string>('Kramvi')
+    $showSearch = signal<boolean>(false)
+    $showInputSearch = signal<boolean>(false)
+    $isLoadBar = signal<boolean>(true)
+    $isMainScreen = signal<boolean>(false)
 
     @Output()
     sidenavToggle = new EventEmitter<void>()
@@ -57,23 +57,23 @@ export class ToolbarComponent {
 
     ngOnInit(): void {
         this.handleChangeTitle$ = this.navigationService.handleChangeTitle().subscribe(title => {
-            this.title.set(title)
+            this.$title.set(title)
         })
 
         this.handleIsMainScreen$ = this.navigationService.handleIsMainScreen().subscribe(isMainScreen => {
-            this.isMainScreen.set(isMainScreen)
+            this.$isMainScreen.set(isMainScreen)
         })
 
         this.handleIsAuth$ = this.authService.handleIsAuth().subscribe(isAuth => {
-            this.isAuth.set(isAuth)
+            this.$isAuth.set(isAuth)
         })
 
         this.handleIsLoadBar$ = this.navigationService.handleIsLoadBar().subscribe(isLoadBar => {
-            this.isLoadBar.set(isLoadBar)
+            this.$isLoadBar.set(isLoadBar)
         })
 
         this.handleShowSearch$ = this.navigationService.handleShowSearch().subscribe(() => {
-            this.showInputSearch.set(true)
+            this.$showInputSearch.set(true)
             setTimeout(() => {
                 if (this.inputKey) {
                     this.inputKey.nativeElement.focus()
@@ -84,10 +84,10 @@ export class ToolbarComponent {
         this.handleSetMenu$ = this.navigationService.handleSetMenu().subscribe(menus => {
             const filterMenus = []
             const filterButtons = []
-            this.showSearch.set(false)
+            this.$showSearch.set(false)
             for (const menu of menus) {
                 if (menu.id === 'search') {
-                    this.showSearch.set(true)
+                    this.$showSearch.set(true)
                     continue
                 }
                 if (menu.show) {
@@ -103,7 +103,7 @@ export class ToolbarComponent {
 
     onClickMenu(id: string) {
         if (id === 'search') {
-            this.showSearch.set(!this.showSearch)
+            this.$showSearch.set(!this.$showSearch())
         }
         this.navigationService.clickMenu(id)
     }
@@ -125,7 +125,7 @@ export class ToolbarComponent {
     }
 
     onToggleSearch() {
-        if (this.showSearch()) {
+        if (this.$showSearch()) {
             setTimeout(() => {
                 if (this.inputKey) {
                     this.inputKey.nativeElement.focus()
@@ -138,7 +138,7 @@ export class ToolbarComponent {
         if (this.formGroup.value.key) {
             this.formGroup.reset()
         } else {
-            this.showInputSearch.set(false)
+            this.$showInputSearch.set(false)
         }
     }
 }
