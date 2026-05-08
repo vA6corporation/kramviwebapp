@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, RouterModule } from '@angular/router'
 import { Subscription } from 'rxjs'
 import { AuthService } from '../../auth/auth.service'
 import { OfficeModel } from '../../offices/office.model'
@@ -15,7 +15,7 @@ import { CreditNotesService } from '../credit-notes.service'
 
 @Component({
     selector: 'app-edit-credit-note-items',
-    imports: [MaterialModule, CreditNoteItemsComponent],
+    imports: [MaterialModule, RouterModule, CreditNoteItemsComponent],
     templateUrl: './edit-credit-note-items.component.html',
     styleUrls: ['./edit-credit-note-items.component.sass']
 })
@@ -28,11 +28,10 @@ export class EditCreditNoteItemsComponent {
     private readonly authService = inject(AuthService)
     private readonly activatedRoute = inject(ActivatedRoute)
 
-    categories: CategoryModel[] = []
-    products: ProductModel[] = []
-    favorites: ProductModel[] = []
+    $categories = signal<CategoryModel[]>([])
+    $products = signal<ProductModel[]>([])
+    $favorites = signal<ProductModel[]>([])
     selectedIndex: number = 0
-    gridListCols = 4
     private office: OfficeModel = new OfficeModel()
 
     private handleSearch$: Subscription = new Subscription()
@@ -65,8 +64,8 @@ export class EditCreditNoteItemsComponent {
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {
             this.productsService.getProductsByKey(key).subscribe({
                 next: products => {
-                    this.products = products
-                    this.selectedIndex = 1
+                    this.$products.set(products)
+                    this.selectedIndex = 2
                     const foundProduct = products.find(e => e.sku.match(new RegExp(`^${key}$`, 'i')) || e.upc.match(new RegExp(`^${key}$`, 'i')))
                     if (foundProduct) {
                         this.onSelectProduct(foundProduct)
@@ -78,8 +77,24 @@ export class EditCreditNoteItemsComponent {
         })
 
         this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
-            this.favorites = products
+            this.$favorites.set(products)
         })
+    }
+
+    onSelectCategory(category: CategoryModel) {
+        this.selectedIndex = 2
+        this.$products.set([])
+        if (category.products) {
+            const products = category.products
+            this.$products.set(products)
+        } else {
+            this.navigationService.loadBarStart()
+            this.productsService.getProductsByCategoryPage(category.id, 1, 500).subscribe(products => {
+                this.navigationService.loadBarFinish()
+                category.products = products
+                this.$products.set(products)
+            })
+        }
     }
 
     onCancel() {

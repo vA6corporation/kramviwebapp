@@ -5,6 +5,7 @@ export interface CreateCreditNoteModel {
     observation: string
     customerId: number | null
     createdAt: Date
+    currencyCode: string
     igvPercent: number
     rcPercent: number
 }

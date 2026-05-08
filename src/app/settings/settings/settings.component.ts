@@ -96,6 +96,7 @@ export class SettingsComponent {
             isShowDeliveryAt: false,
             isShowEditPrice: false,
             isAvailableStock: false,
+            isOfficeTurn: false,
             isShowSubPrice: false,
             isShowBonus: false,
             marginLeft: 0,
@@ -130,7 +131,7 @@ export class SettingsComponent {
     })
     hide: boolean = true
     disableUpdateStock = false
-    isLoading = signal(false)
+    $isLoading = signal(false)
     $certificates = signal<any[]>([])
     $modules = signal<ModuleModel[]>([])
     $business = signal<BusinessModel>(new BusinessModel())
@@ -389,7 +390,7 @@ export class SettingsComponent {
 
     onSubmit() {
         if (this.formGroup.valid) {
-            this.isLoading.set(true)
+            this.$isLoading.set(true)
             this.navigationService.loadBarStart()
             const { activeModule, setting, business, office } = this.formGroup.value
             delete business.sunattk
@@ -400,7 +401,7 @@ export class SettingsComponent {
                         location.reload()
                     }, 1000)
                 }, error: (error: HttpErrorResponse) => {
-                    this.isLoading.set(false)
+                    this.$isLoading.set(false)
                     this.navigationService.showMessage(error.error.message)
                     this.navigationService.loadBarFinish()
                 }

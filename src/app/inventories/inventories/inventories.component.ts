@@ -29,6 +29,8 @@ import { DialogCreatePurchaseComponent } from '../dialog-create-purchase/dialog-
 import { DialogProductProvidersComponent } from '../../providers/dialog-product-providers/dialog-product-providers.component'
 import { DialogPasswordComponent } from '../../boards/dialog-password/dialog-password.component'
 import { BusinessType } from '../../businesses/business.model'
+import { ProvidersService } from '../../providers/providers.service'
+import { ProviderModel } from '../../providers/provider.model'
 
 @Component({
     selector: 'app-inventories',
@@ -47,13 +49,16 @@ export class InventoriesComponent {
     private readonly categoriesService = inject(CategoriesService)
     private readonly navigationService = inject(NavigationService)
     private readonly officesService = inject(OfficesService)
+    private readonly providersService = inject(ProvidersService)
     private readonly authService = inject(AuthService)
 
     formGroup: FormGroup = this.formBuilder.group({
         officeId: '',
         categoryId: '',
-        stockState: '01',
+        providerId: '',
+        stockState: '',
     })
+    $providers = signal<ProviderModel[]>([])
     preDisplayedColumns: string[] = [
         'name',
         'feature',
@@ -102,19 +107,21 @@ export class InventoriesComponent {
     }
 
     private handleAuth$: Subscription = new Subscription()
-    private handleOffices$: Subscription = new Subscription()
     private handleSearch$: Subscription = new Subscription()
     private handleClickMenu$: Subscription = new Subscription()
     private handleCategories$: Subscription = new Subscription()
     private handlePriceLists$: Subscription = new Subscription()
+    private handleOffices$: Subscription = new Subscription()
+    private handleProviders$: Subscription = new Subscription()
 
     ngOnDestroy() {
-        this.handleOffices$.unsubscribe()
         this.handleAuth$.unsubscribe()
         this.handleSearch$.unsubscribe()
         this.handleClickMenu$.unsubscribe()
         this.handleCategories$.unsubscribe()
         this.handlePriceLists$.unsubscribe()
+        this.handleOffices$.unsubscribe()
+        this.handleProviders$.unsubscribe()
     }
 
     ngOnInit(): void {
@@ -127,6 +134,10 @@ export class InventoriesComponent {
 
         this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
             this.$categories.set(categories)
+        })
+
+        this.handleProviders$ = this.providersService.handleProviders().subscribe(providers => {
+            this.$providers.set(providers)
         })
 
         this.handleOffices$ = this.officesService.handleOfficesByActivity().subscribe(offices => {
@@ -664,8 +675,10 @@ export class InventoriesComponent {
     }
 
     onStockStateChange() {
+        this.pageIndex = 0
+        this.key = ''
         const { stockState } = this.formGroup.value
-        const queryParams: Params = { stockState, pageIndex: 0 }
+        const queryParams: Params = { stockState, pageIndex: 0, key: null }
         Object.assign(this.params, { stockState })
         this.router.navigate([], {
             relativeTo: this.activatedRoute,
@@ -696,6 +709,21 @@ export class InventoriesComponent {
         const { officeId } = this.formGroup.value
         const queryParams: Params = { officeId }
         Object.assign(this.params, { officeId })
+        this.router.navigate([], {
+            relativeTo: this.activatedRoute,
+            queryParams: queryParams,
+            queryParamsHandling: 'merge', // remove to replace all query params by provided
+        })
+        this.fetchData()
+        this.fetchCount()
+    }
+
+    onProviderChange() {
+        const { providerId } = this.formGroup.value
+        this.pageIndex = 0
+        this.key = ''
+        const queryParams: Params = { providerId, pageIndex: this.pageIndex, key: null }
+        Object.assign(this.params, { providerId })
         this.router.navigate([], {
             relativeTo: this.activatedRoute,
             queryParams: queryParams,

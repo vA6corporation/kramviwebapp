@@ -56,6 +56,7 @@ export class App {
         '/expenses',
         '/reports',
         '/sales',
+        '/creditNotes',
         '/remissionGuides',
         '/carriers',
         '/purchases',

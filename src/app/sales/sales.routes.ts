@@ -8,6 +8,7 @@ import { ChargeFromComponent } from './charge-from/charge-from.component'
 import { ChargeBoardsComponent } from './charge-boards/charge-boards.component'
 import { DetailSaleItemsComponent } from './detail-sale-items/detail-sale-items.component'
 import { SalesComponent } from './sales/sales.component'
+import { ChangeInvoiceComponent }  from './change-invoice/change-invoice.component'
 
 export const routes: Routes = [
     { path: '', component: SalesComponent },
@@ -18,5 +19,6 @@ export const routes: Routes = [
     { path: ':saleId/edit', component: ChargeEditComponent },
     { path: 'copy/:saleId', component: CopySalesComponent },
     { path: 'from', component: ChargeFromComponent },
-    { path: ':productId/saleItems', component: DetailSaleItemsComponent }
+    { path: ':productId/saleItems', component: DetailSaleItemsComponent },
+    { path: ':saleId/change', component: ChangeInvoiceComponent }
 ]

@@ -14,7 +14,7 @@
                 <mat-label>Categoria</mat-label>
                 <mat-select (selectionChange)="onChangeCategory()" formControlName="categoryId">
                     <mat-option value="">TODAS LAS CATEGORIAS</mat-option>
-                    @for (category of categories; track category.id) {
+                    @for (category of $categories(); track category.id) {
                     <mat-option class="text-uppercase" [value]="category.id">
                         {{ category.name | uppercase }}
                     </mat-option>
@@ -25,7 +25,7 @@
                 <mat-label>Usuario</mat-label>
                 <mat-select (selectionChange)="onChangeUser()" formControlName="userId">
                     <mat-option value="">TODOS LOS USUARIOS</mat-option>
-                    @for (user of users; track user.id) {
+                    @for (user of $users(); track user.id) {
                     <mat-option [value]="user.id" class="text-uppercase">{{ user.name | uppercase }}</mat-option>
                     }
                 </mat-select>
@@ -43,7 +43,7 @@
         <span class="spacer"></span>
     </div>
     <mat-list>
-        @for (category of filterCategories; track category.id) {
+        @for (category of $filterCategories(); track category.id) {
         <mat-list-item class="text-uppercase">
             <span matListItemTitle>
                 {{ category.name }}

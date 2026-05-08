@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject } from '@angular/core'
+import { Component, EventEmitter, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { TurnModel } from '../turn.model'
@@ -20,12 +20,14 @@ export class DialogChangeTurnComponent {
     private readonly navigationService = inject(NavigationService)
     private readonly dialogRef: MatDialogRef<DialogChangeTurnComponent> = inject(MatDialogRef)
 
-    turns: TurnModel[] = []
+    $turns = signal<TurnModel[]>([])
     onUpdate: EventEmitter<void> = new EventEmitter()
 
     ngOnInit(): void {
+        this.navigationService.loadBarStart()
         this.turnsService.getTurnsByPage(1, 20, {}).subscribe(turns => {
-            this.turns = turns
+            this.navigationService.loadBarFinish()
+            this.$turns.set(turns)
         })
     }
 

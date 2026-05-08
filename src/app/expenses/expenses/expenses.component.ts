@@ -35,8 +35,8 @@ export class ExpensesComponent {
     private readonly authService = inject(AuthService)
 
     formGroup: FormGroup = this.formBuilder.group({
-        startDate: [null, Validators.required],
-        endDate: [null, Validators.required],
+        startDate: ['', Validators.required],
+        endDate: ['', Validators.required],
     })
     displayedColumns: string[] = ['createdAt', 'deletedAt', 'concept', 'charge', 'user', 'actions']
     $dataSource = signal<ExpenseModel[]>([])
@@ -61,12 +61,13 @@ export class ExpensesComponent {
         this.navigationService.setTitle('Gastos')
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
+            this.handleOpenTurn$ = this.turnsService.handleOpenTurn(auth.setting.isOfficeTurn).subscribe(turn => {
                 this.turn = turn
             })
         })
 
         const { pageIndex, pageSize } = this.activatedRoute.snapshot.queryParams
+
         this.pageIndex = Number(pageIndex || 0)
         this.pageSize = Number(pageSize || 10)
 
@@ -77,32 +78,38 @@ export class ExpensesComponent {
             { id: 'excel_simple', label: 'Exportar excel', icon: 'file_download', show: false },
         ])
 
-        const { startDate, endDate } = this.formGroup.value
-
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
             switch (id) {
                 case 'excel_simple':
-                   // const { startDate, endDate } = this.formGroup.value
-                   // this.expensesService.getExpensesByRangeDate(startDate, endDate).subscribe(expenses => {
-                   //     const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
-                   //     let body = []
-                   //     body.push([
-                   //         'F. REGISTRO',
-                   //         'CONCEPTO',
-                   //         'MONTO',
-                   //         'USUARIO',
-                   //     ])
-                   //     for (const expense of expenses) {
-                   //         body.push([
-                   //             formatDate(expense.createdAt, 'dd/MM/yyyy', 'en-US'),
-                   //             expense.concept.toUpperCase(),
-                   //             Number((expense.charge || 0).toFixed(2)),
-                   //             expense.user.name
-                   //         ])
-                   //     }
-                   //     const name = `GASTOS_DESDE_${formatDate(startDate, 'dd/MM/yyyy', 'en-US')}_HASTA_${formatDate(endDate, 'dd/MM/yyyy', 'en-US')}`
-                   //     buildExcel(body, name, wscols, [], [])
-                   // })
+                    const { startDate, endDate } = this.formGroup.value
+                    if (startDate && endDate) {
+                        this.navigationService.loadBarStart()
+                        this.expensesService.getExpensesByPage(1, 10000, { startDate, endDate }).subscribe(expenses => {
+                            this.navigationService.loadBarFinish()
+                            const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+                            let body = []
+                            body.push([
+                                'F. REGISTRO',
+                                'CONCEPTO',
+                                'MONTO',
+                                'USUARIO',
+                                'ANULADO',
+                            ])
+                            for (const expense of expenses) {
+                                body.push([
+                                    formatDate(expense.createdAt, 'dd/MM/yyyy', 'en-US'),
+                                    expense.concept.toUpperCase(),
+                                    Number((expense.charge || 0).toFixed(2)),
+                                    expense.user.name,
+                                    expense.deletedAt ? 'SI' : 'NO'
+                                ])
+                            }
+                            const name = `GASTOS_DESDE_${formatDate(startDate, 'dd/MM/yyyy', 'en-US')}_HASTA_${formatDate(endDate, 'dd/MM/yyyy', 'en-US')}`
+                            buildExcel(body, name, wscols, [], [])
+                        })
+                    } else {
+                        this.navigationService.showMessage('Seleccione un rango de fechas')
+                    }
                     break
 
                 default:

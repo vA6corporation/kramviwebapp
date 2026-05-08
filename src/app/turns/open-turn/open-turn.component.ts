@@ -96,7 +96,7 @@ export class OpenTurnComponent {
             this.setting = auth.setting
             this.user = auth.user
 
-            this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
+            this.handleOpenTurn$ = this.turnsService.handleOpenTurn(auth.setting.isOfficeTurn).subscribe(turn => {
                 this.navigationService.loadBarFinish()
                 if (turn) {
                     this.$turn.set(turn)
@@ -274,30 +274,6 @@ export class OpenTurnComponent {
         }
     }
 
-    onAddExpense() {
-        const turn = this.$turn()
-        if (turn) {
-            const dialogRef = this.matDialog.open(DialogCreateExpensesComponent, {
-                width: '600px',
-                position: { top: '20px' },
-                data: turn.id,
-            })
-
-            dialogRef.afterClosed().subscribe(expense => {
-                if (expense) {
-                    this.expensesService.create(expense).subscribe(() => {
-                        this.navigationService.loadBarFinish()
-                        this.navigationService.showMessage('Registrado correctamente')
-                        this.fetchData()
-                    }, (error: HttpErrorResponse) => {
-                        this.navigationService.loadBarFinish()
-                        this.navigationService.showMessage(error.error.message)
-                    })
-                }
-            })
-        }
-    }
-
     onCloseTurn() {
         const turn = this.$turn()
         if (turn && this.user) {
@@ -335,6 +311,30 @@ export class OpenTurnComponent {
                     })
                 })
             }
+        }
+    }
+
+    onAddExpense() {
+        const turn = this.$turn()
+        if (turn) {
+            const dialogRef = this.matDialog.open(DialogCreateExpensesComponent, {
+                width: '600px',
+                position: { top: '20px' },
+                data: turn.id,
+            })
+
+            dialogRef.afterClosed().subscribe(expense => {
+                if (expense) {
+                    this.expensesService.create(expense).subscribe(() => {
+                        this.navigationService.loadBarFinish()
+                        this.navigationService.showMessage('Registrado correctamente')
+                        this.fetchData()
+                    }, (error: HttpErrorResponse) => {
+                        this.navigationService.loadBarFinish()
+                        this.navigationService.showMessage(error.error.message)
+                    })
+                }
+            })
         }
     }
 

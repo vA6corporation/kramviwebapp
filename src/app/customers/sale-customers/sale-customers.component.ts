@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
 import { PageEvent } from '@angular/material/paginator'
 import { ActivatedRoute, Params, Router } from '@angular/router'
@@ -39,12 +39,12 @@ export class SaleCustomersComponent {
         endDate: ['', Validators.required],
     })
     displayedColumns: string[] = ['createdAt', 'product', 'quantity', 'price', 'total', 'invoice', 'actions']
-    dataSource: SaleItemModel[] = []
-    length: number = 0
+    $dataSource = signal<SaleItemModel[]>([])
+    $length = signal<number>(0)
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
-    office: OfficeModel = new OfficeModel()
+    $office = signal<OfficeModel>(new OfficeModel())
     private customerId: any = ''
     private customer: CustomerModel | null = null
     private params: Params = {}
@@ -76,7 +76,7 @@ export class SaleCustomersComponent {
         ])
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.office = auth.office
+            this.$office.set(auth.office)
         })
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(async id => {
@@ -111,7 +111,7 @@ export class SaleCustomersComponent {
                     saleItem.quantity,
                     Number(saleItem.price.toFixed(2)),
                     Number((saleItem.price * saleItem.quantity).toFixed(2)),
-                    `${saleItem.sale?.invoicePrefix}${this.office.serialPrefix}-${saleItem.sale?.invoiceNumber}`
+                    `${saleItem.sale?.invoicePrefix}${this.$office().serialPrefix}-${saleItem.sale?.invoiceNumber}`
                 ])
             }
             const name = `VENTAS_${this.customer?.name.replace(/ /g, '_')}`
@@ -173,15 +173,16 @@ export class SaleCustomersComponent {
 
     fetchCount() {
         this.salesService.getCountSaleItems(this.params).subscribe(count => {
-            this.length = count
+            this.$length.set(count)
         })
     }
 
     fetchData() {
         this.navigationService.loadBarStart()
         this.salesService.getSaleItemsByCustomerPage(this.customerId, this.pageIndex + 1, this.pageSize, this.params).subscribe(saleItems => {
+            console.log(saleItems)
             this.navigationService.loadBarFinish()
-            this.dataSource = saleItems
+            this.$dataSource.set(saleItems)
         })
     }
 

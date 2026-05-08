@@ -4,15 +4,12 @@ import { NavigationService } from '../../navigation/navigation.service'
 import { AuthService } from '../../auth/auth.service'
 import { BusinessModel } from '../../businesses/business.model'
 import { Subscription } from 'rxjs'
-import { BoardsComponent } from '../boards/boards.component'
 import { CategoriesComponent } from '../categories/categories.component'
 import { CustomersComponent } from '../customers/customers.component'
 import { IncomesComponent } from '../incomes/incomes.component'
 import { InoutComponent } from '../inout/inout.component'
 import { InvoicesComponent } from '../invoices/invoices.component'
 import { ProductsComponent } from '../products/products.component'
-import { ProformasComponent } from '../proformas/proformas.component'
-//import { UtilitiesComponent } from '../utilities/utilities.component'
 import { MaterialModule } from '../../material.module'
 import { Chart, registerables } from 'chart.js'
 Chart.register(...registerables)
@@ -23,13 +20,10 @@ Chart.register(...registerables)
         MaterialModule,
         IncomesComponent,
         InoutComponent,
-        //UtilitiesComponent,
         ProductsComponent,
         CategoriesComponent,
         CustomersComponent,
         InvoicesComponent,
-        BoardsComponent,
-        ProformasComponent,
     ],
     templateUrl: './index-reports.component.html',
     styleUrls: ['./index-reports.component.sass']
@@ -69,6 +63,5 @@ export class IndexReportsComponent {
             queryParamsHandling: 'merge', // remove to replace all query params by provided
         })
     }
-
 
 }

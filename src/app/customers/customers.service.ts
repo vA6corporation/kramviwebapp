@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Params } from '@angular/router';
-import { Observable } from 'rxjs';
-import { HttpService } from '../http.service';
-import { CustomerModel } from './customer.model';
-import { SummaryCustomerSaleModel } from './summary-customer-sale.model';
+import { Injectable } from '@angular/core'
+import { Params } from '@angular/router'
+import { Observable } from 'rxjs'
+import { HttpService } from '../http.service'
+import { CustomerModel } from './customer.model'
 
 @Injectable({
     providedIn: 'root'
@@ -35,7 +34,7 @@ export class CustomersService {
     }
 
     getCustomersByMobileNumber(phone: string): Observable<CustomerModel[]> {
-        return this.httpService.get(`customers/byMobileNumber/${phone}`)
+        return this.httpService.get(`customers/byPhone/${phone}`)
     }
 
     getCustomersByRuc(key: string): Observable<CustomerModel[]> {
@@ -83,14 +82,6 @@ export class CustomersService {
 
     getCustomerById(customerId: any): Observable<CustomerModel> {
         return this.httpService.get(`customers/byId/${customerId}`)
-    }
-
-    getSummarySalesByRangeDateCustomers(
-        startDate: Date,
-        endDate: Date,
-        params: Params
-    ): Observable<SummaryCustomerSaleModel[]> {
-        return this.httpService.get(`customers/summarySalesByRangeDateCustomers/${startDate}/${endDate}`, params)
     }
 
     create(customer: any): Observable<CustomerModel> {

@@ -23,10 +23,6 @@ export class InvoicesService {
         return this.httpService.getFile(url)
     }
 
-    generateXml(saleId: any) {
-        return this.httpService.get(`invoices/generateXml/${saleId}`)
-    }
-
     getBadCdrs(): Observable<CdrModel[]> {
         return this.httpService.get('invoices/badCdrs')
     }

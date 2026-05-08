@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { Subscription } from 'rxjs'
 import { AuthService } from '../../auth/auth.service'
@@ -23,11 +23,11 @@ export class DialogDetailProformasComponent {
     private readonly proformasService = inject(ProformasService)
     private readonly authService = inject(AuthService)
 
-    proforma: ProformaModel | null = null
-    proformaItems: ProformaItemModel[] = []
-    customer: CustomerModel | null = null
-    office: OfficeModel = new OfficeModel()
-    user: UserModel = new UserModel()
+    $proforma = signal<ProformaModel | null>(null)
+    $proformaItems = signal<ProformaItemModel[]>([])
+    $customer = signal<CustomerModel | null>(null)
+    $office = signal<OfficeModel>(new OfficeModel())
+    $user = signal<UserModel>(new UserModel())
 
     private handleAuth$: Subscription = new Subscription()
 
@@ -37,15 +37,15 @@ export class DialogDetailProformasComponent {
 
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.office = auth.office
+            this.$office.set(auth.office)
         })
 
         this.proformasService.getProformaById(this.proformaId).subscribe(proforma => {
-            this.proforma = proforma
             const { proformaItems, user, customer } = proforma
-            this.proformaItems = proformaItems
-            this.customer = customer
-            this.user = user
+            this.$proforma.set(proforma)
+            this.$proformaItems.set(proformaItems)
+            this.$customer.set(customer)
+            this.$user.set(user)
         })
     }
 

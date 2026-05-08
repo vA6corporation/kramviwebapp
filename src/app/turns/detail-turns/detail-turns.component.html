@@ -12,6 +12,10 @@
                     <span>{{ turn.createdAt | date: 'dd MMM yyyy, hh:mm a' }}</span>
                 </mat-list-item>
                 <mat-list-item>
+                    <span matListItemTitle>Aperturado por</span>
+                    <span>{{ turn.user.name }}</span>
+                </mat-list-item>
+                <mat-list-item>
                     <span matListItemTitle>Monto de apertura</span>
                     <span>{{ turn.openCash.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
                 </mat-list-item>
@@ -75,6 +79,14 @@
                 <mat-list-item>
                     <span matListItemTitle>{{ expense.concept }}</span>
                     <span matListItemLine>{{ expense.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                    <div class="py-3" matListItemMeta>
+                        <button type="button" mat-icon-button aria-label="trash" (click)="onEditExpense(expense)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button type="button" mat-icon-button aria-label="trash" (click)="onDeleteExpense(expense.id)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
                 </mat-list-item>
                 } @empty {
                 <mat-list-item class="text-center">SIN GASTOS</mat-list-item>
@@ -82,9 +94,9 @@
             </mat-list>
         </mat-card-content>
     </mat-card>
-    <!--<button type="button" (click)="onAddExpense()" mat-flat-button color="primary" class="w-100 mb-3">
+    <button type="button" (click)="onAddExpense()" mat-flat-button color="primary" class="w-100 mb-3">
         AGREGAR GASTO
-    </button>-->
+    </button>
     <mat-card class="mb-3">
         <mat-card-header>
             <mat-card-title>Productos vendidos</mat-card-title>
@@ -139,7 +151,7 @@
         <mat-card-content>
             <mat-action-list role="list">
                 @for (sale of $sales(); track sale.id) {
-                <button mat-list-item (click)="onShowSale(sale.id)">
+                <button mat-list-item (click)="onShowSheet(sale.id)">
                     <span matListItemTitle>{{ sale.invoicePrefix }}{{ office.serialPrefix }}-{{ sale.invoiceNumber
                         }}</span>
                     <span matListItemLine>

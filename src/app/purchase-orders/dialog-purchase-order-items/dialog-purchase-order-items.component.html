@@ -11,7 +11,7 @@
                     <mat-label>Costo</mat-label>
                     <input type="number" class="text-center" matInput formControlName="cost">
                 </mat-form-field>
-                @if (setting.defaultPrice === 'GLOBAL') {
+                @if ($setting().defaultPrice === 'GLOBAL') {
                 <mat-form-field appearance="fill">
                     <mat-label>Precio</mat-label>
                     <input type="number" matInput class="text-center" formControlName="price" readonly>
@@ -43,7 +43,7 @@
         <form (ngSubmit)="onSubmitPrices()" [formGroup]="formGroup" autocomplete="off">
             <title mat-dialog-title>{{ purchaseOrderItem.fullName }}</title>
             <mat-dialog-content>
-                @if (setting.defaultPrice === 'GLOBAL') {
+                @if ($setting().defaultPrice === 'GLOBAL') {
                 <mat-form-field appearance="fill">
                     <mat-label>Precio</mat-label>
                     <input type="number" matInput class="text-center" formControlName="price">

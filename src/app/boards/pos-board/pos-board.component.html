@@ -3,7 +3,7 @@
         <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndex = $event"
             animationDuration="0ms">
             <mat-tab label="Categorias">
-                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                <mat-grid-list cols="4" rowHeight="4:2" class="text-uppercase text-center">
                     @for (category of $categories(); track category.id) {
                         <mat-grid-tile (click)="onSelectCategory(category)" [style.background]="category.color">
                             {{ category.name }}
@@ -12,7 +12,7 @@
                 </mat-grid-list>
             </mat-tab>
             <mat-tab label="Productos">
-                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                <mat-grid-list cols="4" rowHeight="4:2" class="text-uppercase text-center">
                     @for (product of $products(); track product.id) {
                         <mat-grid-tile (click)="onSelectProduct(product)" (contextmenu)="onRightClick(product)" [style.background]="'lightblue'" [ngStyle]="urlImage(product)">
                             {{ product.fullName }}

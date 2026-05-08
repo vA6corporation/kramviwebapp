@@ -1,5 +1,5 @@
 <mat-action-list>
-    @for (creditNoteItem of creditNoteItems; track creditNoteItem.productId; let i = $index) {
+    @for (creditNoteItem of $creditNoteItems(); track creditNoteItem.productId; let i = $index) {
         <button mat-list-item (click)="onSelectCreditNoteItem(i)">
             <span matListItemTitle>{{ creditNoteItem.fullName }}</span>
             <div matListItemLine class="d-flex my-1">
@@ -22,11 +22,11 @@
     <button mat-list-item>
         <div matListItemTitle class="d-flex font-weight-bold">
             <span>
-                Total
+                Total ({{ $countProducts() }})
             </span>
             <span class="spacer"></span>
             <span>
-                {{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
+                {{ $charge().toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
             </span>
         </div>
     </button>

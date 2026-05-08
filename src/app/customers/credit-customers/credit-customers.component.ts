@@ -69,7 +69,7 @@ export class CreditCustomersComponent {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.office = auth.office
 
-            this.handleTurns$ = this.turnsService.handleOpenTurn().subscribe(turn => {
+            this.handleTurns$ = this.turnsService.handleOpenTurn(auth.setting.isOfficeTurn).subscribe(turn => {
                 this.turn = turn
             })
         })

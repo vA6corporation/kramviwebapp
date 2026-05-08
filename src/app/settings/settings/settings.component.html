@@ -265,6 +265,11 @@
                             No permitir ventas sin stock
                         </mat-slide-toggle>
                     </mat-list-item>
+                    <mat-list-item>
+                        <mat-slide-toggle formControlName="isOfficeTurn">
+                            Usar una caja por sucursal
+                        </mat-slide-toggle>
+                    </mat-list-item>
                 </mat-list>
             </mat-expansion-panel>
 
@@ -499,7 +504,7 @@
             <div class="py-3">
                 <button type="button" mat-raised-button routerLink="/" color="primary">CANCELAR</button>
                 <span class="divider"></span>
-                <button type="submit" [disabled]="isLoading()" mat-flat-button color="primary">GUARDAR</button>
+                <button type="submit" [disabled]="$isLoading()" mat-flat-button color="primary">GUARDAR</button>
             </div>
         </div>
     </form>

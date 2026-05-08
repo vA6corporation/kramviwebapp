@@ -1,5 +1,5 @@
+import { Component, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -22,21 +22,18 @@ import { PurchaseOrdersService } from '../purchase-orders.service';
 })
 export class EditPurchaseOrdersComponent {
 
-    constructor(
-        private readonly navigationService: NavigationService,
-        private readonly productsService: ProductsService,
-        private readonly favoritesService: FavoritesService,
-        private readonly purchaseOrdersService: PurchaseOrdersService,
-        private readonly categoriesService: CategoriesService,
-        private readonly activatedRoute: ActivatedRoute,
-        private readonly matDialog: MatDialog,
-    ) { }
+    private readonly navigationService = inject(NavigationService)
+    private readonly productsService = inject(ProductsService)
+    private readonly favoritesService = inject(FavoritesService)
+    private readonly purchaseOrdersService = inject(PurchaseOrdersService)
+    private readonly categoriesService = inject(CategoriesService)
+    private readonly activatedRoute = inject(ActivatedRoute)
+    private readonly matDialog = inject(MatDialog)
 
-    categories: CategoryModel[] = []
-    products: ProductModel[] = []
-    favorites: ProductModel[] = []
+    $categories = signal<CategoryModel[]>([])
+    $products = signal<ProductModel[]>([])
+    $favorites = signal<ProductModel[]>([])
     selectedIndex: number = 0
-    gridListCols = 4
     private purchaseOrderId: string = ''
 
     private handleSearch$: Subscription = new Subscription()
@@ -59,13 +56,13 @@ export class EditPurchaseOrdersComponent {
         ])
 
         this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
-            this.categories = categories
+            this.$categories.set(categories)
         })
 
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {
             this.productsService.getProductsByKey(key).subscribe({
                 next: products => {
-                    this.products = products
+                    this.$products.set(products)
                     this.selectedIndex = 2
                     const foundProduct = products.find(e => e.sku.match(new RegExp(`^${key}$`, 'i')) || e.upc.match(new RegExp(`^${key}$`, 'i')))
                     if (foundProduct) {
@@ -78,7 +75,7 @@ export class EditPurchaseOrdersComponent {
         })
 
         this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
-            this.favorites = products
+            this.$favorites.set(products)
         })
 
         this.purchaseOrderId = this.activatedRoute.snapshot.params['purchaseOrderId']
@@ -91,14 +88,14 @@ export class EditPurchaseOrdersComponent {
 
     onSelectCategory(category: CategoryModel) {
         this.selectedIndex = 2
-        this.products = []
+        this.$products.set([])
         if (category.products) {
-            this.products = category.products
+            this.$products.set(category.products)
         } else {
             this.navigationService.loadBarStart()
             this.productsService.getProductsByCategoryPage(category.id, 1, 500).subscribe(products => {
                 this.navigationService.loadBarFinish()
-                this.products = products
+                this.$products.set(products)
                 category.products = products
             })
         }

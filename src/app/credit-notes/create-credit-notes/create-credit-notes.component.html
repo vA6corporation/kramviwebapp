@@ -1,16 +1,19 @@
+@let customer = $customer();
+@let setting = $setting();
 <div class="d-flex h-100">
     <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()"
         [formGroup]="formGroup" autocomplete="off">
         <div class="px-3">
-            <h2 class="text-center mat-display-small mb-0">{{ charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</h2>
+            <h2 class="text-center mat-display-small mb-0">{{ $charge().toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</h2>
             <p class="caption text-center text-muted mb-2">Total a cobrar</p>
             @if (customer) {
-            <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100 mb-3">
+            <button type="button" mat-button color="primary" (click)="onEditCustomer()" class="w-100">
                 <span>{{ customer.name | uppercase }}</span>
             </button>
-            @if (customer.phone) {
-            <p class="text-center mb-3">Celular: {{ customer.formatPhone }}</p>
+            @if (customer.formatPhone) {
+            <p class="text-center">Celular: {{ customer.formatPhone || 'NINGUNO' }}</p>
             }
+            <p class="text-center">Direccion: {{ customer.address || 'NINGUNO' }}</p>
             }
             @if (setting.isShowEmitionAt) {
             <mat-form-field appearance="fill">
@@ -37,7 +40,7 @@
                 <input type="text" matInput formControlName="observation">
             </mat-form-field>
             <div class="p-1"></div>
-            <button type="submit" class="w-100" mat-flat-button [disabled]="isLoading" color="primary">
+            <button type="submit" class="w-100" mat-flat-button [disabled]="$isLoading()" color="primary">
                 GUARDAR
             </button>
         </div>

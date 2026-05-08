@@ -6,7 +6,7 @@
                 <ng-template mat-tab-label>
                     Favoritos
                 </ng-template>
-                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                <mat-grid-list cols="4" rowHeight="4:2" class="text-uppercase text-center">
                     @for (product of $favorites(); track product.id) {
                     <mat-grid-tile (click)="onSelectProduct(product, $event)" (contextmenu)="onRightClick(product)"
                         [ngStyle]="urlImage(product)">
@@ -25,7 +25,7 @@
                 <ng-template mat-tab-label>
                     Categorias
                 </ng-template>
-                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                <mat-grid-list cols="4" rowHeight="4:2" class="text-uppercase text-center">
                     @for (category of $categories(); track category.id) {
                     <mat-grid-tile (click)="onSelectCategory(category)" [style.background]="category.color">
                         <span class="px-1">
@@ -39,7 +39,7 @@
                 <ng-template mat-tab-label>
                     Busqueda
                 </ng-template>
-                <mat-grid-list [cols]="gridListCols" rowHeight="4:2" class="text-uppercase text-center">
+                <mat-grid-list cols="4" rowHeight="4:2" class="text-uppercase text-center">
                     @for (product of $products(); track product.id) {
                     <mat-grid-tile (click)="onSelectProduct(product, $event)" (contextmenu)="onRightClick(product)"
                         [ngStyle]="urlImage(product)">

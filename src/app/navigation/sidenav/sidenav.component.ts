@@ -20,10 +20,10 @@ export class SidenavComponent {
 
     @Output()
     sidenavClose = new EventEmitter<void>()
-    modules: ModuleModel[] = []
-    business: BusinessModel = new BusinessModel()
-    office: OfficeModel = new OfficeModel()
-    user: UserModel = new UserModel()
+    $modules = signal<ModuleModel[]>([])
+    $business = signal<BusinessModel>(new BusinessModel())
+    $office = signal<OfficeModel>(new OfficeModel())
+    $user = signal<UserModel>(new UserModel())
     isAuth = signal(false)
 
     private handleAuth$: Subscription = new Subscription()
@@ -40,11 +40,11 @@ export class SidenavComponent {
         })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.business = auth.business
-            this.office = auth.office
-            this.user = auth.user
+            this.$business.set(auth.business)
+            this.$office.set(auth.office)
+            this.$user.set(auth.user)
 
-            this.modules = this.authService.getModules()
+            this.$modules.set(this.authService.getModules())
         })
     }
 

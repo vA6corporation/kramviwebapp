@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
 import { RouterModule } from '@angular/router'
 import { Subscription } from 'rxjs'
@@ -28,9 +28,9 @@ export class DialogCreditNotesComponent {
     private readonly printService = inject(PrintService)
     private readonly dialogRef: MatDialogRef<DialogCreditNotesComponent> = inject(MatDialogRef)
 
-    creditNotes: CreditNoteModel[] = []
-    isLoading: boolean = true
-    office: OfficeModel = new OfficeModel()
+    $creditNotes = signal<CreditNoteModel[]>([])
+    $isLoading = signal<boolean>(true)
+    $office = signal<OfficeModel>(new OfficeModel())
     private sale: SaleModel | null = null
 
     private handleAuth$: Subscription = new Subscription()
@@ -41,11 +41,11 @@ export class DialogCreditNotesComponent {
 
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.office = auth.office
+            this.$office.set(auth.office)
         })
 
         this.creditNotesService.getCreditNotesBySale(this.saleId).subscribe(creditNotes => {
-            this.creditNotes = creditNotes
+            this.$creditNotes.set(creditNotes)
         })
 
         this.salesService.getSaleById(this.saleId).subscribe(sale => {
@@ -54,7 +54,7 @@ export class DialogCreditNotesComponent {
                 this.navigationService.showMessage('El comprobante a sido anulado')
             } else {
                 if (this.sale.cdr && this.sale.cdr.sunatCode === '0') {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                 } else {
                     this.navigationService.showMessage('El comprobante no ha sido enviado a sunat')
                 }

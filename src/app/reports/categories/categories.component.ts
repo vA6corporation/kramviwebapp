@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, inject } from '@angular/core'
+import { Component, ElementRef, ViewChild, inject, signal } from '@angular/core'
 import { CommonModule, formatDate } from '@angular/common'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { Params } from '@angular/router'
@@ -14,6 +14,7 @@ import { SalesService } from '../../sales/sales.service'
 import { SummarySaleItemModel } from '../../sales/summary-sale-item.model'
 import { UserModel } from '../../users/user.model'
 import { UsersService } from '../../users/users.service'
+import { AuthService } from '../../auth/auth.service'
 
 @Component({
     selector: 'app-categories',
@@ -28,6 +29,7 @@ export class CategoriesComponent {
     private readonly usersService = inject(UsersService)
     private readonly categoriesService = inject(CategoriesService)
     private readonly navigationService = inject(NavigationService)
+    private readonly authService = inject(AuthService)
 
     @ViewChild('chargeChart')
     private chargeChart!: ElementRef<HTMLCanvasElement>
@@ -35,34 +37,41 @@ export class CategoriesComponent {
     formGroup: FormGroup = this.formBuilder.group({
         categoryId: '',
         userId: '',
+        officeId: '',
         startDate: [new Date(), Validators.required],
         endDate: [new Date(), Validators.required],
     })
     categoryId: string = ''
-    categories: CategoryModel[] = []
-    summarySaleItems: SummarySaleItemModel[] = []
-    filterCategories: any[] = []
-    users: UserModel[] = []
+    $categories = signal<CategoryModel[]>([])
+    $summarySaleItems = signal<SummarySaleItemModel[]>([])
+    $filterCategories = signal<any[]>([])
+    $users = signal<UserModel[]>([])
     private chargeChartRef: Chart | null = null
 
     private handleClickMenu$: Subscription = new Subscription()
     private handleCategories$: Subscription = new Subscription()
     private handleUsers$: Subscription = new Subscription()
+    private handleAuth$: Subscription = new Subscription()
 
     ngOnDestroy() {
         this.handleClickMenu$.unsubscribe()
         this.handleCategories$.unsubscribe()
         this.handleUsers$.unsubscribe()
+        this.handleAuth$.unsubscribe()
     }
 
     ngOnInit() {
         this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
-            this.categories = categories
-            this.fetchData()
+            this.$categories.set(categories)
         })
 
         this.handleUsers$ = this.usersService.handleUsers().subscribe(users => {
-            this.users = users
+            this.$users.set(users)
+        })
+
+        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
+            this.formGroup.patchValue({ officeId: auth.office.id })
+            this.fetchData()
         })
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
@@ -75,10 +84,10 @@ export class CategoriesComponent {
                 'CATEGORIA',
                 'CANTIDAD',
             ])
-            this.summarySaleItems.forEach(summarySaleItem => {
+            this.$summarySaleItems().forEach(summarySaleItem => {
                 body.push([
                     summarySaleItem.fullName.toUpperCase(),
-                    this.categories.find(e => e.id === summarySaleItem.categoryId)?.name.toUpperCase(),
+                    this.$categories().find(e => e.id === summarySaleItem.categoryId)?.name.toUpperCase(),
                     summarySaleItem.totalQuantity,
                 ])
             })
@@ -93,8 +102,11 @@ export class CategoriesComponent {
 
             this.chargeChartRef?.destroy()
 
-            const { startDate, endDate, categoryId, userId } = this.formGroup.value
-            const params: Params = { categoryId, userId }
+            const { startDate, endDate, officeId, categoryId, userId } = this.formGroup.value
+
+            const params: Params = {
+                categoryId, userId, officeId
+            }
 
             this.salesService.getSummarySaleItemsByRangeDate(
                 startDate,
@@ -102,13 +114,13 @@ export class CategoriesComponent {
                 params
             ).subscribe(summarySaleItems => {
                 this.navigationService.loadBarFinish()
-                this.summarySaleItems = summarySaleItems
+                this.$summarySaleItems.set(summarySaleItems)
                 const filterCategories: any[] = []
 
-                for (const category of this.categories) {
+                for (const category of this.$categories()) {
                     filterCategories.push({
                         ...category,
-                        totalCharge: this.summarySaleItems.filter(e => e.categoryId === category.id).map(e => e.totalCharge || 0).reduce((a, b) => a + b, 0),
+                        totalCharge: this.$summarySaleItems().filter(e => e.categoryId === category.id).map(e => e.totalCharge || 0).reduce((a, b) => a + b, 0),
                     })
                 }
 
@@ -122,13 +134,13 @@ export class CategoriesComponent {
                     return 0
                 })
 
-                this.filterCategories = filterCategories.filter(e => e.totalCharge)
+                this.$filterCategories.set(filterCategories.filter(e => e.totalCharge))
 
                 const dataCharge = {
                     datasets: [
                         {
                             label: 'Dataset 1',
-                            data: this.filterCategories.slice(0, 100).map(e => e.totalCharge || 0),
+                            data: this.$filterCategories().slice(0, 100).map(e => e.totalCharge || 0),
                             fill: true
                         },
                     ]
@@ -155,7 +167,8 @@ export class CategoriesComponent {
                                     if (value === 0) {
                                         return null
                                     } else {
-                                        return Math.round(value)
+                                        //return Math.round(value)
+                                        return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                                     }
                                 },
                                 padding: 6

@@ -1,9 +1,9 @@
-import { Component, Inject } from '@angular/core';
-import { MaterialModule } from '../../material.module';
-import { CustomersService } from '../customers.service';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CustomerModel } from '../customer.model';
-import { CommonModule } from '@angular/common';
+import { Component, inject, signal } from '@angular/core'
+import { MaterialModule } from '../../material.module'
+import { CustomersService } from '../customers.service'
+import { MAT_DIALOG_DATA } from '@angular/material/dialog'
+import { CustomerModel } from '../customer.model'
+import { CommonModule } from '@angular/common'
 
 @Component({
     selector: 'app-dialog-detail-customers',
@@ -13,17 +13,14 @@ import { CommonModule } from '@angular/common';
 })
 export class DialogDetailCustomersComponent {
 
-    constructor(
-        @Inject(MAT_DIALOG_DATA)
-        private readonly customerId: any,
-        private readonly customersService: CustomersService,
-    ) { }
+    private readonly customerId: any = inject(MAT_DIALOG_DATA)
+    private readonly customersService = inject(CustomersService)
 
-    customer: CustomerModel | null = null
+    $customer = signal<CustomerModel | null>(null)
 
     ngOnInit() {
         this.customersService.getCustomerById(this.customerId).subscribe(customer => {
-            this.customer = customer
+            this.$customer.set(customer)
         })
     }
 

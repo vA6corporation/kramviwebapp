@@ -113,7 +113,7 @@ export class ChargeCreditComponent {
 
             Object.assign(this.params, { isAvailableStock: auth.setting.isAvailableStock })
 
-            this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
+            this.handleOpenTurn$ = this.turnsService.handleOpenTurn(auth.setting.isOfficeTurn).subscribe(turn => {
                 this.$turn.set(turn)
                 if (turn) {
                     const today = new Date()

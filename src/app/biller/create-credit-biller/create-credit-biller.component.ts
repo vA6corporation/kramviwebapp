@@ -106,7 +106,7 @@ export class CreateCreditBillerComponent {
             this.user = auth.user
             this.$setting.set(auth.setting)
 
-            this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
+            this.handleOpenTurn$ = this.turnsService.handleOpenTurn(auth.setting.isOfficeTurn).subscribe(turn => {
                 this.turn = turn
                 if (turn === null) {
                     this.matDialog.open(DialogCreateTurnsComponent, {

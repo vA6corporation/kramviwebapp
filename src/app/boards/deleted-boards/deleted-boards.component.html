@@ -11,13 +11,6 @@
                 <mat-date-range-picker #picker></mat-date-range-picker>
             </mat-form-field>
             <mat-form-field appearance="fill">
-                <mat-label>Filtrar comandas</mat-label>
-                <mat-select formControlName="filterCommands" (selectionChange)="onFilterChange()">
-                    <mat-option [value]="false">TODAS LAS COMANDAS</mat-option>
-                    <mat-option [value]="true">SOLO CON PRODUCTOS ANULADOS</mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="fill">
                 <mat-label>Todas las mesas</mat-label>
                 <mat-select formControlName="tableId" (selectionChange)="onFilterChange()">
                     <mat-option value="">TODAS LAS MESAS</mat-option>
@@ -62,7 +55,7 @@
             </ng-container>
             <ng-container matColumnDef="deletedBoardItems">
                 <th mat-header-cell *matHeaderCellDef>Producto anulados</th>
-                <td mat-cell *matCellDef="let element">{{ element.deletedBoardItems }}</td>
+                <td mat-cell *matCellDef="let element">{{ element.countDeletedBoardItems }}</td>
             </ng-container>
             <ng-container matColumnDef="user">
                 <th mat-header-cell *matHeaderCellDef>Usuario</th>

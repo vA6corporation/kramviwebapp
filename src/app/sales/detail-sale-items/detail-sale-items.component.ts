@@ -91,7 +91,7 @@ export class DetailSaleItemsComponent {
 
     fetchData() {
         this.navigationService.loadBarStart()
-        this.salesService.getSaleItemsByProductPage(this.productId, this.pageIndex + 1, this.pageSize, this.params).subscribe(saleItems => {
+        this.salesService.getSaleItemsByPageProduct(this.pageIndex + 1, this.pageSize, this.productId, this.params).subscribe(saleItems => {
             this.navigationService.loadBarFinish()
             this.dataSource = saleItems
         })

@@ -79,7 +79,7 @@ export class SalesComponent {
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
-    saleIds: number[] = []
+    $saleIds = signal<number[]>([])
     business: BusinessModel = new BusinessModel()
     office: OfficeModel = new OfficeModel()
     offices: OfficeModel[] = []
@@ -157,7 +157,8 @@ export class SalesComponent {
             const queryParams = this.activatedRoute.snapshot.queryParams
             const { startDate, endDate, pageIndex, pageSize, invoiceCode, stateType, userId, key, officeId } = queryParams
 
-            this.saleIds = []
+            this.$saleIds.set([])
+
             this.pageIndex = Number(pageIndex || 0)
             this.pageSize = Number(pageSize || 10)
             this.key = key
@@ -183,8 +184,6 @@ export class SalesComponent {
                 stateType: stateType || '',
                 userId: userId || '',
                 officeId: officeId || this.office.id,
-                startDate: new Date(startDate),
-                endDate: new Date(endDate)
             })
 
             this.fetchData()
@@ -217,7 +216,7 @@ export class SalesComponent {
         ])
 
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {
-            this.saleIds = []
+            this.$saleIds.set([])
             this.pageIndex = 0
             this.$length.set(0)
 
@@ -333,24 +332,24 @@ export class SalesComponent {
     }
 
     checkCdrs() {
-        if (this.saleIds.length === 0) {
+        if (this.$saleIds().length === 0) {
             this.navigationService.showMessage('Seleccione almenos un comprobante')
         } else {
             this.matDialog.open(DialogCheckCdrsComponent, {
                 width: '900px',
                 position: { top: '20px' },
                 disableClose: true,
-                data: this.saleIds,
+                data: this.$saleIds(),
             })
         }
     }
 
     async copyMassive() {
-        if (this.saleIds.length) {
+        if (this.$saleIds().length) {
             const ok = confirm('Esta seguro de realizar las copias?...')
             if (ok) {
                 this.navigationService.loadBarStart()
-                this.invoicesService.copyInvoiceMassive(this.saleIds).subscribe({
+                this.invoicesService.copyInvoiceMassive(this.$saleIds()).subscribe({
                     next: () => {
                         this.navigationService.loadBarFinish()
                         this.navigationService.showMessage('Copias generadas')
@@ -367,8 +366,8 @@ export class SalesComponent {
     }
 
     async newInvoice() {
-        if (this.saleIds.length) {
-            const queryParams: Params = { saleIds: this.saleIds }
+        if (this.$saleIds().length) {
+            const queryParams: Params = { saleIds: this.$saleIds() }
             this.router.navigate(['/charge/from'], { queryParams })
         } else {
             this.navigationService.showMessage('Seleccione un comprobante')
@@ -452,28 +451,28 @@ export class SalesComponent {
 
     checkSaleId(isChecked: boolean, saleId: number) {
         if (isChecked) {
-            this.saleIds.push(saleId)
+            this.$saleIds.update(values => [...values, saleId])
         } else {
-            const index = this.saleIds.indexOf(saleId)
+            const index = this.$saleIds().indexOf(saleId)
             if (index > -1) {
-                this.saleIds.splice(index, 1)
+                this.$saleIds().splice(index, 1)
             }
         }
     }
 
     checkAllSales(isChecked: boolean) {
         if (isChecked) {
-            this.saleIds = []
-            this.saleIds = this.$dataSource().map(e => e.id)
+            this.$saleIds.set([])
+            this.$saleIds.set(this.$dataSource().map(e => e.id))
         } else {
-            this.saleIds = []
+            this.$saleIds.set([])
         }
     }
 
     async sendMassive() {
-        if (this.saleIds.length) {
+        if (this.$saleIds().length) {
             this.navigationService.loadBarStart()
-            this.invoicesService.sendInvoiceMassive(this.saleIds).subscribe({
+            this.invoicesService.sendInvoiceMassive(this.$saleIds()).subscribe({
                 next: () => {
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Enviado a sunat')
@@ -487,7 +486,7 @@ export class SalesComponent {
             let ok = confirm('Solo se enviaran hasta maximo 500 boletas, esto puede demorar hasta 20 min')
             if (ok) {
                 this.navigationService.loadBarStart()
-                this.invoicesService.sendInvoiceMassive(this.saleIds).subscribe({
+                this.invoicesService.sendInvoiceMassive(this.$saleIds()).subscribe({
                     next: () => {
                         this.navigationService.loadBarFinish()
                         this.navigationService.showMessage('Enviando a sunat')
@@ -503,7 +502,7 @@ export class SalesComponent {
 
     async printMassive() {
         this.navigationService.loadBarStart()
-        for (const saleId of this.saleIds) {
+        for (const saleId of this.$saleIds()) {
             await new Promise((resolve, reject) => {
                 this.salesService.getSaleById(saleId).subscribe(sale => {
                     this.printService.printTicket80mm(sale)
@@ -519,7 +518,6 @@ export class SalesComponent {
         { code: '00', label: 'NOTA DE VENTA' },
         { code: '03', label: 'BOLETA' },
         { code: '01', label: 'FACTURA' },
-        //{ code: '03', label: 'BOLETA Y FACTURA' },
     ]
 
     stateTypes = [
@@ -530,6 +528,7 @@ export class SalesComponent {
 
     async excelKramvi() {
         const { startDate, endDate } = this.formGroup.value
+
         if (startDate && endDate) {
             const offices: OfficeModel[] = await lastValueFrom(this.officesService.getOffices())
 
@@ -742,7 +741,7 @@ export class SalesComponent {
         if (event.ctrlKey) {
             const data: DialogAdminData = {
                 saleId,
-                saleIds: this.saleIds
+                saleIds: this.$saleIds()
             }
 
             event.stopPropagation()
@@ -871,7 +870,7 @@ export class SalesComponent {
     }
 
     fetchData() {
-        this.saleIds = []
+        this.$saleIds.set([])
         if (this.key) {
             this.navigationService.loadBarStart()
             this.salesService.getSalesByKey(this.key).subscribe({

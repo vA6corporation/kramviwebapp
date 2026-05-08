@@ -7,6 +7,7 @@ import { SettingModel } from '../../settings/setting.model'
 import { ProductItemModel } from '../product-item.model'
 import { BillsService } from '../bills.service'
 import { MaterialModule } from '../../material.module'
+import { ProductsService, UnitCodeModel } from '../../products/products.service'
 
 @Component({
     selector: 'app-dialog-add-product',
@@ -19,6 +20,7 @@ export class DialogAddProductComponent {
     private readonly formBuilder = inject(FormBuilder)
     private readonly billsService = inject(BillsService)
     private readonly authService = inject(AuthService)
+    private readonly productsService = inject(ProductsService)
     private readonly dialogRef: MatDialogRef<DialogAddProductComponent> = inject(MatDialogRef)
 
     formGroup: FormGroup = this.formBuilder.group({
@@ -26,8 +28,10 @@ export class DialogAddProductComponent {
         price: ['', Validators.required],
         quantity: [1, Validators.required],
         observation: '',
-        igvCode: '10'
+        unitCode: 'NIU',
+        igvCode: '10',
     })
+    unitCodes: UnitCodeModel[] = []
     private setting: SettingModel = new SettingModel()
 
     private handleAuth$: Subscription = new Subscription()
@@ -41,6 +45,8 @@ export class DialogAddProductComponent {
             this.setting = auth.setting
             this.formGroup.patchValue({ igvCode: this.setting.defaultIgvCode })
         })
+
+        this.unitCodes = this.productsService.getUnitCodes()
     }
 
     onSubmit(): void {

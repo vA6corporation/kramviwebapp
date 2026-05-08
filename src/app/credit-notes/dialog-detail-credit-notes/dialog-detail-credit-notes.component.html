@@ -1,5 +1,6 @@
+@let creditNote = $creditNote();
 <h2 mat-dialog-title>
-    Detalles {{ creditNote?.invoicePrefix }}{{ office.serialPrefix }}-{{ creditNote?.invoiceNumber }}
+    Detalles {{ creditNote?.invoicePrefix }}{{ $office().serialPrefix }}-{{ creditNote?.invoiceNumber }}
     @if (creditNote?.deletedAt) {
     <span class="ml-2 text-danger">ANULADO</span>
     }
@@ -17,11 +18,11 @@
             </tr>
             <tr>
                 <td>Observaciones</td>
-                <td align="right">{{ creditNote?.observation }}</td>
+                <td align="right">{{ creditNote?.observation || 'NINGUNO' }}</td>
             </tr>
             <tr>
                 <td>Usuario</td>
-                <td align="right">{{ user.name }}</td>
+                <td align="right">{{ $user().name }}</td>
             </tr>
             <tr class="text-muted">
                 <td>ID</td>
@@ -31,12 +32,28 @@
     </table>
     <mat-divider class="mb-0"></mat-divider>
     <mat-list class="m-0">
-        @for (creditNoteItem of creditNoteItems; track creditNoteItem.id) {
-        <mat-list-item>
-            <span class="mr-2 text-muted">x{{ creditNoteItem.quantity }}</span>
-            {{ creditNoteItem.fullName }}
-            <span class="spacer"></span>
-            {{ (creditNoteItem.price * creditNoteItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
+        @for (creditNoteItem of $creditNoteItems(); track creditNoteItem.id) {
+        <mat-list-item class="px-0">
+            <span matListItemTitle>{{ creditNoteItem.fullName }} ({{ creditNoteItem.quantity }})</span>
+            <span matListItemLine>
+                <ng-container>{{ (creditNoteItem.price * creditNoteItem.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</ng-container>
+                @if (creditNoteItem.igvCode === '11') {
+                <span class="divider"></span>
+                <span class="text-success">Bon</span>
+                }
+                @if (creditNoteItem.igvCode === '20') {
+                <span class="divider"></span>
+                <span class="text-primary">Exo</span>
+                }
+                @if (creditNoteItem.igvCode === '30') {
+                <span class="divider"></span>
+                <span class="text-primary">Ina</span>
+                }
+                @if (creditNoteItem.observation) {
+                <span class="divider"></span>
+                <span>{{ creditNoteItem.observation }}</span>
+                }
+            </span>
         </mat-list-item>
         }
     </mat-list>

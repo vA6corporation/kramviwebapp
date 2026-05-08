@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { DomSanitizer } from '@angular/platform-browser'
@@ -30,12 +30,12 @@ export class DialogDetailCreditNotesComponent {
     private readonly authService = inject(AuthService)
     private readonly sanitizer = inject(DomSanitizer)
 
-    creditNote: CreditNoteModel | null = null
-    creditNoteItems: CreditNoteItemModel[] = []
+    $creditNote = signal<CreditNoteModel | null>(null)
+    $creditNoteItems = signal<CreditNoteItemModel[]>([])
     cdr: CdrNcModel | null = null
     ticket: TicketModel | null = null
-    user: UserModel = new UserModel()
-    office: OfficeModel = new OfficeModel()
+    $user = signal<UserModel>(new UserModel())
+    $office = signal<OfficeModel>(new OfficeModel())
     business: BusinessModel = new BusinessModel()
 
     private handleAuth$: Subscription = new Subscription()
@@ -47,15 +47,15 @@ export class DialogDetailCreditNotesComponent {
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.business = auth.business
-            this.office = auth.office
+            this.$office.set(auth.office)
         })
 
         this.creditNotesService.getCreditNoteById(this.creditNoteId).subscribe(creditNote => {
             const { creditNoteItems, user, cdr } = creditNote
-            this.creditNote = creditNote
-            this.creditNoteItems = creditNoteItems
+            this.$creditNote.set(creditNote)
+            this.$creditNoteItems.set(creditNoteItems)
             this.cdr = cdr
-            this.user = user
+            this.$user.set(user)
         })
     }
 

@@ -6,5 +6,6 @@ export interface ExpenseModel {
     concept: string
     charge: number
     createdAt: string
+    deletedAt: string | null
     user: UserModel
 }

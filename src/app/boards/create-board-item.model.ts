@@ -5,6 +5,7 @@ export interface CreateBoardItemModel {
     productId: any
     fullName: string
     price: number
+    cost: number | null
     quantity: number
     preQuantity: number
     deletedQuantity: number

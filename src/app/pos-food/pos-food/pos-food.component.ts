@@ -38,7 +38,6 @@ export class PosFoodComponent {
     $categories = signal<CategoryModel[]>([])
     $priceLists = signal<PriceListModel[]>([])
     priceListId: string | null = null
-    gridListCols = 4
     selectedIndex: number = 0
     $setting = signal<SettingModel>(new SettingModel())
     office: OfficeModel = new OfficeModel()

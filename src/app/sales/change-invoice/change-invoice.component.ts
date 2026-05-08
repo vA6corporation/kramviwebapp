@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog'
@@ -57,8 +57,8 @@ export class ChangeInvoiceComponent {
     igvCode = IgvCode
     saleItems: CreateSaleItemModel[] = []
     charge: number = 0
-    customer: CustomerModel | null = null
-    isLoading: boolean = false
+    $customer = signal<CustomerModel | null>(null)
+    $isLoading = signal<boolean>(false)
     payments: PaymentModel[] = []
     private saleId: string = ''
     private sale: SaleModel | null = null
@@ -93,7 +93,7 @@ export class ChangeInvoiceComponent {
             this.office = auth.office
             this.setting = auth.setting
 
-            this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
+            this.handleOpenTurn$ = this.turnsService.handleOpenTurn(auth.setting.isOfficeTurn).subscribe(turn => {
                 this.turn = turn
                 if (turn === null) {
                     this.matDialog.open(DialogCreateTurnsComponent, {
@@ -113,6 +113,7 @@ export class ChangeInvoiceComponent {
         this.salesService.getSaleById(this.saleId).subscribe(sale => {
             this.formGroup.get('observation')?.patchValue(`canje nota de venta ${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}`)
             this.sale = sale
+            this.$customer.set(sale.customer)
             this.payments = sale.payments
             this.salesService.setSale(sale)
             this.salesService.setSaleItems(sale.saleItems)
@@ -135,7 +136,7 @@ export class ChangeInvoiceComponent {
 
             dialogRef.afterClosed().subscribe(customer => {
                 if (customer) {
-                    this.customer = customer
+                    this.$customer.set(customer)
                 }
             })
 
@@ -147,7 +148,7 @@ export class ChangeInvoiceComponent {
 
                 dialogRef.afterClosed().subscribe(customer => {
                     if (customer) {
-                        this.customer = customer
+                        this.$customer.set(customer)
                     }
                 })
             })
@@ -168,6 +169,7 @@ export class ChangeInvoiceComponent {
 
     onSubmit() {
         try {
+            const customer = this.$customer()
             if (this.turn === null) {
                 this.matDialog.open(DialogCreateTurnsComponent, {
                     width: '600px',
@@ -208,23 +210,23 @@ export class ChangeInvoiceComponent {
                 igvPercent: this.setting.defaultIgvPercent,
                 rcPercent: this.setting.defaultRcPercent,
                 turnId: this.turn.id,
-                customerId: this.customer ? this.customer.id : null,
+                customerId: customer ? customer.id : null,
             }
 
-            if (createdSale.invoiceCode === InvoiceCode.FACTURA && this.customer === null) {
+            if (createdSale.invoiceCode === InvoiceCode.FACTURA && customer === null) {
                 throw new Error("Agrega un cliente")
             }
 
-            if (createdSale.invoiceCode === InvoiceCode.FACTURA && this.customer !== null && this.customer.documentType !== 'RUC') {
+            if (createdSale.invoiceCode === InvoiceCode.FACTURA && customer !== null && customer.documentType !== 'RUC') {
                 throw new Error("El cliente debe tener un RUC")
             }
 
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.navigationService.loadBarStart()
 
             this.salesService.changeSale(createdSale, this.saleId, createdSale.observation).subscribe({
                 next: sale => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     let payments: CreatePaymentModel[] = []
 
@@ -241,7 +243,7 @@ export class ChangeInvoiceComponent {
 
                     Object.assign(sale, {
                         user: this.user,
-                        customer: this.customer,
+                        customer,
                         saleItems: this.saleItems,
                         payments,
                     })
@@ -259,10 +261,10 @@ export class ChangeInvoiceComponent {
                     }
 
                     this.salesService.setSaleItems([])
-                    this.router.navigate(['/invoices'])
+                    this.router.navigate(['/sales'])
                     this.navigationService.showMessage('Canjeado correctamente')
                 }, error: (error: HttpErrorResponse) => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage(error.error.message)
                 }
@@ -271,7 +273,7 @@ export class ChangeInvoiceComponent {
             if (error instanceof Error) {
                 this.navigationService.showMessage(error.message)
             }
-            this.isLoading = false
+            this.$isLoading.set(false)
             this.navigationService.loadBarFinish()
         }
     }
@@ -280,12 +282,12 @@ export class ChangeInvoiceComponent {
         const dialogRef = this.matDialog.open(DialogEditCustomersComponent, {
             width: '600px',
             position: { top: '20px' },
-            data: this.customer,
+            data: this.$customer(),
         })
 
         dialogRef.afterClosed().subscribe(customer => {
             if (customer) {
-                this.customer = customer
+                this.$customer.set(customer)
             }
         })
     }

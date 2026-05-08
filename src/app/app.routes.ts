@@ -26,6 +26,10 @@ export const routes: Routes = [
         loadChildren: () => import('./remission-guides/remission-guides.routes').then(m => m.routes)
     },
     {
+        path: 'creditNotes',
+        loadChildren: () => import('./credit-notes/credit-notes.routes').then(m => m.routes)
+    },
+    {
         path: 'turns',
         loadChildren: () => import('./turns/turns.routes').then(m => m.routes)
     },

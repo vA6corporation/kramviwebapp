@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { Router, RouterModule } from '@angular/router'
@@ -22,7 +22,7 @@ export class CreateTablesComponent {
     formGroup: FormGroup = this.formBuilder.group({
         name: ['', Validators.required],
     })
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
 
     ngOnInit(): void {
         this.navigationService.setTitle('Nueva mesa')
@@ -30,17 +30,17 @@ export class CreateTablesComponent {
 
     onSubmit(): void {
         if (this.formGroup.valid) {
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.navigationService.loadBarStart()
             this.tablesService.create(this.formGroup.value).subscribe({
                 next: () => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.router.navigate(['/tables'])
                     this.navigationService.showMessage('Registrado correctamente')
                 }, error: (error: HttpErrorResponse) => {
                     console.log(error)
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage(error.error.message)
                 }

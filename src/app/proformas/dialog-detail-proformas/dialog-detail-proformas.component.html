@@ -1,3 +1,8 @@
+@let proforma = $proforma();
+@let proformaItems = $proformaItems();
+@let customer = $customer();
+@let user = $user();
+@let office = $office();
 <h2 mat-dialog-title>
     Detalles P{{ office.serialPrefix }}-{{ proforma?.proformaNumber }}
     @if (proforma?.deletedAt) {

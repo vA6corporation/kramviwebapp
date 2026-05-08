@@ -27,9 +27,9 @@ export class TurnsService {
         }
     }
 
-    handleOpenTurn(): Observable<TurnModel | null> {
+    handleOpenTurn(isOfficeTurn: boolean): Observable<TurnModel | null> {
         if (this.turn === null) {
-            this.loadTurn()
+            this.loadTurn(isOfficeTurn)
         } else {
             setTimeout(() => {
                 this.turn$.next(this.turn)
@@ -70,8 +70,8 @@ export class TurnsService {
         return this.httpService.get(`turns/changeTurn/${saleId}/${turnId}`)
     }
 
-    loadTurn() {
-        this.httpService.get('turns/openTurn').subscribe({
+    loadTurn(isOfficeTurn: boolean) {
+        this.httpService.get('turns/openTurn', { isOfficeTurn }).subscribe({
             next: turn => {
                 this.turn = turn
                 this.turn$.next(turn)

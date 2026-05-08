@@ -36,10 +36,9 @@ export class DialogDetailSalesComponent {
     $customer = signal<CustomerModel | null>(null)
     $saleItems = signal<SaleItemModel[]>([])
     $payments = signal<PaymentModel[]>([])
-    cdr: CdrModel | null = null
-    ticket: TicketModel | null = null
+    $cdr = signal<CdrModel | null>(null)
+    $ticket = signal<TicketModel | null>(null)
     $office = signal<OfficeModel>(new OfficeModel())
-    //business: BusinessModel = new BusinessModel()
     $user = signal<UserModel>(new UserModel())
 
     private handleAuth$: Subscription = new Subscription()
@@ -50,20 +49,17 @@ export class DialogDetailSalesComponent {
 
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            //this.business = auth.business
-            //this.user = auth.user
             this.$office.set(auth.office)
         })
 
         this.salesService.getSaleById(this.saleId).subscribe(sale => {
-            console.log(sale)
             const { saleItems, customer, payments, user, cdr, ticket } = sale
             this.$sale.set(sale)
             this.$customer.set(customer)
             this.$payments.set(payments)
             this.$saleItems.set(saleItems)
-            //this.cdr = cdr
-            //this.ticket = ticket
+            this.$cdr.set(cdr)
+            this.$ticket.set(ticket)
             this.$user.set(user)
         })
     }

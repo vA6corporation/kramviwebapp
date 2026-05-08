@@ -16,6 +16,9 @@ import { ProductsService } from '../../products/products.service'
 import { DialogPurchaseItemsComponent } from '../dialog-purchase-items/dialog-purchase-items.component'
 import { PurchaseItemsComponent } from '../purchase-items/purchase-items.component'
 import { PurchasesService } from '../purchases.service'
+import { OfficeModel } from '../../offices/office.model'
+import { SettingModel } from '../../settings/setting.model'
+import { AuthService } from '../../auth/auth.service'
 
 @Component({
     selector: 'app-create-purchases',
@@ -31,12 +34,15 @@ export class CreatePurchasesComponent {
     private readonly favoritesService = inject(FavoritesService)
     private readonly purchasesService = inject(PurchasesService)
     private readonly categoriesService = inject(CategoriesService)
+    private readonly authService = inject(AuthService)
 
     $categories = signal<CategoryModel[]>([])
     $products = signal<ProductModel[]>([])
-    favorites: ProductModel[] = []
+    $favorites = signal<ProductModel[]>([])
+    $setting = signal<SettingModel>(new SettingModel())
+    priceListId: string | null = null
+    office: OfficeModel = new OfficeModel()
     selectedIndex: number = 0
-    gridListCols = 4
 
     private handleSearch$: Subscription = new Subscription()
     private handleFavorites$: Subscription = new Subscription()
@@ -69,6 +75,7 @@ export class CreatePurchasesComponent {
                     this.navigationService.loadBarFinish()
                     this.$products.set(products)
                     this.selectedIndex = 2
+                    ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
                     const foundProduct = products.find(e => e.sku.match(new RegExp(`^${key}$`, 'i')) || e.upc.match(new RegExp(`^${key}$`, 'i')))
                     if (foundProduct) {
                         this.onSelectProduct(foundProduct)
@@ -80,8 +87,15 @@ export class CreatePurchasesComponent {
             })
         })
 
-        this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
-            this.favorites = products
+        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
+            this.$setting.set(auth.setting)
+            this.office = auth.office
+            this.priceListId = this.$setting().defaultPriceListId
+
+            this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
+                ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
+                this.$favorites.set(products)
+            })
         })
     }
 

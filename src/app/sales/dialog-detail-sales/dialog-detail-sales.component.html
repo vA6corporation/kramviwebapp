@@ -1,5 +1,7 @@
 @let sale = $sale();
 @let customer = $customer();
+@let cdr = $cdr();
+@let ticket = $ticket();
 <h2 mat-dialog-title>
     Detalles venta {{ sale?.invoicePrefix }}{{ $office().serialPrefix }}-{{ sale?.invoiceNumber }}
     @if (sale?.deletedAt) {

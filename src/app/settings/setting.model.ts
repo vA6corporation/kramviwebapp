@@ -27,6 +27,7 @@ export class SettingModel {
     isShowDeliveryAt: boolean = false
     isShowEditPrice: boolean = false
     isAvailableStock: boolean = false
+    isOfficeTurn: boolean = false
     isShowSubPrice: boolean = false
     isShowBonus: boolean = false
     marginLeft: number = 0

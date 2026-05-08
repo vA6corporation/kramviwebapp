@@ -296,7 +296,7 @@ export class PrintIframeComponent {
         })
 
         this.printService.handlePrintTicketProforma().subscribe(async proforma => {
-            const pdf = await buildTicketProforma(proforma, this.setting, this.business, this.office, this.banks)
+            const pdf = await buildTicketProforma(proforma, this.setting, this.business, this.office, this.banks, this.urlLogo)
             if (main) {
                 const file = pdf.output('arraybuffer')
                 main.print(file)
@@ -308,7 +308,7 @@ export class PrintIframeComponent {
         })
 
         this.printService.handleExportPdfTicketProforma().subscribe(async proforma => {
-            const pdf = await buildTicketProforma(proforma, this.setting, this.business, this.office, this.banks)
+            const pdf = await buildTicketProforma(proforma, this.setting, this.business, this.office, this.banks, this.urlLogo)
             pdf.save(`P${this.office.serialPrefix}-${proforma.proformaNumber}`)
         })
 

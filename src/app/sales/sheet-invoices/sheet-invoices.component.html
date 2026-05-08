@@ -4,9 +4,14 @@
         <span matListItemTitle>Enviar a Sunat</span>
     </button>
 
-    <button type="button" mat-list-item (click)="onDownloadXmlCdr()">
+    <button type="button" mat-list-item (click)="onDownloadCdr()">
         <mat-icon class="color-black" matListItemIcon>download</mat-icon>
-        <span matListItemTitle>Descargar XML/CDR</span>
+        <span matListItemTitle>Descargar CDR</span>
+    </button>
+
+    <button type="button" mat-list-item (click)="onDownloadXml()">
+        <mat-icon class="color-black" matListItemIcon>download</mat-icon>
+        <span matListItemTitle>Descargar XML</span>
     </button>
 
     <button type="button" mat-list-item [routerLink]="['/credits', saleId, 'details']"

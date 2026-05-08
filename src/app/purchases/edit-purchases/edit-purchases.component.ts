@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core'
+import { Component, inject, signal, computed } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { MatDialog } from '@angular/material/dialog'
@@ -38,9 +38,8 @@ export class EditPurchasesComponent {
 
     $categories = signal<CategoryModel[]>([])
     $products = signal<ProductModel[]>([])
-    favorites: ProductModel[] = []
+    $favorites = signal<ProductModel[]>([])
     selectedIndex: number = 0
-    gridListCols = 4
     office: OfficeModel = new OfficeModel()
 
     private handleSearch$: Subscription = new Subscription()
@@ -109,7 +108,7 @@ export class EditPurchasesComponent {
         })
 
         this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
-            this.favorites = products
+            this.$favorites.set(products)
         })
     }
 
@@ -138,17 +137,19 @@ export class EditPurchasesComponent {
     }
 
     urlImage(product: ProductModel) {
-        const styleObject: any = {}
-        if (product.urlImage) {
-            styleObject['background-image'] = `url(${decodeURIComponent(product.urlImage)})`
-            styleObject['background-size'] = 'cover'
-            styleObject['background-position'] = 'center'
-        } else {
-            if (product.isTrackStock && product.stock < 1) {
-                styleObject['background'] = '#ffa7a6'
+        return computed(() => {
+            const styleObject: any = {}
+            if (product.urlImage) {
+                styleObject['background-image'] = `url(${decodeURIComponent(product.urlImage)})`
+                styleObject['background-size'] = 'cover'
+                styleObject['background-position'] = 'center'
+            } else {
+                if (product.isTrackStock && product.stock < 1) {
+                    styleObject['background'] = '#ffa7a6'
+                }
             }
-        }
-        return styleObject
+            return styleObject
+        })
     }
 
     onCancel() {

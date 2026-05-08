@@ -1,5 +1,5 @@
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
-import { Component } from '@angular/core'
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatDialogRef } from '@angular/material/dialog'
 import { CustomersService } from '../customers.service'
@@ -16,11 +16,9 @@ import { NavigationService } from '../../navigation/navigation.service'
 })
 export class DialogCreateCustomersComponent {
 
-    constructor(
-        private readonly customersService: CustomersService,
-        private readonly dialogRef: MatDialogRef<DialogCreateCustomersComponent>,
-        private readonly navigationService: NavigationService,
-    ) { }
+    private readonly customersService = inject(CustomersService)
+    private readonly navigationService = inject(NavigationService)
+    private readonly dialogRef: MatDialogRef<DialogCreateCustomersComponent> = inject(MatDialogRef)
 
     formGroup = new FormGroup<CustomerForm>({
         document: new FormControl('', { nonNullable: true }),
@@ -32,7 +30,7 @@ export class DialogCreateCustomersComponent {
         observation: new FormControl('', { nonNullable: true }),
         creditLimit: new FormControl(null)
     })
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
     maxLength: number = 8
 
     ngOnInit(): void {
@@ -57,14 +55,14 @@ export class DialogCreateCustomersComponent {
 
     onSubmit() {
         if (this.formGroup.valid) {
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.customersService.create(this.formGroup.value).subscribe({
                 next: customer => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.dialogRef.close(customer)
                     this.navigationService.showMessage('Registrado correctamente')
                 }, error: (error: HttpErrorResponse) => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.showMessage(error.error.message)
                 }
             })

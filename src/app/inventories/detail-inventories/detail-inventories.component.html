@@ -51,7 +51,7 @@
             </table>
         </mat-card-content>
     </mat-card>
-    <div class="d-flex mb-3">
+    <div class="mb-3">
         @if ($purchaseItems().length) {
         <div class="w-100">
             <h2 class="mat-title-large">Compras</h2>
@@ -61,10 +61,28 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">F. de registro</th>
                     <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'MMM d, y hh:mm a' }}</td>
                 </ng-container>
+                <ng-container matColumnDef="price">
+                    <th mat-header-cell *matHeaderCellDef>Precio</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span>{{ element.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="cost">
+                    <th mat-header-cell *matHeaderCellDef>Costo</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span>{{ element.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                    </td>
+                </ng-container>
                 <ng-container matColumnDef="quantity">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">Cantidad</th>
                     <td mat-cell *matCellDef="let element">
                         <span>+{{ element.quantity }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="observation">
+                    <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span>{{ element.purchase.observation || 'NINGUNO' }}</span>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="actions">
@@ -86,21 +104,95 @@
             </table>
             <button type="button" [routerLink]="['/purchases', productId, 'purchaseItems']" mat-flat-button color="primary" class="w-100">VER TODOS</button>
         </div>
-        <span class="divider px-2"></span>
         }
+    </div>
+    <div class="mb-3">
+        @if ($inIncidentItems().length) {
+        <div class="w-100">
+            <h2 class="mat-title-large">Aumentos</h2>
+            <table mat-table [dataSource]="dataSourceInIncidents" class="w-100 mb-3" matSort matSortActive="createdAt"
+                matSortDirection="desc">
+                <ng-container matColumnDef="createdAt">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">F. de registro</th>
+                    <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'MMM d, y hh:mm a' }}</td>
+                </ng-container>
+                <ng-container matColumnDef="price">
+                    <th mat-header-cell *matHeaderCellDef>Precio</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span>{{ element.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="cost">
+                    <th mat-header-cell *matHeaderCellDef>Costo</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span>{{ element.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="quantity">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">Cantidad</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span>+{{ element.quantity }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="observation">
+                    <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span>{{ element.inIncident.observation || 'NINGUNO' }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let element" class="text-right">
+                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu" xPosition="before">
+                            <button type="button" (click)="onDetailInIncidents(element.inIncidentId)" mat-menu-item>
+                                <mat-icon>info</mat-icon>
+                                <span>Detalles</span>
+                            </button>
+                        </mat-menu>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="bg-success"></tr>
+            </table>
+            <button type="button" [routerLink]="['/incidents', productId, 'inIncidentItems']" mat-flat-button color="primary" class="w-100">VER TODOS</button>
+        </div>
+        }
+    </div>
+    <div class="mb-3">
         @if ($saleItems().length) {
         <div class="w-100">
             <h2 class="mat-title-large">Ventas</h2>
             <table mat-table [dataSource]="dataSourceSales" class="w-100 mb-3" matSort matSortActive="createdAt"
                 matSortDirection="desc">
                 <ng-container matColumnDef="createdAt">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">F. de registro</th>
+                    <th mat-header-cell *matHeaderCellDef>F. de registro</th>
                     <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'MMM d, y hh:mm a' }}</td>
+                </ng-container>
+                <ng-container matColumnDef="price">
+                    <th mat-header-cell *matHeaderCellDef>Precio</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span>{{ element.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="cost">
+                    <th mat-header-cell *matHeaderCellDef>Costo</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span>{{ element.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                    </td>
                 </ng-container>
                 <ng-container matColumnDef="quantity">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">Cantidad</th>
                     <td mat-cell *matCellDef="let element">
                         <span>-{{ element.quantity }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="observation">
+                    <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+                    <td mat-cell *matCellDef="let element">
+                         <span>{{ element.sale.observation || 'NINGUNO' }}</span>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="actions">
@@ -129,43 +221,7 @@
         </div>
         }
     </div>
-    <div class="d-flex mb-3">
-        @if ($inIncidentItems().length) {
-        <div class="w-100">
-            <h2 class="mat-title-large">Aumentos</h2>
-            <table mat-table [dataSource]="dataSourceInIncidents" class="w-100 mb-3" matSort matSortActive="createdAt"
-                matSortDirection="desc">
-                <ng-container matColumnDef="createdAt">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">F. de registro</th>
-                    <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'MMM d, y hh:mm a' }}</td>
-                </ng-container>
-                <ng-container matColumnDef="quantity">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">Cantidad</th>
-                    <td mat-cell *matCellDef="let element">
-                        <span>+{{ element.quantity }}</span>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let element" class="text-right">
-                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                            <mat-icon>more_vert</mat-icon>
-                        </button>
-                        <mat-menu #menu="matMenu" xPosition="before">
-                            <button type="button" (click)="onDetailInIncidents(element.inIncidentId)" mat-menu-item>
-                                <mat-icon>info</mat-icon>
-                                <span>Detalles</span>
-                            </button>
-                        </mat-menu>
-                    </td>
-                </ng-container>
-                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="bg-success"></tr>
-            </table>
-            <button type="button" [routerLink]="['/incidents', productId, 'inIncidentItems']" mat-flat-button color="primary" class="w-100">VER TODOS</button>
-        </div>
-        <span class="divider px-2"></span>
-        }
+    <div class="mb-3">
         @if ($outIncidentItems().length) {
         <div class="w-100">
             <h2 class="mat-title-large">Reducciones</h2>
@@ -175,10 +231,28 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">F. de registro</th>
                     <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'MMM d, y hh:mm a' }}</td>
                 </ng-container>
+                <ng-container matColumnDef="price">
+                    <th mat-header-cell *matHeaderCellDef>Precio</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span>{{ element.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="cost">
+                    <th mat-header-cell *matHeaderCellDef>Costo</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span>{{ element.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                    </td>
+                </ng-container>
                 <ng-container matColumnDef="quantity">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header="quantity">Cantidad</th>
                     <td mat-cell *matCellDef="let element">
                         <span>-{{ element.quantity }}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="observation">
+                    <th mat-header-cell *matHeaderCellDef>Observaciones</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span>{{ element.outIncident.observation || 'NINGUNO' }}</span>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="actions">

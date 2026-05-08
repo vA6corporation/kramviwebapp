@@ -55,7 +55,6 @@ export class PosBoardComponent {
     priceListId: any | null = null
     boardItems: CreateBoardItemModel[] = []
     preBoardItems: BoardItemModel[] = []
-    gridListCols = 4
     selectedIndex: number = 0
     $setting = signal<SettingModel>(new SettingModel())
     $products = signal<ProductModel[]>([])
@@ -206,7 +205,6 @@ export class PosBoardComponent {
 
         this.handleTables$ = this.tablesService.handleTables().subscribe(tables => {
             this.table = tables[this.tableIndex]
-            console.log(this.table)
             if (this.table) {
                 this.navigationService.setTitle('Mesa ' + this.table.name)
                 this.boardsService.setBoard(null)

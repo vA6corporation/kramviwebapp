@@ -201,8 +201,19 @@ export class ChargeProformasComponent {
                     proforma.proformaItems = this.proformaItems
                     proforma.customer = customer
 
-                    this.printService.printA4Proforma(proforma)
                     this.proformasService.setProformaItems([])
+
+                    switch (this.$setting().defaultTicket) {
+                        case 'A4':
+                            this.printService.printA4Proforma(proforma)
+                        break
+                        case '80MM':
+                            this.printService.printTicketProforma(proforma)
+                        break
+                        default:
+                            this.printService.printTicketProforma(proforma)
+                        break
+                    }
 
                     this.router.navigate(['/proformas'])
 

@@ -1,35 +1,37 @@
+@let customer = $customer();
+@if (customer) {
+<h2 mat-dialog-title>
+    Detalles del cliente
+</h2>
 <mat-dialog-content>
-    @if (customer) {
-    <table class="my-3 w-100">
-        <tr>
-            <td>Nombres/Razon social:</td>
-            <td align="right">{{ customer.name }}</td>
-        </tr>
-        <tr>
-            <td>Documento:</td>
-            <td align="right">{{ customer.documentType }}: {{ customer.document }}</td>
-        </tr>
-        <tr>
-            <td>Celular:</td>
-            <td align="right" [ngClass]="{ 'text-muted': !customer.phone }">
-                {{ customer.phone || 'NINGUNO' }}
-            </td>
-        </tr>
-        <tr>
-            <td>Direccion:</td>
-            <td align="right">
-                {{ customer.address || 'NINGUNO' }}
-            </td>
-        </tr>
-        <tr>
-            <td>Observaciones:</td>
-            <td align="right" [ngClass]="{ 'text-muted': !customer.observation }">
-                {{ customer.observation || 'NINGUNO' }}
-            </td>
-        </tr>
-    </table>
-    }
+    <mat-list>
+        <mat-list-item>
+            <span matListItemTitle>Nombre/Razon social</span>
+            <span matListItemLine>{{ customer.name }}</span>
+        </mat-list-item>
+        <mat-list-item>
+            <span matListItemTitle>Documento</span>
+            <span matListItemLine>{{ customer.documentType }}: {{ customer.document }}</span>
+        </mat-list-item>
+        <mat-list-item>
+            <span matListItemTitle>Celular</span>
+            <span matListItemLine>{{ customer.phone || 'NINGUNO' }}</span>
+        </mat-list-item>
+        <mat-list-item>
+            <span matListItemTitle>Direccion</span>
+            <span matListItemLine>{{ customer.address || 'NINGUNO' }}</span>
+        </mat-list-item>
+        <mat-list-item>
+            <span matListItemTitle>Limite de credito</span>
+            <span matListItemLine>{{ customer.creditLimit || 'NINGUNO' }}</span>
+        </mat-list-item>
+        <mat-list-item>
+            <span matListItemTitle>Observaciones</span>
+            <span matListItemLine>{{ customer.observation || 'NINGUNO' }}</span>
+        </mat-list-item>
+    </mat-list>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>
 </mat-dialog-actions>
+}

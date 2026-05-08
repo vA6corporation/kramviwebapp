@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { CommonModule, formatDate } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
@@ -17,6 +17,7 @@ import { NavigationService } from '../../navigation/navigation.service'
 import { CategoriesService } from '../../products/categories.service'
 import { CategoryModel } from '../../products/category.model'
 import { UserModel } from '../../users/user.model'
+import { UsersService } from '../../users/users.service'
 import { CreditNoteModel } from '../credit-note.model'
 import { CreditNotesService } from '../credit-notes.service'
 import { DialogAdminCreditNotesComponent } from '../dialog-admin-credit-notes/dialog-admin-credit-notes.component'
@@ -43,6 +44,7 @@ export class CreditNotesComponent {
     private readonly router = inject(Router)
     private readonly matDialog = inject(MatDialog)
     private readonly matBottomSheet = inject(MatBottomSheet)
+    private readonly usersService = inject(UsersService)
 
     formGroup: FormGroup = this.formBuilder.group({
         invoiceCode: '',
@@ -50,14 +52,14 @@ export class CreditNotesComponent {
         startDate: ['', Validators.required],
         endDate: ['', Validators.required],
     })
-    users: UserModel[] = []
+    $users = signal<UserModel[]>([])
     displayedColumns: string[] = ['created', 'serial', 'sale', 'customer', 'user', 'charge', 'observation', 'actions']
-    dataSource: CreditNoteModel[] = []
-    length: number = 0
+    $dataSource = signal<CreditNoteModel[]>([])
+    $length = signal<number>(0)
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
-    office: OfficeModel = new OfficeModel()
+    $office = signal<OfficeModel>(new OfficeModel())
     invoiceCode = InvoiceCode
     private business: BusinessModel = new BusinessModel()
     private categories: CategoryModel[] = []
@@ -65,11 +67,13 @@ export class CreditNotesComponent {
 
     private handleClickMenu$: Subscription = new Subscription()
     private handleCategories$: Subscription = new Subscription()
+    private handleUsers$: Subscription = new Subscription()
     private handleAuth$: Subscription = new Subscription()
 
     ngOnDestroy() {
         this.handleClickMenu$.unsubscribe()
         this.handleCategories$.unsubscribe()
+        this.handleUsers$.unsubscribe()
         this.handleAuth$.unsubscribe()
     }
 
@@ -77,12 +81,16 @@ export class CreditNotesComponent {
         this.navigationService.setTitle('Notas de credito')
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.office = auth.office
+            this.$office.set(auth.office)
             this.business = auth.business
         })
 
         this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
             this.categories = categories
+        })
+
+        this.handleUsers$ = this.usersService.handleUsers().subscribe(users => {
+            this.$users.set(users)
         })
 
         const queryParams = this.activatedRoute.snapshot.queryParams
@@ -98,7 +106,7 @@ export class CreditNotesComponent {
         }
 
         this.creditNotesService.getCountCreditNotes(this.params).subscribe(count => {
-            this.length = count
+            this.$length.set(count)
         })
 
         this.fetchData()
@@ -118,13 +126,13 @@ export class CreditNotesComponent {
                     const dialogRef = this.matDialog.open(DialogProgressComponent, {
                         width: '600px',
                         position: { top: '20px' },
-                        data: this.length / chunk
+                        data: this.$length() / chunk
                     })
 
                     const { startDate, endDate } = this.formGroup.value
 
                     if (startDate && endDate) {
-                        for (let index = 0; index < this.length / chunk; index++) {
+                        for (let index = 0; index < this.$length() / chunk; index++) {
                             const values = await lastValueFrom(this.creditNotesService.getCreditNotesByPage(index + 1, chunk, this.params))
                             dialogRef.componentInstance.onComplete()
                             creditNotes.push(...values)
@@ -158,9 +166,9 @@ export class CreditNotesComponent {
                                 formatDate(creditNote.createdAt, 'dd/MM/yyyy', 'en-US'),
                                 customer?.document,
                                 customer?.name,
-                                `${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}`,
+                                `${sale.invoicePrefix}${this.$office().serialPrefix}-${sale.invoiceNumber}`,
                                 formatDate(sale.createdAt, 'dd/MM/yyyy', 'en-US'),
-                                `${creditNote.invoicePrefix}${this.office.serialPrefix}-${creditNote.invoiceNumber}`,
+                                `${creditNote.invoicePrefix}${this.$office().serialPrefix}-${creditNote.invoiceNumber}`,
                                 creditNote.currencyCode,
                                 declare ? -Number((creditNote.charge - creditNote.igv).toFixed(2)) : null,
                                 declare ? -Number((creditNote.charge || 0).toFixed(2)) : null,
@@ -198,7 +206,7 @@ export class CreditNotesComponent {
             const chunk = 500
             const promises: Promise<any>[] = []
 
-            for (let index = 0; index < this.length / chunk; index++) {
+            for (let index = 0; index < this.$length() / chunk; index++) {
                 const promise = lastValueFrom(this.creditNotesService.getCreditNotesByRangeDatePageWithItems(startDate, endDate, index + 1, chunk))
                 promises.push(promise)
             }
@@ -236,7 +244,7 @@ export class CreditNotesComponent {
                             (customer?.name || 'VARIOS').toUpperCase(),
                             customer?.address,
                             customer?.phone,
-                            `${creditNote.invoicePrefix}${this.office.serialPrefix}-${creditNote.invoiceNumber}`,
+                            `${creditNote.invoicePrefix}${this.$office().serialPrefix}-${creditNote.invoiceNumber}`,
                             creditNoteItem.fullName.toUpperCase(),
                             this.categories.find(e => e.id === creditNoteItem.categoryId)?.name.toUpperCase(),
                             Number(creditNoteItem.quantity.toFixed(2)),
@@ -250,7 +258,7 @@ export class CreditNotesComponent {
                         ])
                     }
                 }
-                const name = `NOTAS_DE_CREDITO_DESDE_${formatDate(startDate, 'dd/MM/yyyy', 'en-US')}_HASTA_${formatDate(endDate, 'dd/MM/yyyy', 'en-US')}_${this.office.name.replace(/ /g, '_')}_RUC_${this.business.ruc}`
+                const name = `NOTAS_DE_CREDITO_DESDE_${formatDate(startDate, 'dd/MM/yyyy', 'en-US')}_HASTA_${formatDate(endDate, 'dd/MM/yyyy', 'en-US')}_${this.$office().name.replace(/ /g, '_')}_RUC_${this.business.ruc}`
                 buildExcel(body, name, wscols, [])
             }, (error: HttpErrorResponse) => {
                 console.log(error)
@@ -274,18 +282,11 @@ export class CreditNotesComponent {
         return true
     }
 
-    onInvoiceChange(invoiceCode: string) {
-        const queryParams: Params = { invoiceCode }
+    onUserChange(userId: string) {
+        this.pageIndex = 0
+        const queryParams: Params = { userId, key: null }
 
-        this.router.navigate([], {
-            relativeTo: this.activatedRoute,
-            queryParams: queryParams,
-            queryParamsHandling: 'merge', // remove to replace all query params by provided
-        })
-    }
-
-    onUserChange(userId: any) {
-        const queryParams: Params = { userId }
+        Object.assign(this.params, queryParams)
 
         this.router.navigate([], {
             relativeTo: this.activatedRoute,
@@ -293,6 +294,7 @@ export class CreditNotesComponent {
             queryParamsHandling: 'merge', // remove to replace all query params by provided
         })
 
+        this.fetchCount()
         this.fetchData()
     }
 
@@ -333,7 +335,7 @@ export class CreditNotesComponent {
 
     fetchCount() {
         this.creditNotesService.getCountCreditNotes(this.params).subscribe(count => {
-            this.length = count
+            this.$length.set(count)
         })
     }
 
@@ -346,7 +348,7 @@ export class CreditNotesComponent {
         ).subscribe({
             next: creditNotes => {
                 this.navigationService.loadBarFinish()
-                this.dataSource = creditNotes
+                this.$dataSource.set(creditNotes)
             }, error: (error: HttpErrorResponse) => {
                 this.navigationService.loadBarFinish()
                 this.navigationService.showMessage(error.error.message)
@@ -431,6 +433,71 @@ export class CreditNotesComponent {
                 this.navigationService.showMessage('Debe indicar el motivo')
             }
         })
+    }
+
+    async onDownloadCdr(creditNoteId: number) {
+        //this.matBottomSheetRef.dismiss()
+        this.navigationService.loadBarStart()
+        const creditNote = await lastValueFrom(this.creditNotesService.getCreditNoteById(creditNoteId))
+        const fileName = `07-${creditNote.invoicePrefix}${this.$office().serialPrefix}-${creditNote.invoiceNumber}.zip`
+        if (creditNote.cdr) {
+            try {
+                const blobCdr = await this.creditNotesService.getCdr(creditNote.cdr.id)
+                const urlCdr = window.URL.createObjectURL(blobCdr)
+                this.navigationService.loadBarFinish()
+                this.downloadFile(urlCdr, 'R-' + fileName)
+            } catch (error) {
+            }
+        } else {
+            this.navigationService.showMessage('Debe enviar a SUNAT')
+            this.navigationService.loadBarFinish()
+           // this.invoicesService.sendInvoice(this.saleId).subscribe({
+           //     next: () => {
+           //         //this.onSendInvoice$.emit()
+           //         this.onDownloadCdr()
+           //     }, error: (error: HttpErrorResponse) => {
+           //         this.navigationService.showMessage(error.error.message)
+           //         this.navigationService.loadBarFinish()
+           //     }
+           // })
+        }
+    }
+
+    async onDownloadXml(creditNoteId: number) {
+        //this.matBottomSheetRef.dismiss()
+        this.navigationService.loadBarStart()
+        const creditNote = await lastValueFrom(this.creditNotesService.getCreditNoteById(creditNoteId))
+        const fileName = `07-${creditNote.invoicePrefix}${this.$office().serialPrefix}-${creditNote.invoiceNumber}.zip`
+        if (creditNote.cdr) {
+            try {
+                const blobXml = await this.creditNotesService.getXml(creditNote.cdr.id)
+                const urlXml = window.URL.createObjectURL(blobXml)
+                this.navigationService.loadBarFinish()
+                this.downloadFile(urlXml, fileName)
+            } catch (error) {
+            }
+        } else {
+            this.navigationService.showMessage('Debe enviar a SUNAT')
+            this.navigationService.loadBarFinish()
+           // this.invoicesService.sendInvoice(this.saleId).subscribe({
+           //     next: () => {
+           //         this.onSendInvoice$.emit()
+           //         //this.onDownloadXml()
+           //     }, error: (error: HttpErrorResponse) => {
+           //         this.navigationService.showMessage(error.error.message)
+           //         this.navigationService.loadBarFinish()
+           //     }
+           // })
+        }
+    }
+
+    downloadFile(url: string, fileName: string) {
+        const link = document.createElement("a")
+        link.download = fileName
+        link.href = url
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
     }
 
 }

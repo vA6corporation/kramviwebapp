@@ -17,6 +17,7 @@ import { CreateBoardItemModel } from '../boards/create-board-item.model'
 import { DetractionModel } from '../sales/detraction.model'
 import { SummarySaleModel } from '../sales/summary-sale.model'
 import { IgvCode } from '../sales/igv-code.enum'
+import { SummarySaleCustomerModel } from './summary-sale-customer.model'
 
 @Injectable({
     providedIn: 'root'
@@ -88,13 +89,13 @@ export class SalesService {
         return this.httpService.get(`sales/countQuantitySaleItemsByProduct/${productId}`)
     }
 
-    getSaleItemsByProductPage(
-        productId: any,
+    getSaleItemsByPageProduct(
         pageIndex: number,
         pageSize: number,
+        productId: any,
         params: Params,
     ): Observable<SaleItemModel[]> {
-        return this.httpService.get(`sales/saleItemsByProductPage/${productId}/${pageIndex}/${pageSize}`, params)
+        return this.httpService.get(`sales/saleItemsByPageProduct/${pageIndex}/${pageSize}/${productId}`, params)
     }
 
     getCharge(): number {
@@ -183,6 +184,14 @@ export class SalesService {
         return this.httpService.get('sales/summarySales', params)
     }
 
+    getSummarySalesByRangeDateCustomers(
+        startDate: Date,
+        endDate: Date,
+        params: Params
+    ): Observable<SummarySaleCustomerModel[]> {
+        return this.httpService.get(`sales/summarySalesByRangeDateCustomers/${startDate}/${endDate}`, params)
+    }
+
     getSaleItemDetails(saleItemIds: number[]) {
         return this.httpService.post('saleItems/saleItemDetails', { saleItemIds })
     }
@@ -208,6 +217,7 @@ export class SalesService {
             fullName: product.fullName,
             productId: product.id,
             price: product.price,
+            cost: product.cost,
             quantity: 1,
             isTrackStock: product.isTrackStock,
             unitCode: product.unitCode,
@@ -221,36 +231,6 @@ export class SalesService {
         return index - 1
     }
 
-   // addSaleItemWithLot(
-   //     product: ProductModel,
-   //     quantity: number,
-   // ): number {
-   //     const index = this.saleItems.findIndex(e => e.productId === product.id && e.igvCode === product.igvCode)
-   //     if (index < 0) {
-   //         const saleItem: CreateSaleItemModel = {
-   //             fullName: product.fullName,
-   //             price: product.price,
-   //             quantity,
-   //             isTrackStock: product.isTrackStock,
-   //             unitCode: product.unitCode,
-   //             igvCode: product.igvCode,
-   //             preIgvCode: product.igvCode,
-   //             observation: '',
-   //             prices: product.prices,
-   //             productId: product.id,
-   //         }
-   //         const newIndex = this.saleItems.push(saleItem)
-   //         this.saleItems$.next(this.saleItems)
-   //         return newIndex - 1
-   //     } else {
-   //         const saleItem: CreateSaleItemModel = this.saleItems[index]
-   //         saleItem.quantity = quantity
-   //         this.saleItems.splice(index, 1, saleItem)
-   //         this.saleItems$.next(this.saleItems)
-   //         return index
-   //     }
-   // }
-
     addSaleItem(
         product: ProductModel,
         annotation: string = '',
@@ -260,6 +240,7 @@ export class SalesService {
             const saleItem: CreateSaleItemModel = {
                 fullName: product.fullName,
                 price: product.price,
+                cost: product.cost,
                 quantity: 1,
                 isTrackStock: product.isTrackStock,
                 unitCode: product.unitCode,

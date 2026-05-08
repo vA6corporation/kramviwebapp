@@ -51,7 +51,7 @@ export class DetailInventoriesComponent {
     private readonly incidentsService = inject(IncidentsService)
 
     @ViewChild(MatSort) sort: MatSort = new MatSort()
-    displayedColumns: string[] = ['createdAt', 'quantity', 'actions']
+    displayedColumns: string[] = ['createdAt', 'price', 'cost', 'quantity', 'observation', 'actions']
     formGroup: FormGroup = this.formBuilder.group({
         startDate: ['', Validators.required],
         endDate: ['', Validators.required],
@@ -114,7 +114,7 @@ export class DetailInventoriesComponent {
             const chunk = 500
 
             for (let index = 0; index < countSaleItems / chunk; index++) {
-                const promise = lastValueFrom(this.salesService.getSaleItemsByProductPage(this.productId, index + 1, chunk, params))
+                const promise = lastValueFrom(this.salesService.getSaleItemsByPageProduct(index + 1, chunk, this.productId, params))
                 promises.push(promise)
             }
 
@@ -254,7 +254,7 @@ export class DetailInventoriesComponent {
             this.navigationService.setTitle(`Detalles ${product.fullName}`)
         })
 
-        this.salesService.getSaleItemsByProductPage(this.productId, this.pageIndexSale, this.pageSize, this.params).subscribe(saleItems => {
+        this.salesService.getSaleItemsByPageProduct(this.pageIndexSale, this.pageSize, this.productId, this.params).subscribe(saleItems => {
             this.$saleItems.set(saleItems)
             this.dataSourceSales = new MatTableDataSource(saleItems)
             this.dataSourceSales.sort = this.sort

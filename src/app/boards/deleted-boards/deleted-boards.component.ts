@@ -39,7 +39,6 @@ export class DeletedBoardsComponent {
     formGroup: FormGroup = this.formBuilder.group({
         startDate: ['', Validators.required],
         endDate: ['', Validators.required],
-        filterCommands: false,
         tableId: '',
     })
     displayedColumns: string[] = ['createdAt', 'ticketNumber', 'boardNumber', 'sale', 'user', 'charge', 'deletedBoardItems', 'preaccountsCount', 'observation', 'actions']
@@ -89,16 +88,16 @@ export class DeletedBoardsComponent {
     }
 
     fetchCount() {
-        const { startDate, endDate, filterCommands, tableId } = this.formGroup.value
-        const params: Params = { filterCommands, startDate, endDate, tableId }
+        const { startDate, endDate, tableId } = this.formGroup.value
+        const params: Params = { startDate, endDate, tableId }
         this.boardsService.getCountBoards(params).subscribe(count => {
             this.$length.set(count)
         })
     }
 
     fetchData() {
-        const { startDate, endDate, filterCommands, tableId } = this.formGroup.value
-        const params: Params = { filterCommands, startDate, endDate, tableId }
+        const { startDate, endDate, tableId } = this.formGroup.value
+        const params: Params = { startDate, endDate, tableId }
         this.navigationService.loadBarStart()
         this.boardsService.getBoardsByPage(this.pageIndex + 1, this.pageSize, params).subscribe(boards => {
             this.navigationService.loadBarFinish()

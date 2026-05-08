@@ -1,4 +1,4 @@
-export interface SummaryCustomerSaleModel {
+export interface SummarySaleCustomerModel {
     id: number
     document: string
     documentType: string
@@ -7,6 +7,6 @@ export interface SummaryCustomerSaleModel {
     phone: string
     address: string
 
-    countSale: number
     totalCharge: number
+    totalQuantity: number
 }

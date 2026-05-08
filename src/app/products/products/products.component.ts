@@ -24,7 +24,6 @@ import { DialogProgressComponent } from '../../navigation/dialog-progress/dialog
 import { MaterialModule } from '../../material.module'
 import { BusinessType } from '../../businesses/business.model'
 import { DialogPasswordComponent } from '../../boards/dialog-password/dialog-password.component'
-//import { DialogProductProvidersComponent } from '../../providers/dialog-product-providers/dialog-product-providers.component'
 import { ProvidersService } from '../../providers/providers.service'
 import { ProviderModel } from '../../providers/provider.model'
 
@@ -48,8 +47,10 @@ export class ProductsComponent {
     private readonly authService = inject(AuthService)
 
     formGroup: FormGroup = this.formBuilder.group({
+        officeId: '',
         categoryId: '',
         providerId: '',
+        stockState: '',
     })
     $categories = signal<CategoryModel[]>([])
     $providers = signal<ProviderModel[]>([])
@@ -93,6 +94,7 @@ export class ProductsComponent {
     $priceLists = signal<PriceListModel[]>([])
     priceListId: any | null = null
     $setting = signal<SettingModel>(new SettingModel())
+    $offices = signal<OfficeModel[]>([])
     productIds: number[] = []
     private office: OfficeModel = new OfficeModel()
     private business: BusinessModel = new BusinessModel()
@@ -566,6 +568,21 @@ export class ProductsComponent {
         }
     }
 
+    onStockStateChange() {
+        this.pageIndex = 0
+        this.key = ''
+        const { stockState } = this.formGroup.value
+        const queryParams: Params = { stockState, pageIndex: 0, key: null }
+        Object.assign(this.params, { stockState })
+        this.router.navigate([], {
+            relativeTo: this.activatedRoute,
+            queryParams: queryParams,
+            queryParamsHandling: 'merge', // remove to replace all query params by provided
+        })
+        this.fetchData()
+        this.fetchCount()
+    }
+
     onDeleteProduct(productId: any) {
         const ok = confirm('Esta seguro de eliminar?...')
         if (ok) {
@@ -616,6 +633,19 @@ export class ProductsComponent {
         this.key = ''
         const queryParams: Params = { categoryId, pageIndex: this.pageIndex, key: null }
         Object.assign(this.params, { categoryId })
+        this.router.navigate([], {
+            relativeTo: this.activatedRoute,
+            queryParams: queryParams,
+            queryParamsHandling: 'merge', // remove to replace all query params by provided
+        })
+        this.fetchData()
+        this.fetchCount()
+    }
+
+    onOfficeChange() {
+        const { officeId } = this.formGroup.value
+        const queryParams: Params = { officeId }
+        Object.assign(this.params, { officeId })
         this.router.navigate([], {
             relativeTo: this.activatedRoute,
             queryParams: queryParams,

@@ -25,6 +25,7 @@ export class DialogIncidentItemsComponent {
     incidentItem: CreateIncidentItemModel = this.incidentsService.getIncidentItem(this.index)
     formGroup: FormGroup = this.formBuilder.group({
         quantity: [this.incidentItem.quantity, Validators.required],
+        price: [this.incidentItem.price, Validators.required],
         cost: [this.incidentItem.cost, Validators.required],
         isBonus: this.incidentItem.igvCode === '11' ? true : false,
     })
@@ -54,8 +55,9 @@ export class DialogIncidentItemsComponent {
 
     onSubmit(): void {
         if (this.formGroup.valid) {
-            const { quantity, cost, isBonus } = this.formGroup.value
+            const { quantity, price, cost, isBonus } = this.formGroup.value
             this.incidentItem.quantity = quantity
+            this.incidentItem.price = price
             this.incidentItem.cost = cost
             if (isBonus) {
                 this.incidentItem.igvCode = '11'

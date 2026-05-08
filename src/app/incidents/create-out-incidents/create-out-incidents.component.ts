@@ -11,6 +11,9 @@ import { HttpErrorResponse } from '@angular/common/http'
 import { MaterialModule } from '../../material.module'
 import { IncidentItemsComponent } from '../incident-items/incident-items.component'
 import { RouterModule } from '@angular/router'
+import { OfficeModel } from '../../offices/office.model'
+import { SettingModel } from '../../settings/setting.model'
+import { AuthService } from '../../auth/auth.service'
 
 @Component({
     selector: 'app-create-out-incidents',
@@ -25,10 +28,14 @@ export class CreateOutIncidentsComponent {
     private readonly productsService = inject(ProductsService)
     private readonly favoritesService = inject(FavoritesService)
     private readonly incidentsService = inject(IncidentsService)
+    private readonly authService = inject(AuthService)
 
     $categories = signal<CategoryModel[]>([])
     $products = signal<ProductModel[]>([])
     $favorites = signal<ProductModel[]>([])
+    $setting = signal<SettingModel>(new SettingModel())
+    priceListId: string | null = null
+    office: OfficeModel = new OfficeModel()
     selectedIndex: number = 0
 
     private handleSearch$: Subscription = new Subscription()
@@ -60,6 +67,7 @@ export class CreateOutIncidentsComponent {
                 next: products => {
                     this.$products.set(products)
                     this.selectedIndex = 2
+                    ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
                     const foundProduct = products.find(e => e.sku.match(new RegExp(`^${key}$`, 'i')) || e.upc.match(new RegExp(`^${key}$`, 'i')))
                     if (foundProduct) {
                         this.onSelectProduct(foundProduct)
@@ -70,8 +78,15 @@ export class CreateOutIncidentsComponent {
             })
         })
 
-        this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
-            this.$favorites.set(products)
+        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
+            this.$setting.set(auth.setting)
+            this.office = auth.office
+            this.priceListId = this.$setting().defaultPriceListId
+
+            this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
+                ProductsService.setPrices(products, this.priceListId, this.$setting(), this.office)
+                this.$favorites.set(products)
+            })
         })
     }
 

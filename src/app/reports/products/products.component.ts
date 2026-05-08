@@ -2,8 +2,6 @@ import { Component, ElementRef, ViewChild, inject, signal } from '@angular/core'
 import { CommonModule, formatDate } from '@angular/common'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { Params } from '@angular/router'
-import { Chart, ChartOptions, ChartType } from 'chart.js'
-import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { Subscription } from 'rxjs'
 import { AuthService } from '../../auth/auth.service'
 import { OfficeModel } from '../../offices/office.model'
@@ -36,10 +34,6 @@ export class ProductsComponent {
     private readonly officesService = inject(OfficesService)
     private readonly authService = inject(AuthService)
 
-    @ViewChild('chargeChart')
-    private chargeChart!: ElementRef<HTMLCanvasElement>
-    @ViewChild('quantityChart')
-    private quantityChart!: ElementRef<HTMLCanvasElement>
     @ViewChild(MatSort) sort: MatSort = new MatSort()
 
     formGroup: FormGroup = this.formBuilder.group({
@@ -57,20 +51,16 @@ export class ProductsComponent {
     $users = signal<UserModel[]>([])
     $totalQuantity = signal<number>(0)
     $totalCharge = signal<number>(0)
-    private chargeChartRef: Chart | null = null
-    private quantityChartRef: Chart | null = null
 
     private handleClickMenu$: Subscription = new Subscription()
     private handleCategories$: Subscription = new Subscription()
     private handleUsers$: Subscription = new Subscription()
-    private handleOffices$: Subscription = new Subscription()
     private handleAuth$: Subscription = new Subscription()
 
     ngOnDestroy() {
         this.handleClickMenu$.unsubscribe()
         this.handleCategories$.unsubscribe()
         this.handleUsers$.unsubscribe()
-        this.handleOffices$.unsubscribe()
         this.handleAuth$.unsubscribe()
     }
 
@@ -156,9 +146,6 @@ export class ProductsComponent {
         if (this.formGroup.valid) {
             this.navigationService.loadBarStart()
 
-            this.chargeChartRef?.destroy()
-            this.quantityChartRef?.destroy()
-
             const { startDate, endDate, officeId, categoryId, userId } = this.formGroup.value
 
             const params: Params = {
@@ -177,87 +164,6 @@ export class ProductsComponent {
 
                 this.$totalCharge.set(summarySaleItems.map(e => e.totalCharge).reduce((a, b) => a + b, 0))
                 this.$totalQuantity.set(summarySaleItems.map(e => e.totalQuantity).reduce((a, b) => a + b, 0))
-
-                const dataCharge = {
-                    datasets: [
-                        {
-                            label: 'Dataset 1',
-                            data: summarySaleItems.slice(0, 10).map(e => e.totalCharge || 0),
-                            fill: true
-                        },
-                    ]
-                }
-
-                const dataQuantity = {
-                    datasets: [
-                        {
-                            label: 'Dataset 1',
-                            data: summarySaleItems.slice(0, 10).map(e => e.totalQuantity || 0),
-                            fill: true
-                        },
-                    ]
-                }
-
-                const configCharge = {
-                    type: 'pie' as ChartType,
-                    data: dataCharge,
-                    plugins: [ChartDataLabels],
-                    options: {
-                        maintainAspectRatio: false,
-                        plugins: {
-                            datalabels: {
-                                backgroundColor: function (context) {
-                                    return 'rgba(73, 79, 87, 0.5)'
-                                },
-                                borderRadius: 4,
-                                color: 'white',
-                                font: {
-                                    weight: 'bold'
-                                },
-                                formatter: function (value) {
-                                    if (value === 0) {
-                                        return null
-                                    } else {
-                                        return Math.round(value)
-                                    }
-                                },
-                                padding: 6
-                            },
-                        }
-                    } as ChartOptions,
-                }
-
-                const configQuantity = {
-                    type: 'pie' as ChartType,
-                    data: dataQuantity,
-                    plugins: [ChartDataLabels],
-                    options: {
-                        maintainAspectRatio: false,
-                        plugins: {
-                            datalabels: {
-                                backgroundColor: function (context) {
-                                    return 'rgba(73, 79, 87, 0.5)'
-                                },
-                                borderRadius: 4,
-                                color: 'white',
-                                font: {
-                                    weight: 'bold'
-                                },
-                                formatter: function (value) {
-                                    if (value === 0) {
-                                        return null
-                                    } else {
-                                        return Math.round(value)
-                                    }
-                                },
-                                padding: 6
-                            },
-                        }
-                    } as ChartOptions,
-                }
-
-                this.chargeChartRef = new Chart(this.chargeChart.nativeElement, configCharge)
-                this.quantityChartRef = new Chart(this.quantityChart.nativeElement, configQuantity)
             })
         }
     }

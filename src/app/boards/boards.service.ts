@@ -24,7 +24,7 @@ export class BoardsService {
 
     private boardItems: CreateBoardItemModel[] = []
     private handleBoardItems$ = new BehaviorSubject<CreateBoardItemModel[]>([])
-    private handleBoard$ = new BehaviorSubject<BoardModel|null>(null)
+    private handleBoard$ = new BehaviorSubject<BoardModel | null>(null)
 
     handleBoard() {
         return this.handleBoard$.asObservable()
@@ -40,6 +40,7 @@ export class BoardsService {
             fullName: product.fullName,
             productId: product.id,
             price: product.price,
+            cost: product.cost,
             quantity: 1,
             preQuantity: 0,
             deletedQuantity: 0,
@@ -62,6 +63,7 @@ export class BoardsService {
                 fullName: product.fullName,
                 productId: product.id,
                 price: product.price,
+                cost: product.cost,
                 quantity: 1,
                 preQuantity: 0,
                 deletedQuantity: 0,

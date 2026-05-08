@@ -44,7 +44,6 @@ export class EditProformasComponent {
     priceListId: any | null = null
     selectedIndex: number = 0
     proformaItems: ProformaItemModel[] = []
-    gridListCols = 4
     $setting = signal<SettingModel>(new SettingModel())
     office: OfficeModel = new OfficeModel()
     private proformaId: any = ''

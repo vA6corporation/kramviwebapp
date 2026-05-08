@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog'
@@ -53,18 +53,19 @@ export class CreateCreditNotesComponent {
         reasonCode: ['', Validators.required],
         reasonDescription: ['', Validators.required],
         observation: '',
+        discount: null,
+        discountPercent: null
     })
     saleItems: CreateSaleItemModel[] = []
-    charge: number = 0
-    customer: CustomerModel | null = null
-    isLoading: boolean = false
+    $charge = signal<number>(0)
+    $customer = signal<CustomerModel | null>(null)
+    $isLoading = signal<boolean>(false)
     cash: number = 0
     saleId: any = ''
     sale: SaleModel | null = null
     office: OfficeModel = new OfficeModel()
-    setting: SettingModel = new SettingModel()
+    $setting = signal<SettingModel>(new SettingModel())
     user: UserModel = new UserModel()
-    address: string = ''
 
     reasons = [
         { code: '01', label: 'ANULACION DE LA OPERACION' },
@@ -92,17 +93,18 @@ export class CreateCreditNotesComponent {
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
             this.user = auth.user
-            this.setting = auth.setting
+            this.$setting.set(auth.setting)
             this.office = auth.office
         })
 
         this.saleId = this.activatedRoute.snapshot.params['saleId']
+
         this.salesService.getSaleById(this.saleId).subscribe(sale => {
-            this.sale = sale
-            this.salesService.setSale(sale)
-            const { customer } = this.sale
             this.navigationService.setTitle(`Nueva nota de credito ${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}`)
-            this.customer = customer
+            this.sale = sale
+            //this.salesService.setSale(sale)
+            this.$customer.set(sale.customer)
+            this.salesService.setSaleItems(sale.saleItems)
         })
 
         this.navigationService.setMenu([
@@ -115,12 +117,12 @@ export class CreateCreditNotesComponent {
                     const dialogRef = this.matDialog.open(DialogSearchCustomersComponent, {
                         width: '600px',
                         position: { top: '20px' },
-                        data: this.setting.defaultSearchCustomer
+                        data: this.$setting().defaultSearchCustomer
                     })
 
                     dialogRef.afterClosed().subscribe(customer => {
                         if (customer) {
-                            this.customer = customer
+                            this.$customer.set(customer)
                         }
                     })
 
@@ -132,7 +134,7 @@ export class CreateCreditNotesComponent {
 
                         dialogRef.afterClosed().subscribe(customer => {
                             if (customer) {
-                                this.customer = customer
+                                this.$customer.set(customer)
                             }
                         })
                     })
@@ -147,29 +149,68 @@ export class CreateCreditNotesComponent {
 
         this.handleSaleItems$ = this.salesService.handleSaleItems().subscribe(saleItems => {
             this.saleItems = saleItems
-            this.charge = 0
+            this.$charge.set(0)
+            let charge = 0
+
             for (const saleItem of this.saleItems) {
                 if (saleItem.igvCode !== IgvCode.BONIFICACION) {
-                    this.charge += saleItem.price * saleItem.quantity
+                    charge += saleItem.price * saleItem.quantity
                 }
+            }
+
+            const { discount, discountPercent } = this.formGroup.value
+
+            if (discountPercent) {
+                let discount = (charge / 100) * discountPercent
+                this.$charge.set(charge - discount)
+                this.formGroup.patchValue({ discount })
+            } else {
+                this.$charge.set(charge - discount)
             }
         })
     }
 
     onChangeDiscount() {
+        this.$charge.set(0)
+        let charge = 0
+
         const { discount } = this.formGroup.value
-        this.charge = 0
+
         for (const saleItem of this.saleItems) {
             if (saleItem.igvCode !== IgvCode.BONIFICACION) {
-                this.charge += saleItem.price * saleItem.quantity
+                charge += saleItem.price * saleItem.quantity
             }
         }
-        this.charge -= discount
+
+        this.$charge.set(charge - discount)
+    }
+
+    onChangeDiscountPercent() {
+        let charge = 0
+        let discount = 0
+
+        const { discountPercent } = this.formGroup.value
+
+        for (const saleItem of this.saleItems) {
+            if (saleItem.igvCode !== IgvCode.BONIFICACION) {
+                charge += saleItem.price * saleItem.quantity
+            }
+        }
+
+        if (discountPercent) {
+            discount = (charge / 100) * discountPercent
+            this.$charge.set(charge - discount)
+            this.formGroup.patchValue({ discount })
+        } else {
+            this.$charge.set(charge)
+            this.formGroup.patchValue({ discount })
+        }
     }
 
     onSubmit() {
-        this.isLoading = true
         try {
+            const customer = this.$customer()
+            const charge = this.$charge()
 
             if (!this.formGroup.valid) {
                 throw new Error("Complete los campos")
@@ -187,8 +228,6 @@ export class CreateCreditNotesComponent {
                 throw new Error("El producto no puede tener precio 0")
             }
 
-            this.navigationService.loadBarStart()
-
             const formData: FormData = this.formGroup.value
 
             const createdCreditNote: CreateCreditNoteModel = {
@@ -197,22 +236,26 @@ export class CreateCreditNotesComponent {
                 reasonDescription: formData.reasonDescription,
                 observation: formData.observation,
                 createdAt: formData.createdAt,
-                customerId: this.customer?.id || null,
+                currencyCode: this.sale.currencyCode,
                 igvPercent: this.sale.igvPercent,
-                rcPercent: this.sale.rcPercent
+                rcPercent: this.sale.rcPercent,
+                customerId: customer ? customer.id : null,
             }
+
+            this.$isLoading.set(true)
+            this.navigationService.loadBarStart()
 
             this.creditNotesService.create(this.sale, createdCreditNote, this.saleItems, this.saleId).subscribe({
                 next: () => {
                     this.salesService.setSaleItems([])
                     const queryParams: Params = { tabIndex: 1 }
-                    this.router.navigate(['/invoices'], { queryParams })
-                    this.isLoading = false
+                    this.router.navigate(['/creditNotes'], { queryParams })
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Registrado correctamente')
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.showMessage(error.error.message)
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                 }
             })
@@ -220,7 +263,7 @@ export class CreateCreditNotesComponent {
             if (error instanceof Error) {
                 this.navigationService.showMessage(error.message)
             }
-            this.isLoading = false
+            this.$isLoading.set(false)
             this.navigationService.loadBarFinish()
         }
     }
@@ -229,13 +272,12 @@ export class CreateCreditNotesComponent {
         const dialogRef = this.matDialog.open(DialogEditCustomersComponent, {
             width: '600px',
             position: { top: '20px' },
-            data: this.customer,
+            data: this.$customer(),
         })
 
         dialogRef.afterClosed().subscribe(customer => {
             if (customer) {
-                this.customer = customer
-                this.address = customer.address
+                this.$customer.set(customer)
             }
         })
     }

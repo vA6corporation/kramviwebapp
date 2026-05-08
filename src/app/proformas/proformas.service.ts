@@ -62,6 +62,7 @@ export class ProformasService {
                 fullName: product.fullName,
                 isTrackStock: product.isTrackStock,
                 price: product.price,
+                cost: product.cost,
                 quantity: 1,
                 preIgvCode: product.igvCode,
                 igvCode: product.igvCode,

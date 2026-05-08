@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
 import { Subscription } from 'rxjs'
 import { CreateCreditNoteItemModel } from '../create-credit-note-item.model'
@@ -18,9 +18,10 @@ export class CreditNoteItemsComponent {
     private readonly creditNotesService = inject(CreditNotesService)
     private readonly matDialog = inject(MatDialog)
 
+    $creditNoteItems = signal<CreateCreditNoteItemModel[]>([])
+    $charge = signal<number>(0)
+    $countProducts = signal<number>(0)
     igvCode = IgvCode
-    creditNoteItems: CreateCreditNoteItemModel[] = []
-    charge: number = 0
 
     private handleCreditNoteItems$: Subscription = new Subscription()
 
@@ -30,13 +31,19 @@ export class CreditNoteItemsComponent {
 
     ngOnInit(): void {
         this.handleCreditNoteItems$ = this.creditNotesService.handleCreditNoteItems().subscribe(creditNoteItems => {
-            this.creditNoteItems = creditNoteItems
-            this.charge = 0
-            for (const creditNoteItem of this.creditNoteItems) {
+            this.$creditNoteItems.set(creditNoteItems)
+            this.$charge.set(0)
+            this.$countProducts.set(0)
+            let charge = 0
+            let countProducts = 0
+            for (const creditNoteItem of creditNoteItems) {
+                countProducts += creditNoteItem.quantity
                 if (creditNoteItem.igvCode !== IgvCode.BONIFICACION) {
-                    this.charge += creditNoteItem.price * creditNoteItem.quantity
+                    charge += creditNoteItem.price * creditNoteItem.quantity
                 }
             }
+            this.$charge.set(charge)
+            this.$countProducts.set(countProducts)
         })
     }
 

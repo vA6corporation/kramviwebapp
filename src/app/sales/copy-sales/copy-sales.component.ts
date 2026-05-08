@@ -48,7 +48,6 @@ export class CopySalesComponent {
     priceLists: PriceListModel[] = []
     priceListId: string | null = null
     selectedIndex: number = 0
-    gridListCols = 4
     $setting = signal<SettingModel>(new SettingModel())
     office: OfficeModel = new OfficeModel()
     private sortByName: boolean = true

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { BoardVersionModel } from '../board-version.model'
 import { BoardModel } from '../board.model'
@@ -17,13 +17,13 @@ export class DialogVersionBoardsComponent {
     private readonly boardId: any = inject(MAT_DIALOG_DATA)
     private readonly boardsService = inject(BoardsService)
 
-    board: BoardModel | null = null
-    versions: BoardVersionModel[] = []
+    $board = signal<BoardModel | null>(null)
+    $versions = signal<BoardVersionModel[]>([])
 
     ngOnInit(): void {
         this.boardsService.getBoardById(this.boardId).subscribe(board => {
-            this.board = board
-            this.versions = board.versions.reverse()
+            this.$board.set(board)
+            this.$versions.set(board.versions.reverse())
         })
     }
 

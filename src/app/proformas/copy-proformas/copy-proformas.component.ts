@@ -45,7 +45,6 @@ export class CopyProformasComponent {
     priceListId: any | null = null
     selectedIndex: number = 0
     proformaItems: ProformaItemModel[] = []
-    gridListCols = 4
     $setting = signal<SettingModel>(new SettingModel())
     private office: OfficeModel = new OfficeModel()
 

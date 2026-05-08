@@ -128,7 +128,7 @@ export class ChargeFromComponent {
             this.user = auth.user
             this.setting = auth.setting
 
-            this.handleOpenTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
+            this.handleOpenTurn$ = this.turnsService.handleOpenTurn(auth.setting.isOfficeTurn).subscribe(turn => {
                 this.turn = turn
                 if (turn === null) {
                     this.matDialog.open(DialogCreateTurnsComponent, {

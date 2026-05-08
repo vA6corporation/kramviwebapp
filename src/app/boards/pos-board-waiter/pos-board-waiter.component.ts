@@ -54,7 +54,6 @@ export class PosBoardWaiterComponent {
     priceLists: PriceListModel[] = []
     priceListId: any | null = null
     boardItems: CreateBoardItemModel[] = []
-    gridListCols = 4
     selectedIndex: number = 0
     $setting = signal<SettingModel>(new SettingModel())
     $products = signal<ProductModel[]>([])

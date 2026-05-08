@@ -54,7 +54,7 @@ export class DialogPaymentCreditsComponent {
         })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.handleTurn$ = this.turnsService.handleOpenTurn().subscribe(turn => {
+            this.handleTurn$ = this.turnsService.handleOpenTurn(auth.setting.isOfficeTurn).subscribe(turn => {
                 this.turn = turn
             })
         })

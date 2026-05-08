@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { Subscription } from 'rxjs'
 import { AuthService } from '../../auth/auth.service'
@@ -14,13 +14,10 @@ import { MaterialModule } from '../../material.module'
 })
 export class DialogBadCdrsComponent {
 
-    constructor(
-        @Inject(MAT_DIALOG_DATA)
-        readonly badCdrs: CdrModel[],
-        private readonly authService: AuthService,
-    ) { }
+    readonly badCdrs: CdrModel[] = inject(MAT_DIALOG_DATA)
+    private readonly authService = inject(AuthService)
 
-    office: OfficeModel = new OfficeModel()
+    $office = signal<OfficeModel>(new OfficeModel())
 
     private handleAuth$: Subscription = new Subscription()
 
@@ -30,7 +27,7 @@ export class DialogBadCdrsComponent {
 
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.office = auth.office
+            this.$office.set(auth.office)
         })
     }
 

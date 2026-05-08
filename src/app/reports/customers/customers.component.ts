@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, inject } from '@angular/core'
+import { Component, ElementRef, ViewChild, inject, signal } from '@angular/core'
 import { CommonModule, formatDate } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
@@ -8,8 +8,8 @@ import { Params } from '@angular/router'
 import { Chart, ChartOptions, ChartType } from 'chart.js'
 import { Subscription } from 'rxjs'
 import { buildExcel } from '../../buildExcel'
-import { CustomersService } from '../../customers/customers.service'
-import { SummaryCustomerSaleModel } from '../../customers/summary-customer-sale.model'
+import { SalesService } from '../../sales/sales.service'
+import { SummarySaleCustomerModel } from '../../sales/summary-sale-customer.model'
 import { NavigationService } from '../../navigation/navigation.service'
 import { CategoriesService } from '../../products/categories.service'
 import { CategoryModel } from '../../products/category.model'
@@ -26,15 +26,15 @@ import { MaterialModule } from '../../material.module'
 })
 export class CustomersComponent {
 
-    private readonly customersService = inject(CustomersService)
+    private readonly salesService = inject(SalesService)
     private readonly categoriesService = inject(CategoriesService)
     private readonly navigationService = inject(NavigationService)
     private readonly usersService = inject(UsersService)
     private readonly formBuilder = inject(FormBuilder)
 
     @ViewChild(MatSort) sort: MatSort = new MatSort()
-    displayedColumns: string[] = ['customer', 'countSale', 'totalCharge']
-    dataSource: MatTableDataSource<SummaryCustomerSaleModel> = new MatTableDataSource()
+    displayedColumns: string[] = ['customer', 'totalQuantity', 'totalCharge']
+    $dataSource = signal<MatTableDataSource<SummarySaleCustomerModel>>(new MatTableDataSource())
     formGroup: FormGroup = this.formBuilder.group({
         categoryId: '',
         userId: '',
@@ -42,11 +42,9 @@ export class CustomersComponent {
         endDate: [new Date(), Validators.required],
     })
     chart: Chart | null = null
-    categoryId: string = ''
-    categories: CategoryModel[] = []
-    totalCountSale: number = 0
-    totalTotalSale: number = 0
-    summaryCustomerSales: SummaryCustomerSaleModel[] = []
+    $totalQuantity = signal<number>(0)
+    $totalCharge = signal<number>(0)
+    $summarySaleCustomers = signal<SummarySaleCustomerModel[]>([])
     users: UserModel[] = []
     @ViewChild('incomesChart')
     private incomesChart!: ElementRef<HTMLCanvasElement>
@@ -66,10 +64,6 @@ export class CustomersComponent {
             // { id: 'search', label: 'Buscar', icon: 'search', show: true },
             { id: 'excel_simple', label: 'Exportar Excel', icon: 'file_download', show: false },
         ])
-
-        this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
-            this.categories = categories
-        })
 
         this.handleUsers$ = this.usersService.handleUsers().subscribe(users => {
             this.users = users
@@ -91,16 +85,16 @@ export class CustomersComponent {
                 'C. VENTAS',
                 'USUARIO'
             ])
-            for (const summaryCustomerSale of this.summaryCustomerSales) {
+            for (const summarySaleCustomers of this.$summarySaleCustomers()) {
                 body.push([
-                    summaryCustomerSale.documentType,
-                    summaryCustomerSale.document,
-                    summaryCustomerSale.name.toUpperCase(),
-                    (summaryCustomerSale.address || '').toUpperCase(),
-                    summaryCustomerSale.phone,
-                    summaryCustomerSale.email,
-                    summaryCustomerSale.totalCharge,
-                    summaryCustomerSale.countSale,
+                    summarySaleCustomers.documentType,
+                    summarySaleCustomers.document,
+                    summarySaleCustomers.name.toUpperCase(),
+                    (summarySaleCustomers.address || '').toUpperCase(),
+                    summarySaleCustomers.phone,
+                    summarySaleCustomers.email,
+                    summarySaleCustomers.totalCharge,
+                    summarySaleCustomers.totalQuantity,
                 ])
             }
             const name = `RANKIN_DE_CLIENTES_DESDE_${formatDate(startDate, 'dd/MM/yyyy', 'en-US')}_HASTA_${formatDate(endDate, 'dd/MM/yyyy', 'en-US')}`
@@ -119,23 +113,23 @@ export class CustomersComponent {
             const { startDate, endDate, categoryId, userId } = this.formGroup.value
             const params: Params = { categoryId, userId }
 
-            this.customersService.getSummarySalesByRangeDateCustomers(
+            this.salesService.getSummarySalesByRangeDateCustomers(
                 startDate,
                 endDate,
                 params
             ).subscribe({
-                next: summaryCustomerSale => {
+                next: summarySaleCustomers => {
                     this.navigationService.loadBarFinish()
-                    this.summaryCustomerSales = summaryCustomerSale
-                    this.dataSource = new MatTableDataSource(summaryCustomerSale)
-                    this.dataSource.sort = this.sort
-                    this.totalCountSale = summaryCustomerSale.map(e => e.countSale).reduce((a, b) => a + b, 0)
-                    this.totalTotalSale = summaryCustomerSale.map(e => e.totalCharge).reduce((a, b) => a + b, 0)
+                    this.$summarySaleCustomers.set(summarySaleCustomers)
+                    this.$dataSource.set(new MatTableDataSource(summarySaleCustomers))
+                    this.$dataSource().sort = this.sort
+                    this.$totalQuantity.set(summarySaleCustomers.map(e => e.totalQuantity).reduce((a, b) => a + b, 0))
+                    this.$totalCharge.set(summarySaleCustomers.map(e => e.totalCharge).reduce((a, b) => a + b, 0))
                     const data = {
                         datasets: [
                             {
                                 label: 'Dataset 1',
-                                data: summaryCustomerSale.slice(0, 10).map(e => e.totalCharge || 0),
+                                data: summarySaleCustomers.slice(0, 10).map(e => e.totalCharge || 0),
                                 fill: true
                             },
                         ]

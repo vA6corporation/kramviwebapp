@@ -8,6 +8,7 @@ export interface ProformaItemModel {
     fullName: string
     isTrackStock: boolean
     price: number
+    cost: number | null
     quantity: number
     preIgvCode: IgvCode
     igvCode: IgvCode

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog'
@@ -54,8 +54,8 @@ export class EditCreditNotesComponent {
 
     creditNoteItems: CreateCreditNoteItemModel[] = []
     charge: number = 0
-    customer: CustomerModel | null = null
-    isLoading: boolean = false
+    $customer = signal<CustomerModel | null>(null)
+    $isLoading = signal<boolean>(false)
     cash: number = 0
     creditNoteId: any | null = null
     creditNote: CreditNoteModel | null = null
@@ -98,7 +98,7 @@ export class EditCreditNotesComponent {
                 this.creditNote = creditNote
                 this.formGroup.patchValue(creditNote)
                 this.navigationService.setTitle(`Editar nota de credito ${creditNote.invoicePrefix}${this.office.serialPrefix}-${creditNote.invoiceNumber}`)
-                this.customer = creditNote.customer
+                this.$customer.set(creditNote.customer)
             }
         })
 
@@ -117,7 +117,7 @@ export class EditCreditNotesComponent {
 
                     dialogRef.afterClosed().subscribe(customer => {
                         if (customer) {
-                            this.customer = customer
+                            this.$customer.set(customer)
                         }
                     })
 
@@ -129,7 +129,7 @@ export class EditCreditNotesComponent {
 
                         dialogRef.afterClosed().subscribe(customer => {
                             if (customer) {
-                                this.customer = customer
+                                this.$customer.set(customer)
                             }
                         })
                     })
@@ -166,6 +166,7 @@ export class EditCreditNotesComponent {
 
     onSubmit() {
         try {
+            const customer = this.$customer()
             if (!this.formGroup.valid) {
                 throw new Error("Complete los campos")
             }
@@ -184,9 +185,10 @@ export class EditCreditNotesComponent {
                     observation: formData.observation,
                     discount: formData.discount,
                     createdAt: formData.createdAt,
-                    customerId: this.customer?.id || null,
+                    currencyCode: this.creditNote.currencyCode,
                     igvPercent: this.creditNote.igvPercent,
-                    rcPercent: this.creditNote.rcPercent
+                    rcPercent: this.creditNote.rcPercent,
+                    customerId: customer ? customer.id : null,
                 }
 
                 if (!this.creditNoteItems.length) {
@@ -197,7 +199,7 @@ export class EditCreditNotesComponent {
                     throw new Error("El producto no puede tener precio 0")
                 }
 
-                this.isLoading = true
+                this.$isLoading.set(true)
                 this.creditNotesService.updateCreditNoteWithItems(
                     this.creditNoteId,
                     creditNote,
@@ -209,7 +211,7 @@ export class EditCreditNotesComponent {
                         this.router.navigate(['/creditNotes'])
                     }, error: (error: HttpErrorResponse) => {
                         this.navigationService.loadBarFinish()
-                        this.isLoading = false
+                        this.$isLoading.set(false)
                         this.navigationService.showMessage(error.error.message)
                     }
                 })
@@ -219,7 +221,7 @@ export class EditCreditNotesComponent {
             if (error instanceof Error) {
                 this.navigationService.showMessage(error.message)
             }
-            this.isLoading = false
+            this.$isLoading.set(false)
             this.navigationService.loadBarFinish()
         }
     }
@@ -228,13 +230,12 @@ export class EditCreditNotesComponent {
         const dialogRef = this.matDialog.open(DialogEditCustomersComponent, {
             width: '600px',
             position: { top: '20px' },
-            data: this.customer,
+            data: this.$customer(),
         })
 
         dialogRef.afterClosed().subscribe(customer => {
             if (customer) {
-                this.customer = customer
-                this.address = customer.address
+                this.$customer.set(customer)
             }
         })
     }

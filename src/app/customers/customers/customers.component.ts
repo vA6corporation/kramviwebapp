@@ -180,7 +180,6 @@ export class CustomersComponent {
     onDialogDetailCustomer(customerId: any) {
         this.matDialog.open(DialogDetailCustomersComponent, {
             width: '600px',
-            height: '600px',
             position: { top: '20px' },
             data: customerId,
         })

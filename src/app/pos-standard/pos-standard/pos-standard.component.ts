@@ -4,7 +4,6 @@ import { HttpErrorResponse } from '@angular/common/http'
 import { MatDialog } from '@angular/material/dialog'
 import { Router, RouterModule } from '@angular/router'
 import { Subscription } from 'rxjs'
-import { environment } from '../../../environments/environment'
 import { AuthService } from '../../auth/auth.service'
 import { OfficeModel } from '../../offices/office.model'
 import { SettingModel } from '../../settings/setting.model'
@@ -40,14 +39,12 @@ export class PosStandardComponent {
     private readonly matDialog = inject(MatDialog)
     private readonly router = inject(Router)
 
-    enviroment = environment
     $categories = signal<CategoryModel[]>([])
     $products = signal<ProductModel[]>([])
     $favorites = signal<ProductModel[]>([])
     $priceLists = signal<PriceListModel[]>([])
     priceListId: string | null = null
     selectedIndex: number = 0
-    gridListCols = 4
     $setting = signal<SettingModel>(new SettingModel())
     office: OfficeModel = new OfficeModel()
     private sortByName: boolean = true

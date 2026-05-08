@@ -103,7 +103,7 @@ export class SheetInvoicesComponent {
         document.body.removeChild(link)
     }
 
-    async onDownloadXmlCdr() {
+    async onDownloadCdr() {
         this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
         const sale = await lastValueFrom(this.salesService.getSaleById(this.saleId))
@@ -115,29 +115,42 @@ export class SheetInvoicesComponent {
                 this.navigationService.loadBarFinish()
                 this.downloadFile(urlCdr, 'R-' + fileName)
             } catch (error) {
+                this.navigationService.showMessage('Sin resultados')
+                this.navigationService.loadBarFinish()
             }
+        } else {
+            this.invoicesService.sendInvoice(this.saleId).subscribe({
+                next: () => {
+                    this.onSendInvoice$.emit()
+                    this.onDownloadCdr()
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                    this.navigationService.loadBarFinish()
+                }
+            })
+        }
+    }
 
+    async onDownloadXml() {
+        this.matBottomSheetRef.dismiss()
+        this.navigationService.loadBarStart()
+        const sale = await lastValueFrom(this.salesService.getSaleById(this.saleId))
+        const fileName = `${this.business.ruc}-${sale.invoiceCode}-${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}.zip`
+        if (sale.cdr) {
             try {
                 const blobXml = await this.invoicesService.getXml(sale.cdr.id)
                 const urlXml = window.URL.createObjectURL(blobXml)
                 this.navigationService.loadBarFinish()
                 this.downloadFile(urlXml, fileName)
             } catch (error) {
-                this.invoicesService.generateXml(sale.id).subscribe({
-                    next: () => {
-                        this.navigationService.showMessage('Intenten una vez mas')
-                        this.navigationService.loadBarFinish()
-                    },
-                    error: () => {
-                        this.navigationService.loadBarFinish()
-                    }
-                })
+                this.navigationService.showMessage('Sin resultados')
+                this.navigationService.loadBarFinish()
             }
         } else {
             this.invoicesService.sendInvoice(this.saleId).subscribe({
                 next: () => {
                     this.onSendInvoice$.emit()
-                    this.onDownloadXmlCdr()
+                    this.onDownloadXml()
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.showMessage(error.error.message)
                     this.navigationService.loadBarFinish()

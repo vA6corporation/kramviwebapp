@@ -334,4 +334,68 @@ export class DetailTurnsComponent {
         }
     }
 
+    onDeleteExpense(expenseId: number) {
+        const ok = confirm('Estas seguro de eliminar?...')
+        if (ok) {
+            this.expensesService.delete(expenseId).subscribe({
+                next: () => {
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage('Eliminado correctamente')
+                    this.fetchData()
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                    this.navigationService.loadBarFinish()
+                }
+            })
+        }
+    }
+
+    onEditExpense(expense: ExpenseModel) {
+        const dialogRef = this.matDialog.open(DialogEditExpensesComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: expense,
+        })
+
+        dialogRef.afterClosed().subscribe(updatedExpense => {
+            if (updatedExpense) {
+                this.navigationService.loadBarStart()
+                this.expensesService.update(updatedExpense, expense.id).subscribe({
+                    next: () => {
+                        this.navigationService.loadBarFinish()
+                        this.fetchData()
+                        this.navigationService.showMessage('Se han guardado los cambios')
+                    }, error: (error: HttpErrorResponse) => {
+                        this.navigationService.showMessage(error.error.message)
+                        this.navigationService.loadBarFinish()
+                    }
+                })
+            }
+        })
+    }
+
+    onAddExpense() {
+        const turn = this.$turn()
+        if (turn) {
+            const dialogRef = this.matDialog.open(DialogCreateExpensesComponent, {
+                width: '600px',
+                position: { top: '20px' },
+                data: turn.id,
+            })
+
+            dialogRef.afterClosed().subscribe(expense => {
+                if (expense) {
+                    this.expensesService.create(expense).subscribe(() => {
+                        this.navigationService.loadBarFinish()
+                        this.navigationService.showMessage('Registrado correctamente')
+                        this.fetchData()
+                    }, (error: HttpErrorResponse) => {
+                        this.navigationService.loadBarFinish()
+                        this.navigationService.showMessage(error.error.message)
+                    })
+                }
+            })
+        }
+    }
+
 }

@@ -24,6 +24,16 @@ export class CreditNotesService {
     private creditNoteItems: CreateCreditNoteItemModel[] = []
     private creditNoteItems$ = new BehaviorSubject<CreateCreditNoteItemModel[]>([])
 
+    getCdr(cdrId: any): Promise<Blob> {
+        const url = `creditNotes/cdrByCdrNc/${cdrId}`
+        return this.httpService.getFile(url)
+    }
+
+    getXml(cdrId: any): Promise<Blob> {
+        const url = `creditNotes/xmlByCdrNc/${cdrId}`
+        return this.httpService.getFile(url)
+    }
+
     setCreditNote(creditNote: CreditNoteModel): void {
         this.creditNote = creditNote
     }
@@ -64,6 +74,7 @@ export class CreditNotesService {
                 fullName: product.fullName,
                 productId: product.id,
                 price: product.price,
+                cost: product.cost,
                 quantity: 1,
                 unitCode: product.unitCode,
                 igvCode: product.igvCode,

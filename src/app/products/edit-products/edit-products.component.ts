@@ -4,7 +4,6 @@ import { HttpErrorResponse } from '@angular/common/http'
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog'
 import { ActivatedRoute, RouterModule } from '@angular/router'
-import Compressor from 'compressorjs'
 import { Subscription } from 'rxjs'
 import { AuthService } from '../../auth/auth.service'
 import { OfficeModel } from '../../offices/office.model'
@@ -22,8 +21,9 @@ import { PriceListModel } from '../price-list.model'
 import { PriceType } from '../price-type.enum'
 import { ProductModel } from '../product.model'
 import { IgvCodeModel, ProductsService, UnitCodeModel } from '../products.service'
-import Ean from 'ean-generator'
 import { DialogCreateAnnotationsComponent } from '../dialog-create-annotations/dialog-create-annotations.component'
+import Compressor from 'compressorjs'
+import Ean from 'ean-generator'
 
 @Component({
     selector: 'app-edit-products',

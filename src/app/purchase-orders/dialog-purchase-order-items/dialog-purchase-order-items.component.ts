@@ -31,7 +31,7 @@ export class DialogPurchaseOrderItemsComponent {
     private readonly officesService = inject(OfficesService)
 
     formArray: FormArray = this.formBuilder.array([])
-    setting = new SettingModel()
+    $setting = signal<SettingModel>(new SettingModel())
     offices: OfficeModel[] = []
     office: OfficeModel = new OfficeModel()
     priceLists: PriceListModel[] = []
@@ -56,12 +56,13 @@ export class DialogPurchaseOrderItemsComponent {
         this.handlePriceLists$.unsubscribe()
         this.handleOfficesByActivity$.unsubscribe()
     }
+
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.setting = auth.setting
+            this.$setting.set(auth.setting)
             this.office = auth.office
 
-            switch (this.setting.defaultPrice) {
+            switch (this.$setting().defaultPrice) {
                 case PriceType.OFICINA:
                     this.formGroup.get('price')?.setValidators([])
                     this.formGroup.get('price')?.updateValueAndValidity()

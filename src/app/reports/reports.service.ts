@@ -40,4 +40,5 @@ export class ReportsService {
     getSummaryInvoices(params: Params): Observable<any[]> {
         return this.httpService.get(`sales/summaryInvoices`, params)
     }
+
 }

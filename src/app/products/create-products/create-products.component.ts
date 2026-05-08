@@ -61,7 +61,8 @@ export class CreateProductsComponent {
         isTrackStock: false,
         printZone: 'COCINA',
         prices: this.formArray,
-        stock: null
+        stock: null,
+        minimumStock: null
     })
 
     $isLoading = signal(false)

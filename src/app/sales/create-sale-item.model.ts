@@ -4,6 +4,7 @@ import { PriceModel } from '../products/price.model'
 export interface CreateSaleItemModel {
     fullName: string
     price: number
+    cost: number | null
     quantity: number
     preIgvCode: IgvCode
     igvCode: IgvCode
