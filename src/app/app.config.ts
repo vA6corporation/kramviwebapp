@@ -1,5 +1,6 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, LOCALE_ID, provideZonelessChangeDetection } from '@angular/core'
-import { provideHttpClient } from '@angular/common/http'
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
+import { AppInterceptor } from './app.interceptor'
 import { provideRouter } from '@angular/router'
 import { routes } from './app.routes'
 import { MAT_DATE_LOCALE } from '@angular/material/core'
@@ -17,5 +18,10 @@ export const appConfig: ApplicationConfig = {
         provideZonelessChangeDetection(),
         provideRouter(routes),
         provideHttpClient(),
+        provideHttpClient(
+            withInterceptorsFromDi()
+        ),
+        { provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true },
+
     ]
 }

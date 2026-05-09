@@ -82,6 +82,11 @@ export class App {
 
         this.authService.handleIsAuth().subscribe(isAuth => {
             this.isAuth = isAuth
+            if (isAuth) {
+                if (this.authService.isDebtor() <= 0) {
+                    this.navigationService.showDialogMessage('Es necesario renovar la suscripcion')
+                }
+            }
         })
 
         const $events = this.router.events.subscribe(event => {
@@ -119,9 +124,6 @@ export class App {
                             this.navigationService.loadBarFinish()
                             this.$isStart.set(true)
                             this.authService.loggedIn()
-                            if (this.authService.isDebtor() <= 0) {
-                                this.navigationService.showDialogMessage('Es necesario renovar la suscripcion')
-                            }
                         }, error: () => {
                             this.router.navigate(['/login'])
                             this.navigationService.loadBarFinish()

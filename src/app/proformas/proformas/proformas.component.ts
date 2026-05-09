@@ -52,7 +52,6 @@ export class ProformasComponent {
         startDate: ['', Validators.required],
         endDate: ['', Validators.required],
         userId: '',
-        isBilled: '',
     })
     private params: Params = {}
     private business: BusinessModel = new BusinessModel()
@@ -136,9 +135,10 @@ export class ProformasComponent {
         })
 
         const { startDate, endDate, pageIndex, pageSize, userId, key } = this.activatedRoute.snapshot.queryParams
+
         this.pageIndex = Number(pageIndex || 0)
         this.pageSize = Number(pageSize || 10)
-        this.formGroup.patchValue({ userId })
+        this.formGroup.patchValue({ userId: userId || '' })
 
         if (key) {
             Object.assign(this.params, { key })
@@ -149,13 +149,16 @@ export class ProformasComponent {
                 startDate: new Date(startDate),
                 endDate: new Date(endDate)
             })
+            Object.assign(this.params, {
+                startDate: new Date(startDate),
+                endDate: new Date(endDate)
+            })
         }
 
         this.fetchData()
         this.fetchCount()
 
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {
-            // this.key = key
             this.pageIndex = 0
             const queryParams: Params = { pageIndex: 0, key }
             Object.assign(this.params, { key })
@@ -165,10 +168,6 @@ export class ProformasComponent {
                 queryParams: queryParams,
                 queryParamsHandling: 'merge', // remove to replace all query params by provided
             })
-
-            // this.proformasService.getCountProformasByKey(this.key).subscribe(count => {
-            //     this.length = count
-            // })
 
             this.fetchData()
             this.fetchCount()
@@ -204,28 +203,9 @@ export class ProformasComponent {
 
     onUserChange() {
         this.pageIndex = 0
-        // this.key = ''
 
         const { userId } = this.formGroup.value
         const queryParams: Params = { userId, key: '' }
-        Object.assign(this.params, queryParams)
-
-        this.router.navigate([], {
-            relativeTo: this.activatedRoute,
-            queryParams: queryParams,
-            queryParamsHandling: 'merge', // remove to replace all query params by provided
-        })
-
-        this.fetchData()
-        this.fetchCount()
-    }
-
-    onIsBilledChange() {
-        this.pageIndex = 0
-        // this.key = ''
-
-        const { isBilled } = this.formGroup.value
-        const queryParams: Params = { isBilled, key: '' }
         Object.assign(this.params, queryParams)
 
         this.router.navigate([], {

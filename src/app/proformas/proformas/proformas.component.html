@@ -21,14 +21,6 @@
                     }
                 </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="fill">
-                <mat-label>Seleccione un estado</mat-label>
-                <mat-select formControlName="isBilled" (selectionChange)="onIsBilledChange()">
-                    <mat-option value="">TODOS LOS ESTADOS</mat-option>
-                    <mat-option value="true" class="text-uppercase">SOLO FACTURADOS</mat-option>
-                    <mat-option value="false" class="text-uppercase">SOLO SIN FACTURAR</mat-option>
-                </mat-select>
-            </mat-form-field>
         </div>
     </form>
     <div class="mat-elevation-z2">
@@ -94,7 +86,7 @@
                         </button>
                         }
                         @if (element.saleId === null) {
-                        <button [routerLink]="['/sales/charge/credit']" [queryParams]="{ proformaId: element.id }"
+                        <button [routerLink]="['/sales/chargeCredit']" [queryParams]="{ proformaId: element.id }"
                             mat-menu-item>
                             <mat-icon>receipt</mat-icon>
                             <span>Vender al credito</span>

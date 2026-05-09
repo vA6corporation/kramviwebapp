@@ -41,7 +41,7 @@ export class CopyProformasComponent {
     $categories = signal<CategoryModel[]>([])
     $products = signal<ProductModel[]>([])
     $favorites = signal<ProductModel[]>([])
-    priceLists: PriceListModel[] = []
+    $priceLists = signal<PriceListModel[]>([])
     priceListId: any | null = null
     selectedIndex: number = 0
     proformaItems: ProformaItemModel[] = []
@@ -114,7 +114,7 @@ export class CopyProformasComponent {
         })
 
         this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
-            this.priceLists = priceLists
+            this.$priceLists.set(priceLists)
             this.priceListId = this.$setting().defaultPriceListId || priceLists[0]?.id
         })
 

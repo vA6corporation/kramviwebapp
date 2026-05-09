@@ -46,7 +46,7 @@ export class ProformaItemsComponent {
         })
     }
 
-    onClickSaleItem(index: number) {
+    onSelectProformaItem(index: number) {
         this.matDialog.open(DialogProformaItemsComponent, {
             width: '600px',
             position: { top: '20px' },
