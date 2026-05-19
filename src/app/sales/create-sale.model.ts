@@ -9,7 +9,6 @@ export interface CreateSaleModel {
     igvPercent: number
     rcPercent: number
     isRetainer: boolean
-    isDelivery: boolean
     createdAt: Date | null
     turnId: any
     customerId: any

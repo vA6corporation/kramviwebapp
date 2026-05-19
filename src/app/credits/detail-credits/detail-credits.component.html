@@ -111,7 +111,7 @@
                     }
                 </mat-list>
                 <mat-card-actions>
-                    <button mat-flat-button color="primary" (click)="onCreatePayment()" [disabled]="turn === null">PAGAR</button>
+                    <button mat-flat-button color="primary" (click)="onCreatePayment()" [disabled]="$turn() === null">PAGAR</button>
                 </mat-card-actions>
             </mat-card>
             <mat-card>

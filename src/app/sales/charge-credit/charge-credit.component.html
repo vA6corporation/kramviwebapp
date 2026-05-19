@@ -7,8 +7,8 @@
         <div class="px-3">
             <h2 class="text-center mat-display-small mb-0">{{ $charge().toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</h2>
             <p class="caption text-center text-muted mb-2">Total a cobrar</p>
-            @if (payments.length) {
-            <p class="text-center mb-3">Monto a cuenta: {{ payments[0].charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</p>
+            @if ($payments().length) {
+            <p class="text-center mb-3">Monto a cuenta: {{ $payments()[0].charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</p>
             }
             @if (turn && $isYesterdayTurn()) {
                 <div class="bg-warning rounded">

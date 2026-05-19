@@ -131,7 +131,6 @@ export class ProductsComponent {
             { id: 'search', icon: 'search', show: true, label: '' },
             { id: 'export_products', icon: 'download', show: false, label: 'Exportar a excel' },
             { id: 'print_barcodes', icon: 'qr_code', show: false, label: 'Codigo de barras' },
-            { id: 'delete_products', icon: 'delete', show: false, label: 'Eliminar productos' }
         ])
 
         this.handleOffices$ = this.authService.handleOffices().subscribe(offices => {
@@ -162,26 +161,32 @@ export class ProductsComponent {
                     break
             }
 
-            const { categoryId, pageIndex, pageSize, key } = this.activatedRoute.snapshot.queryParams
+            const { categoryId, officeId, providerId, state, pageIndex, pageSize, key } = this.activatedRoute.snapshot.queryParams
 
             this.pageIndex = Number(pageIndex || 0)
             this.pageSize = Number(pageSize || 10)
             this.key = decodeURIComponent(key || '')
+
             this.formGroup.patchValue({
-                categoryId: categoryId || '',
+                providerId: providerId ? Number(providerId) : '',
+                categoryId: categoryId ? Number(categoryId) : '',
+                officeId: officeId ? Number(officeId) : '',
+                state: state || '01'
             })
+
             Object.assign(this.params, {
+                providerId: providerId || '',
                 categoryId: categoryId || '',
+                officeId: officeId || '',
+                state: state || '01'
             })
+
             this.fetchCount()
             this.fetchData()
         })
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(async id => {
             switch (id) {
-                case 'delete_products':
-                    this.onDeleteProducts()
-                    break
                 case 'print_barcodes':
                     this.onPrintBarcodeMassive()
                     break
@@ -550,21 +555,6 @@ export class ProductsComponent {
                     }
                 }
             })
-        }
-    }
-
-    async onDeleteProducts() {
-        if (this.productIds.length) {
-            const ok = confirm('Estas seguro de eliminar?...')
-            if (ok) {
-                this.navigationService.loadBarStart()
-                for (const productId of this.productIds) {
-                    await lastValueFrom(this.productsService.delete(productId))
-                }
-                this.fetchData()
-            }
-        } else {
-            this.navigationService.showMessage('Selecciona almenos 1 producto')
         }
     }
 

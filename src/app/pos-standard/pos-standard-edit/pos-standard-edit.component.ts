@@ -43,7 +43,7 @@ export class PosStandardEditComponent {
     $categories = signal<CategoryModel[]>([])
     $products = signal<ProductModel[]>([])
     $favorites = signal<ProductModel[]>([])
-    priceLists: PriceListModel[] = []
+    $priceLists = signal<PriceListModel[]>([])
     priceListId: string | null = null
     selectedIndex: number = 0
     $setting = signal<SettingModel>(new SettingModel())
@@ -93,8 +93,8 @@ export class PosStandardEditComponent {
         })
 
         this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
-            this.priceLists = priceLists
-            this.priceListId = this.$setting().defaultPriceListId || this.priceLists[0]?.id
+            this.$priceLists.set(priceLists)
+            this.priceListId = this.$setting().defaultPriceListId || priceLists[0]?.id
         })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {

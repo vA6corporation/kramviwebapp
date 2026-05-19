@@ -10,7 +10,6 @@ export interface SaleForm {
   createdAt: Date
   isConsumption: boolean
   isRetainer: boolean
-  isDelivery: boolean
 
   paymentMethodId: any | null
 }

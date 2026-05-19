@@ -60,7 +60,7 @@ export class CreateCreditBillerComponent {
         createdAt: '',
         isRetainer: false,
     })
-    payments: PaymentModel[] = []
+    $payments = signal<PaymentModel[]>([])
     $productItems = signal<ProductItemModel[]>([])
     $charge = signal<number>(0)
     $customer = signal<CustomerModel | null>(null)
@@ -194,7 +194,7 @@ export class CreateCreditBillerComponent {
 
                     dialogRef.afterClosed().subscribe(payment => {
                         if (payment) {
-                            this.payments = [payment]
+                            this.$payments.set([payment])
                             this.dues[0].charge = this.dues[0].preCharge - payment.charge
                         }
                     })
@@ -293,6 +293,7 @@ export class CreateCreditBillerComponent {
             const productItems = this.$productItems()
             const setting = this.$setting()
             const charge = this.$charge()
+            const payments = this.$payments()
 
             if (this.turn === null) {
                 this.matDialog.open(DialogCreateTurnsComponent, {
@@ -347,7 +348,7 @@ export class CreateCreditBillerComponent {
             this.billsService.saveCredit(
                 createdCredit,
                 productItems,
-                this.payments,
+                payments,
                 this.dues,
                 this.detraction
             ).subscribe({
@@ -355,9 +356,9 @@ export class CreateCreditBillerComponent {
 
                     Object.assign(sale, {
                         user: this.user,
-                        customer: customer,
+                        customer,
                         saleItems: productItems,
-                        payments: this.payments,
+                        payments,
                     })
 
                     switch (this.$setting().defaultTicket) {
@@ -377,7 +378,7 @@ export class CreateCreditBillerComponent {
 
                     this.billsService.setProductItems([])
                     this.dues = []
-                    this.payments = []
+                    this.$payments.set([])
                     this.$customer.set(null)
 
                     this.$isLoading.set(false)

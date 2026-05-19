@@ -64,7 +64,7 @@
             @if ($setting().defaultPrice === 'LISTA') {
             <mat-form-field appearance="fill">
                 <mat-select [(value)]="priceListId" (selectionChange)="onChangePriceList()">
-                    @for (priceList of priceLists; track $index) {
+                    @for (priceList of $priceLists(); track $index) {
                     <mat-option [value]="priceList.id">{{ priceList.name }}</mat-option>
                     }
                 </mat-select>

@@ -312,7 +312,6 @@ export class CreateBillerComponent {
                 createdAt: saleForm.createdAt,
                 cash: saleForm.cash,
                 isRetainer: saleForm.isRetainer,
-                isDelivery: false,
 
                 turnId: this.turn.id,
                 customerId: customer ? customer.id : null,

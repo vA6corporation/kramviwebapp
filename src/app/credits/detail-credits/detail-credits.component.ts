@@ -46,7 +46,7 @@ export class DetailCreditsComponent {
     $credit = signal<CreditModel | null>(null)
     $payments = signal<PaymentModel[]>([])
     $customer = signal<CustomerModel | null>(null)
-    turn: TurnModel | null = null
+    $turn = signal<TurnModel | null>(null)
     $saleItems = signal<SaleItemModel[]>([])
     $office = signal<OfficeModel>(new OfficeModel())
     $dues = signal<CreateDueModel[]>([])
@@ -69,7 +69,7 @@ export class DetailCreditsComponent {
             this.$office.set(auth.office)
 
             this.handleOpenTurn$ = this.turnsService.handleOpenTurn(auth.setting.isOfficeTurn).subscribe(turn => {
-                this.turn = turn
+                this.$turn.set(turn)
                 if (turn === null) {
                     this.matDialog.open(DialogCreateTurnsComponent, {
                         width: '600px',
@@ -145,7 +145,6 @@ export class DetailCreditsComponent {
                 this.navigationService.loadBarStart()
                 this.paymentsService.update(updatePayment, payment.id, payment.saleId).subscribe({
                     next: () => {
-                        Object.assign(payment, updatePayment)
                         this.navigationService.showMessage('Se han guardado los cambios')
                         this.navigationService.loadBarFinish()
                         this.fetchData()
@@ -174,9 +173,10 @@ export class DetailCreditsComponent {
 
     onCreatePayment() {
         const credit = this.$credit()
-        if (credit && this.turn) {
+        const turn = this.$turn()
+        if (credit && turn) {
             const data: DialogCreatePaymentData = {
-                turnId: this.turn.id,
+                turnId: turn.id,
                 saleId: credit.id
             }
 

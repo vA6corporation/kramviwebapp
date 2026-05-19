@@ -60,7 +60,6 @@ export class ChargeFoodComponent {
         deliveryAt: null,
         createdAt: null,
         isRetainer: false,
-        isDelivery: false,
         paymentMethodId: null,
     })
     payments: CreatePaymentModel[] = []
@@ -75,6 +74,7 @@ export class ChargeFoodComponent {
     $isYesterdayTurn = signal<boolean>(false)
     $turn = signal<TurnModel | null>(null)
 
+    private uuid = crypto.randomUUID()
     private user: UserModel = new UserModel()
 
     invoiceCodes = [
@@ -289,7 +289,6 @@ export class ChargeFoodComponent {
                 deliveryAt: saleForm.deliveryAt,
                 createdAt: saleForm.createdAt,
                 isRetainer: saleForm.isRetainer,
-                isDelivery: saleForm.isDelivery,
 
                 turnId: turn.id,
                 customerId: customer ? customer.id : null,
@@ -319,6 +318,7 @@ export class ChargeFoodComponent {
             this.navigationService.loadBarStart()
 
             this.salesService.createSale(
+                this.uuid,
                 createdSale,
                 this.saleItems,
                 this.payments,

@@ -205,7 +205,6 @@ export class ChangeInvoiceComponent {
                 discount: this.sale.discount,
                 deliveryAt: null,
                 isRetainer: false,
-                isDelivery: false,
                 createdAt: null,
                 igvPercent: this.setting.defaultIgvPercent,
                 rcPercent: this.setting.defaultRcPercent,

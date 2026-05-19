@@ -19,9 +19,10 @@ export class DialogInitPaymentsComponent {
     private readonly paymentMethodsService = inject(PaymentMethodsService)
     private readonly dialogRef: MatDialogRef<DialogInitPaymentsComponent> = inject(MatDialogRef)
 
-    formArray: FormArray = this.formBuilder.array([])
     formGroup: FormGroup = this.formBuilder.group({
-        payments: this.formArray,
+        turnId: this.turnId,
+        paymentMethodId: [null, Validators.required],
+        charge: [null, Validators.required],
     })
     paymentMethods: PaymentMethodModel[] = []
 
@@ -35,19 +36,12 @@ export class DialogInitPaymentsComponent {
         this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
             this.paymentMethods = paymentMethods
             this.formGroup.patchValue({ paymentMethodId: (this.paymentMethods[0] || { id: 0 }).id })
-
-            const formGroup = this.formBuilder.group({
-                turnId: this.turnId,
-                paymentMethodId: (this.paymentMethods[0] || { id: 0 }).id,
-                charge: [null, Validators.required],
-            })
-            this.formArray.push(formGroup)
         })
     }
 
     onSubmit() {
         if (this.formGroup.valid) {
-            this.dialogRef.close(this.formArray.value)
+            this.dialogRef.close(this.formGroup.value)
         }
     }
 

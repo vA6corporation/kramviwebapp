@@ -31,7 +31,6 @@ import { ExcelKramvi } from '../ExcelKramvi'
 import { ExcelSimple } from '../ExcelSimple'
 import { DialogAdminComponent, DialogAdminData } from '../dialog-admin/dialog-admin.component'
 import { DialogBadCdrsComponent } from '../dialog-bad-cdrs/dialog-bad-cdrs.component'
-import { DialogCheckCdrsComponent } from '../dialog-check-cdrs/dialog-check-cdrs.component'
 import { DialogDeleteSaleComponent } from '../dialog-delete-sale/dialog-delete-sale.component'
 import { DialogDetailSalesComponent } from '../dialog-detail-sales/dialog-detail-sales.component'
 import { InvoicesService } from '../../invoices/invoices.service'
@@ -206,8 +205,6 @@ export class SalesComponent {
             { id: 'search', label: 'Buscar', icon: 'search', show: true },
             { id: 'send_massive', label: 'Enviar a Sunat', icon: 'near_me', show: false },
             { id: 'copy_invoices', label: 'Copiar ventas', icon: 'content_copy', show: false },
-            { id: 'new_invoice', label: 'Nueva venta desde', icon: 'content_copy', show: false },
-            { id: 'check_cdrs', label: 'Consultar CDRS', icon: 'check', show: false },
             { id: 'print_massive', label: 'Imprimir', icon: 'printer', show: false },
             { id: 'excel_simple', label: 'Excel simple', icon: 'file_download', show: false },
             { id: 'excel_detail', label: 'Excel detallado', icon: 'file_download', show: false },
@@ -243,10 +240,6 @@ export class SalesComponent {
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
             switch (id) {
-                case 'new_invoice': {
-                    this.newInvoice()
-                    break
-                }
                 case 'copy_invoices': {
                     this.copyMassive()
                     break
@@ -273,10 +266,6 @@ export class SalesComponent {
                 }
                 case 'excel_detail': {
                     this.excelDetails()
-                    break
-                }
-                case 'check_cdrs': {
-                    this.checkCdrs()
                     break
                 }
                 default:
@@ -329,19 +318,6 @@ export class SalesComponent {
 
         this.fetchData()
         this.fetchCount()
-    }
-
-    checkCdrs() {
-        if (this.$saleIds().length === 0) {
-            this.navigationService.showMessage('Seleccione almenos un comprobante')
-        } else {
-            this.matDialog.open(DialogCheckCdrsComponent, {
-                width: '900px',
-                position: { top: '20px' },
-                disableClose: true,
-                data: this.$saleIds(),
-            })
-        }
     }
 
     async copyMassive() {

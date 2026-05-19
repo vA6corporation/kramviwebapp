@@ -82,6 +82,7 @@ export class ChargeBoardsComponent {
     $isYesterdayTurn = signal<boolean>(false)
     $turn = signal<TurnModel | null>(null)
 
+    private uuid = crypto.randomUUID()
     private params: Params = {}
     private user: UserModel = new UserModel()
     private board: BoardModel | null = null
@@ -335,7 +336,6 @@ export class ChargeBoardsComponent {
                 deliveryAt: null,
                 createdAt: saleForm.createdAt,
                 isRetainer: saleForm.isRetainer,
-                isDelivery: saleForm.isDelivery,
                 igvPercent: this.$setting().defaultIgvPercent,
                 rcPercent: this.$setting().defaultRcPercent,
                 turnId: turn.id,
@@ -367,6 +367,7 @@ export class ChargeBoardsComponent {
             this.navigationService.loadBarStart()
 
             this.salesService.createSale(
+                this.uuid,
                 createdSale,
                 this.boardItems,
                 this.payments,

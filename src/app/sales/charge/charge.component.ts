@@ -86,6 +86,7 @@ export class ChargeComponent {
     $turn = signal<TurnModel | null>(null)
     goTo: string = ''
 
+    private uuid = crypto.randomUUID()
     private detraction: DetractionModel | null = null
     private user: UserModel = new UserModel()
     private params: Params = {}
@@ -367,7 +368,6 @@ export class ChargeComponent {
                 createdAt: saleForm.createdAt,
                 cash: saleForm.cash,
                 isRetainer: saleForm.isRetainer,
-                isDelivery: saleForm.isDelivery,
                 igvPercent: this.$setting().defaultIgvPercent,
                 rcPercent: this.$setting().defaultRcPercent,
                 turnId: turn.id,
@@ -395,6 +395,7 @@ export class ChargeComponent {
             this.navigationService.loadBarStart()
 
             this.salesService.createSale(
+                this.uuid,
                 createdSale,
                 this.saleItems,
                 this.payments,
@@ -402,10 +403,10 @@ export class ChargeComponent {
                 this.params
             ).subscribe({
                 next: sale => {
+
                     Object.assign(sale, {
+                        customer,
                         user: this.user,
-                        customer: this.$customer(),
-                        saleItems: this.saleItems,
                         payments: this.payments,
                     })
 

@@ -161,17 +161,26 @@ export class InventoriesComponent {
                 break
             }
 
-            const { categoryId, officeId, state, pageIndex, pageSize, key } = this.activatedRoute.snapshot.queryParams
+            const { categoryId, officeId, providerId, state, pageIndex, pageSize, key } = this.activatedRoute.snapshot.queryParams
 
             this.pageIndex = Number(pageIndex || 0)
             this.pageSize = Number(pageSize || 10)
             this.key = decodeURIComponent(key || '')
-            this.formGroup.patchValue({ categoryId: categoryId ? Number(categoryId) : '', state: state || '01' })
-            Object.assign(this.params, { categoryId: categoryId || '', state: state || '01' })
-            if (officeId) {
-                Object.assign(this.params, { officeId })
-                this.formGroup.patchValue({ officeId })
-            }
+
+            this.formGroup.patchValue({
+                providerId: providerId ? Number(providerId) : '',
+                categoryId: categoryId ? Number(categoryId) : '',
+                officeId: officeId ? Number(officeId) : '',
+                state: state || '01'
+            })
+
+            Object.assign(this.params, {
+                providerId: providerId || '',
+                categoryId: categoryId || '',
+                officeId: officeId || '',
+                state: state || '01'
+            })
+
             this.fetchData()
             this.fetchCount()
         })

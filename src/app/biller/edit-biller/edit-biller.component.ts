@@ -281,7 +281,7 @@ export class EditBillerComponent {
                 cash: null,
                 deliveryAt: null,
                 isRetainer: false,
-                isDelivery: false,
+                isCredit: this.sale.isCredit,
 
                 turnId: this.sale.turnId,
                 customerId: customer ? customer.id : null,

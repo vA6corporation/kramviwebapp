@@ -267,7 +267,7 @@ export async function buildTicket58mm(
 
     if (sale.isCredit) {
         text = `SALDO ${currency}`
-        pdf.text(text, 25, positionY, { align: 'right' })
+        pdf.text(text, 35, positionY, { align: 'right' })
         text = (sale.charge - payments.map(e => e.charge).reduce((a, b) => a + b, 0)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 45, positionY, { align: 'right' })
         positionY += 3
@@ -297,6 +297,8 @@ export async function buildTicket58mm(
         pdf.text(strArr, pageCenter, positionY, { align: 'center' })
         positionY += 3 * strArr.length
     }
+
+    positionY += 3
 
     text = `Usuario: ${user.name}`
     pdf.text(text, pageCenter, positionY, { align: 'center' })

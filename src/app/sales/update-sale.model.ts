@@ -9,7 +9,7 @@ export interface UpdateSaleModel {
     igvPercent: number
     rcPercent: number
     isRetainer: boolean
-    isDelivery: boolean
+    isCredit: boolean
     createdAt: Date | null
     turnId: any
     customerId: any

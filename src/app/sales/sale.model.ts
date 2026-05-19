@@ -41,7 +41,6 @@ export interface SaleModel {
     discount: number | null
     payed: number
     deliveryAt: any
-    isDelivery: boolean
 
     payments: PaymentModel[]
     saleItems: SaleItemModel[]

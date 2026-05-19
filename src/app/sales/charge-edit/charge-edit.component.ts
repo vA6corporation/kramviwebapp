@@ -208,8 +208,6 @@ export class ChargeEditComponent {
                 throw new Error("El producto no puede tener precio 0")
             }
 
-            //const saleForm: SaleForm = this.formGroup.value
-
             const createdSale: UpdateSaleModel = {
                 invoiceCode: this.sale.invoiceCode,
                 currencyCode: saleForm.currencyCode || this.sale.currencyCode,
@@ -222,7 +220,7 @@ export class ChargeEditComponent {
                 cash: null,
                 deliveryAt: null,
                 isRetainer: false,
-                isDelivery: false,
+                isCredit: this.sale.isCredit,
 
                 turnId: this.sale.turnId,
                 customerId: customer ? customer.id : null,

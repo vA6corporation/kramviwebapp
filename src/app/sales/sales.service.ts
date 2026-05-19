@@ -273,28 +273,14 @@ export class SalesService {
     }
 
     createSale(
+        uuid: string,
         sale: CreateSaleModel,
         saleItems: CreateSaleItemModel[] | CreateBoardItemModel[],
         payments: CreatePaymentModel[],
         detraction: DetractionModel | null,
         params: Params,
     ): Observable<SaleModel> {
-        return this.httpService.post('sales', {
-            sale,
-            saleItems,
-            payments,
-            detraction,
-        }, params)
-    }
-
-    createSaleStock(
-        sale: CreateSaleModel,
-        saleItems: CreateSaleItemModel[],
-        payments: CreatePaymentModel[],
-        detraction: DetractionModel | null,
-        params: Params,
-    ): Observable<{ sale: SaleModel | null, outStocks: OutStockModel[] }> {
-        return this.httpService.post('sales/withStock', {
+        return this.httpService.post(`sales/${uuid}`, {
             sale,
             saleItems,
             payments,

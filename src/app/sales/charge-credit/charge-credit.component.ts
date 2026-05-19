@@ -76,7 +76,7 @@ export class ChargeCreditComponent {
     $charge = signal<number>(0)
     $customer = signal<CustomerModel | null>(null)
     $isLoading = signal<boolean>(false)
-    payments: CreatePaymentModel[] = []
+    $payments = signal<CreatePaymentModel[]>([])
     dues: CreateDueModel[] = []
     $setting = signal<SettingModel>(new SettingModel())
     $paymentMethods = signal<PaymentMethodModel[]>([])
@@ -214,11 +214,10 @@ export class ChargeCreditComponent {
                             data: turn.id,
                         })
 
-                        dialogRef.afterClosed().subscribe(payments => {
-                            if (payments) {
-                                this.payments = payments
-                                const charge = this.payments.map(e => e.charge).reduce((a, b) => a + b, 0)
-                                this.dues[0].charge = this.dues[0].preCharge - charge
+                        dialogRef.afterClosed().subscribe(payment => {
+                            if (payment) {
+                                this.$payments.set([payment])
+                                this.dues[0].charge = this.dues[0].preCharge - payment.charge
                             }
                         })
                     }
@@ -346,6 +345,7 @@ export class ChargeCreditComponent {
             const creditForm: CreditForm = this.formGroup.value
             const customer = this.$customer()
             const charge = this.$charge()
+            const payments = this.$payments()
 
             if (turn === null) {
                 this.matDialog.open(DialogCreateTurnsComponent, {
@@ -388,7 +388,7 @@ export class ChargeCreditComponent {
 
             this.salesService.createCredit(
                 createdCredit, this.saleItems,
-                this.payments,
+                payments,
                 this.dues,
                 this.detraction,
                 this.params
@@ -398,7 +398,7 @@ export class ChargeCreditComponent {
                         user: this.user,
                         customer,
                         saleItems: this.saleItems,
-                        payments: this.payments,
+                        payments,
                     })
 
                     switch (this.$setting().defaultTicket) {
