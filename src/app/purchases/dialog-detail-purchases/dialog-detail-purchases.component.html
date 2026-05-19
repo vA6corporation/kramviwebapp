@@ -27,6 +27,10 @@
     <table class="w-100">
         <tbody>
             <tr>
+                <td>Imp. Total</td>
+                <td align="right">{{ (purchase?.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
+            </tr>
+            <tr>
                 <td>F. de compra</td>
                 <td align="right">{{ purchase?.createdAt | date: 'dd/MM/yyyy' }}</td>
             </tr>
