@@ -386,7 +386,8 @@ export class ChargeComponent {
                 const payment = {
                     charge,
                     paymentMethodId: saleForm.paymentMethodId,
-                    turnId: turn.id
+                    turnId: turn.id,
+                    createdAt: new Date()
                 }
                 this.payments.push(payment)
             }
