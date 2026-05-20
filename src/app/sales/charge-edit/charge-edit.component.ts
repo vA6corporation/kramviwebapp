@@ -234,7 +234,7 @@ export class ChargeEditComponent {
                 throw new Error("El cliente debe tener un RUC")
             }
 
-            if (this.payments.length === 0 && charge) {
+            if (this.payments.length === 0 && charge && this.sale.isCredit === false) {
                 const payment = {
                     charge,
                     paymentMethodId: saleForm.paymentMethodId,

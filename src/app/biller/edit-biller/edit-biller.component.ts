@@ -287,7 +287,7 @@ export class EditBillerComponent {
                 customerId: customer ? customer.id : null,
             }
 
-            if (this.payments.length === 0 && charge) {
+            if (this.payments.length === 0 && charge && this.sale.isCredit === false) {
                 const payment = {
                     charge,
                     paymentMethodId: saleForm.paymentMethodId,
