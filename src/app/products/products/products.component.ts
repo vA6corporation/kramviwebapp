@@ -134,7 +134,7 @@ export class ProductsComponent {
         ])
 
         this.handleOffices$ = this.authService.handleOffices().subscribe(offices => {
-            this.offices = offices
+            this.$offices.set(offices)
         })
 
         this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
@@ -149,8 +149,6 @@ export class ProductsComponent {
             this.$setting.set(auth.setting)
             this.office = auth.office
             this.business = auth.business
-
-            Object.assign(this.params, { officeId: this.office.id })
 
             switch (this.$setting().defaultPrice) {
                 case PriceType.LISTA:
@@ -170,14 +168,14 @@ export class ProductsComponent {
             this.formGroup.patchValue({
                 providerId: providerId ? Number(providerId) : '',
                 categoryId: categoryId ? Number(categoryId) : '',
-                officeId: officeId ? Number(officeId) : '',
+                officeId: officeId ? Number(officeId) : this.office.id,
                 state: state || '01'
             })
 
             Object.assign(this.params, {
                 providerId: providerId || '',
                 categoryId: categoryId || '',
-                officeId: officeId || '',
+                officeId: officeId || this.office.id,
                 state: state || '01'
             })
 
@@ -464,6 +462,16 @@ export class ProductsComponent {
 
                     if (!products.find(e => e.minimumStock)) {
                         const index = this.$displayedColumns().findIndex(e => e === 'minimumStock')
+                        if (index >= 0) {
+                            this.$displayedColumns.update(values => {
+                                values.splice(index, 1)
+                                return values
+                            })
+                        }
+                    }
+
+                    if (!products.find(e => e.provider)) {
+                        const index = this.$displayedColumns().findIndex(e => e === 'provider')
                         if (index >= 0) {
                             this.$displayedColumns.update(values => {
                                 values.splice(index, 1)

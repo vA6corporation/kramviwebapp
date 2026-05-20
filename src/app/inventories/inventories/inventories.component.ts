@@ -149,9 +149,6 @@ export class InventoriesComponent {
             this.office = auth.office
             this.business = auth.business
 
-            this.formGroup.patchValue({ officeId: this.office.id })
-            Object.assign(this.params, { officeId: this.office.id })
-
             switch (this.$setting().defaultPrice) {
                 case PriceType.LISTA:
                     this.handlePriceLists$ = this.productsService.handlePriceLists().subscribe(priceLists => {
@@ -170,14 +167,14 @@ export class InventoriesComponent {
             this.formGroup.patchValue({
                 providerId: providerId ? Number(providerId) : '',
                 categoryId: categoryId ? Number(categoryId) : '',
-                officeId: officeId ? Number(officeId) : '',
+                officeId: officeId ? Number(officeId) : this.office.id,
                 state: state || '01'
             })
 
             Object.assign(this.params, {
                 providerId: providerId || '',
                 categoryId: categoryId || '',
-                officeId: officeId || '',
+                officeId: officeId || this.office.id,
                 state: state || '01'
             })
 
@@ -597,6 +594,16 @@ export class InventoriesComponent {
                         }
                     }
 
+                    if (!products.find(e => e.provider)) {
+                        const index = this.$displayedColumns().findIndex(e => e === 'provider')
+                        if (index >= 0) {
+                            this.$displayedColumns.update(values => {
+                                values.splice(index, 1)
+                                return values
+                            })
+                        }
+                    }
+
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.showMessage(error.error.message)
                     this.navigationService.loadBarFinish()
@@ -670,6 +677,15 @@ export class InventoriesComponent {
                     }
                 }
 
+                if (!products.find(e => e.provider)) {
+                    const index = this.$displayedColumns().findIndex(e => e === 'provider')
+                    if (index >= 0) {
+                        this.$displayedColumns.update(values => {
+                            values.splice(index, 1)
+                            return values
+                        })
+                    }
+                }
             })
         }
     }
