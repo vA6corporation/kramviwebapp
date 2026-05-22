@@ -256,12 +256,12 @@ export class SettingsComponent {
         }
     }
 
-    onDeleteCertificate(certificateId: any, event: MouseEvent) {
+    onDeleteCertificate(certificateUuid: any, event: MouseEvent) {
         event.stopPropagation()
         const ok = confirm('Esta seguro de anular?...')
         if (ok) {
             this.navigationService.loadBarStart()
-            this.settingsService.deleteCertificate(certificateId, this.$business().id).subscribe({
+            this.settingsService.deleteCertificate(certificateUuid, this.$business().id).subscribe({
                 next: () => {
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Certificado eliminado')
@@ -283,10 +283,10 @@ export class SettingsComponent {
         document.body.removeChild(link)
     }
 
-    async onDownloadCertificate(certificateId: any, event: MouseEvent) {
+    async onDownloadCertificate(certificateUuid: any, event: MouseEvent) {
         event.stopPropagation()
         this.navigationService.loadBarStart()
-        const blobCdr = await this.settingsService.getCertificate(certificateId)
+        const blobCdr = await this.settingsService.getCertificate(certificateUuid)
         const urlCertificate = URL.createObjectURL(blobCdr)
         this.navigationService.loadBarFinish()
         this.downloadFile(urlCertificate, 'certificado.pem')

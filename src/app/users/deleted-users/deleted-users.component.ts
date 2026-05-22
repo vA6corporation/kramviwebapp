@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { Subscription } from 'rxjs'
 import { NavigationService } from '../../navigation/navigation.service'
 import { UserModel } from '../user.model'
@@ -7,18 +7,18 @@ import { MaterialModule } from '../../material.module'
 import { CommonModule } from '@angular/common'
 
 @Component({
-    selector: 'app-disabled-users',
+    selector: 'app-deleted-users',
     imports: [MaterialModule, CommonModule],
-    templateUrl: './disabled-users.component.html',
-    styleUrls: ['./disabled-users.component.sass']
+    templateUrl: './deleted-users.component.html',
+    styleUrl: './deleted-users.component.sass',
 })
-export class DisabledUsersComponent {
+export class DeletedUsersComponent {
 
     private readonly usersService = inject(UsersService)
     private readonly navigationService = inject(NavigationService)
 
     displayedColumns: string[] = ['name', 'email', 'office', 'actions']
-    dataSource: UserModel[] = []
+    $dataSource = signal<UserModel[]>([])
     length: number = 0
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
@@ -31,21 +31,25 @@ export class DisabledUsersComponent {
     }
 
     ngOnInit(): void {
-        this.navigationService.setTitle('Usuarios')
+        this.navigationService.setTitle('Usuarios desactivados')
 
+        this.fetchData()
+    }
+
+    fetchData() {
         this.navigationService.loadBarStart()
-        this.usersService.getDisabledUsers().subscribe(users => {
+        this.usersService.getDeletedUsers().subscribe(users => {
             this.navigationService.loadBarFinish()
-            this.dataSource = users
+            this.$dataSource.set(users)
         })
     }
 
     onRestoreUser(userId: any) {
         this.navigationService.loadBarStart()
         this.usersService.restore(userId).subscribe(() => {
-            this.dataSource = this.dataSource.filter(e => e.id !== userId)
             this.navigationService.showMessage('Restablecido correctamente')
             this.navigationService.loadBarFinish()
+            this.fetchData()
         })
     }
 

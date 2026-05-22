@@ -24,7 +24,7 @@ import { BoardItemsComponent } from '../board-items/board-items.component'
 import { BoardModel } from '../board.model'
 import { BoardsService } from '../boards.service'
 import { DialogDeletedComponent } from '../dialog-deleted/dialog-deleted.component'
-import { DialogPasswordComponent } from '../dialog-password/dialog-password.component'
+import { DialogPasswordComponent } from '../../sales/dialog-password/dialog-password.component'
 import { CreateBoardItemModel } from '../create-board-item.model'
 import { DialogDetailProductsComponent } from '../../products/dialog-detail-products/dialog-detail-products.component'
 

@@ -1,10 +1,10 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { HttpService } from '../../http.service';
-import { MaterialModule } from '../../material.module';
-import { NavigationService } from '../../navigation/navigation.service';
-import { formatDate } from '@angular/common';
-import { buildExcel } from '../../buildExcel';
+import { HttpErrorResponse } from '@angular/common/http'
+import { Component } from '@angular/core'
+import { HttpService } from '../../http.service'
+import { MaterialModule } from '../../material.module'
+import { NavigationService } from '../../navigation/navigation.service'
+import { formatDate } from '@angular/common'
+import { buildExcel } from '../../buildExcel'
 
 @Component({
     selector: 'app-delete-data',
@@ -21,18 +21,21 @@ export class DeleteDataComponent {
 
     onDeleteProducts() {
         this.navigationService.loadBarStart()
-        this.httpService.delete('tools/deleteProducts').subscribe({
-            next: () => {
-                this.navigationService.loadBarFinish()
-                this.navigationService.showMessage('Productos eliminados')
-                setTimeout(() => {
-                    location.reload()
-                }, 3000)
-            }, error: (error: HttpErrorResponse) => {
-                this.navigationService.loadBarFinish()
-                this.navigationService.showMessage(error.error.message)
-            }
-        })
+        const ok = confirm('Estas seguro de eliminar?...')
+        if (ok) {
+            this.httpService.delete('tools/deleteProducts').subscribe({
+                next: () => {
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage('Productos eliminados')
+                    setTimeout(() => {
+                        location.reload()
+                    }, 3000)
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.loadBarFinish()
+                    this.navigationService.showMessage(error.error.message)
+                }
+            })
+        }
     }
 
     onDeleteSales() {

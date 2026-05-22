@@ -14,8 +14,8 @@ export class UsersService {
 
     private users$: BehaviorSubject<UserModel[]> | null = null
 
-    getDisabledUsers(): Observable<UserModel[]> {
-        return this.httpService.get('users/disabled')
+    getDeletedUsers(): Observable<UserModel[]> {
+        return this.httpService.get('users/deleted')
     }
 
     handleUsers(): Observable<UserModel[]> {

@@ -10,6 +10,7 @@ export async function buildTicketRemissionGuide(
     setting: SettingModel,
     business: BusinessModel,
     office: OfficeModel,
+    urlLogo: string
 ): Promise<jsPDF> {
     const header = 11
     const body = 8
@@ -31,10 +32,10 @@ export async function buildTicketRemissionGuide(
     let positionY: number = 5
     const pageCenter = 35
 
-   // if (setting.logo) {
-   //     positionY += 40
-   //     pdf.addImage(setting.logo, "JPEG", 15 + marginLeft, 0, 40, 40)
-   // }
+    if (urlLogo) {
+        positionY += 42
+        pdf.addImage(urlLogo, "JPEG", 15, 0, 40, 40)
+    }
 
     text = (office.tradeName || '').toUpperCase()
     strArr = pdf.splitTextToSize(text, 65)

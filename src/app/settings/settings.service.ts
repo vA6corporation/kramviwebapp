@@ -41,8 +41,8 @@ export class SettingsService {
         return this.httpService.get('certificates')
     }
 
-    deleteCertificate(certificateId: any, businessId: any): Observable<void> {
-        return this.httpService.delete(`certificates/${certificateId}/${businessId}`)
+    deleteCertificate(certificateUuid: any, businessId: any): Observable<void> {
+        return this.httpService.delete(`certificates/${certificateUuid}/${businessId}`)
     }
 
     savePriceList(name: string): Observable<void> {

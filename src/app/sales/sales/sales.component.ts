@@ -11,7 +11,7 @@ import { AuthService } from '../../auth/auth.service'
 import { BusinessModel } from '../../businesses/business.model'
 import { OfficeModel } from '../../offices/office.model'
 import { SettingModel } from '../../settings/setting.model'
-import { DialogPasswordComponent } from '../../boards/dialog-password/dialog-password.component'
+import { DialogPasswordComponent } from '../dialog-password/dialog-password.component'
 import { buildExcel } from '../../buildExcel'
 import { DialogProgressComponent } from '../../navigation/dialog-progress/dialog-progress.component'
 import { NavigationService } from '../../navigation/navigation.service'
@@ -350,8 +350,8 @@ export class SalesComponent {
         }
     }
 
-    onOptions(saleId: string) {
-        const matBottomSheetRef = this.matBottomSheet.open(SheetInvoicesComponent, { data: saleId })
+    onOptions(sale: SaleModel) {
+        const matBottomSheetRef = this.matBottomSheet.open(SheetInvoicesComponent, { data: sale })
         matBottomSheetRef.instance.handleSendInvoice().subscribe(() => {
             this.fetchData()
         })

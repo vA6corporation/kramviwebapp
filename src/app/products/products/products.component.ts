@@ -23,7 +23,7 @@ import { buildExcel } from '../../buildExcel'
 import { DialogProgressComponent } from '../../navigation/dialog-progress/dialog-progress.component'
 import { MaterialModule } from '../../material.module'
 import { BusinessType } from '../../businesses/business.model'
-import { DialogPasswordComponent } from '../../boards/dialog-password/dialog-password.component'
+import { DialogPasswordComponent } from '../../sales/dialog-password/dialog-password.component'
 import { ProvidersService } from '../../providers/providers.service'
 import { ProviderModel } from '../../providers/provider.model'
 

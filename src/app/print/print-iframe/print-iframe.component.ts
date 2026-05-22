@@ -182,7 +182,7 @@ export class PrintIframeComponent {
         })
 
         this.printService.handlePrintA4RemissionGuide().subscribe(async remissionGuide => {
-            const pdf = await buildA4RemissionGuide(remissionGuide, this.setting, this.business, this.office)
+            const pdf = await buildA4RemissionGuide(remissionGuide, this.setting, this.business, this.office, this.urlLogo)
             if (main) {
                 const file = pdf.output('arraybuffer')
                 main.print(file)
@@ -257,7 +257,7 @@ export class PrintIframeComponent {
         })
 
         this.printService.handleExportPdfA4RemissionGuide().subscribe(async remissionGuide => {
-            const pdf = await buildA4RemissionGuide(remissionGuide, this.setting, this.business, this.office)
+            const pdf = await buildA4RemissionGuide(remissionGuide, this.setting, this.business, this.office, this.urlLogo)
             pdf.save(`T${this.office.serialPrefix}-${remissionGuide.remissionGuideNumber}`)
         })
 
@@ -390,13 +390,13 @@ export class PrintIframeComponent {
         })
 
         this.printService.handleExportRemissionGuidePdfTicket80mm().subscribe(async remissionGuide => {
-            const pdf = await buildTicketRemissionGuide(remissionGuide, this.setting, this.business, this.office)
+            const pdf = await buildTicketRemissionGuide(remissionGuide, this.setting, this.business, this.office, this.urlLogo)
             pdf.save(`T${this.office.serialPrefix}-${remissionGuide.remissionGuideNumber}`)
         })
 
         this.printService.handlePrintRemissionGuideTicket80mm().subscribe(async remissionGuide => {
             if (main) {
-                const pdf = await buildTicketRemissionGuide(remissionGuide, this.setting, this.business, this.office)
+                const pdf = await buildTicketRemissionGuide(remissionGuide, this.setting, this.business, this.office, this.urlLogo)
                 const printers = this.printers.filter(e => e.printInvoice)
                 const file = pdf.output('arraybuffer')
 
@@ -408,7 +408,7 @@ export class PrintIframeComponent {
                     main.print(file)
                 }
             } else {
-                const pdf = await buildTicketRemissionGuide(remissionGuide, this.setting, this.business, this.office)
+                const pdf = await buildTicketRemissionGuide(remissionGuide, this.setting, this.business, this.office, this.urlLogo)
                 pdf.autoPrint({ variant: 'non-conform' })
                 const blobUrl = pdf.output('bloburl')
                 this.print(blobUrl)

@@ -14,13 +14,13 @@
         <span matListItemTitle>Descargar XML</span>
     </button>
 
-    <button type="button" mat-list-item [routerLink]="['/credits', saleId, 'details']"
+    <button type="button" mat-list-item [routerLink]="['/credits', sale.id, 'details']"
         (click)="matBottomSheetRef.dismiss()">
         <mat-icon class="color-black" matListItemIcon>local_atm</mat-icon>
         <span matListItemTitle>Pagos</span>
     </button>
 
-    <button type="button" mat-list-item [routerLink]="['/sales/copy', saleId]" (click)="matBottomSheetRef.dismiss()">
+    <button type="button" mat-list-item [routerLink]="['/sales/copy', sale.id]" (click)="matBottomSheetRef.dismiss()">
         <mat-icon class="color-black" matListItemIcon>content_copy</mat-icon>
         <span matListItemTitle>Copiar venta</span>
     </button>

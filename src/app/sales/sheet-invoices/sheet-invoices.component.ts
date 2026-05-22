@@ -14,6 +14,8 @@ import { DialogSendEmailComponent } from '../dialog-send-email/dialog-send-email
 import { InvoicesService } from '../../invoices/invoices.service'
 import { MaterialModule } from '../../material.module'
 import { RouterModule } from '@angular/router'
+import { InvoiceCode } from '../invoice-code.enum'
+import { SaleModel } from '../sale.model'
 
 @Component({
     selector: 'app-sheet-invoices',
@@ -23,7 +25,7 @@ import { RouterModule } from '@angular/router'
 })
 export class SheetInvoicesComponent {
 
-    readonly saleId: number = inject(MAT_BOTTOM_SHEET_DATA)
+    readonly sale: SaleModel = inject(MAT_BOTTOM_SHEET_DATA)
     readonly matBottomSheetRef: MatBottomSheetRef<SheetInvoicesComponent> = inject(MatBottomSheetRef)
     private readonly navigationService = inject(NavigationService)
     private readonly invoicesService = inject(InvoicesService)
@@ -57,7 +59,7 @@ export class SheetInvoicesComponent {
         this.matDialog.open(DialogCreditNotesComponent, {
             width: '600px',
             position: { top: '20px' },
-            data: this.saleId,
+            data: this.sale.id,
         })
     }
 
@@ -67,23 +69,42 @@ export class SheetInvoicesComponent {
         this.matDialog.open(DialogRemissionGuidesComponent, {
             width: '600px',
             position: { top: '20px' },
-            data: this.saleId,
+            data: this.sale.id,
         })
     }
 
     onEmailDialog() {
         this.matBottomSheetRef.dismiss()
-        this.matDialog.open(DialogSendEmailComponent, {
-            width: '600px',
-            position: { top: '20px' },
-            data: this.saleId,
-        })
+
+        if (this.business.certificateId && this.sale.cdr === null && this.sale.invoiceCode !== InvoiceCode.NOTA_DE_VENTA) {
+            this.navigationService.loadBarStart()
+            this.invoicesService.sendInvoice(this.sale.id).subscribe({
+                next: cdr => {
+                    this.matDialog.open(DialogSendEmailComponent, {
+                        width: '600px',
+                        position: { top: '20px' },
+                        data: this.sale.id,
+                    })
+                    this.onSendInvoice$.emit()
+                    this.navigationService.loadBarFinish()
+                }, error: (error: HttpErrorResponse) => {
+                    this.navigationService.showMessage(error.error.message)
+                    this.navigationService.loadBarFinish()
+                }
+            })
+        } else {
+            this.matDialog.open(DialogSendEmailComponent, {
+                width: '600px',
+                position: { top: '20px' },
+                data: this.sale.id,
+            })
+        }
     }
 
     onStatusCdr() {
         this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
-        this.invoicesService.statusCdr(this.saleId).subscribe({
+        this.invoicesService.statusCdr(this.sale.id).subscribe({
             next: cdr => {
                 this.navigationService.loadBarFinish()
                 this.navigationService.showMessage(cdr.sunatMessage)
@@ -106,11 +127,11 @@ export class SheetInvoicesComponent {
     async onDownloadCdr() {
         this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
-        const sale = await lastValueFrom(this.salesService.getSaleById(this.saleId))
-        const fileName = `${this.business.ruc}-${sale.invoiceCode}-${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}.zip`
-        if (sale.cdr) {
+        const fileName = `${this.business.ruc}-${this.sale.invoiceCode}-${this.sale.invoicePrefix}${this.office.serialPrefix}-${this.sale.invoiceNumber}.zip`
+
+        if (this.sale.cdr) {
             try {
-                const blobCdr = await this.invoicesService.getCdr(sale.cdr.id)
+                const blobCdr = await this.invoicesService.getCdr(this.sale.cdr.id)
                 const urlCdr = window.URL.createObjectURL(blobCdr)
                 this.navigationService.loadBarFinish()
                 this.downloadFile(urlCdr, 'R-' + fileName)
@@ -119,10 +140,13 @@ export class SheetInvoicesComponent {
                 this.navigationService.loadBarFinish()
             }
         } else {
-            this.invoicesService.sendInvoice(this.saleId).subscribe({
-                next: () => {
+            this.invoicesService.sendInvoice(this.sale.id).subscribe({
+                next: async cdr => {
                     this.onSendInvoice$.emit()
-                    this.onDownloadCdr()
+                    const blobCdr = await this.invoicesService.getCdr(cdr.id)
+                    const urlCdr = window.URL.createObjectURL(blobCdr)
+                    this.navigationService.loadBarFinish()
+                    this.downloadFile(urlCdr, 'R-' + fileName)
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.showMessage(error.error.message)
                     this.navigationService.loadBarFinish()
@@ -134,11 +158,11 @@ export class SheetInvoicesComponent {
     async onDownloadXml() {
         this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
-        const sale = await lastValueFrom(this.salesService.getSaleById(this.saleId))
-        const fileName = `${this.business.ruc}-${sale.invoiceCode}-${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}.zip`
-        if (sale.cdr) {
+        const fileName = `${this.business.ruc}-${this.sale.invoiceCode}-${this.sale.invoicePrefix}${this.office.serialPrefix}-${this.sale.invoiceNumber}.zip`
+
+        if (this.sale.cdr) {
             try {
-                const blobXml = await this.invoicesService.getXml(sale.cdr.id)
+                const blobXml = await this.invoicesService.getXml(this.sale.cdr.id)
                 const urlXml = window.URL.createObjectURL(blobXml)
                 this.navigationService.loadBarFinish()
                 this.downloadFile(urlXml, fileName)
@@ -147,10 +171,13 @@ export class SheetInvoicesComponent {
                 this.navigationService.loadBarFinish()
             }
         } else {
-            this.invoicesService.sendInvoice(this.saleId).subscribe({
-                next: () => {
+            this.invoicesService.sendInvoice(this.sale.id).subscribe({
+                next: async cdr => {
                     this.onSendInvoice$.emit()
-                    this.onDownloadXml()
+                    const blobCdr = await this.invoicesService.getCdr(cdr.id)
+                    const urlCdr = window.URL.createObjectURL(blobCdr)
+                    this.navigationService.loadBarFinish()
+                    this.downloadFile(urlCdr, fileName)
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.showMessage(error.error.message)
                     this.navigationService.loadBarFinish()
@@ -162,7 +189,7 @@ export class SheetInvoicesComponent {
     onSendInvoice() {
         this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
-        this.invoicesService.sendInvoice(this.saleId).subscribe({
+        this.invoicesService.sendInvoice(this.sale.id).subscribe({
             next: () => {
                 this.onSendInvoice$.emit()
                 this.navigationService.showMessage('Enviado a sunat')
