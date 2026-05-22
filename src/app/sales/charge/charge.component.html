@@ -2,8 +2,7 @@
 @let setting = $setting();
 @let turn = $turn();
 <div class="d-flex">
-    <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()"
-        [formGroup]="formGroup" autocomplete="off">
+    <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
         <div class="px-3">
             <h2 class="text-center mat-display-small mb-0">{{ $charge().toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</h2>
             <p class="caption text-center text-muted mb-2">Total a cobrar</p>
@@ -45,14 +44,6 @@
             <mat-form-field appearance="fill">
                 <mat-label>Fecha de emision</mat-label>
                 <input matInput [matDatepicker]="picker" formControlName="createdAt">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-            }
-            @if (setting.isShowDeliveryAt) {
-            <mat-form-field appearance="fill">
-                <mat-label>Fecha de entrega</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="deliveryAt">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>

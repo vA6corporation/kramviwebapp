@@ -4,7 +4,6 @@ export interface CreateCreditModel {
     customerId: number | null
     currencyCode: string
     discount: number | null
-    deliveryAt: Date | null
     createdAt: Date | null
     observation: string
     igvPercent: number

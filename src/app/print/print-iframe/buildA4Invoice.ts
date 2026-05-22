@@ -221,15 +221,6 @@ export async function buildA4Invoice(
         pdf.text('N° DE CUOTAS', 130, 65)
         pdf.text(':', 165, 65)
 
-        if (sale.deliveryAt) {
-            pdf.text('F. DE ENTREGA', 130, 70)
-            pdf.text(':', 165, 70)
-        }
-    } else {
-        if (sale.deliveryAt) {
-            pdf.text('F. DE ENTREGA', 130, 60)
-            pdf.text(':', 165, 60)
-        }
     }
 
     pdf.setFont('Helvetica', 'normal')
@@ -245,14 +236,6 @@ export async function buildA4Invoice(
         pdf.text(text, 170, 60)
         text = `${sale.dues.length} cuotas`
         pdf.text(text, 170, 65)
-
-        if (sale.deliveryAt) {
-            pdf.text(`${formatDate(sale.deliveryAt, 'dd/MM/yyyy', 'en-US')}`, 170, 70)
-        }
-    } else {
-        if (sale.deliveryAt) {
-            pdf.text(`${formatDate(sale.deliveryAt, 'dd/MM/yyyy', 'en-US')}`, 170, 60)
-        }
     }
 
     let positionYColumns = positionYCustomer

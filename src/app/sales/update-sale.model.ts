@@ -5,7 +5,6 @@ export interface UpdateSaleModel {
     cash: number | null
     currencyCode: string
     discount: number | null
-    deliveryAt: Date | null
     igvPercent: number
     rcPercent: number
     isRetainer: boolean

@@ -322,7 +322,6 @@ export class CreateCreditBillerComponent {
                 observation: creditForm.observation,
                 currencyCode: creditForm.currencyCode || 'PEN',
                 discount: creditForm.discount,
-                deliveryAt: creditForm.deliveryAt,
                 createdAt: creditForm.createdAt,
                 isRetainer: creditForm.isRetainer,
                 isCredit: true,

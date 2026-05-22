@@ -132,11 +132,6 @@ export class ChargeBoardsComponent {
                 }
             })
 
-            if (this.$setting().isShowDeliveryAt) {
-                this.formGroup.get('deliveryAt')?.setValidators([Validators.required])
-                this.formGroup.get('deliveryAt')?.updateValueAndValidity()
-            }
-
             if (this.$setting().isShowEmitionAt) {
                 this.formGroup.get('createdAt')?.patchValue(new Date())
                 this.formGroup.get('createdAt')?.setValidators([Validators.required])
@@ -333,7 +328,6 @@ export class ChargeBoardsComponent {
                 cash: saleForm.cash,
                 currencyCode: 'PEN',
                 discount: saleForm.discount,
-                deliveryAt: null,
                 createdAt: saleForm.createdAt,
                 isRetainer: saleForm.isRetainer,
                 igvPercent: this.$setting().defaultIgvPercent,

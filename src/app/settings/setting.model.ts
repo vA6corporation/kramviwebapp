@@ -24,7 +24,6 @@ export class SettingModel {
     isShowRetainer: boolean = false
     isShowDetraction: boolean = false
     isShowCredit: boolean = false
-    isShowDeliveryAt: boolean = false
     isShowEditPrice: boolean = false
     isAvailableStock: boolean = false
     isOfficeTurn: boolean = false

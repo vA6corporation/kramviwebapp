@@ -48,10 +48,6 @@ export class SalesService {
         return this.sale
     }
 
-    getSalesByRangeDateDeliveryAt(startDate: Date, endDate: Date): Observable<SaleModel[]> {
-        return this.httpService.get(`sales/byRangeDateDeliveryAt/${startDate}/${endDate}`)
-    }
-
     getSalesByPageTurn(pageIndex: number, pageSize: number, turnId: any): Observable<SaleModel[]> {
         return this.httpService.get(`sales/byPageTurn/${pageIndex}/${pageSize}/${turnId}`)
     }
@@ -328,14 +324,6 @@ export class SalesService {
 
     update(sale: SaleModel, saleId: any): Observable<void> {
         return this.httpService.put(`sales/${saleId}`, { sale })
-    }
-
-    updateDeliverySale(saleId: any) {
-        return this.httpService.get(`sales/deliverySale/${saleId}`)
-    }
-
-    updateDeliverySaleItem(saleId: any, saleItemId: any) {
-        return this.httpService.get(`sales/deliverySaleItem/${saleId}/${saleItemId}`)
     }
 
     updateDateSale(sale: SaleModel, saleId: any): Observable<void> {

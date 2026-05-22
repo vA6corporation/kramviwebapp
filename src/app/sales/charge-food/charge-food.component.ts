@@ -57,7 +57,6 @@ export class ChargeFoodComponent {
         currencyCode: 'PEN',
         discount: null,
         isConsumption: false,
-        deliveryAt: null,
         createdAt: null,
         isRetainer: false,
         paymentMethodId: null,
@@ -130,11 +129,6 @@ export class ChargeFoodComponent {
                     })
                 }
             })
-
-            if (this.$setting().isShowDeliveryAt) {
-                this.formGroup.get('deliveryAt')?.setValidators([Validators.required])
-                this.formGroup.get('deliveryAt')?.updateValueAndValidity()
-            }
 
             if (this.$setting().isShowEmitionAt) {
                 this.formGroup.get('createdAt')?.patchValue(new Date())
@@ -286,7 +280,6 @@ export class ChargeFoodComponent {
                 cash: saleForm.cash,
                 currencyCode: saleForm.currencyCode || 'PEN',
                 discount: saleForm.discount,
-                deliveryAt: saleForm.deliveryAt,
                 createdAt: saleForm.createdAt,
                 isRetainer: saleForm.isRetainer,
 

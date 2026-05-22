@@ -279,7 +279,6 @@ export class EditBillerComponent {
                 igvPercent: this.sale.igvPercent,
                 rcPercent: this.sale.rcPercent,
                 cash: null,
-                deliveryAt: null,
                 isRetainer: false,
                 isCredit: this.sale.isCredit,
 

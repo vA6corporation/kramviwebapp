@@ -63,7 +63,6 @@ export class ChargeCreditComponent {
         currencyCode: 'PEN',
         observation: '',
         discount: null,
-        deliveryAt: null,
         createdAt: null,
         isRetainer: false,
     })
@@ -134,11 +133,6 @@ export class ChargeCreditComponent {
                     })
                 }
             })
-
-            if (this.$setting().isShowDeliveryAt) {
-                this.formGroup.get('deliveryAt')?.setValidators([Validators.required])
-                this.formGroup.get('deliveryAt')?.updateValueAndValidity()
-            }
         })
 
         this.navigationService.setMenu([
@@ -369,7 +363,6 @@ export class ChargeCreditComponent {
                 turnId: turn.id,
                 currencyCode: creditForm.currencyCode || 'PEN',
                 discount: creditForm.discount,
-                deliveryAt: creditForm.deliveryAt,
                 createdAt: creditForm.createdAt,
                 isRetainer: creditForm.isRetainer,
                 isCredit: true,

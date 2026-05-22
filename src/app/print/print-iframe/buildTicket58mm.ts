@@ -150,12 +150,6 @@ export async function buildTicket58mm(
         positionY += 3
     }
 
-    if (sale.deliveryAt) {
-        pdf.text('F. entrega:', 0 + marginLeft, positionY)
-        pdf.text(`${formatDate(sale.deliveryAt, 'dd/MM/yyyy', 'en-US')}`, 15 + marginLeft, positionY)
-        positionY += 3
-    }
-
     pdf.line(0 + marginLeft, positionY, 47, positionY) // horizontal line
     positionY += 5
 

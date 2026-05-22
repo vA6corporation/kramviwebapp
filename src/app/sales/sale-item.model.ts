@@ -20,7 +20,6 @@ export interface SaleItemModel {
     isTrackStock: boolean
     observation: string
     createdAt: string
-    deliveryAt?: string
     saleId: any
     categoryId: any
     printZone?: PrintZoneType

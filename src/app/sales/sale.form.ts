@@ -6,7 +6,6 @@ export interface SaleForm {
   observation: string
   cash: number | null
   discount: number | null
-  deliveryAt: Date | null
   createdAt: Date
   isConsumption: boolean
   isRetainer: boolean

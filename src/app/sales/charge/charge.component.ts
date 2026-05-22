@@ -61,7 +61,6 @@ export class ChargeComponent {
         observation: '',
         discount: null,
         discountPercent: null,
-        deliveryAt: null,
         createdAt: null,
         cash: null,
         isRetainer: false,
@@ -147,11 +146,6 @@ export class ChargeComponent {
                     })
                 }
             })
-
-            if (this.$setting().isShowDeliveryAt) {
-                this.formGroup.get('deliveryAt')?.setValidators([Validators.required])
-                this.formGroup.get('deliveryAt')?.updateValueAndValidity()
-            }
 
             if (this.$setting().isShowEmitionAt) {
                 this.formGroup.get('createdAt')?.patchValue(new Date())
@@ -364,7 +358,6 @@ export class ChargeComponent {
                 observation: saleForm.observation,
                 currencyCode: saleForm.currencyCode || 'PEN',
                 discount: saleForm.discount,
-                deliveryAt: saleForm.deliveryAt,
                 createdAt: saleForm.createdAt,
                 cash: saleForm.cash,
                 isRetainer: saleForm.isRetainer,

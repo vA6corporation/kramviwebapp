@@ -308,7 +308,6 @@ export class CreateBillerComponent {
                 observation: saleForm.observation,
                 currencyCode: saleForm.currencyCode || 'PEN',
                 discount: saleForm.discount,
-                deliveryAt: saleForm.deliveryAt,
                 createdAt: saleForm.createdAt,
                 cash: saleForm.cash,
                 isRetainer: saleForm.isRetainer,

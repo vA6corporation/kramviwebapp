@@ -42,14 +42,6 @@
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
             }
-            @if (setting.isShowDeliveryAt) {
-            <mat-form-field appearance="fill">
-                <mat-label>Fecha de entrega</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="deliveryAt">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-            }
             @if (setting.isShowTotalDiscount) {
             <mat-form-field appearance="fill">
                 <mat-label>Descuento global</mat-label>

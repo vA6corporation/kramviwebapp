@@ -203,7 +203,6 @@ export class ChangeInvoiceComponent {
                 cash: null,
                 currencyCode: this.sale.currencyCode,
                 discount: this.sale.discount,
-                deliveryAt: null,
                 isRetainer: false,
                 createdAt: null,
                 igvPercent: this.setting.defaultIgvPercent,

@@ -5,7 +5,6 @@ export interface CreditForm {
     currencyCode: string
     discount: number | null
     isConsumption: boolean
-    deliveryAt: Date | null
     createdAt: Date | null
     isRetainer: boolean
 }

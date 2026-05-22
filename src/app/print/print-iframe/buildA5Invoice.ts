@@ -167,16 +167,6 @@ export async function buildA5Invoice(
     text = sale.isCredit ? 'CREDITO' : 'CONTADO'
     pdf.text(text, 35, positionYCustomer)
 
-    if (sale.deliveryAt) {
-        positionYCustomer += 4
-        pdf.setFont('Helvetica', 'bold')
-        pdf.text('F. DE ENTREGA', 8, positionYCustomer)
-        pdf.text(':', 32, positionYCustomer)
-        pdf.setFont('Helvetica', 'normal')
-        text = formatDate(sale.deliveryAt, 'dd/MM/yyyy', 'en-US')
-        pdf.text(text, 35, positionYCustomer)
-    }
-
     positionYCustomer += 4
 
     pdf.setFont('Helvetica', 'bold')

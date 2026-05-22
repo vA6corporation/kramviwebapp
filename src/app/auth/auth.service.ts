@@ -24,7 +24,6 @@ export class AuthService {
         { label: 'Punto de venta', name: 'posFood', path: '/posFood', isActive: false, isAuthorized: false, icon: 'desktop_windows', info: 'Restaurantes' },
         { label: 'Atencion de cajero', name: 'boards', path: '/boards', isActive: false, isAuthorized: false, icon: 'desktop_windows', info: 'Restaurantes' },
         { label: 'Atencion de mozos', name: 'boardsWaiter', path: '/boards/waiter', isActive: false, isAuthorized: false, icon: 'desktop_windows', info: 'Restaurantes' },
-        { label: 'Entregas', name: 'deliveries', path: '/deliveries', isActive: false, isAuthorized: false, icon: 'outbox', info: 'Casos especiales' },
         { label: 'Proformar', name: 'proformar', path: '/proformas/posProformas', isActive: false, isAuthorized: false, icon: 'desktop_windows', info: 'Tiendas' },
         { label: 'Proformas', name: 'proformas', path: '/proformas', isActive: false, isAuthorized: false, icon: 'check_box', info: 'Tiendas' },
         { label: 'Comandas', name: 'deletedBoards', path: '/boards/deletedBoards', isActive: false, isAuthorized: false, icon: 'delete_sweep', info: 'Restaurantes' },

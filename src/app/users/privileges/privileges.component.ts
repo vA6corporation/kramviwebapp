@@ -30,7 +30,6 @@ export class PrivilegesComponent {
         expenses: false,
         posStandard: false,
         posFood: false,
-        deliveries: false,
         proformas: false,
         proformar: false,
         boards: false,

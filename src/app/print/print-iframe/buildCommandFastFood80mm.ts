@@ -23,8 +23,6 @@ export function buildCommandFastFood80mm(
     let strArr: string[] = []
     pdf.setFontSize(body)
     pdf.text(`TICKET N° ${sale.invoicePrefix}${office.serialPrefix}-${sale.invoiceNumber}`, pageCenter, positionY, { align: 'center' })
-    //positionY += 5
-    //pdf.text(`${sale.isDelivery ? 'DELIVERY' : 'ESTABLECIMIENTO'}`, pageCenter, positionY, { align: 'center' })
     positionY += 10
 
     let totalCharge = 0
