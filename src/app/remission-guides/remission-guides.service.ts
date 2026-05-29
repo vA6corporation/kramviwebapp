@@ -100,8 +100,8 @@ export class RemissionGuidesService {
         return this.remissionGuideItems$.asObservable()
     }
 
-    sendRemissionGuide(remissionGuideId: any, sunattk: string) {
-        return this.httpService.get(`remissionGuides/sendSunat/${remissionGuideId}/${sunattk}`)
+    sendRemissionGuide(remissionGuideId: any) {
+        return this.httpService.get(`remissionGuides/sendSunat/${remissionGuideId}`)
     }
 
     getProvincesByDepartmentCode(departmentCode: string): Observable<any[]> {

@@ -44,8 +44,8 @@ export class PurchasesService {
         return this.httpService.get(`purchases/countPurchases`, params)
     }
 
-    getCountPurchaseItemsByProduct(productId: any, params: Params): Observable<number> {
-        return this.httpService.get(`purchases/countPurchaseItemsByProduct/${productId}`, params)
+    getCountPurchaseItems(params: Params): Observable<number> {
+        return this.httpService.get('purchases/countPurchaseItems', params)
     }
 
     getCountQuantityPurchaseItemsByProduct(

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { PageEvent } from '@angular/material/paginator'
 import { MatDialog } from '@angular/material/dialog'
 import { Subscription } from 'rxjs'
@@ -8,7 +8,7 @@ import { UsersService } from '../../users/users.service'
 import { HttpErrorResponse } from '@angular/common/http'
 import { MaterialModule } from '../../material.module'
 import { CommonModule } from '@angular/common'
-import { RouterModule, Router, ActivatedRoute, Params } from '@angular/router'
+import { RouterModule, ActivatedRoute, Params } from '@angular/router'
 import { PurchasesService } from '../../purchases/purchases.service'
 import { PurchaseItemModel } from '../../purchases/purchase-item.model'
 import { DialogDetailPurchasesComponent } from '../dialog-detail-purchases/dialog-detail-purchases.component'
@@ -25,7 +25,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 export class DetailPurchaseItemsComponent {
 
     private readonly formBuilder = inject(FormBuilder)
-    private readonly router = inject(Router)
     private readonly usersService = inject(UsersService)
     private readonly productsService = inject(ProductsService)
     private readonly purchasesService = inject(PurchasesService)
@@ -34,13 +33,12 @@ export class DetailPurchaseItemsComponent {
     private readonly matDialog = inject(MatDialog)
 
     displayedColumns: string[] = ['createdAt', 'user', 'quantity', 'cost', 'charge', 'actions']
-    dataSource: PurchaseItemModel[] = []
-    length: number = 0
+    $dataSource = signal<PurchaseItemModel[]>([])
+    $length = signal<number>(0)
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
-    users: UserModel[] = []
-    product: ProductModel | null = null
+    $users = signal<UserModel[]>([])
     private productId: any = ''
     private params: Params = {}
 
@@ -50,6 +48,8 @@ export class DetailPurchaseItemsComponent {
 
     formGroup: FormGroup = this.formBuilder.group({
         userId: '',
+        startDate: ['', Validators.required],
+        endDate: ['', Validators.required],
     })
 
     ngOnDestroy(): void {
@@ -59,20 +59,31 @@ export class DetailPurchaseItemsComponent {
     }
 
     ngOnInit(): void {
-        this.navigationService.setTitle('Detalle de compras')
         this.productId = this.activatedRoute.snapshot.params['productId']
         Object.assign(this.params, { productId: this.productId })
 
         this.handleUsers$ = this.usersService.handleUsers().subscribe(users => {
-            this.users = users
+            this.$users.set(users)
         })
 
         this.productsService.getProductById(this.productId).subscribe(product => {
-            this.product = product
+            this.navigationService.setTitle(`Detalle de compras - ${product.fullName}`)
         })
 
         this.fetchData()
         this.fetchCount()
+    }
+
+    onRangeChange() {
+        if (this.formGroup.valid) {
+            this.pageIndex = 0
+
+            const { startDate, endDate } = this.formGroup.value
+            Object.assign(this.params, { startDate, endDate })
+
+            this.fetchCount()
+            this.fetchData()
+        }
     }
 
     onDetailPurchase(purchaseId: any) {
@@ -84,8 +95,8 @@ export class DetailPurchaseItemsComponent {
     }
 
     fetchCount() {
-        this.purchasesService.getCountPurchaseItemsByProduct(this.productId, this.params).subscribe(count => {
-            this.length = count
+        this.purchasesService.getCountPurchaseItems(this.params).subscribe(count => {
+            this.$length.set(count)
         })
     }
 
@@ -93,22 +104,15 @@ export class DetailPurchaseItemsComponent {
         this.navigationService.loadBarStart()
         this.purchasesService.getPurchaseItemsByPageProduct(this.pageIndex + 1, this.pageSize, this.productId, this.params).subscribe(purchaseItems => {
             this.navigationService.loadBarFinish()
-            this.dataSource = purchaseItems
+            this.$dataSource.set(purchaseItems)
         })
     }
 
     onUserChange() {
         this.pageIndex = 0
+
         const { userId } = this.formGroup.value
-        const queryParams: Params = { userId }
-
-        Object.assign(this.params, queryParams)
-
-        this.router.navigate([], {
-            relativeTo: this.activatedRoute,
-            queryParams: queryParams,
-            queryParamsHandling: 'merge', // remove to replace all query params by provided
-        })
+        Object.assign(this.params, { userId })
 
         this.fetchCount()
         this.fetchData()

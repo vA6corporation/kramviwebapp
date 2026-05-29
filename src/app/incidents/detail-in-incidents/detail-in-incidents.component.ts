@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { PageEvent } from '@angular/material/paginator'
 import { MatDialog } from '@angular/material/dialog'
 import { Subscription } from 'rxjs'
@@ -17,10 +17,10 @@ import { ProductModel } from '../../products/product.model'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 
 @Component({
-  selector: 'app-detail-in-incidents',
-  imports: [MaterialModule, RouterModule, ReactiveFormsModule, CommonModule],
-  templateUrl: './detail-in-incidents.component.html',
-  styleUrl: './detail-in-incidents.component.sass'
+    selector: 'app-detail-in-incidents',
+    imports: [MaterialModule, RouterModule, ReactiveFormsModule, CommonModule],
+    templateUrl: './detail-in-incidents.component.html',
+    styleUrl: './detail-in-incidents.component.sass'
 })
 export class DetailInIncidentsComponent {
 
@@ -34,13 +34,12 @@ export class DetailInIncidentsComponent {
     private readonly navigationService = inject(NavigationService)
 
     displayedColumns: string[] = ['createdAt', 'user', 'quantity', 'cost', 'charge', 'actions']
-    dataSource: IncidentItemModel[] = []
-    length: number = 0
+    $dataSource = signal<IncidentItemModel[]>([])
+    $length = signal<number>(0)
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
-    users: UserModel[] = []
-    product: ProductModel | null = null
+    $users = signal<UserModel[]>([])
     private productId: string = ''
     private params: Params = {}
 
@@ -50,6 +49,8 @@ export class DetailInIncidentsComponent {
 
     formGroup: FormGroup = this.formBuilder.group({
         userId: '',
+        startDate: ['', Validators.required],
+        endDate: ['', Validators.required],
     })
 
     ngOnDestroy(): void {
@@ -59,20 +60,31 @@ export class DetailInIncidentsComponent {
     }
 
     ngOnInit(): void {
-        this.navigationService.setTitle('Detalle de aumentos')
         this.productId = this.activatedRoute.snapshot.params['productId']
         Object.assign(this.params, { productId: this.productId })
 
         this.handleUsers$ = this.usersService.handleUsers().subscribe(users => {
-            this.users = users
+            this.$users.set(users)
         })
 
         this.productsService.getProductById(this.productId).subscribe(product => {
-            this.product = product
+            this.navigationService.setTitle(`Detalle de aumentos - ${product.fullName}`)
         })
 
         this.fetchData()
         this.fetchCount()
+    }
+
+    onRangeChange() {
+        if (this.formGroup.valid) {
+            this.pageIndex = 0
+
+            const { startDate, endDate } = this.formGroup.value
+            Object.assign(this.params, { startDate, endDate })
+
+            this.fetchCount()
+            this.fetchData()
+        }
     }
 
     onDetailIncident(purchaseId: string) {
@@ -85,7 +97,7 @@ export class DetailInIncidentsComponent {
 
     fetchCount() {
         this.incidentsService.getCountInIncidentItems(this.params).subscribe(count => {
-            this.length = count
+            this.$length.set(count)
         })
     }
 
@@ -93,22 +105,15 @@ export class DetailInIncidentsComponent {
         this.navigationService.loadBarStart()
         this.incidentsService.getInIncidentItemsByPage(this.pageIndex + 1, this.pageSize, this.params).subscribe(incidentItems => {
             this.navigationService.loadBarFinish()
-            this.dataSource = incidentItems
+            this.$dataSource.set(incidentItems)
         })
     }
 
     onUserChange() {
         this.pageIndex = 0
+
         const { userId } = this.formGroup.value
-        const queryParams: Params = { userId }
-
-        Object.assign(this.params, queryParams)
-
-        this.router.navigate([], {
-            relativeTo: this.activatedRoute,
-            queryParams: queryParams,
-            queryParamsHandling: 'merge', // remove to replace all query params by provided
-        })
+        Object.assign(this.params, { userId })
 
         this.fetchCount()
         this.fetchData()

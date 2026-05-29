@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { NavigationService } from '../../navigation/navigation.service'
 import { OfficesService } from '../offices.service'
 import { OfficeModel } from '../office.model'
@@ -7,18 +7,18 @@ import { MaterialModule } from '../../material.module'
 import { CommonModule } from '@angular/common'
 
 @Component({
-    selector: 'app-disabled-offices',
+    selector: 'app-deleted-offices',
     imports: [MaterialModule, CommonModule],
-    templateUrl: './disabled-offices.component.html',
-    styleUrls: ['./disabled-offices.component.sass'],
+    templateUrl: './deleted-offices.component.html',
+    styleUrl: './deleted-offices.component.sass',
 })
-export class DisabledOfficesComponent {
+export class DeletedOfficesComponent {
 
     private readonly navigationService = inject(NavigationService)
     private readonly officesService = inject(OfficesService)
 
     displayedColumns: string[] = ['name', 'address', 'activityName', 'serialPrefix', 'codigoAnexo', 'actions']
-    dataSource: OfficeModel[] = []
+    $dataSource = signal<OfficeModel[]>([])
     length: number = 0
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
@@ -26,10 +26,14 @@ export class DisabledOfficesComponent {
 
     ngOnInit(): void {
         this.navigationService.setTitle('Sucursales')
+        this.fetchData()
+    }
+
+    fetchData() {
         this.navigationService.loadBarStart()
-        this.officesService.getDisabledOffices().subscribe(offices => {
+        this.officesService.getDeletedOffices().subscribe(offices => {
             this.navigationService.loadBarFinish()
-            this.dataSource = offices
+            this.$dataSource.set(offices)
         }, (error: HttpErrorResponse) => {
             this.navigationService.showMessage(error.error.message)
         })
@@ -40,8 +44,8 @@ export class DisabledOfficesComponent {
         this.officesService.restore(officeId).subscribe(() => {
             this.navigationService.loadBarFinish()
             this.navigationService.showMessage('Restablecido correctamente')
-            this.dataSource = this.dataSource.filter(e => e.id !== officeId)
-        });
+            this.fetchData()
+        })
     }
 
 }

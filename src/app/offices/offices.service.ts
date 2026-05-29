@@ -17,8 +17,8 @@ export class OfficesService {
         return this.httpService.get('offices')
     }
 
-    getDisabledOffices(): Observable<OfficeModel[]> {
-        return this.httpService.get('offices/disabled')
+    getDeletedOffices(): Observable<OfficeModel[]> {
+        return this.httpService.get('offices/deleted')
     }
 
     handleOfficesByActivity(): Observable<OfficeModel[]> {

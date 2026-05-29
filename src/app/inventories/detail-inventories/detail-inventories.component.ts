@@ -104,9 +104,9 @@ export class DetailInventoriesComponent {
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(async id => {
             this.navigationService.loadBarStart()
 
-            const params = { isIncludeParent: true, productId: this.productId }
+            const params = { productId: this.productId }
             const countSaleItems = await lastValueFrom(this.salesService.getCountSaleItems(params))
-            const countPurchaseItems = await lastValueFrom(this.purchasesService.getCountPurchaseItemsByProduct(this.productId, params))
+            const countPurchaseItems = await lastValueFrom(this.purchasesService.getCountPurchaseItems(params))
             const countIncidentInItems = await lastValueFrom(this.incidentsService.getCountInIncidentItems(params))
             const countIncidentOutItems = await lastValueFrom(this.incidentsService.getCountOutIncidentItems(params))
 

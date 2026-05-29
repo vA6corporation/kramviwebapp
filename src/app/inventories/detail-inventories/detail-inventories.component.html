@@ -217,7 +217,7 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="bg-danger"></tr>
             </table>
-            <button type="button" [routerLink]="['/charge', productId, 'saleItems']" mat-flat-button color="primary" class="w-100">VER TODOS</button>
+            <button type="button" [routerLink]="['/sales', productId, 'saleItems']" mat-flat-button color="primary" class="w-100">VER TODOS</button>
         </div>
         }
     </div>

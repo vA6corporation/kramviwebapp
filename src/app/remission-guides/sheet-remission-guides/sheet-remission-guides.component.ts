@@ -27,7 +27,7 @@ export class SheetRemissionGuidesComponent {
     private readonly authService = inject(AuthService)
 
     private onSendRemissionGuide$: EventEmitter<void> = new EventEmitter()
-    private sunattk: string = ''
+    //private sunattk: string = ''
     private office: OfficeModel = new OfficeModel()
     private business: BusinessModel = new BusinessModel()
 
@@ -65,33 +65,33 @@ export class SheetRemissionGuidesComponent {
     onSendRemissionGuide() {
         this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
-        if (this.sunattk) {
-            this.remissionGuidesService.sendRemissionGuide(this.remissionGuideId, this.sunattk).subscribe({
-                next: () => {
-                    this.onSendRemissionGuide$.next()
-                    this.navigationService.showMessage('Enviado a sunat')
-                    this.navigationService.loadBarFinish()
-                }, error: (error: HttpErrorResponse) => {
-                    this.navigationService.showMessage(error.error.message)
-                    this.navigationService.loadBarFinish()
-                }
-            })
-        } else {
-            const params: Params = {
-                clientId: this.business.clientId,
-                clientSecret: this.business.clientSecret
+        this.remissionGuidesService.sendRemissionGuide(this.remissionGuideId).subscribe({
+            next: () => {
+                this.onSendRemissionGuide$.next()
+                this.navigationService.showMessage('Enviado a sunat')
+                this.navigationService.loadBarFinish()
+            }, error: (error: HttpErrorResponse) => {
+                this.navigationService.showMessage(error.error.message)
+                this.navigationService.loadBarFinish()
             }
-            this.remissionGuidesService.getSunatToken(params).subscribe({
-                next: res => {
-                    this.navigationService.loadBarFinish()
-                    this.sunattk = res.sunattk
-                    this.onSendRemissionGuide()
-                }, error: (error: HttpErrorResponse) => {
-                    this.navigationService.loadBarFinish()
-                    this.navigationService.showMessage(error.error.message)
-                }
-            })
-        }
+        })
+       // if (this.sunattk) {
+       // } else {
+       //     const params: Params = {
+       //         clientId: this.business.clientId,
+       //         clientSecret: this.business.clientSecret
+       //     }
+       //     this.remissionGuidesService.getSunatToken(params).subscribe({
+       //         next: res => {
+       //             this.navigationService.loadBarFinish()
+       //             this.sunattk = res.sunattk
+       //             this.onSendRemissionGuide()
+       //         }, error: (error: HttpErrorResponse) => {
+       //             this.navigationService.loadBarFinish()
+       //             this.navigationService.showMessage(error.error.message)
+       //         }
+       //     })
+       // }
     }
 
     downloadFile(url: string, fileName: string) {
