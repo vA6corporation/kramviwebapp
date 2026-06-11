@@ -247,7 +247,7 @@ export class ChargeComponent {
             this.proformasService.getProformaById(proformaId).subscribe(proforma => {
                 const { proformaItems, customer, discount } = proforma
                 this.salesService.setSaleItems(proformaItems)
-                this.formGroup.patchValue(proforma)
+                this.formGroup.patchValue({ discount })
                 this.$charge.update(value => value -= (discount || 0))
                 this.$customer.set(customer)
             })

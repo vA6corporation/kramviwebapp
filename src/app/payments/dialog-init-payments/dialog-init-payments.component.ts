@@ -22,6 +22,7 @@ export class DialogInitPaymentsComponent {
     formGroup: FormGroup = this.formBuilder.group({
         turnId: this.turnId,
         paymentMethodId: [null, Validators.required],
+        createdAt: new Date(),
         charge: [null, Validators.required],
     })
     paymentMethods: PaymentMethodModel[] = []

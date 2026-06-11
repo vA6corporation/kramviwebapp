@@ -46,7 +46,7 @@ export class PurchasesComponent {
         endDate: [null, Validators.required],
     })
 
-    displayedColumns: string[] = ['createdAt', 'serial', 'customer', 'user', 'charge', 'observation', 'actions']
+    displayedColumns: string[] = ['createdAt', 'invoiceName', 'serial', 'customer', 'user', 'charge', 'observation', 'actions']
     $dataSource = signal<PurchaseModel[]>([])
     $length = signal<number>(0)
     pageSize: number = 10
@@ -60,8 +60,6 @@ export class PurchasesComponent {
         { code: '03', label: 'BOLETA' },
         { code: '01', label: 'FACTURA' },
     ]
-    private endDate: Date = new Date()
-    private startDate: Date = new Date()
     private business: BusinessModel = new BusinessModel()
     private params: Params = {}
 
@@ -88,62 +86,65 @@ export class PurchasesComponent {
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
             if (id === 'excel_simple') {
-                this.navigationService.loadBarStart()
-                const chunk = 500
-                const promises: Promise<any>[] = []
-                const params = { ...this.params, sortBy: '-purchasedAt' }
-                for (let index = 0; index < this.$length() / chunk; index++) {
-                    const promise = lastValueFrom(this.purchasesService.getPurchasesByPage(index + 1, chunk, params))
-                    promises.push(promise)
-                }
-
-                Promise.all(promises).then(values => {
-                    this.navigationService.loadBarFinish()
-                    const purchases = values.flat() as PurchaseModel[]
-                    const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
-                    let body = []
-                    body.push([
-                        'F. DE REGISTRO',
-                        'RUC/DNI',
-                        'CLIENTE',
-                        'COMPROBANTE',
-                        'Nº COMPROBANTE',
-                        'MONEDA',
-                        'BASE',
-                        'IMPORTE T.',
-                        'IGV',
-                        'GRAVADO',
-                        'EXONERADO',
-                        'INAFECTO',
-                        'GRATUITO',
-                        'ANULADO',
-                        'F. PAGO',
-                        'OBSERVACIONES'
-                    ])
-                    for (const purchase of purchases) {
-                        const { provider } = purchase
-                        body.push([
-                            formatDate(purchase.createdAt, 'dd/MM/yyyy', 'en-US'),
-                            provider?.document,
-                            (provider?.name || 'VARIOS').toUpperCase(),
-                            purchase.invoiceName.toUpperCase(),
-                            purchase.serie,
-                            purchase.currencyCode,
-                            Number((purchase.charge - purchase.igv).toFixed(2)),
-                            Number((purchase.charge || 0).toFixed(2)),
-                            Number((purchase.igv || 0).toFixed(2)),
-                            Number((purchase.gravado || 0).toFixed(2)),
-                            Number((purchase.exonerado || 0).toFixed(2)),
-                            Number((purchase.inafecto || 0).toFixed(2)),
-                            Number((purchase.gratuito || 0).toFixed(2)),
-                            purchase.deletedAt ? 'SI' : 'NO',
-                            purchase.isPaid ? 'CONTADO' : 'CREDITO',
-                            purchase.observation
-                        ])
+                const { startDate, endDate } = this.formGroup.value
+                if (startDate && endDate) {
+                    this.navigationService.loadBarStart()
+                    const chunk = 500
+                    const promises: Promise<any>[] = []
+                    const params = { ...this.params, sortBy: '-purchasedAt' }
+                    for (let index = 0; index < this.$length() / chunk; index++) {
+                        const promise = lastValueFrom(this.purchasesService.getPurchasesByPage(index + 1, chunk, params))
+                        promises.push(promise)
                     }
-                    const name = `VENTAS_DESDE_${formatDate(this.startDate, 'dd/MM/yyyy', 'en-US')}_HASTA_${formatDate(this.endDate, 'dd/MM/yyyy', 'en-US')}_${this.office.name.replace(/ /g, '_')}_RUC_${this.business.ruc}`
-                    buildExcel(body, name, wscols, [])
-                })
+
+                    Promise.all(promises).then(values => {
+                        this.navigationService.loadBarFinish()
+                        const purchases = values.flat() as PurchaseModel[]
+                        const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+                        let body = []
+                        body.push([
+                            'F. DE REGISTRO',
+                            'RUC/DNI',
+                            'PROVEEDOR',
+                            'COMPROBANTE',
+                            'SERIE',
+                            'MONEDA',
+                            'BASE',
+                            'IMPORTE T.',
+                            'IGV',
+                            'GRAVADO',
+                            'EXONERADO',
+                            'INAFECTO',
+                            'GRATUITO',
+                            'ANULADO',
+                            'OBSERVACIONES'
+                        ])
+                        for (const purchase of purchases) {
+                            const { provider } = purchase
+                            body.push([
+                                formatDate(purchase.createdAt, 'dd/MM/yyyy', 'en-US'),
+                                provider?.document,
+                                (provider?.name || 'VARIOS').toUpperCase(),
+                                purchase.invoiceName.toUpperCase(),
+                                purchase.serie,
+                                purchase.currencyCode,
+                                Number((purchase.charge - purchase.igv).toFixed(2)),
+                                Number((purchase.charge || 0).toFixed(2)),
+                                Number((purchase.igv || 0).toFixed(2)),
+                                Number((purchase.gravado || 0).toFixed(2)),
+                                Number((purchase.exonerado || 0).toFixed(2)),
+                                Number((purchase.inafecto || 0).toFixed(2)),
+                                Number((purchase.gratuito || 0).toFixed(2)),
+                                purchase.deletedAt ? 'SI' : 'NO',
+                                purchase.observation
+                            ])
+                        }
+                        const name = `COMPRAS_DESDE_${formatDate(startDate, 'dd/MM/yyyy', 'en-US')}_HASTA_${formatDate(endDate, 'dd/MM/yyyy', 'en-US')}_${this.office.name.replace(/ /g, '_')}_RUC_${this.business.ruc}`
+                        buildExcel(body, name, wscols, [])
+                    })
+                } else {
+                    this.navigationService.showMessage('Seleccione un rango de fecha')
+                }
             }
         })
 
@@ -153,10 +154,14 @@ export class PurchasesComponent {
         this.formGroup.get('invoiceCode')?.patchValue(invoiceCode || '')
 
         if (startDate && endDate) {
-            this.startDate = new Date(startDate)
-            this.endDate = new Date(endDate)
-            this.formGroup.patchValue({ startDate: this.startDate, endDate: this.endDate })
-            Object.assign({ startDate: this.startDate, endDate: this.endDate })
+            this.formGroup.patchValue({
+                startDate: new Date(startDate),
+                endDate: new Date(endDate)
+            })
+            Object.assign(this.params, {
+                startDate: new Date(startDate),
+                endDate: new Date(endDate),
+            })
         }
 
         if (provider) {

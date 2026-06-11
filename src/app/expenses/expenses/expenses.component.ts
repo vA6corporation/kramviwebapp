@@ -16,6 +16,8 @@ import { DialogCreateExpensesComponent } from '../dialog-create-expenses/dialog-
 import { ExpenseModel } from '../expense.model'
 import { ExpensesService } from '../expenses.service'
 import { AuthService } from '../../auth/auth.service'
+import { UserModel } from '../../users/user.model'
+import { UsersService } from '../../users/users.service'
 
 @Component({
     selector: 'app-expenses',
@@ -33,14 +35,17 @@ export class ExpensesComponent {
     private readonly expensesService = inject(ExpensesService)
     private readonly turnsService = inject(TurnsService)
     private readonly authService = inject(AuthService)
+    private readonly usersService = inject(UsersService)
 
     formGroup: FormGroup = this.formBuilder.group({
         startDate: ['', Validators.required],
         endDate: ['', Validators.required],
+        userId: '',
     })
     displayedColumns: string[] = ['createdAt', 'deletedAt', 'concept', 'charge', 'user', 'actions']
     $dataSource = signal<ExpenseModel[]>([])
     $length = signal<number>(0)
+    $users = signal<UserModel[]>([])
     pageSize: number = 10
     pageSizeOptions: number[] = [10, 30, 50]
     pageIndex: number = 0
@@ -50,11 +55,13 @@ export class ExpensesComponent {
     private handleOpenTurn$: Subscription = new Subscription()
     private handleClickMenu$: Subscription = new Subscription()
     private handleAuth$: Subscription = new Subscription()
+    private handleUsers$: Subscription = new Subscription()
 
     ngOnDestroy() {
         this.handleClickMenu$.unsubscribe()
         this.handleOpenTurn$.unsubscribe()
         this.handleAuth$.unsubscribe()
+        this.handleUsers$.unsubscribe()
     }
 
     ngOnInit(): void {
@@ -64,6 +71,10 @@ export class ExpensesComponent {
             this.handleOpenTurn$ = this.turnsService.handleOpenTurn(auth.setting.isOfficeTurn).subscribe(turn => {
                 this.turn = turn
             })
+        })
+
+        this.handleUsers$ = this.usersService.handleUsers().subscribe(users => {
+            this.$users.set(users)
         })
 
         const { pageIndex, pageSize } = this.activatedRoute.snapshot.queryParams
@@ -118,6 +129,22 @@ export class ExpensesComponent {
         })
     }
 
+    onUserChange(userId: string) {
+        this.pageIndex = 0
+        const queryParams: Params = { userId, key: null }
+
+        Object.assign(this.params, queryParams)
+
+        this.router.navigate([], {
+            relativeTo: this.activatedRoute,
+            queryParams: queryParams,
+            queryParamsHandling: 'merge', // remove to replace all query params by provided
+        })
+
+        this.fetchCount()
+        this.fetchData()
+    }
+
     handlePageEvent(event: PageEvent): void {
         this.pageIndex = event.pageIndex
         this.pageSize = event.pageSize
@@ -129,6 +156,8 @@ export class ExpensesComponent {
             queryParams: queryParams,
             queryParamsHandling: 'merge', // remove to replace all query params by provided
         })
+
+        this.fetchData()
     }
 
     onAddExpense() {

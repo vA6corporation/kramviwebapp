@@ -133,6 +133,15 @@ export class ChargeCreditComponent {
                     })
                 }
             })
+
+            if (this.$setting().isShowEmitionAt) {
+                this.formGroup.get('createdAt')?.patchValue(new Date())
+                this.formGroup.get('createdAt')?.setValidators([Validators.required])
+                this.formGroup.get('createdAt')?.updateValueAndValidity()
+            }
+
+            this.formGroup.get('invoiceCode')?.patchValue(this.$setting().defaultInvoice)
+            this.formGroup.get('currencyCode')?.patchValue(this.$setting().defaultCurrency)
         })
 
         this.navigationService.setMenu([
@@ -222,8 +231,6 @@ export class ChargeCreditComponent {
             }
         })
 
-        this.formGroup.get('invoiceCode')?.patchValue(this.$setting().defaultInvoice)
-
         this.handleSaleItems$ = this.salesService.handleSaleItems().subscribe(saleItems => {
 
             this.saleItems = saleItems
@@ -266,7 +273,7 @@ export class ChargeCreditComponent {
             this.proformasService.getProformaById(proformaId).subscribe(proforma => {
                 const { proformaItems, customer, discount } = proforma
                 this.salesService.setSaleItems(proformaItems)
-                this.formGroup.patchValue(proforma)
+                this.formGroup.patchValue({ discount })
                 this.$charge.update(value => value -= (discount || 0))
                 this.$customer.set(customer)
             })
@@ -387,10 +394,10 @@ export class ChargeCreditComponent {
                 this.params
             ).subscribe({
                 next: sale => {
+
                     Object.assign(sale, {
-                        user: this.user,
                         customer,
-                        saleItems: this.saleItems,
+                        user: this.user,
                         payments,
                     })
 

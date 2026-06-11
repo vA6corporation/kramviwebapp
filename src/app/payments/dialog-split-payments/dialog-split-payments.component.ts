@@ -82,7 +82,12 @@ export class DialogSplitPaymentsComponent {
     onSubmit() {
         if (this.formGroup.valid) {
             const payments = this.formArray.value
-            this.dialogRef.close(payments)
+            const payed = payments.map((e: PaymentModel) => e.charge).reduce((a: number, b: number) => a + b, 0)
+            if (Math.trunc(payed) === Math.trunc(this.data.charge)) {
+                this.dialogRef.close(payments)
+            } else {
+                this.navigationService.showMessage('Los montos no coinciden')
+            }
         }
     }
 
