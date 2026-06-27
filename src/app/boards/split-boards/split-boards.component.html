@@ -7,7 +7,7 @@
                 </mat-card-header>
                 <mat-card-content>
                     <mat-list>
-                        @for (boardItem of boardItems; track $index) {
+                        @for (boardItem of $boardItems(); track $index) {
                         <mat-list-item>
                             <span matListItemTitle>{{ boardItem.fullName }} ({{ boardItem.preQuantity }})</span>
                             <span matListItemLine>Separar: {{ boardItem.quantity || 'NINGUNO' }}</span>
@@ -34,9 +34,9 @@
     </mat-tab>
     <mat-tab label="Seleccion de mesa">
         <mat-grid-list cols="5" rowHeight="100px">
-            @for (table of tables; track table.id; let i = $index) {
+            @for (table of $tables(); track table.id; let i = $index) {
             <mat-grid-tile (click)="onSplitBoard(table, i)" [style.background]="table.board ? '#ff0000' : 'lightblue'">
-                <span class="mat-title-large">{{ table.name }}</span>
+                <h2 class="mat-title-large">{{ table.name }}</h2>
             </mat-grid-tile>
             }
         </mat-grid-list>

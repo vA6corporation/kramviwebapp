@@ -47,7 +47,7 @@ export class RemissionGuidesComponent {
         endDate: ['', Validators.required],
     })
     $users = signal<UserModel[]>([])
-    displayedColumns: string[] = ['created', 'serial', 'sale', 'customer', 'user', 'actions']
+    displayedColumns: string[] = ['created', 'carrierCode', 'serial', 'sale', 'customer', 'user', 'actions']
     $dataSource = signal<RemissionGuideModel[]>([])
     $length = signal<number>(0)
     pageSize: number = 10

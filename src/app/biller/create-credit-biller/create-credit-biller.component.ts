@@ -380,6 +380,10 @@ export class CreateCreditBillerComponent {
                     this.$payments.set([])
                     this.$customer.set(null)
 
+                    if (this.$setting().isShowEmitionAt) {
+                        this.formGroup.get('createdAt')?.patchValue(new Date())
+                    }
+
                     this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Registrado correctamente')

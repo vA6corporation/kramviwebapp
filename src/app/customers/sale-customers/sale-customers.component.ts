@@ -180,7 +180,6 @@ export class SaleCustomersComponent {
     fetchData() {
         this.navigationService.loadBarStart()
         this.salesService.getSaleItemsByCustomerPage(this.customerId, this.pageIndex + 1, this.pageSize, this.params).subscribe(saleItems => {
-            console.log(saleItems)
             this.navigationService.loadBarFinish()
             this.$dataSource.set(saleItems)
         })

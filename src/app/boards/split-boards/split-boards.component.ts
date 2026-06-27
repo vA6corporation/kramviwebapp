@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { BoardsService } from '../boards.service'
 import { NavigationService } from '../../navigation/navigation.service'
 import { ActivatedRoute, Params, Router } from '@angular/router'
@@ -24,9 +24,9 @@ export class SplitBoardsComponent {
     private readonly tablesService = inject(TablesService)
     private readonly router = inject(Router)
 
-    tables: TableModel[] = []
+    $tables = signal<TableModel[]>([])
     board: BoardModel | null = null
-    boardItems: BoardItemModel[] = []
+    $boardItems = signal<BoardItemModel[]>([])
     preBoardItems: BoardItemModel[] = []
     selectedIndex: number = 0
     isLoading: boolean = false
@@ -49,7 +49,7 @@ export class SplitBoardsComponent {
                         table.board = null
                     }
                 }
-                this.tables = tables
+                this.$tables.set(tables)
             })
 
             const tableIndex = this.activatedRoute.snapshot.params['tableIndex']
@@ -64,11 +64,14 @@ export class SplitBoardsComponent {
                         this.navigationService.loadBarFinish()
                         this.board = board
                         this.boardsService.setBoard(board)
-                        this.boardItems = board.boardItems
-                        this.preBoardItems = JSON.parse(JSON.stringify(this.boardItems))
-                        this.boardItems.forEach(e => {
-                            e.preQuantity = e.quantity
-                            e.quantity = 0
+                        this.$boardItems.set(board.boardItems)
+                        this.preBoardItems = JSON.parse(JSON.stringify(this.$boardItems()))
+                        this.$boardItems.update(values => {
+                            values.forEach(e => {
+                                e.preQuantity = e.quantity
+                                e.quantity = 0
+                            })
+                            return values
                         })
                     }, error: (error: HttpErrorResponse) => {
                         this.isLoading = false
@@ -106,17 +109,17 @@ export class SplitBoardsComponent {
         if (table.board) {
             this.navigationService.showMessage('Esta mesa esta ocupada')
         } else {
-            const tables = JSON.parse(JSON.stringify(this.tables))
-            this.tables = []
+            const tables = JSON.parse(JSON.stringify(this.$tables()))
+            this.$tables.set([])
             this.navigationService.loadBarStart()
             if (this.board) {
-                this.boardsService.splitBoard(this.boardItems, this.preBoardItems, this.board.id, table.id).subscribe({
+                this.boardsService.splitBoard(this.$boardItems(), this.preBoardItems, this.board.id, table.id).subscribe({
                     next: () => {
                         this.navigationService.loadBarFinish()
                         this.navigationService.showMessage('Se ha dividido la mesa')
-                        this.router.navigate([`/boards/posBoards/${tableIndex}`])
+                        this.router.navigate(['/boards'])
                     }, error: (error: HttpErrorResponse) => {
-                        this.tables = tables
+                        this.$tables.set(tables)
                         this.navigationService.loadBarFinish()
                         this.navigationService.showMessage(error.error.message)
                     }

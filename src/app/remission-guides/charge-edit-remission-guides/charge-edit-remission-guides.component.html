@@ -1,7 +1,7 @@
 @let customer = $customer();
 @let carrier = $carrier();
 <div class="d-flex">
-    <form class="flex-70 d-flex align-items-center justify-content-center" (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
+    <form class="flex-70 d-flex justify-content-center" (ngSubmit)="onSubmit()" [formGroup]="formGroup" autocomplete="off">
         <div class="px-3">
             <p class="caption text-center text-muted">Transportista</p>
             @if (carrier) {

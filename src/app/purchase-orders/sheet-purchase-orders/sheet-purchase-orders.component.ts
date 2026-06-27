@@ -27,7 +27,7 @@ export class SheetPurchaseOrdersComponent {
         this.navigationService.loadBarStart()
         this.purchaseOrdersService.getPurchaseOrderById(this.purchaseOrderId).subscribe(purchaseOrder => {
             this.navigationService.loadBarFinish()
-            if (printerType === 'a4') {
+            if (printerType === 'A4') {
                 this.printService.printA4PurchaseOrder(purchaseOrder)
             } else {
                 this.printService.printTicket80mmPurchaseOrder(purchaseOrder)
@@ -40,7 +40,7 @@ export class SheetPurchaseOrdersComponent {
         this.navigationService.loadBarStart()
         this.purchaseOrdersService.getPurchaseOrderById(this.purchaseOrderId).subscribe(purchaseOrder => {
             this.navigationService.loadBarFinish()
-            if (printerType === 'a4') {
+            if (printerType === 'A4') {
                 this.printService.exportPdfA4PurchaseOrder(purchaseOrder)
             } else {
                 this.printService.exportPdfTicket80mmPurchaseOrder(purchaseOrder)

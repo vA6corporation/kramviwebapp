@@ -135,6 +135,10 @@
                             <mat-icon>swap_vert</mat-icon>
                             <span>Ajustar stock</span>
                         </button>
+                        <button type="button" (click)="onTransferStock(element)" mat-menu-item>
+                            <mat-icon>north_east</mat-icon>
+                            <span>Traspasar stock</span>
+                        </button>
                         <button type="button" (click)="onDeleteProduct(element.id)" mat-menu-item>
                             <mat-icon>delete</mat-icon>
                             <span>Eliminar</span>

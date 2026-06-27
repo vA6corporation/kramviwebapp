@@ -330,7 +330,7 @@ export class PrintIframeComponent {
         })
 
         this.printService.handlePrintA4CreditNote().subscribe(async creditNote => {
-            const pdf = await buildA4CreditNote(creditNote, this.setting, this.business, this.office)
+            const pdf = await buildA4CreditNote(creditNote, this.setting, this.business, this.office, this.urlLogo)
             if (main) {
                 const file = pdf.output('arraybuffer')
                 main.print(file)
@@ -359,7 +359,7 @@ export class PrintIframeComponent {
         })
 
         this.printService.handleExportPdfA4CreditNote().subscribe(async creditNote => {
-            const pdf = await buildA4CreditNote(creditNote, this.setting, this.business, this.office)
+            const pdf = await buildA4CreditNote(creditNote, this.setting, this.business, this.office, this.urlLogo)
             pdf.save(`NOTA_DE_CREDITO_${creditNote.invoicePrefix}${this.office.serialPrefix}-${creditNote.invoiceNumber}`)
         })
 

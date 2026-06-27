@@ -40,6 +40,7 @@ export class PrivilegesComponent {
         products: false,
         inventories: false,
         incidents: false,
+        transfers: false,
         reports: false,
         sales: false,
         carriers: false,

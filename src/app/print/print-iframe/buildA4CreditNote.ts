@@ -11,6 +11,7 @@ export async function buildA4CreditNote(
     setting: SettingModel,
     business: BusinessModel,
     office: OfficeModel,
+    urlLogo: string
 ): Promise<jsPDF> {
     const header = 11
     const body = 8
@@ -23,9 +24,9 @@ export async function buildA4CreditNote(
     let strArr: string[] = []
     const pageHeight = pdf.internal.pageSize.height
 
-   // if (setting?.logo) {
-   //     pdf.addImage(setting.logo, "JPEG", 5, 5, 35, 35)
-   // }
+    if (urlLogo) {
+        pdf.addImage(urlLogo, "JPEG", 5, 5, 35, 35)
+    }
 
     let positionYTitle = 10
 

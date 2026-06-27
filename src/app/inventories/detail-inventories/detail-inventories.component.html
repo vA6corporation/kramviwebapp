@@ -70,7 +70,7 @@
                 <ng-container matColumnDef="cost">
                     <th mat-header-cell *matHeaderCellDef>Costo</th>
                     <td mat-cell *matCellDef="let element">
-                        <span>{{ element.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                        <span>{{ (element.cost || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="quantity">
@@ -81,7 +81,7 @@
                 </ng-container>
                 <ng-container matColumnDef="observation">
                     <th mat-header-cell *matHeaderCellDef>Observaciones</th>
-                    <td mat-cell *matCellDef="let element">
+                    <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.purchase.observation }">
                         <span>{{ element.purchase.observation || 'NINGUNO' }}</span>
                     </td>
                 </ng-container>
@@ -125,7 +125,7 @@
                 <ng-container matColumnDef="cost">
                     <th mat-header-cell *matHeaderCellDef>Costo</th>
                     <td mat-cell *matCellDef="let element">
-                        <span>{{ element.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                        <span>{{ (element.cost || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="quantity">
@@ -136,7 +136,7 @@
                 </ng-container>
                 <ng-container matColumnDef="observation">
                     <th mat-header-cell *matHeaderCellDef>Observaciones</th>
-                    <td mat-cell *matCellDef="let element">
+                    <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.inIncident.observation }">
                         <span>{{ element.inIncident.observation || 'NINGUNO' }}</span>
                     </td>
                 </ng-container>
@@ -180,7 +180,7 @@
                 <ng-container matColumnDef="cost">
                     <th mat-header-cell *matHeaderCellDef>Costo</th>
                     <td mat-cell *matCellDef="let element">
-                        <span>{{ element.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                        <span>{{ (element.cost || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="quantity">
@@ -191,7 +191,7 @@
                 </ng-container>
                 <ng-container matColumnDef="observation">
                     <th mat-header-cell *matHeaderCellDef>Observaciones</th>
-                    <td mat-cell *matCellDef="let element">
+                    <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.sale.observation }">
                          <span>{{ element.sale.observation || 'NINGUNO' }}</span>
                     </td>
                 </ng-container>
@@ -240,7 +240,7 @@
                 <ng-container matColumnDef="cost">
                     <th mat-header-cell *matHeaderCellDef>Costo</th>
                     <td mat-cell *matCellDef="let element">
-                        <span>{{ element.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                        <span>{{ (element.cost || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="quantity">
@@ -251,7 +251,7 @@
                 </ng-container>
                 <ng-container matColumnDef="observation">
                     <th mat-header-cell *matHeaderCellDef>Observaciones</th>
-                    <td mat-cell *matCellDef="let element">
+                    <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.outIncident.observation }">
                         <span>{{ element.outIncident.observation || 'NINGUNO' }}</span>
                     </td>
                 </ng-container>

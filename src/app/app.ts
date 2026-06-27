@@ -52,6 +52,7 @@ export class App {
         '/products',
         '/inventories',
         '/incidents',
+        '/transfers',
         '/turns',
         '/expenses',
         '/reports',

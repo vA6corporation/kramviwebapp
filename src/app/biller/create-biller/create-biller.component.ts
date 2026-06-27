@@ -375,6 +375,10 @@ export class CreateBillerComponent {
                     this.formGroup.get('paymentMethodId')?.enable()
                     this.$customer.set(null)
 
+                    if (this.$setting().isShowEmitionAt) {
+                        this.formGroup.get('createdAt')?.patchValue(new Date())
+                    }
+
                     this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Registrado correctamente')

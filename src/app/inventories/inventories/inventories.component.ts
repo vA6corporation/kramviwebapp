@@ -31,6 +31,7 @@ import { DialogPasswordComponent } from '../../sales/dialog-password/dialog-pass
 import { BusinessType } from '../../businesses/business.model'
 import { ProvidersService } from '../../providers/providers.service'
 import { ProviderModel } from '../../providers/provider.model'
+import { DialogCreateTransfersComponent } from '../../transfers/dialog-create-transfers/dialog-create-transfers.component'
 
 @Component({
     selector: 'app-inventories',
@@ -432,6 +433,20 @@ export class InventoriesComponent {
 
         matBottomSheetRef.instance.handleRemoveStock().subscribe(() => {
             this.onRemoveStock(product)
+        })
+    }
+
+    onTransferStock(product: ProductModel) {
+        const dialogRef = this.matDialog.open(DialogCreateTransfersComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: product,
+        })
+
+        dialogRef.afterClosed().subscribe(ok => {
+            if (ok) {
+                this.fetchData()
+            }
         })
     }
 

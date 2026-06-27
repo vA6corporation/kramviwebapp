@@ -32,6 +32,7 @@ export class AuthService {
         { label: 'Productos', name: 'products', path: '/products', isActive: false, isAuthorized: false, icon: 'shopping_basket', info: 'General' },
         { label: 'Inventario', name: 'inventories', path: '/inventories', isActive: false, isAuthorized: false, icon: 'check_circle', info: 'General' },
         { label: 'Ajustes de inventario', name: 'incidents', path: '/incidents', isActive: false, isAuthorized: false, icon: 'check_circle', info: 'General' },
+        { label: 'Traspasos', name: 'transfers', path: '/transfers', isActive: false, isAuthorized: false, icon: 'check_circle', info: 'General' },
         { label: 'Cajas cerradas', name: 'turns', path: '/turns', isActive: false, isAuthorized: false, icon: 'archive', info: 'General' },
         { label: 'Gastos', name: 'expenses', path: '/expenses', isActive: false, isAuthorized: false, icon: 'local_atm', info: 'General' },
         { label: 'Reportes', name: 'reports', path: '/reports', isActive: false, isAuthorized: false, icon: 'equalizer', info: 'General' },
