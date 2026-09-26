@@ -37,7 +37,7 @@ export class DialogPurchaseOrderItemsComponent {
     priceLists: PriceListModel[] = []
     purchaseOrderItem: PurchaseOrderItemModel = this.purchaseOrdersService.getPurchaseOrderItem(this.index)
     selectedIndex: number = 0
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
     formGroup: FormGroup = this.formBuilder.group({
         prices: this.formArray,
         price: [this.purchaseOrderItem.price, Validators.required],
@@ -132,14 +132,14 @@ export class DialogPurchaseOrderItemsComponent {
     onSubmitPrices(): void {
         if (this.formGroup.valid) {
             const { prices, price } = this.formGroup.value
-            this.isLoading = true
             this.dialogRef.disableClose = true
+            this.$isLoading.set(true)
             this.productsService.updatePrices(this.purchaseOrderItem.productId, prices, price).subscribe(() => {
+                this.$isLoading.set(false)
                 this.formGroup.patchValue({ price, prices })
                 this.purchaseOrderItem.price = price
                 this.purchaseOrderItem.prices = prices
                 this.dialogRef.disableClose = false
-                this.isLoading = false
                 this.selectedIndex = 0
             })
         }

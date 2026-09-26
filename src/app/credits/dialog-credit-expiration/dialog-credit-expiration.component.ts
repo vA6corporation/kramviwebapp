@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
 import { SalesService } from '../../sales/sales.service'
@@ -20,11 +20,11 @@ export class DialogCreditExpirationComponent {
     formGroup: FormGroup = this.formBuilder.group({
         expirationAt: [new Date(), Validators.required],
     })
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
 
     onSubmit(): void {
         if (this.formGroup.valid) {
-            this.isLoading = true
+            this.$isLoading.set(true)
             const { expirationAt } = this.formGroup.value
             this.salesService.updateExpirationAt(this.saleId, expirationAt).subscribe(() => {
                 this.dialogRef.close(true)

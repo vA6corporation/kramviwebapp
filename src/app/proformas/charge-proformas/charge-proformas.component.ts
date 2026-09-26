@@ -25,6 +25,7 @@ interface FormData {
     observation: string
     currencyCode: string
     discount: any
+    isIncludeIgv: boolean
 }
 
 @Component({
@@ -48,6 +49,7 @@ export class ChargeProformasComponent {
         currencyCode: 'PEN',
         discount: null,
         discountPercent: null,
+        isIncludeIgv: true,
     } as FormData)
     proformaItems: ProformaItemModel[] = []
     charge: number = 0
@@ -193,6 +195,7 @@ export class ChargeProformasComponent {
                 igvPercent: this.$setting().defaultIgvPercent,
                 rcPercent: this.$setting().defaultRcPercent,
                 customerId: customer ? customer.id : null,
+                isIncludeIgv: formData.isIncludeIgv,
             }
 
             this.proformasService.create(createdProforma, this.proformaItems).subscribe({

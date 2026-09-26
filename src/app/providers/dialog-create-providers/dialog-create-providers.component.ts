@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatDialogRef } from '@angular/material/dialog'
@@ -28,7 +28,7 @@ export class DialogCreateProvidersComponent {
         phone: '',
         email: ['', Validators.email],
     })
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
     maxLength: number = 11
 
     ngOnInit(): void {
@@ -53,14 +53,14 @@ export class DialogCreateProvidersComponent {
 
     onSubmit() {
         if (this.formGroup.valid) {
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.providersService.create(this.formGroup.value).subscribe({
                 next: provider => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.dialogRef.close(provider)
                     this.navigationService.showMessage('Registrado correctamente')
                 }, error: (error: HttpErrorResponse) => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.showMessage(error.error.message)
                 }
             })

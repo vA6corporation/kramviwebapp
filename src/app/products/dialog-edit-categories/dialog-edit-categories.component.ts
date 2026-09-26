@@ -1,5 +1,5 @@
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
-import { Component, inject } from '@angular/core'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { CategoriesService } from '../categories.service'
@@ -26,7 +26,7 @@ export class DialogEditCategoriesComponent {
         color: '',
         deletedAt: null,
     })
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
 
     ngOnInit(): void {
         this.formGroup.patchValue(this.category)
@@ -34,14 +34,15 @@ export class DialogEditCategoriesComponent {
 
     onSubmit() {
         if (this.formGroup.valid) {
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.navigationService.loadBarStart()
             this.categoriesService.update(this.formGroup.value, this.category.id).subscribe(() => {
+                this.$isLoading.set(false)
                 this.dialogRef.close(true)
                 this.navigationService.loadBarFinish()
                 this.navigationService.showMessage('Se han guardado los cambios')
             }, (error: HttpErrorResponse) => {
-                this.isLoading = false
+                this.$isLoading.set(false)
                 this.navigationService.loadBarFinish()
                 this.navigationService.showMessage(error.error.message)
             })

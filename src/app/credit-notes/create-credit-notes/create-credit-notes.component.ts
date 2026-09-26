@@ -102,6 +102,7 @@ export class CreateCreditNotesComponent {
         this.salesService.getSaleById(this.saleId).subscribe(sale => {
             this.navigationService.setTitle(`Nueva nota de credito ${sale.invoicePrefix}${this.office.serialPrefix}-${sale.invoiceNumber}`)
             this.sale = sale
+            this.formGroup.patchValue({ discount: sale.discount })
             this.$customer.set(sale.customer)
             this.salesService.setSaleItems(sale.saleItems)
         })

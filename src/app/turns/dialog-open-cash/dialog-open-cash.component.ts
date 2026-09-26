@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
 import { Subscription } from 'rxjs'
@@ -27,7 +27,7 @@ export class DialogOpenCashComponent {
     formGroup: FormGroup = this.formBuilder.group({
         openCash: ['', Validators.required]
     })
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
     private setting = new SettingModel()
 
     private handleAuth$: Subscription = new Subscription()

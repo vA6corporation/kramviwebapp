@@ -80,7 +80,7 @@
                                 }
                             </span>
                             <span matListItemLine>{{ payment.createdAt | date: 'dd MMM yyyy, hh:mm a' }}</span>
-                            <span>{{ payment.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                            <span>{{ payment.sale.invoicePrefix }}{{ office.serialPrefix }}-{{ payment.sale.invoiceNumber }} - {{ payment.charge.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }} <b class="ml-2">{{ payment.sale.isCredit ? 'CREDITO' : '' }}</b></span>
                         </button>
                     }
                 </mat-action-list>

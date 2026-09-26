@@ -41,7 +41,7 @@
                 <mat-select formControlName="remissionGuideCode">
                     @for (remissionGuideCode of remissionGuideCodes; track $index) {
                     <mat-option [value]="remissionGuideCode.code">
-                        {{ remissionGuideCode.label }}
+                        {{ remissionGuideCode.code }} {{ remissionGuideCode.label }}
                     </mat-option>
                     }
                 </mat-select>
@@ -61,8 +61,8 @@
             <div class="d-flex">
                 <mat-form-field appearance="fill">
                     <mat-label>Departamento de origen</mat-label>
-                    <mat-select formControlName="originDepartment" #originDepartment
-                        (selectionChange)="onChangeOriginDepartment(originDepartment.value)">
+                    <mat-select formControlName="originDepartmentCode" #originDepartmentCode
+                        (selectionChange)="onChangeOriginDepartment(originDepartmentCode.value)">
                         @for (department of departments; track $index) {
                         <mat-option [value]="department.code">
                             {{ department.name | uppercase }}
@@ -72,9 +72,9 @@
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Provincia de origen</mat-label>
-                    <mat-select formControlName="originProvince" #originProvince
-                        (selectionChange)="onChangeOriginProvince(originProvince.value)">
-                        @for (province of originProvinces; track $index) {
+                    <mat-select formControlName="originProvinceCode" #originProvinceCode
+                        (selectionChange)="onChangeOriginProvince(originProvinceCode.value)">
+                        @for (province of $originProvinces(); track $index) {
                         <mat-option [value]="province.code">
                             {{ province.name | uppercase }}
                         </mat-option>
@@ -84,7 +84,7 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Distrito de origen</mat-label>
                     <mat-select formControlName="originLocationCode">
-                        @for (district of originDistricts; track $index) {
+                        @for (district of $originDistricts(); track $index) {
                         <mat-option [value]="district.code">
                             {{ district.name | uppercase }}
                         </mat-option>
@@ -99,9 +99,9 @@
             <div class="d-flex">
                 <mat-form-field appearance="fill">
                     <mat-label>Departamento de destino</mat-label>
-                    <mat-select formControlName="destinyDepartment" #destinyDepartment
-                        (selectionChange)="onChangeDestinyDepartment(destinyDepartment.value)">
-                        @for (department of destinyDepartments; track $index) {
+                    <mat-select formControlName="destinyDepartmentCode" #destinyDepartmentCode
+                        (selectionChange)="onChangeDestinyDepartment(destinyDepartmentCode.value)">
+                        @for (department of $destinyDepartments(); track $index) {
                         <mat-option [value]="department.code">
                             {{ department.name | uppercase }}
                         </mat-option>
@@ -110,9 +110,9 @@
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                     <mat-label>Provincia de destino</mat-label>
-                    <mat-select formControlName="destinyProvince" #destinyProvince
-                        (selectionChange)="onChangeDestinyProvince(destinyProvince.value)">
-                        @for (province of destinyProvinces; track $index) {
+                    <mat-select formControlName="destinyProvinceCode" #destinyProvinceCode
+                        (selectionChange)="onChangeDestinyProvince(destinyProvinceCode.value)">
+                        @for (province of $destinyProvinces(); track $index) {
                         <mat-option [value]="province.code">
                             {{ province.name | uppercase }}
                         </mat-option>
@@ -122,7 +122,7 @@
                 <mat-form-field appearance="fill">
                     <mat-label>Distrito de destino</mat-label>
                     <mat-select formControlName="destinyLocationCode">
-                        @for (district of destinyDistricts; track $index) {
+                        @for (district of $destinyDistricts(); track $index) {
                         <mat-option [value]="district.code">
                             {{ district.name | uppercase }}
                         </mat-option>
@@ -134,6 +134,8 @@
                 <mat-label>Direccion de destino</mat-label>
                 <input type="text" matInput formControlName="destinyAddress">
             </mat-form-field>
+
+
             <div class="p-2"></div>
             <button type="submit" class="w-100" mat-flat-button [disabled]="$isLoading()" color="primary">
                 GUARDAR

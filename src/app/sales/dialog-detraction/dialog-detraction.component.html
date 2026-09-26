@@ -5,7 +5,7 @@
             <mat-label>Bien/Servicio sujeto a detraccion</mat-label>
             <mat-select formControlName="serviceCode">
                 @for (service of services; track $index) {
-                <mat-option [value]="service.code">{{ service.name | uppercase }}</mat-option>
+                <mat-option [value]="service.code">{{ service.code }} {{ service.name | uppercase }}</mat-option>
                 }
             </mat-select>
         </mat-form-field>
@@ -17,7 +17,7 @@
             <mat-label>Medio de pago</mat-label>
             <mat-select formControlName="paymentCode">
                 @for (paymentMethod of paymentMethods; track $index) {
-                <mat-option [value]="paymentMethod.code">{{ paymentMethod.name | uppercase }}</mat-option>
+                <mat-option [value]="paymentMethod.code">{{ paymentMethod.code }} {{ paymentMethod.name | uppercase }}</mat-option>
                 }
             </mat-select>
         </mat-form-field>

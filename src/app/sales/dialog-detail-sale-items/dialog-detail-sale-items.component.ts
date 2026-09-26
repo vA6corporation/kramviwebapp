@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { SalesService } from '../sales.service'
 import { MaterialModule } from '../../material.module'
@@ -8,6 +8,7 @@ import { AuthService } from '../../auth/auth.service'
 import { Subscription } from 'rxjs'
 import { IgvCode } from '../../sales/igv-code.enum'
 import { CommonModule } from '@angular/common'
+import { SaleItemModel } from '../sale-item.model'
 
 @Component({
     selector: 'app-dialog-detail-sale-items',
@@ -22,8 +23,8 @@ export class DialogDetailSaleItemsComponent {
     private readonly authService = inject(AuthService)
 
     igvCode = IgvCode
-    saleItems: any[] = []
     office: OfficeModel = new OfficeModel()
+    $saleItems = signal<SaleItemModel[]>([])
 
     private handleAuth$: Subscription = new Subscription()
 
@@ -37,7 +38,7 @@ export class DialogDetailSaleItemsComponent {
         });
 
         this.salesService.getSaleItemDetails(this.saleItemIds).subscribe(saleItems => {
-            this.saleItems = saleItems
+            this.$saleItems.set(saleItems)
         })
     }
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject } from '@angular/core'
+import { Component, EventEmitter, inject, signal } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
@@ -26,7 +26,7 @@ export class DialogSearchCustomersComponent {
         searchType: 'NAME',
         key: ['', Validators.required],
     })
-    customers: CustomerModel[] = []
+    $customers = signal<CustomerModel[]>([])
     maxlength: number = 11
     searchTypes = [
         { code: 'RUC', label: 'RUC' },
@@ -35,7 +35,7 @@ export class DialogSearchCustomersComponent {
         { code: 'MOBILE', label: 'CELULAR' },
         { code: 'NAME', label: 'NOMBRES' },
     ]
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
 
     private createCustomer: EventEmitter<void> = new EventEmitter()
 
@@ -88,14 +88,14 @@ export class DialogSearchCustomersComponent {
             case 'RUC':
                 if (key.length === 11) {
                     this.formGroup.get('key')?.disable()
-                    this.isLoading = true
+                    this.$isLoading.set(true)
                     this.customersService.getCustomersByRuc(key).subscribe({
                         next: customers => {
-                            this.isLoading = false
-                            this.customers = customers
+                            this.$isLoading.set(false)
+                            this.$customers.set(customers)
                             this.formGroup.get('key')?.enable()
                         }, error: (error: HttpErrorResponse) => {
-                            this.isLoading = false
+                            this.$isLoading.set(false)
                             this.formGroup.get('key')?.enable()
                             this.navigationService.showMessage(error.error.message)
                         }
@@ -105,14 +105,14 @@ export class DialogSearchCustomersComponent {
             case 'DNI':
                 if (key.length === 8) {
                     this.formGroup.get('key')?.disable()
-                    this.isLoading = true
+                    this.$isLoading.set(true)
                     this.customersService.getCustomersByDni(key).subscribe({
                         next: customers => {
-                            this.isLoading = false
-                            this.customers = customers
+                            this.$isLoading.set(false)
+                            this.$customers.set(customers)
                             this.formGroup.get('key')?.enable()
                         }, error: (error: HttpErrorResponse) => {
-                            this.isLoading = false
+                            this.$isLoading.set(false)
                             this.formGroup.get('key')?.enable()
                             this.navigationService.showMessage(error.error.message)
                         }
@@ -122,14 +122,14 @@ export class DialogSearchCustomersComponent {
             case 'CE':
                 if (key.length === 9) {
                     this.formGroup.get('key')?.disable()
-                    this.isLoading = true
+                    this.$isLoading.set(true)
                     this.customersService.getCustomersByCe(key).subscribe({
                         next: customers => {
-                            this.isLoading = false
-                            this.customers = customers
+                            this.$isLoading.set(false)
+                            this.$customers.set(customers)
                             this.formGroup.get('key')?.enable()
                         }, error: (error: HttpErrorResponse) => {
-                            this.isLoading = false
+                            this.$isLoading.set(false)
                             this.formGroup.get('key')?.enable()
                             this.navigationService.showMessage(error.error.message)
                         }
@@ -139,14 +139,14 @@ export class DialogSearchCustomersComponent {
             case 'MOBILE':
                 if (key.length === 9) {
                     this.formGroup.get('key')?.disable()
-                    this.isLoading = true
+                    this.$isLoading.set(true)
                     this.customersService.getCustomersByMobileNumber(key).subscribe({
                         next: customers => {
-                            this.isLoading = false
-                            this.customers = customers
+                            this.$isLoading.set(false)
+                            this.$customers.set(customers)
                             this.formGroup.get('key')?.enable()
                         }, error: (error: HttpErrorResponse) => {
-                            this.isLoading = false
+                            this.$isLoading.set(false)
                             this.formGroup.get('key')?.enable()
                             this.navigationService.showMessage(error.error.message)
                         }
@@ -155,14 +155,14 @@ export class DialogSearchCustomersComponent {
                 break
             default:
                 this.formGroup.get('key')?.disable()
-                this.isLoading = true
+                this.$isLoading.set(true)
                 this.customersService.getCustomersByKey(key).subscribe({
                     next: customers => {
-                        this.isLoading = false
-                        this.customers = customers
+                        this.$isLoading.set(false)
+                        this.$customers.set(customers)
                         this.formGroup.get('key')?.enable()
                     }, error: (error: HttpErrorResponse) => {
-                        this.isLoading = false
+                        this.$isLoading.set(false)
                         this.formGroup.get('key')?.enable()
                         this.navigationService.showMessage(error.error.message)
                     }

@@ -40,8 +40,8 @@
             </ng-container>
             <ng-container matColumnDef="phone">
                 <th mat-header-cell *matHeaderCellDef>Celular</th>
-                <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.customer.phone }"
-                    class="text-uppercase truncate-cell">{{ element.customer.phone || 'NINGUNO' }}</td>
+                <td mat-cell *matCellDef="let element" [ngClass]="{ 'text-muted': !element.customer?.phone }"
+                    class="text-uppercase truncate-cell">{{ element.customer?.phone || 'NINGUNO' }}</td>
             </ng-container>
             <ng-container matColumnDef="charge">
                 <th mat-header-cell *matHeaderCellDef>Importe T.</th>

@@ -23,7 +23,6 @@ export class DialogPasswordComponent {
     formGroup: FormGroup = this.formBuilder.group({
         password: ['', Validators.required]
     })
-    isLoading: boolean = false
     hide: boolean = true
     private setting: SettingModel = new SettingModel()
 

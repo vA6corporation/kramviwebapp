@@ -23,7 +23,7 @@
             </mat-form-field>
         }
         <mat-action-list>
-            @for (customer of customers; track customer.id) {
+            @for (customer of $customers(); track customer.id) {
                 <button mat-list-item (click)="onSelectCustomer(customer)">
                     <span matListItemTitle>{{ customer.name | uppercase }}</span>
                     <span matListItemLine>{{ customer.documentType }}: {{ customer.document }}</span>
@@ -34,7 +34,7 @@
     <mat-dialog-actions>
         <span class="spacer"></span>
         <button type="button" mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
-        <button type="button" mat-flat-button mat-dialog-close color="primary" [disabled]="isLoading"
+        <button type="button" mat-flat-button mat-dialog-close color="primary" [disabled]="$isLoading()"
             (click)="onCreateCustomer()">NUEVO CLIENTE</button>
     </mat-dialog-actions>
 </form>

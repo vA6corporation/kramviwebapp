@@ -67,7 +67,6 @@ export class DialogAdminComponent {
     $user = signal<UserModel | null>(null)
     $cdr = signal<CdrModel | null>(null)
     $ticket = signal<TicketModel | null>(null)
-    cdrTicket: CdrModel | null = null
     private onUpdate$: EventEmitter<void> = new EventEmitter()
 
     private handleAuth$: Subscription = new Subscription()
@@ -89,19 +88,16 @@ export class DialogAdminComponent {
 
     fetchData() {
         this.salesService.getSaleById(this.data.saleId).subscribe(sale => {
-            const { user, cdr } = sale
+            const { user, cdr, ticket } = sale
             console.log(sale)
             this.$sale.set(sale)
             this.$user.set(user)
             this.$cdr.set(cdr)
+            this.$ticket.set(ticket)
 
             this.formGroup.patchValue(sale)
             this.formDate.patchValue(sale)
             this.formCdr.patchValue(cdr || {})
-        })
-        this.invoicesService.getDeleteTicketBySale(this.data.saleId).subscribe(ticket => {
-            this.$ticket.set(ticket)
-            this.formTicket.patchValue(ticket)
         })
     }
 
@@ -135,28 +131,16 @@ export class DialogAdminComponent {
         }
     }
 
-    onUndelete() {
+    onRestore() {
         const sale = this.$sale()
         if (sale) {
-            Object.assign(sale, { deletedAt: null })
-            this.salesService.updateDeleteSale(sale, this.data.saleId).subscribe({
+            this.salesService.restore(this.data.saleId).subscribe({
                 next: () => {
                     this.navigationService.showMessage('Se han guardado los cambios')
                     this.onUpdate$.emit()
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.showMessage(error.error.message)
                 }
-            })
-        }
-    }
-
-    onDeleteCdrTicket() {
-        if (this.cdrTicket) {
-            this.navigationService.loadBarStart()
-            this.invoicesService.deleteCdrTicket(this.data.saleId).subscribe(() => {
-                this.navigationService.loadBarFinish()
-                this.onUpdate$.emit()
-                this.fetchData()
             })
         }
     }

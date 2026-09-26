@@ -189,7 +189,7 @@ export class SalesService {
     }
 
     getSaleItemDetails(saleItemIds: number[]) {
-        return this.httpService.post('saleItems/saleItemDetails', { saleItemIds })
+        return this.httpService.post('sales/saleItemsByIds', { saleItemIds })
     }
 
     handleSaleItems(): Observable<CreateSaleItemModel[]> {
@@ -348,6 +348,10 @@ export class SalesService {
 
     delete(saleId: any): Observable<void> {
         return this.httpService.delete(`sales/${saleId}`)
+    }
+
+    restore(saleId: any): Observable<void> {
+        return this.httpService.delete(`sales/restore/${saleId}`)
     }
 
     deleteMassive(salesId: any[]): Observable<void> {

@@ -175,7 +175,8 @@ export class SalesComponent {
 
             Object.assign(this.params, {
                 officeId: officeId || this.office.id,
-                invoiceCode: invoiceCode || ''
+                invoiceCode: invoiceCode || '',
+                stateType: stateType || '',
             })
 
             this.formGroup.patchValue({
@@ -689,7 +690,7 @@ export class SalesComponent {
             for (const office of offices) {
                 const chunk = 500
                 const sales: SaleModel[] = []
-                const length = await lastValueFrom(this.salesService.getCountSalesByRangeDateTax(startDate, endDate, { officeId: office.id }))
+                const length = await lastValueFrom(this.salesService.getCountSalesByRangeDate(startDate, endDate, { officeId: office.id }))
 
                 if (length) {
                     const dialogRef = this.matDialog.open(DialogProgressComponent, {

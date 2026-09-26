@@ -32,6 +32,7 @@ import { BusinessType } from '../../businesses/business.model'
 import { ProvidersService } from '../../providers/providers.service'
 import { ProviderModel } from '../../providers/provider.model'
 import { DialogCreateTransfersComponent } from '../../transfers/dialog-create-transfers/dialog-create-transfers.component'
+import { InventoriesService } from '../inventories.service'
 
 @Component({
     selector: 'app-inventories',
@@ -52,6 +53,7 @@ export class InventoriesComponent {
     private readonly officesService = inject(OfficesService)
     private readonly providersService = inject(ProvidersService)
     private readonly authService = inject(AuthService)
+    private readonly inventoriesService = inject(InventoriesService)
 
     formGroup: FormGroup = this.formBuilder.group({
         officeId: '',
@@ -71,6 +73,7 @@ export class InventoriesComponent {
         'price',
         'stock',
         'minimumStock',
+        'rotation',
         'comanda',
         'provider',
         'actions'
@@ -86,6 +89,7 @@ export class InventoriesComponent {
         'price',
         'stock',
         'minimumStock',
+        'rotation',
         'comanda',
         'provider',
         'actions'
@@ -130,6 +134,7 @@ export class InventoriesComponent {
 
         this.navigationService.setMenu([
             { id: 'excel_simple', label: 'Exportar excel', icon: 'file_download', show: false },
+            { id: 'excel_kardex', label: 'Exportar kardex', icon: 'file_download', show: false },
             { id: 'search', icon: 'search', show: true, label: '' },
         ])
 
@@ -186,7 +191,7 @@ export class InventoriesComponent {
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {
             this.pageIndex = 0
             this.key = key
-            const queryParams: Params = { key, categoryId: null }
+            const queryParams: Params = { key, categoryId: null, pageIndex: 0 }
 
             this.router.navigate([], {
                 relativeTo: this.activatedRoute,
@@ -204,6 +209,233 @@ export class InventoriesComponent {
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(async id => {
             switch (id) {
+                case 'excel_kardex': {
+                    const chunk = 500
+                    const products: any[] = []
+
+                    const dialogRef = this.matDialog.open(DialogProgressComponent, {
+                        width: '600px',
+                        position: { top: '20px' },
+                        data: this.$length() / chunk
+                    })
+
+                    for (let index = 0; index < this.$length() / chunk; index++) {
+                        const values = await lastValueFrom(this.inventoriesService.getProductsByPageWithKardex(index + 1, chunk, this.params))
+                        dialogRef.componentInstance.onComplete()
+                        products.push(...values)
+                    }
+
+                    const wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20]
+                    let body = []
+                    let totalCost = 0
+                    let totalPrice = 0
+
+                    const mergeRangeOne = {
+                        s: { r: 0, c: 0 }, // Start at Row 0, Column 0 (A1)
+                        e: { r: 0, c: 6 }  // End at Row 0, Column 1 (B1)
+                    }
+
+                    const mergeRangeTwo = {
+                        s: { r: 0, c: 7 }, // Start at Row 0, Column 0 (A1)
+                        e: { r: 0, c: 8 }  // End at Row 0, Column 1 (B1)
+                    }
+
+                    const mergeRangeThree = {
+                        s: { r: 0, c: 9 }, // Start at Row 0, Column 0 (A1)
+                        e: { r: 0, c: 10 }  // End at Row 0, Column 1 (B1)
+                    }
+
+                    const mergeRangeFour = {
+                        s: { r: 0, c: 11 }, // Start at Row 0, Column 0 (A1)
+                        e: { r: 0, c: 12 }  // End at Row 0, Column 1 (B1)
+                    }
+
+                    const date = new Date()
+
+                    body.push([
+                        date.getFullYear().toString(),
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        'INVENTARIO INICIAL',
+                        '',
+                        'COMPRAS',
+                        '',
+                        'VENTAS',
+                        '',
+                        'INVENTARIO FINAL',
+                        '',
+                    ])
+
+                    switch (this.$setting().defaultPrice) {
+                        case PriceType.GLOBAL: {
+                            body.push([
+                                'CODIGO',
+                                'CODIGO I.',
+                                'PRODUCTO',
+                                'VARIANTE',
+                                'MARCA',
+                                'CATEGORIA',
+                                'UNIDAD DE M.',
+                                'UNIDADES',
+                                'VALORACION',
+                                'UNIDADES',
+                                'VALORACION',
+                                'UNIDADES',
+                                'VALORACION',
+                                'UNIDADES',
+                                'VALORACION',
+                                'PROVEEDOR'
+                            ])
+
+                            for (const product of products) {
+                                body.push([
+                                    product.upc,
+                                    product.sku,
+                                    product.name.toUpperCase(),
+                                    (product.feature || '').toUpperCase(),
+                                    (product.brand || '').toUpperCase(),
+                                    (this.$categories().find(e => e.id === product.categoryId)?.name || '').toUpperCase(),
+                                    product.unitName,
+                                    product.initStock,
+                                    Number((product.price * product.initStock).toFixed(2)),
+                                    product.yearQuantityPurchase,
+                                    Number(product.cost * product.yearQuantityPurchase),
+                                    product.yearQuantitySale,
+                                    Number(product.price * product.yearQuantitySale),
+                                    product.stock,
+                                    Number(product.price * product.stock),
+                                    product.proveedir?.name || 'NINGUNO'
+                                ])
+                            }
+
+                            body.push(['', '', '', '', '', '', '', '', '', Number(totalCost.toFixed(2)), Number(totalPrice.toFixed(2))])
+                            break
+                        }
+                        case PriceType.OFICINA: {
+
+                            const titleRow = [
+                                'CODIGO',
+                                'CODIGO I.',
+                                'PRODUCTO',
+                                'VARIANTE',
+                                'MARCA',
+                                'CATEGORIA',
+                                'UNIDAD DE M.',
+                                'UNIDADES',
+                                'VALORACION',
+                                'UNIDADES',
+                                'VALORACION',
+                                'UNIDADES',
+                                'VALORACION',
+                                'UNIDADES',
+                                'VALORACION',
+                                'PROVEEDOR'
+                            ]
+
+                            for (const office of this.$offices()) {
+                                titleRow.push(`precio ${office.name.toUpperCase()}`)
+                            }
+
+                            body.push(titleRow)
+
+                            for (const product of products) {
+                                const bodyRow = [
+                                    product.upc,
+                                    product.sku,
+                                    product.name.toUpperCase(),
+                                    (product.feature || '').toUpperCase(),
+                                    (product.brand || '').toUpperCase(),
+                                    (this.$categories().find(e => e.id === product.categoryId)?.name || '').toUpperCase(),
+                                    product.unitName,
+                                    product.initStock,
+                                    Number((product.price * product.initStock).toFixed(2)),
+                                    product.yearQuantityPurchase,
+                                    Number(product.cost * product.yearQuantityPurchase),
+                                    product.yearQuantitySale,
+                                    Number(product.price * product.yearQuantitySale),
+                                    product.stock,
+                                    Number(product.price * product.stock),
+                                    product.proveedir?.name || 'NINGUNO'
+                                ]
+
+                               // for (const office of this.$offices()) {
+                               //     const price = product.prices.find((e: any) => e.officeId === office.id && e.priceListId === null)
+                               //     bodyRow.push(price ? price.price : product.price)
+                               // }
+
+                                body.push(bodyRow)
+                            }
+                            break
+                        }
+                        case PriceType.LISTA: {
+
+                            const titleRow = [
+                                'CODIGO',
+                                'CODIGO I.',
+                                'PRODUCTO',
+                                'VARIANTE',
+                                'MARCA',
+                                'CATEGORIA',
+                                'UNIDAD DE M.',
+                                'UNIDADES',
+                                'VALORACION',
+                                'UNIDADES',
+                                'VALORACION',
+                                'UNIDADES',
+                                'VALORACION',
+                                'UNIDADES',
+                                'VALORACION',
+                                'PROVEEDOR'
+                            ]
+
+                            for (const priceList of this.$priceLists()) {
+                                titleRow.push(priceList.name.toUpperCase())
+                            }
+
+                            body.push(titleRow)
+
+                            for (const product of products) {
+                                const bodyRow = [
+                                    product.upc,
+                                    product.sku,
+                                    product.name.toUpperCase(),
+                                    (product.feature || '').toUpperCase(),
+                                    (product.brand || '').toUpperCase(),
+                                    (this.$categories().find(e => e.id === product.categoryId)?.name || '').toUpperCase(),
+                                    product.unitName,
+                                    product.initStock,
+                                    Number((product.price * product.initStock).toFixed(2)),
+                                    product.yearQuantityPurchase,
+                                    Number(product.cost * product.yearQuantityPurchase),
+                                    product.yearQuantitySale,
+                                    Number(product.price * product.yearQuantitySale),
+                                    product.stock,
+                                    Number(product.price * product.stock),
+                                    product.proveedir?.name || 'NINGUNO'
+                                ]
+
+                               // for (const priceList of this.$priceLists()) {
+                               //     const price = product.prices.find((e: any) => e.priceListId === priceList.id)
+                               //     bodyRow.push(price ? price.price : product.price)
+                               // }
+
+                                body.push(bodyRow)
+                            }
+                            break
+                        }
+                        default:
+                            break
+                    }
+
+                    const name = `KARDEX_${formatDate(new Date(), 'dd/MM/yyyy', 'en-US')}`
+                    buildExcel(body, name, wscols, [], [mergeRangeOne, mergeRangeTwo, mergeRangeThree, mergeRangeFour])
+
+                    break
+                }
                 case 'excel_simple': {
                     const chunk = 500
                     const products: ProductModel[] = []
@@ -232,7 +464,6 @@ export class InventoriesComponent {
                                 'VARIANTE',
                                 'MARCA',
                                 'CATEGORIA',
-                                'C. INTERNO',
                                 'C. FABRICANTE',
                                 'STOCK',
                                 'COSTO',
@@ -249,7 +480,6 @@ export class InventoriesComponent {
                                     (product.feature || '').toUpperCase(),
                                     (product.brand || '').toUpperCase(),
                                     (this.$categories().find(e => e.id === product.categoryId)?.name || '').toUpperCase(),
-                                    product.sku,
                                     product.upc,
                                     product.stock,
                                     Number(product.cost.toFixed(2)),
@@ -269,7 +499,6 @@ export class InventoriesComponent {
                                 'VARIANTE',
                                 'MARCA',
                                 'CATEGORIA',
-                                'C. INTERNO',
                                 'C. FABRICANTE',
                                 'STOCK',
                                 'COSTO',
@@ -281,9 +510,6 @@ export class InventoriesComponent {
                                 titleRow.push(`precio ${office.name.toUpperCase()}`)
                             }
 
-                            titleRow.push('LOTE')
-                            titleRow.push('F. VENCIMIENTO')
-
                             body.push(titleRow)
 
                             for (const product of products) {
@@ -292,7 +518,6 @@ export class InventoriesComponent {
                                     (product.feature || '').toUpperCase(),
                                     (product.brand || '').toUpperCase(),
                                     (this.$categories().find(e => e.id === product.categoryId)?.name || '').toUpperCase(),
-                                    product.sku,
                                     product.upc,
                                     product.stock,
                                     Number(product.cost.toFixed(2)),
@@ -316,7 +541,6 @@ export class InventoriesComponent {
                                 'VARIANTE',
                                 'MARCA',
                                 'CATEGORIA',
-                                'C. INTERNO',
                                 'C. FABRICANTE',
                                 'STOCK',
                                 'COSTO',
@@ -328,9 +552,6 @@ export class InventoriesComponent {
                                 titleRow.push(priceList.name.toUpperCase())
                             }
 
-                            titleRow.push('LOTE')
-                            titleRow.push('F. VENCIMIENTO')
-
                             body.push(titleRow)
 
                             for (const product of products) {
@@ -339,7 +560,6 @@ export class InventoriesComponent {
                                     (product.feature || '').toUpperCase(),
                                     (product.brand || '').toUpperCase(),
                                     (this.$categories().find(e => e.id === product.categoryId)?.name || '').toUpperCase(),
-                                    product.sku,
                                     product.upc,
                                     product.stock,
                                     Number(product.cost.toFixed(2)),

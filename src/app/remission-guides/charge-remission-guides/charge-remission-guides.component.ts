@@ -47,23 +47,27 @@ export class ChargeRemissionGuidesComponent {
         reasonDescription: ['', Validators.required],
         shippingWeight: ['', Validators.required],
         observation: '',
-        originDepartment: ['15', Validators.required],
-        originProvince: ['1501', Validators.required],
+        originDepartmentCode: ['15', Validators.required],
+        originProvinceCode: ['1501', Validators.required],
         originLocationCode: ['', Validators.required],
-        destinyDepartment: ['15', Validators.required],
-        destinyProvince: ['1501', Validators.required],
+        destinyDepartmentCode: ['15', Validators.required],
+        destinyProvinceCode: ['1501', Validators.required],
+        destinyLocationCode: ['', Validators.required],
         originAddress: ['', Validators.required],
         destinyAddress: ['', Validators.required],
-        destinyLocationCode: ['', Validators.required],
     })
 
     remissionGuideCodes: any[] = [
         { code: '01', label: 'VENTA' },
         { code: '02', label: 'COMPRA' },
         { code: '04', label: 'TRASLADO ENTRE ESTABLECIMIENTO DE LA MISMA EMPRESA' },
+        { code: '05', label: 'CONSIGNACION' },
+        { code: '07', label: 'RECOJO DE BIENES TRANSFORMADOS' },
         { code: '08', label: 'IMPORTACION' },
         { code: '09', label: 'EXPORTACION' },
+        { code: '13', label: 'OTROS' },
         { code: '14', label: 'VENTA SUJETA A CONFIRMACION DEL COMPRADOR' },
+        { code: '17', label: 'TRASLADO DE BIENES PARA TRANSFORMACION' },
         { code: '18', label: 'TRASLADO EMISOR ETINERANTE CP' },
         { code: '19', label: 'TRASLADO ZONA PRIMARIA' }
     ]
@@ -155,14 +159,14 @@ export class ChargeRemissionGuidesComponent {
         { name: 'Lince', code: '150116', departmentCode: '15', provinceCode: '1501' }
     ]
 
-    originDepartments: any[] = this.departments
-    destinyDepartments: any[] = this.departments
+    $originDepartments = signal(this.departments)
+    $destinyDepartments = signal(this.departments)
 
-    originProvinces: any[] = this.provinces
-    destinyProvinces: any[] = this.provinces
+    $originProvinces = signal(this.provinces)
+    $destinyProvinces = signal(this.provinces)
 
-    originDistricts: any[] = this.districts
-    destinyDistricts: any[] = this.districts
+    $originDistricts = signal(this.districts)
+    $destinyDistricts = signal(this.districts)
 
     remissionGuideItems: RemissionGuideItemModel[] = []
     $carrier = signal<CarrierModel | null>(null)
@@ -263,6 +267,7 @@ export class ChargeRemissionGuidesComponent {
         })
 
         const { saleId } = this.activatedRoute.snapshot.queryParams
+
         if (saleId) {
             this.saleId = saleId
             Object.assign(this.params, { saleId })
@@ -272,29 +277,63 @@ export class ChargeRemissionGuidesComponent {
                 this.remissionGuidesService.setRemissionGuideItems(saleItems)
             })
         }
+
+        const { remissionGuideId } = this.activatedRoute.snapshot.queryParams
+
+        if (remissionGuideId) {
+            this.remissionGuidesService.getRemissionGuideById(remissionGuideId).subscribe(remissionGuide => {
+                const { remissionGuideItems, customer, carrier, saleId } = remissionGuide
+                this.saleId = saleId
+                Object.assign(this.params, { saleId })
+                this.formGroup.patchValue(remissionGuide)
+                this.remissionGuidesService.setRemissionGuideItems(remissionGuideItems)
+                this.$customer.set(customer)
+                this.$carrier.set(carrier)
+
+                const originDepartmentCode = remissionGuide.originLocationCode.substring(0, 2)
+                const originProvinceCode = remissionGuide.originLocationCode.substring(0, 4)
+                if (originDepartmentCode != '15') {
+                  this.formGroup.patchValue({ originDepartmentCode })
+                  this.formGroup.patchValue({ originProvinceCode })
+                  this.onChangeOriginDepartment(originDepartmentCode)
+                  this.onChangeOriginProvince(originProvinceCode)
+                }
+
+                const destinyDepartmentCode = remissionGuide.destinyLocationCode.substring(0, 2)
+                const destinyProvinceCode = remissionGuide.destinyLocationCode.substring(0, 4)
+                console.log(destinyDepartmentCode)
+                console.log(destinyProvinceCode)
+                if (destinyDepartmentCode != '15') {
+                  this.formGroup.patchValue({ destinyDepartmentCode })
+                  this.formGroup.patchValue({ destinyProvinceCode })
+                  this.onChangeDestinyDepartment(destinyDepartmentCode)
+                  this.onChangeDestinyProvince(destinyProvinceCode)
+                }
+            })
+        }
     }
 
     onChangeOriginDepartment(departmentCode: string) {
         this.remissionGuidesService.getProvincesByDepartmentCode(departmentCode).subscribe(provinces => {
-            this.originProvinces = provinces
+            this.$originProvinces.set(provinces)
         })
     }
 
     async onChangeOriginProvince(provinceCode: string) {
         this.remissionGuidesService.getDistrictsByProvinceCode(provinceCode).subscribe(districts => {
-            this.originDistricts = districts
+            this.$originDistricts.set(districts)
         })
     }
 
     async onChangeDestinyDepartment(departmentCode: string) {
         this.remissionGuidesService.getProvincesByDepartmentCode(departmentCode).subscribe(provinces => {
-            this.destinyProvinces = provinces
+            this.$destinyProvinces.set(provinces)
         })
     }
 
     async onChangeDestinyProvince(provinceCode: string) {
         this.remissionGuidesService.getDistrictsByProvinceCode(provinceCode).subscribe(districts => {
-            this.destinyDistricts = districts
+            this.$destinyDistricts.set(districts)
         })
     }
 

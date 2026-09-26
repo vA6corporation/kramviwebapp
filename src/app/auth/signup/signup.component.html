@@ -1,5 +1,6 @@
 <div class="py-5">
     <form class="container" (ngSubmit)="onSubmit()" [formGroup]="signupForm" autocomplete="off">
+        <h2>Kramvi para tiendas</h2>
         <div formGroupName="user">
             <mat-form-field appearance="fill">
                 <mat-label>Email</mat-label>
@@ -30,13 +31,6 @@
             <mat-form-field appearance="fill">
                 <mat-label>Celular del cliente</mat-label>
                 <input #phone type="text" matInput (input)="onInputMobile(phone.value)" formControlName="phone" maxlength="15" minlength="9">
-            </mat-form-field>
-            <mat-form-field appearance="fill">
-                <mat-label>Tipo de negocio</mat-label>
-                <mat-select formControlName="businessType">
-                    <mat-option value="STORE">TIENDA</mat-option>
-                    <mat-option value="FOOD">RESTAURANTE</mat-option>
-                </mat-select>
             </mat-form-field>
         </div>
         <div class="d-flex">

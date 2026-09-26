@@ -57,14 +57,6 @@ export class CustomersService {
         return this.httpService.get(`customers/byPage/${pageIndex}/${pageSize}`, params)
     }
 
-    getCustomersByPageWithLastSale(
-        pageIndex: number,
-        pageSize: number,
-        params: Params
-    ): Observable<CustomerModel[]> {
-        return this.httpService.get(`customers/byPageWithLastSale/${pageIndex}/${pageSize}`, params)
-    }
-
     getDeletedCustomersByPage(
         pageIndex: number,
         pageSize: number

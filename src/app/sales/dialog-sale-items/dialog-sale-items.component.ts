@@ -67,15 +67,15 @@ export class DialogSaleItemsComponent {
     }
 
     onChangePriceList() {
-        //switch (this.setting.defaultPrice) {
-        //    case PriceType.LISTA: {
-        //        const price = this.saleItem.prices.find(e => e.priceListId === this.priceListId) || null
-        //        if (price) {
-        //            this.formGroup.get('price')?.patchValue(price.price)
-        //        }
-        //        break
-        //    }
-        //}
+        switch (this.$setting().defaultPrice) {
+            case PriceType.LISTA: {
+                const price = this.saleItem.prices.find(e => e.priceListId === this.priceListId) || null
+                if (price) {
+                    this.formGroup.get('price')?.patchValue(price.price)
+                }
+                break
+            }
+        }
     }
 
     subTotal(): number {

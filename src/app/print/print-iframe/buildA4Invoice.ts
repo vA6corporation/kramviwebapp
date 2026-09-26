@@ -324,7 +324,15 @@ export async function buildA4Invoice(
 
     if (sale.detraction) {
         positionYitems += 5
-        text = `Operacion sujeta a detraccion \t N° de cuenta Banco de la nacion: ${sale.detraction.bankAccountNumber} \t Porcentaje detraccion: ${sale.detraction.percent} \t Monto detraccion: ${sale.detraction.amount}`
+        pdf.setFont('Helvetica', 'bold')
+        text = 'Operacion sujeta a detraccion'
+        pdf.text(text, 5, positionYitems)
+        pdf.setFont('Helvetica', 'normal')
+        positionYitems += 5
+        text = `${sale.detraction.serviceCode} ${sale.detraction.serviceName} \t\t ${sale.detraction.paymentCode} ${sale.detraction.paymentName}`
+        pdf.text(text, 5, positionYitems)
+        positionYitems += 5
+        text = `N° de cuenta Banco de la nacion: ${sale.detraction.bankAccountNumber} \t Porcentaje detraccion: ${sale.detraction.percent} \t Monto detraccion: ${sale.detraction.amount}`
         pdf.text(text, 5, positionYitems)
     }
 

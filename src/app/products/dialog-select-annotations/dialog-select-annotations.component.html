@@ -1,6 +1,6 @@
+<h2 mat-dialog-title>Anotaciones rapidas</h2>
 <div mat-dialog-content>
     <mat-selection-list>
-        <div mat-subheader>Anotaciones rapidas</div>
         @for (annotation of $annotations(); track $index) {
         <mat-list-option (click)="onSelectAnnotation(annotation)">{{ annotation }}</mat-list-option>
         }

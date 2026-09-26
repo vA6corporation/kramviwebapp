@@ -77,10 +77,6 @@ export class InvoicesService {
         return this.httpService.delete(`tickets/${ticketId}`)
     }
 
-    getDeleteTicketBySale(saleId: any): Observable<CdrModel> {
-        return this.httpService.get(`tickets/deleteTicketBySale/${saleId}`)
-    }
-
     deleteCdrTicket(saleId: any) {
         return this.httpService.delete(`tickets/deleteCdrTicket/${saleId}`)
     }

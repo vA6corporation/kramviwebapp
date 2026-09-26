@@ -1,5 +1,5 @@
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
-import { Component, inject } from '@angular/core'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { Router, RouterModule } from '@angular/router'
 import { NavigationService } from '../../navigation/navigation.service'
@@ -22,8 +22,7 @@ export class CreatePaymentMethodsComponent {
     formGroup: FormGroup = this.formBuilder.group({
         name: [null, Validators.required],
     })
-
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
 
     ngOnInit() {
         this.navigationService.setTitle('Nuevo medio de pago')
@@ -31,17 +30,17 @@ export class CreatePaymentMethodsComponent {
 
     onSubmit(): void {
         if (this.formGroup.valid) {
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.navigationService.loadBarStart()
             this.paymentMethodsService.create(this.formGroup.value).subscribe({
                 next: () => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Registrado correctamente')
                     this.paymentMethodsService.loadPaymentMethods()
                     this.router.navigate(['/paymentMethods'])
                 }, error: (error: HttpErrorResponse) => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage(error.error.message)
                 }

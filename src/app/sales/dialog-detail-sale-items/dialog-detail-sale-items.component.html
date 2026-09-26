@@ -1,13 +1,13 @@
 <h2 mat-dialog-title>Detalles</h2>
 <mat-dialog-content>
     <mat-list role="list">
-        @for (saleItem of saleItems; track saleItem.id) {
+        @for (saleItem of $saleItems(); track saleItem.id) {
             <mat-list-item role="listitem">
-                <span matListItemTitle>{{ saleItem.sale.invoicePrefix }}{{ office.serialPrefix }}-{{ saleItem.sale.invoiceNumber }}</span>
+                <span matListItemTitle>{{ saleItem.sale?.invoicePrefix }}{{ office.serialPrefix }}-{{ saleItem.sale?.invoiceNumber }}</span>
                 <div matListItemLine>
-                    <span class="mr-3">x{{ saleItem.quantity }}</span>
-                    <span class="mr-3">{{ saleItem.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
-                    <span class="mr-3">{{ saleItem.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</span>
+                    <span class="mr-3">Cantidad: {{ saleItem.quantity }}</span>
+                    <span class="mr-3">Precio unitario: {{ saleItem.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                    <span class="mr-3">Costo unitario: {{ saleItem.cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
                     @if (saleItem.igvCode === igvCode.BONIFICACION) {
                         <span class="mr-3" [style.color]="'green'">Bonificacion</span>
                     }
@@ -17,6 +17,7 @@
                     @if (saleItem.igvCode === igvCode.INAFECTO) {
                         <span class="text-primary mr-3">Inafecto</span>
                     }
+                    <span class="mr-3" matListItemLine>{{ saleItem.createdAt | date: 'dd/MM/yyyy, hh:mm a' }}</span>
                 </div>
             </mat-list-item>
         }

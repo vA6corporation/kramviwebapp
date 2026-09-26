@@ -6,6 +6,7 @@ import { ProformaItemModel } from './proforma-item.model'
 
 export interface ProformaModel {
     id: number
+    isIncludeIgv: boolean
     proformaNumber: string
     observation: string
     customerId: number | null
@@ -22,7 +23,7 @@ export interface ProformaModel {
     rcPercent: number
     deletedAt: string | null
     expirationAt: Date
-    chargeLetters: String
+    chargeLetters: string
     cash: number
     currencyCode: string
     discount: number | null

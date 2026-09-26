@@ -65,16 +65,6 @@ export class PaymentsService {
         return this.httpService.get(`payments/byPage/${pageIndex}/${pageSize}`, params)
     }
 
-    getPaymentsByRangeDatePageWithSale(
-        startDate: string,
-        endDate: string,
-        pageIndex: number,
-        pageSize: number,
-        params: Params
-    ): Observable<PaymentModel[]> {
-        return this.httpService.get(`payments/byRangeDatePageWithSale/${startDate}/${endDate}/${pageIndex}/${pageSize}`, params)
-    }
-
     create(
         payment: CreatePaymentModel,
         saleId: any

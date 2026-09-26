@@ -169,7 +169,17 @@ export async function buildA5Invoice(
 
     positionYCustomer += 4
 
+    pdf.setFont('Helvetica', 'normal')
+
     pdf.setFont('Helvetica', 'bold')
+    pdf.text('OBS.', 8, positionYCustomer)
+    pdf.text(':', 32, positionYCustomer)
+
+    pdf.setFont('Helvetica', 'normal')
+    text = sale.observation
+    pdf.text(text, 35, positionYCustomer)
+
+    positionYCustomer += 4
 
     pdf.setFont('Helvetica', 'normal')
 

@@ -84,7 +84,7 @@ export class CustomersComponent {
                     })
 
                     for (let index = 0; index < this.$length() / chunk; index++) {
-                        const values = await lastValueFrom(this.customersService.getCustomersByPageWithLastSale(index + 1, chunk, this.params))
+                        const values = await lastValueFrom(this.customersService.getCustomersByPage(index + 1, chunk, this.params))
                         dialogRef.componentInstance.onComplete()
                         customers.push(...values)
                     }

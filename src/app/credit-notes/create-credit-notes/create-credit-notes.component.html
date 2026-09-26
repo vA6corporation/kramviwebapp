@@ -35,6 +35,12 @@
                 <mat-label>Descripcion del motivo</mat-label>
                 <input type="text" matInput formControlName="reasonDescription">
             </mat-form-field>
+            @if (setting.isShowTotalDiscount) {
+            <mat-form-field appearance="fill">
+                <mat-label>Descuento global</mat-label>
+                <input type="number" matInput formControlName="discount" (input)="onChangeDiscount()">
+            </mat-form-field>
+            }
             <mat-form-field appearance="fill">
                 <mat-label>Observaciones</mat-label>
                 <input type="text" matInput formControlName="observation">

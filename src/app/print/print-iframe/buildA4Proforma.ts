@@ -309,37 +309,39 @@ export async function buildA4Proforma(
         positionYSummary += 4
     }
 
-    text = 'SUB TOTAL'
-    pdf.text(text, 170, positionYSummary, { align: 'right' })
-    positionYSummary += 4
+    if (proforma.isIncludeIgv) {
+        text = 'SUB TOTAL'
+        pdf.text(text, 170, positionYSummary, { align: 'right' })
+        positionYSummary += 4
 
-    if (proforma.gravado) {
-        text = 'OP. GRAVADO'
+        if (proforma.gravado) {
+            text = 'OP. GRAVADO'
+            pdf.text(text, 170, positionYSummary, { align: 'right' })
+            positionYSummary += 4
+        }
+
+        if (proforma.exonerado) {
+            text = 'OP. EXONERADO'
+            pdf.text(text, 170, positionYSummary, { align: 'right' })
+            positionYSummary += 4
+        }
+
+        if (proforma.inafecto) {
+            text = 'OP. INAFECTO'
+            pdf.text(text, 170, positionYSummary, { align: 'right' })
+            positionYSummary += 4
+        }
+
+        if (proforma.gratuito) {
+            text = 'OP. GRATUITO'
+            pdf.text(text, 170, positionYSummary, { align: 'right' })
+            positionYSummary += 4
+        }
+
+        text = `I.G.V. (${proforma.igvPercent}%)`
         pdf.text(text, 170, positionYSummary, { align: 'right' })
         positionYSummary += 4
     }
-
-    if (proforma.exonerado) {
-        text = 'OP. EXONERADO'
-        pdf.text(text, 170, positionYSummary, { align: 'right' })
-        positionYSummary += 4
-    }
-
-    if (proforma.inafecto) {
-        text = 'OP. INAFECTO'
-        pdf.text(text, 170, positionYSummary, { align: 'right' })
-        positionYSummary += 4
-    }
-
-    if (proforma.gratuito) {
-        text = 'OP. GRATUITO'
-        pdf.text(text, 170, positionYSummary, { align: 'right' })
-        positionYSummary += 4
-    }
-
-    text = `I.G.V. (${proforma.igvPercent}%)`
-    pdf.text(text, 170, positionYSummary, { align: 'right' })
-    positionYSummary += 4
 
     text = 'IMPORTE TOTAL'
     pdf.text(text, 170, positionYSummary, { align: 'right' })
@@ -359,43 +361,45 @@ export async function buildA4Proforma(
     pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
     positionYSummaryRight += 4
 
-    if (proforma.gravado) {
-        text = (proforma.gravado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    if (proforma.isIncludeIgv) {
+        if (proforma.gravado) {
+            text = (proforma.gravado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+            pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+            positionYSummaryRight += 4
+        }
+
+        if (proforma.exonerado) {
+            text = (proforma.exonerado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+            pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+            positionYSummaryRight += 4
+        }
+
+        if (proforma.inafecto) {
+            text = (proforma.inafecto || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+            pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+            positionYSummaryRight += 4
+        }
+
+        if (proforma.gratuito) {
+            text = (proforma.gratuito || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+            pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+            positionYSummaryRight += 4
+        }
+
+        text = proforma.igv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
+        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
+        positionYSummaryRight += 4
+
+        text = (proforma.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
         pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
         pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
         positionYSummaryRight += 4
     }
-
-    if (proforma.exonerado) {
-        text = (proforma.exonerado || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
-        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-        positionYSummaryRight += 4
-    }
-
-    if (proforma.inafecto) {
-        text = (proforma.inafecto || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
-        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-        positionYSummaryRight += 4
-    }
-
-    if (proforma.gratuito) {
-        text = (proforma.gratuito || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-        pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
-        pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-        positionYSummaryRight += 4
-    }
-
-    text = proforma.igv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-    pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
-    pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-    positionYSummaryRight += 4
-
-    text = (proforma.charge || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-    pdf.text(text, 200, positionYSummaryRight, { align: 'right' })
-    pdf.text(currency, 180, positionYSummaryRight, { align: 'right' })
-    positionYSummaryRight += 4
 
     return pdf
 }

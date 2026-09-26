@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ActivatedRoute, RouterModule } from '@angular/router'
@@ -23,7 +23,7 @@ export class EditTablesComponent {
         name: ['', Validators.required],
         deletedAt: null
     })
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
     private tableId: any = ''
 
     ngOnInit(): void {
@@ -37,17 +37,17 @@ export class EditTablesComponent {
 
     onSubmit(): void {
         if (this.formGroup.valid) {
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.navigationService.loadBarStart()
             this.tablesService.update(this.formGroup.value, this.tableId).subscribe({
                 next: () => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Se han guardado los cambios')
                     this.navigationService.back()
                 }, error: (error: HttpErrorResponse) => {
                     console.log(error)
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage(error.error.message)
                 }

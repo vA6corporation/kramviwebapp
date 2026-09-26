@@ -1,5 +1,5 @@
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
-import { Component, inject } from '@angular/core'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { Router, RouterModule } from '@angular/router'
 import { NavigationService } from '../../navigation/navigation.service'
@@ -22,7 +22,7 @@ export class CreateActivitiesComponent {
     formGroup: FormGroup = this.formBuilder.group({
         name: ['', Validators.required],
     })
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
 
     ngOnInit(): void {
         this.navigationService.setTitle('Nueva actividad')
@@ -30,16 +30,16 @@ export class CreateActivitiesComponent {
 
     onSubmit() {
         if (this.formGroup.valid) {
-            this.isLoading = true
             this.navigationService.loadBarStart()
+            this.$isLoading.set(true)
             this.activitiesService.create(this.formGroup.value).subscribe({
                 next: () => {
                     this.navigationService.loadBarFinish()
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.router.navigate(['/activities'])
                 }, error: (error: HttpErrorResponse) => {
                     this.navigationService.loadBarFinish()
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.showMessage(error.error.message)
                 }
             })

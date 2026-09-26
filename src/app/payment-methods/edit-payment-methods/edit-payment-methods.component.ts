@@ -1,5 +1,5 @@
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
-import { Component, inject } from '@angular/core'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ActivatedRoute, RouterModule } from '@angular/router'
 import { NavigationService } from '../../navigation/navigation.service'
@@ -22,7 +22,7 @@ export class EditPaymentMethodsComponent {
     formGroup: FormGroup = this.formBuilder.group({
         name: [null, Validators.required],
     })
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
     private paymentMethodId: any = 0
 
     ngOnInit(): void {
@@ -35,17 +35,17 @@ export class EditPaymentMethodsComponent {
 
     onSubmit(): void {
         if (this.formGroup.valid) {
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.navigationService.loadBarStart()
             this.paymentMethodsService.update(this.formGroup.value, this.paymentMethodId).subscribe({
                 next: () => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.paymentMethodsService.loadPaymentMethods()
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Se han guardado los cambios')
                     this.navigationService.back()
                 }, error: (error: HttpErrorResponse) => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage(error.error.message)
                 }

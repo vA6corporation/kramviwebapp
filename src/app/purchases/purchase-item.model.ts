@@ -1,5 +1,6 @@
 import { IgvCode } from '../sales/igv-code.enum'
 import { PriceModel } from '../products/price.model'
+import { PurchaseModel } from './purchase.model'
 
 export interface PurchaseItemModel {
     id: number
@@ -15,6 +16,7 @@ export interface PurchaseItemModel {
     purchasedAt: string
     unitCode: string
     createdAt: string
+    purchase: PurchaseModel
     purchaseId: any
     productId: any
     isTrackStock: boolean

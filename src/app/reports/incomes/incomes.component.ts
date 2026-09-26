@@ -94,8 +94,8 @@ export class IncomesComponent {
 
             if (startDate && endDate) {
                 this.formGroup.patchValue({
-                    startDate: new Date(Number(startDate)),
-                    endDate: new Date(Number(endDate))
+                    startDate: new Date(startDate),
+                    endDate: new Date(endDate)
                 })
             }
 
@@ -160,7 +160,7 @@ export class IncomesComponent {
         const promises: Promise<any>[] = []
 
         for (let index = 0; index < this.length / chunk; index++) {
-            const promise = lastValueFrom(this.paymentsService.getPaymentsByRangeDatePageWithSale(startDate, endDate, index + 1, chunk, this.params))
+            const promise = lastValueFrom(this.paymentsService.getPaymentsByPage(index + 1, chunk, this.params))
             promises.push(promise)
         }
 
@@ -175,6 +175,7 @@ export class IncomesComponent {
                 'MONTO',
                 'COMPROBANTE',
                 'USUARIO',
+                'ES CREDITO'
             ])
             for (const payment of payments) {
                 body.push([
@@ -182,7 +183,8 @@ export class IncomesComponent {
                     (this.$paymentMethods().find(e => payment.paymentMethodId === e.id) || { name: '' }).name,
                     payment.charge,
                     `${payment.sale.invoicePrefix}${this.office.serialPrefix}-${payment.sale.invoiceNumber}`,
-                    (payment || { name: 'NINGUNO' }).user.name
+                    (payment || { name: 'NINGUNO' }).user.name,
+                    payment.sale.isCredit ? 'SI' : 'NO'
                 ])
             }
             const name = `PAGOS_DESDE_${formatDate(startDate, 'dd-MM-yyyy', 'en-US')}_HASTA_${formatDate(endDate, 'dd-MM-yyyy', 'en-US')}`

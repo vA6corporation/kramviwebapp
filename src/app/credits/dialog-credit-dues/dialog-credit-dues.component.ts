@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
@@ -21,12 +21,12 @@ export class DialogCreditDuesComponent {
     formGroup: FormGroup = this.formBuilder.group({
         dues: ['', Validators.required],
     })
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
 
     onSubmit(): void {
         if (this.formGroup.valid) {
-            this.isLoading = true
             const { dues } = this.formGroup.value
+            this.$isLoading.set(true)
             this.salesService.updateDues(this.saleId, dues).subscribe({
                 next: () => {
                     this.dialogRef.close(true)

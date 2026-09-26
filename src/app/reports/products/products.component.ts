@@ -17,6 +17,8 @@ import { UserModel } from '../../users/user.model'
 import { UsersService } from '../../users/users.service'
 import { MatSort } from '@angular/material/sort'
 import { MatTableDataSource } from '@angular/material/table'
+import { MatDialog } from '@angular/material/dialog'
+import { DialogDetailSaleItemsComponent } from '../../sales/dialog-detail-sale-items/dialog-detail-sale-items.component'
 
 @Component({
     selector: 'app-products',
@@ -33,6 +35,7 @@ export class ProductsComponent {
     private readonly navigationService = inject(NavigationService)
     private readonly officesService = inject(OfficesService)
     private readonly authService = inject(AuthService)
+    private readonly matDialog = inject(MatDialog)
 
     @ViewChild(MatSort) sort: MatSort = new MatSort()
 
@@ -43,7 +46,7 @@ export class ProductsComponent {
         startDate: [new Date(), Validators.required],
         endDate: [new Date(), Validators.required],
     })
-    displayedColumns: string[] = ['product', 'quantity', 'price', 'cost', 'totalCharge', 'totalPurchase', 'totalUtility', 'stock']
+    displayedColumns: string[] = ['product', 'quantity', 'price', 'cost', 'totalCharge', 'totalPurchase', 'totalUtility', 'stock', 'actions']
     $dataSource = signal<MatTableDataSource<SummarySaleItemModel>>(new MatTableDataSource())
     categoryId: string = ''
     $categories = signal<CategoryModel[]>([])
@@ -166,6 +169,15 @@ export class ProductsComponent {
                 this.$totalQuantity.set(summarySaleItems.map(e => e.totalQuantity).reduce((a, b) => a + b, 0))
             })
         }
+    }
+
+    onDetailSaleItems(saleItemIds: number[]) {
+        console.log(saleItemIds)
+        this.matDialog.open(DialogDetailSaleItemsComponent, {
+            width: '600px',
+            position: { top: '20px' },
+            data: saleItemIds
+        })
     }
 
     onOfficeChange() {

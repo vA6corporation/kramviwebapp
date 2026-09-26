@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject } from '@angular/core'
+import { Component, EventEmitter, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
@@ -25,8 +25,8 @@ export class DialogAdminCreditNotesComponent {
     private readonly navigationService = inject(NavigationService)
     private readonly matDialogRef: MatDialogRef<DialogAdminCreditNotesComponent> = inject(MatDialogRef)
 
-    office: OfficeModel | null = null
-    creditNote: CreditNoteModel | null = null
+    $office = signal<OfficeModel | null>(null)
+    $creditNote = signal<CreditNoteModel | null>(null)
 
     private onUpdate$: EventEmitter<void> = new EventEmitter()
     private handleAuth$: Subscription = new Subscription()
@@ -45,8 +45,9 @@ export class DialogAdminCreditNotesComponent {
 
     ngOnInit(): void {
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.office = auth.office
+            this.$office.set(auth.office)
         })
+
         this.fetchData()
     }
 
@@ -61,17 +62,27 @@ export class DialogAdminCreditNotesComponent {
         })
     }
 
+    onDeleteCdrNc(cdrNcId: number) {
+        const ok = confirm('Estas seguro de eliminar?...')
+        if (ok) {
+            this.creditNotesService.deleteCdrNc(cdrNcId).subscribe(() => {
+                this.fetchData()
+            })
+        }
+    }
+
     fetchData() {
         this.creditNotesService.getById(this.creditNoteId).subscribe(creditNote => {
-            this.creditNote = creditNote
+            this.$creditNote.set(creditNote)
             this.formGroup.patchValue(creditNote)
         })
     }
 
     onSubmitDate() {
-        if (this.creditNote) {
-            Object.assign(this.creditNote, this.formDate.value)
-            this.creditNotesService.updateDate(this.creditNote, this.creditNoteId).subscribe({
+        const creditNote = this.$creditNote()
+        if (creditNote) {
+            Object.assign(creditNote, this.formDate.value)
+            this.creditNotesService.updateDate(creditNote, this.creditNoteId).subscribe({
                 next: () => {
                     this.navigationService.showMessage('Se han guardado los cambios')
                     this.onUpdate$.emit()
@@ -83,9 +94,10 @@ export class DialogAdminCreditNotesComponent {
     }
 
     onSubmit() {
-        if (this.creditNote) {
-            Object.assign(this.creditNote, this.formGroup.value)
-            this.creditNotesService.update(this.creditNoteId, this.creditNote).subscribe({
+        const creditNote = this.$creditNote()
+        if (creditNote) {
+            Object.assign(creditNote, this.formGroup.value)
+            this.creditNotesService.update(this.creditNoteId, creditNote).subscribe({
                 next: () => {
                     this.onUpdate$.next()
                     this.navigationService.showMessage('Se han guardado los cambios')

@@ -13,7 +13,6 @@ import { DialogEditProvidersComponent } from '../../providers/dialog-edit-provid
 import { ProviderModel } from '../../providers/provider.model'
 import { PaymentOrdersService } from '../payment-orders.service'
 import { DialogSearchProvidersComponent } from '../../providers/dialog-search-providers/dialog-search-providers.component'
-import { DialogAttachFileComponent } from '../dialog-attach-file/dialog-attach-file.component'
 import { MaterialModule } from '../../material.module'
 import { CommonModule } from '@angular/common'
 import { BankModel } from '../../banks/bank.model'
@@ -76,48 +75,29 @@ export class CreatePaymentOrdersComponent {
         })
 
         this.handleClickMenu$ = this.navigationService.handleClickMenu().subscribe(id => {
-            switch (id) {
-                case 'add_provider':
-                    const dialogRef = this.matDialog.open(DialogSearchProvidersComponent, {
-                        width: '600px',
-                        position: { top: '20px' },
-                    })
+            const dialogRef = this.matDialog.open(DialogSearchProvidersComponent, {
+                width: '600px',
+                position: { top: '20px' },
+            })
 
-                    dialogRef.afterClosed().subscribe(provider => {
-                        if (provider) {
-                            this.$provider.set(provider)
-                        }
-                    })
-
-                    dialogRef.componentInstance.handleAddProvider().subscribe(() => {
-                        const dialogRef = this.matDialog.open(DialogCreateProvidersComponent, {
-                            width: '600px',
-                            position: { top: '20px' },
-                        })
-
-                        dialogRef.afterClosed().subscribe(provider => {
-                            if (provider) {
-                                this.$provider.set(provider)
-                            }
-                        })
-                    })
-                    break
-
-                case 'attach_file': {
-                    const dialogRef = this.matDialog.open(DialogAttachFileComponent, {
-                        width: '600px',
-                        position: { top: '20px' },
-                    })
-
-                    dialogRef.afterClosed().subscribe(file => {
-                        if (file) {
-                            this.formData = new FormData()
-                            this.formData.append('file', file, file.name)
-                        }
-                    })
-                    break
+            dialogRef.afterClosed().subscribe(provider => {
+                if (provider) {
+                    this.$provider.set(provider)
                 }
-            }
+            })
+
+            dialogRef.componentInstance.handleAddProvider().subscribe(() => {
+                const dialogRef = this.matDialog.open(DialogCreateProvidersComponent, {
+                    width: '600px',
+                    position: { top: '20px' },
+                })
+
+                dialogRef.afterClosed().subscribe(provider => {
+                    if (provider) {
+                        this.$provider.set(provider)
+                    }
+                })
+            })
         })
     }
 

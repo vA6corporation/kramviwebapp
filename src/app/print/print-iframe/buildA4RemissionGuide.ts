@@ -108,7 +108,7 @@ export async function buildA4RemissionGuide(
     positionYCustomer += 5 * strArr.length
 
     pdf.setFont('Helvetica', 'bold')
-    pdf.text('RUC', 8, positionYCustomer)
+    pdf.text(customer?.documentType || 'RUC', 8, positionYCustomer)
     pdf.text(':', 30, positionYCustomer)
 
     pdf.setFont('Helvetica', 'normal')
@@ -129,7 +129,7 @@ export async function buildA4RemissionGuide(
     positionYCustomer += 5 * strArr.length
 
     pdf.setFont('Helvetica', 'bold')
-    pdf.text('SUSTENTO', 8, positionYCustomer)
+    pdf.text('M. DE TRASLADO', 8, positionYCustomer)
     pdf.text(':', 30, positionYCustomer)
 
     pdf.setFont('Helvetica', 'normal')

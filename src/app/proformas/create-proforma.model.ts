@@ -5,4 +5,5 @@ export interface CreateProformaModel {
     rcPercent: number
     currencyCode: string
     customerId: number | null
+    isIncludeIgv: boolean
 }

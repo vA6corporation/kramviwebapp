@@ -192,6 +192,7 @@ export class DetailInventoriesComponent {
                     outCharge = item.price * item.quantity
                     stock -= item.quantity
                 }
+
                 if (item.type === 'COMPRA') {
                     providercustomer = item.purchase?.provider || {}
                     serie = item.purchase.serie
@@ -200,12 +201,15 @@ export class DetailInventoriesComponent {
                     inCharge = item.cost * item.quantity
                     stock += item.quantity
                 }
+
                 if (item.type === 'AUMENTO') {
                     stock += item.quantity
                 }
+
                 if (item.type === 'REDUCCION') {
                     stock -= item.quantity
                 }
+
                 body.push([
                     item.type,
                     formatDate(new Date(item.createdAt), 'dd/MM/yyyy', 'en-US'),
@@ -223,6 +227,7 @@ export class DetailInventoriesComponent {
                     (this.$product()?.price || 0) * stock,
                 ])
             }
+
             if (this.$product()) {
                 const name = `KARDEX_${formatDate(new Date(), 'dd/MM/yyyy', 'en-US')}_${this.$product()?.fullName.replace(/ /g, '_').toUpperCase()}`
                 buildExcel(body, name, wscols, [])

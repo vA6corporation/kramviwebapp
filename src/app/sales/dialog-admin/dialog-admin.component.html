@@ -89,7 +89,7 @@
             <button mat-flat-button color="primary" type="submit">GUARDAR</button>
         </div>
     </form>
-    <button mat-flat-button color="primary" type="button" (click)="onUndelete()">REVERTIR ANULADO</button>
+    <button mat-flat-button color="primary" type="button" (click)="onRestore()">REVERTIR ANULADO</button>
     <span class="divider"></span>
     @if (sale && sale.isBiller) {
     <a [href]="'/biller/' + sale.id + '/edit'" target="_blank" mat-flat-button color="primary">EDITAR</a>
@@ -114,9 +114,6 @@
     }
     @if (cdr) {
     <button type="button" mat-raised-button color="primary" (click)="onDeleteCdr()">ELIM. CDR</button>
-    }
-    @if (cdrTicket) {
-    <button type="button" mat-raised-button color="primary" (click)="onDeleteCdrTicket()">ELIM. CDRT</button>
     }
     <span class="spacer"></span>
     <button mat-raised-button mat-dialog-close color="primary">VOLVER</button>

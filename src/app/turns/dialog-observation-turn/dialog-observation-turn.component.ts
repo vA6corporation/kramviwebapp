@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { HttpErrorResponse } from '@angular/common/http'
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
@@ -28,7 +28,7 @@ export class DialogObservationTurnComponent {
     formGroup: FormGroup = this.formBuilder.group({
         observation: ''
     })
-    isLoading: boolean = false
+    $isLoading = signal<boolean>(false)
     private setting = new SettingModel()
 
     private handleAuth$: Subscription = new Subscription()
@@ -46,15 +46,18 @@ export class DialogObservationTurnComponent {
     onSubmit() {
         if (this.formGroup.valid) {
             this.navigationService.loadBarStart()
-            this.dialogRef.close()
             const { observation } = this.formGroup.value
             Object.assign(this.turn, { observation })
+            this.$isLoading.set(true)
             this.turnsService.update(this.turn.id, this.turn).subscribe({
                 next: () => {
+                    this.$isLoading.set(false)
+                    this.dialogRef.close()
                     this.turnsService.loadTurn(this.setting.isOfficeTurn)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage('Se han guardado los cambios')
                 }, error: (error: HttpErrorResponse) => {
+                    this.$isLoading.set(false)
                     this.navigationService.loadBarFinish()
                     this.navigationService.showMessage(error.error.message)
                 }

@@ -1,6 +1,12 @@
 import * as XLSX from 'xlsx'
 
-export function buildExcel(body: any[], name: string, wscols: any[] = [], wsrows: any[] = [], merges: any[] = []) {
+export function buildExcel(
+    body: any[],
+    name: string,
+    wscols: any[] = [],
+    wsrows: any[] = [],
+    merges: any[] = []
+) {
     const wb = XLSX.utils.book_new()
     wb.Props = {
         Title: "SheetJS Tutorial",
@@ -17,6 +23,7 @@ export function buildExcel(body: any[], name: string, wscols: any[] = [], wsrows
         wscols[index] = { wch: item }
     })
     ws['!cols'] = wscols
+    ws['!merges'] = merges
 
     wsrows = wsrows.map(e => ({ hpx: e }))
     ws['!rows'] = wsrows
@@ -31,9 +38,10 @@ export function parseExcel(file: File): Promise<any[]> {
             var workbook = XLSX.read(data, {
                 type: 'binary'
             })
+
             workbook.SheetNames.forEach((sheetName) => {
                 var XL_row_object: any[] = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {})
-                const arrayJson = []
+                const arrayJson: any[] = []
                 for (const obj of XL_row_object) {
                     const keys = Object.keys(obj)
                     const newObject: any = {}

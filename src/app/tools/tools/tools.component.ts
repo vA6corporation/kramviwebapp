@@ -5,7 +5,7 @@ import { ImportProductsComponent } from '../import-products/import-products.comp
 import { ImportCustomersComponent } from '../import-customers/import-customers.component'
 import { ImportStockComponent } from '../import-stock/import-stock.component'
 import { DeleteDataComponent } from '../delete-data/delete-data.component'
-import { DuplicateInvoicesComponent } from '../duplicate-invoices/duplicate-invoices.component'
+import { CertificateConverterComponent } from '../certificate-converter/certificate-converter.component'
 
 @Component({
     selector: 'app-tools',
@@ -15,7 +15,7 @@ import { DuplicateInvoicesComponent } from '../duplicate-invoices/duplicate-invo
         ImportCustomersComponent,
         ImportStockComponent,
         DeleteDataComponent,
-        DuplicateInvoicesComponent,
+        CertificateConverterComponent,
     ],
     templateUrl: './tools.component.html',
     styleUrls: ['./tools.component.sass']

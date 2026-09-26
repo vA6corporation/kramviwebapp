@@ -184,4 +184,8 @@ export class CreditNotesService {
         return this.httpService.delete(`creditNotes/byId/${creditNoteId}`)
     }
 
+    deleteCdrNc(cdrNcId: any): Observable<void> {
+        return this.httpService.delete(`creditNotes/cdrNc/${cdrNcId}`)
+    }
+
 }

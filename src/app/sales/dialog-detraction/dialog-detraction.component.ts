@@ -52,6 +52,7 @@ export class DialogDetractionComponent {
         { name: 'Carnes y despojos comestibles', code: '014' },
         { name: 'Abonos, cueros y pieles de origen animal', code: '015' },
         { name: 'Aceite de pescado', code: '016' },
+        { name: 'Arrendamiento de bienes muebles e inmuebles', code: '019' },
         { name: 'Mantenimiento y reparacion de bienes muebles', code: '020' },
         { name: 'Servicio de transporte de carga', code: '027' },
         { name: 'Transporte de pasajeros', code: '028' },

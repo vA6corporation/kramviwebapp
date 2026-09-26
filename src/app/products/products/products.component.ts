@@ -66,6 +66,7 @@ export class ProductsComponent {
         'price',
         'stock',
         'minimumStock',
+        'rotation',
         'comanda',
         'provider',
         'actions'
@@ -82,6 +83,7 @@ export class ProductsComponent {
         'price',
         'stock',
         'minimumStock',
+        'rotation',
         'comanda',
         'provider',
         'actions'
@@ -215,12 +217,11 @@ export class ProductsComponent {
                     switch (this.$setting().defaultPrice) {
                         case PriceType.GLOBAL: {
                             body.push([
-                                'ID',
                                 'PRODUCTO',
                                 'VARIANTE',
                                 'MARCA',
                                 'CATEGORIA',
-                                'C. INTERNO',
+                                'UNIDAD DE M.',
                                 'C. FABRICANTE',
                                 'STOCK',
                                 'COSTO',
@@ -231,12 +232,11 @@ export class ProductsComponent {
 
                             for (const product of products) {
                                 body.push([
-                                    product.id,
                                     product.name.toUpperCase(),
                                     (product.feature || '').toUpperCase(),
                                     (product.brand || '').toUpperCase(),
                                     (this.$categories().find(e => e.id === product.categoryId)?.name || '').toUpperCase(),
-                                    product.sku,
+                                    product.unitName,
                                     product.upc,
                                     product.stock,
                                     Number(product.cost.toFixed(2)),
@@ -254,7 +254,7 @@ export class ProductsComponent {
                                 'VARIANTE',
                                 'MARCA',
                                 'CATEGORIA',
-                                'C. INTERNO',
+                                'UNIDAD DE M.',
                                 'C. FABRICANTE',
                                 'STOCK',
                                 'COSTO',
@@ -274,7 +274,7 @@ export class ProductsComponent {
                                     (product.feature || '').toUpperCase(),
                                     (product.brand || '').toUpperCase(),
                                     (this.$categories().find(e => e.id === product.categoryId)?.name || '').toUpperCase(),
-                                    product.sku,
+                                    product.unitName,
                                     product.upc,
                                     product.stock,
                                     Number(product.cost.toFixed(2)),
@@ -298,7 +298,7 @@ export class ProductsComponent {
                                 'VARIANTE',
                                 'MARCA',
                                 'CATEGORIA',
-                                'C. INTERNO',
+                                'UNIDAD DE M.',
                                 'C. FABRICANTE',
                                 'STOCK',
                                 'COSTO',
@@ -318,7 +318,7 @@ export class ProductsComponent {
                                     (product.feature || '').toUpperCase(),
                                     (product.brand || '').toUpperCase(),
                                     (this.$categories().find(e => e.id === product.categoryId)?.name || '').toUpperCase(),
-                                    product.sku,
+                                    product.unitName,
                                     product.upc,
                                     product.stock,
                                     Number(product.cost.toFixed(2)),
@@ -346,13 +346,9 @@ export class ProductsComponent {
         })
 
         this.handleSearch$ = this.navigationService.handleSearch().subscribe(key => {
-
             this.pageIndex = 0
             this.key = key
-
-            const queryParams: Params = { key, categoryId: null }
-
-            Object.assign(this.params, { categoryId: null })
+            const queryParams: Params = { key, categoryId: null, pageIndex: 0 }
 
             this.router.navigate([], {
                 relativeTo: this.activatedRoute,

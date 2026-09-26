@@ -40,7 +40,8 @@ export class ExcelSimple {
             'M. DE PAGO',
             'USUARIO',
             'OBSERVACIONES',
-            'ANULADO'
+            'ANULADO',
+            'ES CREDITO'
         ])
     }
 
@@ -71,7 +72,8 @@ export class ExcelSimple {
                 paymentNames,
                 user.name,
                 sale.observation,
-                sale.deletedAt ? 'SI' : 'NO'
+                sale.deletedAt ? 'SI' : 'NO',
+                sale.isCredit ? 'SI' : 'NO'
             ])
         }
     }

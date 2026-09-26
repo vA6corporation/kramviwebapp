@@ -63,6 +63,15 @@ export class PurchasesService {
         return this.httpService.get(`purchases/purchaseItemsByPageProduct/${pageIndex}/${pageSize}/${productId}`, params)
     }
 
+    getPurchaseItemsByProviderPage(
+        providerId: any,
+        pageIndex: number,
+        pageSize: number,
+        params: Params,
+    ): Observable<PurchaseItemModel[]> {
+        return this.httpService.get(`purchases/purchaseItemsByProviderPage/${providerId}/${pageIndex}/${pageSize}`, params)
+    }
+
     setPurchaseItems(purchaseItems: CreatePurchaseItemModel[]) {
         this.purchaseItems = purchaseItems
         this.purchaseItems$.next(this.purchaseItems)

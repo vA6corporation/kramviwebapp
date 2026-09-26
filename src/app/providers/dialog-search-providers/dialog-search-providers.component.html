@@ -23,7 +23,7 @@
             </mat-form-field>
         }
         <mat-action-list>
-            @for (provider of providers; track provider.id) {
+            @for (provider of $providers(); track provider.id) {
                 <button mat-list-item (click)="onSelectProvider(provider)">
                     <span matListItemTitle>{{ provider.name | uppercase }}</span>
                     <span matListItemLine>{{ provider.documentType }}: {{ provider.document }}</span>
@@ -33,8 +33,9 @@
     </div>
     <mat-dialog-actions>
         <span class="spacer"></span>
-        <button mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
-        <button mat-flat-button mat-dialog-close color="primary" [disabled]="isLoading"
-            (click)="onCreateProvider()">NUEVO PROVEEDOR</button>
+        <button type="button" mat-raised-button mat-dialog-close color="primary">CANCELAR</button>
+        <button type="button" mat-flat-button mat-dialog-close color="primary" [disabled]="$isLoading()" (click)="onCreateProvider()">
+            NUEVO PROVEEDOR
+        </button>
     </mat-dialog-actions>
 </form>

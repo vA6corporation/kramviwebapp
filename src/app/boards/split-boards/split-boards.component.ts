@@ -29,7 +29,6 @@ export class SplitBoardsComponent {
     $boardItems = signal<BoardItemModel[]>([])
     preBoardItems: BoardItemModel[] = []
     selectedIndex: number = 0
-    isLoading: boolean = false
     table: null | TableModel = null
 
     private handleTables$: Subscription = new Subscription()
@@ -60,7 +59,6 @@ export class SplitBoardsComponent {
                 this.navigationService.loadBarStart()
                 this.boardsService.getActiveBoardByTable(this.table.id).subscribe({
                     next: board => {
-                        this.isLoading = false
                         this.navigationService.loadBarFinish()
                         this.board = board
                         this.boardsService.setBoard(board)
@@ -74,7 +72,6 @@ export class SplitBoardsComponent {
                             return values
                         })
                     }, error: (error: HttpErrorResponse) => {
-                        this.isLoading = false
                         this.navigationService.loadBarFinish()
                         console.log(error.error.message)
                     }

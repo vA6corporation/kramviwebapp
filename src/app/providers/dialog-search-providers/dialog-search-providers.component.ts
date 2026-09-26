@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject } from '@angular/core'
+import { Component, EventEmitter, inject, signal } from '@angular/core'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ProvidersService } from '../providers.service'
 import { NavigationService } from '../../navigation/navigation.service'
@@ -21,7 +21,6 @@ export class DialogSearchProvidersComponent {
     private readonly providersService = inject(ProvidersService)
     private readonly navigationService = inject(NavigationService)
 
-    providers: ProviderModel[] = []
     formGroup: FormGroup = this.formBuilder.group({
         searchType: 'RUC',
         key: [null, Validators.required],
@@ -33,7 +32,8 @@ export class DialogSearchProvidersComponent {
         { code: 'MOBILE', name: 'CELULAR' },
         { code: 'NAME', name: 'NOMBRES' },
     ]
-    isLoading: boolean = false
+    $providers = signal<ProviderModel[]>([])
+    $isLoading = signal<boolean>(false)
 
     private onAdd: EventEmitter<void> = new EventEmitter()
 
@@ -75,13 +75,13 @@ export class DialogSearchProvidersComponent {
             case 'RUC':
                 if (key.length === 11) {
                     this.formGroup.get('key')?.disable()
-                    this.isLoading = true
+                    this.$isLoading.set(true)
                     this.providersService.getProvidersByRuc(key).subscribe(providers => {
-                        this.isLoading = false
-                        this.providers = providers
+                        this.$isLoading.set(false)
+                        this.$providers.set(providers)
                         this.formGroup.get('key')?.enable()
                     }, (error: HttpErrorResponse) => {
-                        this.isLoading = false
+                        this.$isLoading.set(false)
                         this.formGroup.get('key')?.enable()
                         this.navigationService.showMessage(error.error.message)
                     })
@@ -90,13 +90,13 @@ export class DialogSearchProvidersComponent {
             case 'DNI':
                 if (key.length === 8) {
                     this.formGroup.get('key')?.disable()
-                    this.isLoading = true
+                    this.$isLoading.set(true)
                     this.providersService.getProvidersByDni(key).subscribe(provider => {
-                        this.isLoading = false
-                        this.providers = provider
+                        this.$isLoading.set(false)
+                        this.$providers.set(provider)
                         this.formGroup.get('key')?.enable()
                     }, (error: HttpErrorResponse) => {
-                        this.isLoading = false
+                        this.$isLoading.set(false)
                         this.formGroup.get('key')?.enable()
                         this.navigationService.showMessage(error.error.message)
                     })
@@ -105,13 +105,13 @@ export class DialogSearchProvidersComponent {
             case 'MOBILE':
                 if (key.length === 9) {
                     this.formGroup.get('key')?.disable()
-                    this.isLoading = true
+                    this.$isLoading.set(true)
                     this.providersService.getProvidersByMobile(key).subscribe(provider => {
-                        this.isLoading = false
-                        this.providers = provider
+                        this.$isLoading.set(false)
+                        this.$providers.set(provider)
                         this.formGroup.get('key')?.enable()
                     }, (error: HttpErrorResponse) => {
-                        this.isLoading = false
+                        this.$isLoading.set(false)
                         this.formGroup.get('key')?.enable()
                         this.navigationService.showMessage(error.error.message)
                     })
@@ -119,13 +119,13 @@ export class DialogSearchProvidersComponent {
                 break
             default:
                 this.formGroup.get('key')?.disable()
-                this.isLoading = true
+                this.$isLoading.set(true)
                 this.providersService.getProvidersByKey(key).subscribe(provider => {
-                    this.isLoading = false
-                    this.providers = provider
+                    this.$isLoading.set(false)
+                    this.$providers.set(provider)
                     this.formGroup.get('key')?.enable()
                 }, (error: HttpErrorResponse) => {
-                    this.isLoading = false
+                    this.$isLoading.set(false)
                     this.formGroup.get('key')?.enable()
                     this.navigationService.showMessage(error.error.message)
                 })

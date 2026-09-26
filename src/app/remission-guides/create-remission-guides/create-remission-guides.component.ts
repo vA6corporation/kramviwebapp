@@ -61,18 +61,6 @@ export class CreateRemissionGuidesComponent {
     }
 
     ngOnInit(): void {
-        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
-            this.office = auth.office
-
-            this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
-                this.$favorites.set(products)
-            })
-        })
-
-        this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
-            this.$categories.set(categories)
-        })
-
         if (this.authService.isDebtorCancel()) {
             this.router.navigate(['/subscription'])
         }
@@ -84,6 +72,18 @@ export class CreateRemissionGuidesComponent {
             { id: 'search', icon: 'search', show: true, label: '' },
             { id: 'import_products', label: 'Importar todos los productos', icon: 'info', show: false },
         ])
+
+        this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
+            this.office = auth.office
+
+            this.handleFavorites$ = this.favoritesService.handleFavorites().subscribe(products => {
+                this.$favorites.set(products)
+            })
+        })
+
+        this.handleCategories$ = this.categoriesService.handleCategories().subscribe(categories => {
+            this.$categories.set(categories)
+        })
 
         this.handleRemissionGuideItems$ = this.remissionGuidesService.handleRemissionGuideItems().subscribe(remissionGuideItems => {
             this.remissionGuideItems = remissionGuideItems

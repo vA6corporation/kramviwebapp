@@ -17,7 +17,6 @@ export class DialogDeletedComponent {
     formGroup: FormGroup = this.formBuilder.group({
         observation: ['', Validators.required]
     })
-    isLoading: boolean = false
 
     onSubmit() {
         if (this.formGroup.valid) {

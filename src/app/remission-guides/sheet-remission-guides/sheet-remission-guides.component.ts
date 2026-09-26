@@ -10,24 +10,24 @@ import { MaterialModule } from '../../material.module'
 import { NavigationService } from '../../navigation/navigation.service'
 import { RemissionGuidesService } from '../remission-guides.service'
 import { PrintService } from '../../print/print.service'
+import { RouterModule } from '@angular/router'
 
 @Component({
     selector: 'app-sheet-remission-guides',
-    imports: [MaterialModule],
+    imports: [MaterialModule, RouterModule],
     templateUrl: './sheet-remission-guides.component.html',
     styleUrl: './sheet-remission-guides.component.sass'
 })
 export class SheetRemissionGuidesComponent {
 
-    private readonly remissionGuideId: any = inject(MAT_BOTTOM_SHEET_DATA)
-    private readonly matBottomSheetRef: MatBottomSheetRef<SheetRemissionGuidesComponent> = inject(MatBottomSheetRef)
+    readonly remissionGuideId: any = inject(MAT_BOTTOM_SHEET_DATA)
+    readonly matBottomSheetRef: MatBottomSheetRef<SheetRemissionGuidesComponent> = inject(MatBottomSheetRef)
     private readonly remissionGuidesService = inject(RemissionGuidesService)
     private readonly navigationService = inject(NavigationService)
     private readonly printService = inject(PrintService)
     private readonly authService = inject(AuthService)
 
     private onSendRemissionGuide$: EventEmitter<void> = new EventEmitter()
-    //private sunattk: string = ''
     private office: OfficeModel = new OfficeModel()
     private business: BusinessModel = new BusinessModel()
 
@@ -75,23 +75,6 @@ export class SheetRemissionGuidesComponent {
                 this.navigationService.loadBarFinish()
             }
         })
-       // if (this.sunattk) {
-       // } else {
-       //     const params: Params = {
-       //         clientId: this.business.clientId,
-       //         clientSecret: this.business.clientSecret
-       //     }
-       //     this.remissionGuidesService.getSunatToken(params).subscribe({
-       //         next: res => {
-       //             this.navigationService.loadBarFinish()
-       //             this.sunattk = res.sunattk
-       //             this.onSendRemissionGuide()
-       //         }, error: (error: HttpErrorResponse) => {
-       //             this.navigationService.loadBarFinish()
-       //             this.navigationService.showMessage(error.error.message)
-       //         }
-       //     })
-       // }
     }
 
     downloadFile(url: string, fileName: string) {
@@ -103,7 +86,30 @@ export class SheetRemissionGuidesComponent {
         document.body.removeChild(link)
     }
 
-    async onDownloadXmlCdr() {
+    async onDownloadXml() {
+        this.matBottomSheetRef.dismiss()
+        this.navigationService.loadBarStart()
+        const remissionGuide = await lastValueFrom(this.remissionGuidesService.getRemissionGuideById(this.remissionGuideId))
+        const fileName = `${this.business.ruc}-09-T${this.office.serialPrefix}-${remissionGuide.remissionGuideNumber}.zip`
+        if (remissionGuide.cdr) {
+            try {
+                const blobXml = await this.remissionGuidesService.getXml(remissionGuide.cdr.id)
+                const urlXml = window.URL.createObjectURL(blobXml)
+                this.navigationService.loadBarFinish()
+                this.downloadFile(urlXml, fileName)
+            } catch (error) {
+                this.navigationService.loadBarFinish()
+                if (error instanceof Error) {
+                    this.navigationService.showMessage(error.message)
+                }
+            }
+        } else {
+            this.navigationService.showMessage('No hay XML')
+            this.navigationService.loadBarFinish()
+        }
+    }
+
+    async onDownloadCdr() {
         this.matBottomSheetRef.dismiss()
         this.navigationService.loadBarStart()
         const remissionGuide = await lastValueFrom(this.remissionGuidesService.getRemissionGuideById(this.remissionGuideId))
@@ -114,10 +120,6 @@ export class SheetRemissionGuidesComponent {
                 const urlCdr = window.URL.createObjectURL(blobCdr)
                 this.navigationService.loadBarFinish()
                 this.downloadFile(urlCdr, 'R-' + fileName)
-                const blobXml = await this.remissionGuidesService.getXml(remissionGuide.cdr.id)
-                const urlXml = window.URL.createObjectURL(blobXml)
-                this.navigationService.loadBarFinish()
-                this.downloadFile(urlXml, fileName)
             } catch (error) {
                 this.navigationService.loadBarFinish()
                 if (error instanceof Error) {

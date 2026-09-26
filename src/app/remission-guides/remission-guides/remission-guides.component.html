@@ -88,10 +88,12 @@
                             <mat-icon>print</mat-icon>
                             <span>Imprimir Ticket 80mm</span>
                         </button>
+                        @if (element.cdr === null && !element.deletedAt) {
                         <button [routerLink]="['/remissionGuides', element.id, 'edit']" mat-menu-item>
                             <mat-icon>edit</mat-icon>
                             <span>Editar</span>
                         </button>
+                        }
                         <button type="button" mat-menu-item (click)="onDeleteInvoice(element)">
                             <mat-icon>delete</mat-icon>
                             <span>Anular</span>

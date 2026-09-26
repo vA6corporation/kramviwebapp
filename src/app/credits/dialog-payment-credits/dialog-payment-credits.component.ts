@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core'
+import { Component, inject, signal } from '@angular/core'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
 import { Subscription } from 'rxjs'
@@ -30,8 +30,8 @@ export class DialogPaymentCreditsComponent {
     formGroup: FormGroup = this.formBuilder.group({
         paymentMethodId: [null, Validators.required],
     })
-    paymentMethods: PaymentMethodModel[] = []
-    isLoading: boolean = false
+    $paymentMethods = signal<PaymentMethodModel[]>([])
+    $isLoading = signal<boolean>(false)
     payed = this.credits.map(e => e.payed).reduce((a, b) => a + b, 0)
     charge = this.credits.map(e => e.charge).reduce((a, b) => a + b, 0)
     private turn: TurnModel | null = null
@@ -50,7 +50,7 @@ export class DialogPaymentCreditsComponent {
         this.dialogRef.disableClose = true
 
         this.handlePaymentMethods$ = this.paymentMethodsService.handlePaymentMethods().subscribe(paymentMethods => {
-            this.paymentMethods = paymentMethods
+            this.$paymentMethods.set(paymentMethods)
         })
 
         this.handleAuth$ = this.authService.handleAuth().subscribe(auth => {
@@ -64,8 +64,9 @@ export class DialogPaymentCreditsComponent {
     onSubmit() {
         if (this.formGroup.valid && this.turn) {
             const { paymentMethodId } = this.formGroup.value
-            this.isLoading = true
+            this.$isLoading.set(true)
             this.creditsService.paidCustomerCredits(this.credits.map(e => e.id), paymentMethodId, this.turn.id).subscribe(() => {
+                this.$isLoading.set(false)
                 this.dialogRef.close(true)
             })
         }
